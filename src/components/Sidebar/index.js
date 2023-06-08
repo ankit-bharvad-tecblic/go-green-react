@@ -11,7 +11,7 @@ function Sidebar(props) {
   const mainPanel = React.useRef();
   let variantChange = "0.2s linear";
 
-  const { logoText, routes, sidebarVariant } = props;
+  const { routes, sidebarVariant } = props;
 
   //  BRAND
   //  Chakra Color Mode
@@ -26,33 +26,23 @@ function Sidebar(props) {
 
   // SIDEBAR
   return (
-    <Box ref={mainPanel}>
-      <Box display={{ sm: "none", xl: "block" }} position="fixed">
-        <Box
-          bg={sidebarBg}
-          transition={variantChange}
-          w="260px"
-          maxW="260px"
-          ms={{
-            sm: "16px",
-          }}
-          my={{
-            sm: "16px",
-          }}
-          h="calc(100vh - 32px)"
-          ps="20px"
-          pe="20px"
-          m={sidebarMargins}
-          borderRadius={sidebarRadius}
-        >
-          <SidebarContent
-            routes={routes}
-            logoText={"PURITY UI DASHBOARD"}
-            display="none"
-            sidebarVariant={sidebarVariant}
-          />
-        </Box>
-      </Box>
+    <Box
+      w="250px"
+      bg="#FFFFFF"
+      borderRadius="16px"
+      p="10px 12px"
+      minH={{
+        base: "calc(100vh - 40px)",
+        md: "calc(100vh - 60px)",
+        lg: "calc(100vh - 90px)",
+      }}
+    >
+      <SidebarContent
+        routes={routes}
+        logoText={"GO Green"}
+        display="none"
+        sidebarVariant={sidebarVariant}
+      />
     </Box>
   );
 }
