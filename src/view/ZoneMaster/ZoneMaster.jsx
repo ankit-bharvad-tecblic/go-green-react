@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useState } from "react";
+import { useGetZoneMasterMutation } from "../../features/master-api-slice";
 
 const ZoneMaster = () => {
   const columnHelper = createColumnHelper();
@@ -8,6 +9,11 @@ const ZoneMaster = () => {
     filter: [],
     search: "",
   });
+
+  const [
+    getZoneMaster,
+    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
+  ] = useGetZoneMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
@@ -54,22 +60,12 @@ const ZoneMaster = () => {
         .join("&");
     }
 
-    try {
-      const response = await fetch(
-        `http://192.168.0.124:8000/warehouse/zone?${paramString}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    console.log("paramString ---> ", paramString);
 
-      const result = await response.json();
-      console.log("Success:", result);
-      setData(result?.results || []);
+    try {
+      const response = await getZoneMaster(paramString).unwrap();
+      console.log("Success:", response);
+      setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -81,6 +77,7 @@ const ZoneMaster = () => {
 
   useEffect(() => {
     console.log("filter =-==> ", filter);
+
     handleSearch();
   }, [filter.search]);
 
@@ -108,6 +105,7 @@ const ZoneMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data}
+        loading={getZoneMasterApiIsLoading}
       />
     </div>
   );
