@@ -7,10 +7,15 @@ import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
+import { localStorageService } from "../services/localStorge.service";
+import ForgotPassword from "../view/Auth/ForgotPassword";
+import ChangePassword from "../view/Auth/ChangePassword";
 
-const isAuth = true;
+const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
+
+/// let isAuth = localStorageService.get("GG_ADMIN");
+
 const headerType = "absolute";
-
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
@@ -35,6 +40,26 @@ const routes = [
       <GuestRoute>
         <Suspense fallback={<div>Loading...</div>}>
           <Login />
+        </Suspense>
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <GuestRoute>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ForgotPassword />
+        </Suspense>
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/change-password",
+    element: (
+      <GuestRoute>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ChangePassword />
         </Suspense>
       </GuestRoute>
     ),

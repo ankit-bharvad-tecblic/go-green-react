@@ -1,9 +1,8 @@
 export const API = {
   SIGNUP: "/register/",
   LOGIN: "/login/",
-  ADD_USER: "/create_admin_user/",
-  GET_COUNTRY: "/hotel/country_data/",
-  GET_CITY: "/hotel/city_data",
+  FORGOT_PWD: "/Forgotpass_Api/",
+  CHANGE_PASSWORD: "/verify_password/",
 
   DASHBOARD: {
     DISTRICT_MASTER: "/warehouse/district/",

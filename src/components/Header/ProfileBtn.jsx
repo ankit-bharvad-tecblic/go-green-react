@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Image,
   Popover,
@@ -12,12 +13,13 @@ import ReactIcon from "../../assets/Images/reactIcon.svg";
 import React from "react";
 import { RiGroupLine } from "react-icons/ri";
 import { IoLogOutOutline } from "react-icons/io5";
+import { commonService } from "../../services/common.service";
 
 function ProfileBtn() {
   return (
     <>
       <Box position="relative">
-        <Popover direction="rtl" autoFocus={true}>
+        <Popover direction="rtl" isLazy autoFocus={true}>
           <PopoverTrigger>
             <Flex
               height="40px"
@@ -35,7 +37,13 @@ function ProfileBtn() {
           <PopoverContent position={"absolute"} right="0px" borderRadius="20px">
             <PopoverBody>
               <Box p="10px">
-                <Flex bg="primary.100" p="16px" gap="10px" alignItems="center" cursor="pointer">
+                <Flex
+                  bg="primary.100"
+                  p="16px"
+                  gap="10px"
+                  alignItems="center"
+                  cursor="pointer"
+                >
                   <Flex
                     height="40px"
                     width="40px"
@@ -99,6 +107,9 @@ function ProfileBtn() {
                   borderBottom="1px"
                   borderColor="gray.100"
                   cursor="pointer"
+                  // onClick={() => alert()}
+
+                  onClick={() => commonService.userLogout()}
                 >
                   <Flex
                     height="40px"
@@ -111,7 +122,7 @@ function ProfileBtn() {
                   >
                     <IoLogOutOutline color="secondary.500" />
                   </Flex>
-                  <Box>
+                  <Box zIndex={10000}>
                     <Text fontSize="16px" color="black" fontWeight="600">
                       Sign out
                     </Text>

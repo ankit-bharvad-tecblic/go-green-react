@@ -3,9 +3,11 @@ import { mode } from "@chakra-ui/theme-tools";
 export const globalStyles = {
   colors: {
     gray: {
+      800: "#636363",
       700: "#1f2733",
       600: "#ADB8CC",
-      800: "#636363",
+      500: "#344054",
+      400: "#667085",
     },
 
     primary: {
