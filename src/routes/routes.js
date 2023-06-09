@@ -8,7 +8,9 @@ import StateMaster from "../view/StateMaster/StateMaster";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
 
-const isAuth = false;
+const isAuth = true;
+const headerType = "absolute";
+
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
@@ -42,7 +44,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"Dashboard"}>
             <Dashboard />
           </Layout>
         </Suspense>
@@ -54,7 +56,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Zone Master"}>
+          <Layout variant={headerType} title={"Zone Master"}>
             <ZoneMaster />
           </Layout>
         </Suspense>
@@ -66,7 +68,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"State Master"}>
             <StateMaster />
           </Layout>
         </Suspense>
@@ -78,7 +80,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"District Master"}>
             <DistrictMaster />
           </Layout>
         </Suspense>
@@ -90,7 +92,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"Area Master"}>
             <AreaMaster />
           </Layout>
         </Suspense>

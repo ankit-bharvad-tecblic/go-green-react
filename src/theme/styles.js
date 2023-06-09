@@ -5,6 +5,7 @@ export const globalStyles = {
     gray: {
       700: "#1f2733",
       600: "#ADB8CC",
+      800: "#636363",
     },
 
     primary: {

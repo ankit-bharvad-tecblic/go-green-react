@@ -36,13 +36,21 @@ function Sidebar(props) {
         md: "calc(100vh - 60px)",
         lg: "calc(100vh - 90px)",
       }}
+      h={{
+        base: "calc(100vh - 40px)",
+        md: "calc(100vh - 60px)",
+        lg: "calc(100vh - 90px)",
+      }}
+      overflow="auto"
     >
-      <SidebarContent
-        routes={routes}
-        logoText={"GO Green"}
-        display="none"
-        sidebarVariant={sidebarVariant}
-      />
+      <Box>
+        <SidebarContent
+          routes={routes}
+          logoText={"GO Green"}
+          display="none"
+          sidebarVariant={sidebarVariant}
+        />
+      </Box>
     </Box>
   );
 }
