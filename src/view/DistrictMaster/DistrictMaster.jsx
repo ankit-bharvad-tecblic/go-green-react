@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useState } from "react";
+import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
 
 const DistrictMaster = () => {
   const columnHelper = createColumnHelper();
@@ -49,6 +50,14 @@ const DistrictMaster = () => {
 
   let paramString = "";
 
+  const [
+    getDistrictMaster,
+    {
+      error: getDistrictMasterApiErr,
+      isLoading: getDistrictMasterApiIsLoading,
+    },
+  ] = useGetDistrictMasterMutation();
+
   const getData = async () => {
     //params filter
     if (filter.filter.length || filter.search) {
@@ -65,21 +74,22 @@ const DistrictMaster = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://192.168.0.124:8000/warehouse/district?${paramString}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const response = await fetch(
+      //   `http://192.168.0.124:8000/warehouse/district?${paramString}`,
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       Authorization:
+      //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
 
-      const result = await response.json();
-      console.log("Success:", result);
-      setData(result?.results || []);
+      const response = await getDistrictMaster(paramString).unwrap();
+
+      console.log("Success:", response);
+      setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -111,6 +121,7 @@ const DistrictMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data}
+        loading={getDistrictMasterApiIsLoading}
       />
     </div>
   );

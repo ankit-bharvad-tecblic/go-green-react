@@ -6,9 +6,9 @@ export const API = {
   GET_CITY: "/hotel/city_data",
 
   DASHBOARD: {
-    OVERALL_PERFORMANCE: "/booking/overall_performance/",
-    PACKAGE_PERFORMANCE: "/booking/package_dashboard/",
-    HOTEL_PERFORMANCE: "/booking/hotel_dashboard/",
-    SIGHTSEEING_PERFORMANCE: "/booking/sightseeing_dashboard/",
+    DISTRICT_MASTER: "/warehouse/district/",
+    STATE_MASTER: "/warehouse/state/",
+    ZONE_MASTER: "/warehouse/zone/",
+    AREA_MASTER: "/warehouse/area/",
   },
 };

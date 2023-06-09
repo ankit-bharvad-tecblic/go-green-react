@@ -8,7 +8,7 @@ import StateMaster from "../view/StateMaster/StateMaster";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
 
-const isAuth = true;
+const isAuth = false;
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
@@ -28,7 +28,7 @@ const ProtectedRoutes = ({ children }) => {
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     element: (
       <GuestRoute>
         <Suspense fallback={<div>Loading...</div>}>
