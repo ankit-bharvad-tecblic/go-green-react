@@ -1,4 +1,5 @@
 import moment from "moment";
+import { localStorageService } from "./localStorge.service";
 // import fileType from "file-type";
 
 const fileTypes = {
@@ -103,5 +104,9 @@ export const commonService = {
     var currentTime = currentDate.toISOString().replace(/[-:.T]/g, "");
     var fileName = currentTime + ".txt";
     return fileName;
+  },
+  userLogout: () => {
+    localStorageService.remove("GG_ADMIN");
+    window.location.href = "/login";
   },
 };

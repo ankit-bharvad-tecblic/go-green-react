@@ -34,7 +34,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 
-function FunctionalTable({ setFilter, filterFields, columns, data }) {
+function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
   const [sorting, setSorting] = React.useState([]);
   const table = useReactTable({
     columns,
@@ -268,25 +268,39 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                         )
                       ) : null}
                     </chakra.span> */}
-                    </Th>
-                  );
-                })}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table?.getRowModel().rows?.length === 0 && (
-              <Tr>
-                <Td colSpan={6}>
-                  <Box width="full">
-                    <Text textAlign="center" color="primary.700">
-                      Not Found
-                    </Text>
-                  </Box>
-                </Td>
-              </Tr>
-            )}
-            {table?.getRowModel().rows?.map((row) => (
+                  </Th>
+                );
+              })}
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody>
+          {!loading && table?.getRowModel().rows?.length === 0 && (
+            <Tr>
+              <Td colSpan={6}>
+                <Box width="full">
+                  <Text textAlign="center" color="primary.700">
+                    Not Found
+                  </Text>
+                </Box>
+              </Td>
+            </Tr>
+          )}
+
+          {loading && (
+            <Tr>
+              <Td colSpan={6}>
+                <Box width="full">
+                  <Text textAlign="center" color="primary.700">
+                    Loading...
+                  </Text>
+                </Box>
+              </Td>
+            </Tr>
+          )}
+
+          {!loading &&
+            table?.getRowModel().rows?.map((row) => (
               <Tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
                   // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly

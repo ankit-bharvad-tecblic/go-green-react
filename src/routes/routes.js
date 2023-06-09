@@ -7,8 +7,15 @@ import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
+import { localStorageService } from "../services/localStorge.service";
+import ForgotPassword from "../view/Auth/ForgotPassword";
+import ChangePassword from "../view/Auth/ChangePassword";
 
-const isAuth = true;
+const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
+
+/// let isAuth = localStorageService.get("GG_ADMIN");
+
+const headerType = "absolute";
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
@@ -28,7 +35,7 @@ const ProtectedRoutes = ({ children }) => {
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     element: (
       <GuestRoute>
         <Suspense fallback={<div>Loading...</div>}>
@@ -38,11 +45,31 @@ const routes = [
     ),
   },
   {
+    path: "/forgot-password",
+    element: (
+      <GuestRoute>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ForgotPassword />
+        </Suspense>
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/change-password",
+    element: (
+      <GuestRoute>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ChangePassword />
+        </Suspense>
+      </GuestRoute>
+    ),
+  },
+  {
     path: "/dashboard",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"Dashboard"}>
             <Dashboard />
           </Layout>
         </Suspense>
@@ -54,7 +81,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Zone Master"}>
+          <Layout variant={headerType} title={"Zone Master"}>
             <ZoneMaster />
           </Layout>
         </Suspense>
@@ -66,7 +93,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"State Master"}>
             <StateMaster />
           </Layout>
         </Suspense>
@@ -78,7 +105,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"District Master"}>
             <DistrictMaster />
           </Layout>
         </Suspense>
@@ -90,7 +117,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout varient={"fixed"} title={"Dashboard"}>
+          <Layout variant={headerType} title={"Area Master"}>
             <AreaMaster />
           </Layout>
         </Suspense>

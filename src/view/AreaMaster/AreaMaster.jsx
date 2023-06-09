@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useState } from "react";
+import { useGetAreaMasterMutation } from "../../features/master-api-slice";
 
 const AreaMaster = () => {
   const columnHelper = createColumnHelper();
@@ -8,6 +9,11 @@ const AreaMaster = () => {
     filter: [],
     search: "",
   });
+
+  const [
+    getAreaMaster,
+    { error: getAreaMasterApiErr, isLoading: getAreaMasterApiIsLoading },
+  ] = useGetAreaMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
@@ -65,21 +71,10 @@ const AreaMaster = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://192.168.0.124:8000/warehouse/area?${paramString}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await getAreaMaster(paramString).unwrap();
 
-      const result = await response.json();
-      console.log("Success:", result);
-      setData(result?.results || []);
+      console.log("Success:", response);
+      setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -111,6 +106,7 @@ const AreaMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data}
+        loading={getAreaMasterApiIsLoading}
       />
     </div>
   );

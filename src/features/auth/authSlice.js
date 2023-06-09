@@ -28,12 +28,12 @@ const authSlice = createSlice({
       // });
     },
     isAuthorized: () => {
-      const userDetails = localStorageService.get("KE_ADMIN");
+      const userDetails = localStorageService.get("GG_ADMIN");
       const isAuth = JSON.stringify(userDetails) === "{}" ? false : true;
       return isAuth;
     },
-    logOut: () => {   
-      localStorageService.remove("KE_ADMIN");
+    logOut: () => {
+      localStorageService.remove("GG_ADMIN");
       window.location.href = "/login";
     },
   },
