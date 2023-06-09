@@ -15,8 +15,9 @@ import { FaBell } from "react-icons/fa";
 import { VscThreeBars } from "react-icons/vsc";
 import Sidebar from "../Sidebar";
 import SidebarList from "../../routes/SidebarList";
+import ProfileBtn from "./ProfileBtn";
 
-function Header({ varient, title }) {
+function Header({ variant, title }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [scrolled, setScrolled] = useState(false);
@@ -33,7 +34,7 @@ function Header({ varient, title }) {
 
   return (
     <>
-      {varient === "fixed" ? (
+      {variant === "fixed" ? (
         <Box width="100%" mb={{ base: "10px", md: "15px", lg: "20px" }}>
           <Flex justifyContent="space-between" alignItems="center" width="100%">
             <Flex gap={{ base: "10px", lg: "0px" }} alignItems="center">
@@ -45,17 +46,7 @@ function Header({ varient, title }) {
               </Heading>
             </Flex>
             <Flex gap="10px">
-              <Flex
-                height="40px"
-                width="40px"
-                borderRadius="full"
-                bg="white"
-                justifyContent="center"
-                alignItems="center"
-                cursor="pointer"
-              >
-                <Image src={ReactIcon} alt="icon" height="30px" width="30px" />
-              </Flex>
+              <ProfileBtn />
               <Flex
                 height="40px"
                 width="40px"
@@ -99,22 +90,7 @@ function Header({ varient, title }) {
                   </Heading>
                 </Flex>
                 <Flex gap="10px">
-                  <Flex
-                    height="40px"
-                    width="40px"
-                    borderRadius="full"
-                    bg="white"
-                    justifyContent="center"
-                    alignItems="center"
-                    cursor="pointer"
-                  >
-                    <Image
-                      src={ReactIcon}
-                      alt="icon"
-                      height="30px"
-                      width="30px"
-                    />
-                  </Flex>
+                  <ProfileBtn />
                   <Flex
                     height="40px"
                     width="40px"
