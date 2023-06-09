@@ -72,8 +72,18 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
 
   return (
     <Box border="0px" p="30px" borderRadius="15px" background="white">
-      <Flex justifyContent="space-between" alignItems="center">
-        <Flex gap="5px" alignItems="center">
+      <Flex
+        // direction={{ base: "column", md: "column", lg: "column", xl: "row" }}
+        wrap="wrap"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Flex
+          gap="10px"
+          mb={{ base: 2, xl: 0 }}
+          maxWidth={["100%", "100%", "50%"]}
+          alignItems="center"
+        >
           <Select
             value={table.getState().pagination.pageSize}
             onChange={(e) => {
@@ -96,7 +106,17 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
             ITEM PER PAGE
           </Text>
         </Flex>
-        <Flex gap="20px" flex="none">
+        <Flex
+          gap="20px"
+          // direction={{
+          //   base: "column",
+          //   sm: "row",
+          //   md: "row",
+          //   lg: "row",
+          //   xl: "row",
+          // }}
+          wrap="wrap"
+        >
           <Button
             leftIcon={<BsPlusCircle bg="gray.600" />}
             borderColor="border_light.100"
@@ -178,67 +198,67 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
           </InputGroup>
         </Flex>
       </Flex>
-
-      <Table mt="15px">
-        <Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
-                const meta = header.column.columnDef.meta;
-                return (
-                  <Th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    isNumeric={meta?.isNumeric}
-                    p="12px 0px"
-                    textAlign="center"
-                    fontSize="12px"
-                    fontWeight="bold"
-                    color="black"
-                    cursor="pointer"
-                  >
-                    <Flex
-                      gap="7px"
-                      justifyContent="center"
-                      alignContent="center"
+      <Box overflowX="auto">
+        <Table mt="15px">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
+                  const meta = header.column.columnDef.meta;
+                  return (
+                    <Th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      isNumeric={meta?.isNumeric}
+                      p="12px 0px"
+                      textAlign="center"
+                      fontSize="12px"
+                      fontWeight="bold"
+                      color="black"
+                      cursor="pointer"
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {header.id !== "UPDATE" ? (
-                        header.column.getIsSorted() ? (
-                          header.column.getIsSorted() === "desc" ? (
+                      <Flex
+                        gap="7px"
+                        justifyContent="center"
+                        alignContent="center"
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {header.id !== "UPDATE" ? (
+                          header.column.getIsSorted() ? (
+                            header.column.getIsSorted() === "desc" ? (
+                              <Flex>
+                                <BsArrowDown color="black" fontSize="14px" />
+                                <Box ml="-7px">
+                                  <BsArrowUp color="#B6B7BC" fontSize="14px" />
+                                </Box>
+                              </Flex>
+                            ) : (
+                              // <TriangleDownIcon aria-label="sorted descending" />
+                              <Flex>
+                                <BsArrowDown color="#B6B7BC" fontSize="14px" />
+                                <Box ml="-7px">
+                                  <BsArrowUp color="black" fontSize="14px" />
+                                </Box>
+                              </Flex>
+                            )
+                          ) : (
                             <Flex>
-                              <BsArrowDown color="black" fontSize="14px" />
+                              <BsArrowDown color="#B6B7BC" fontSize="14px" />
                               <Box ml="-7px">
                                 <BsArrowUp color="#B6B7BC" fontSize="14px" />
                               </Box>
                             </Flex>
-                          ) : (
-                            // <TriangleDownIcon aria-label="sorted descending" />
-                            <Flex>
-                              <BsArrowDown color="#B6B7BC" fontSize="14px" />
-                              <Box ml="-7px">
-                                <BsArrowUp color="black" fontSize="14px" />
-                              </Box>
-                            </Flex>
                           )
                         ) : (
-                          <Flex>
-                            <BsArrowDown color="#B6B7BC" fontSize="14px" />
-                            <Box ml="-7px">
-                              <BsArrowUp color="#B6B7BC" fontSize="14px" />
-                            </Box>
-                          </Flex>
-                        )
-                      ) : (
-                        <></>
-                      )}
-                    </Flex>
+                          <></>
+                        )}
+                      </Flex>
 
-                    {/* <chakra.span pl="4">
+                      {/* <chakra.span pl="4">
                       <BsArrowDownUp />
                      {header.column.getIsSorted() ? (
                         header.column.getIsSorted() === "desc" ? (
@@ -248,66 +268,70 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                         )
                       ) : null}
                     </chakra.span> */}
-                  </Th>
-                );
-              })}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {table?.getRowModel().rows?.length === 0 && (
-            <Tr>
-              <Td colSpan={6}>
-                <Box width="full">
-                  <Text textAlign="center" color="primary.700">
-                    Not Found
-                  </Text>
-                </Box>
-              </Td>
-            </Tr>
-          )}
-          {table?.getRowModel().rows?.map((row) => (
-            <Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => {
-                // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
-                const meta = cell.column.columnDef.meta;
-                return (
-                  <Td
-                    key={cell.id}
-                    isNumeric={meta?.isNumeric}
-                    p="20px 0px"
-                    textAlign="center"
-                    fontSize="14px"
-                    color="#718096"
-                  >
-                    {cell.column.id === "UPDATE" ? (
-                      <Flex justifyContent="center">
-                        <BiEditAlt
-                          color="primary.700"
-                          fontSize="26px"
-                          cursor="pointer"
+                    </Th>
+                  );
+                })}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table?.getRowModel().rows?.length === 0 && (
+              <Tr>
+                <Td colSpan={6}>
+                  <Box width="full">
+                    <Text textAlign="center" color="primary.700">
+                      Not Found
+                    </Text>
+                  </Box>
+                </Td>
+              </Tr>
+            )}
+            {table?.getRowModel().rows?.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => {
+                  // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
+                  const meta = cell.column.columnDef.meta;
+                  return (
+                    <Td
+                      key={cell.id}
+                      isNumeric={meta?.isNumeric}
+                      p="20px 0px"
+                      textAlign="center"
+                      fontSize="14px"
+                      color="#718096"
+                    >
+                      {cell.column.id === "UPDATE" ? (
+                        <Flex justifyContent="center">
+                          <BiEditAlt
+                            color="primary.700"
+                            fontSize="26px"
+                            cursor="pointer"
+                          />
+                        </Flex>
+                      ) : cell.column.id === "active" ? (
+                        <Switch
+                          size="md"
+                          colorScheme="whatsapp"
+                          // isReadOnly
+                          // isChecked={flexRender(
+                          //   cell.column.columnDef.cell,
+                          //   cell.getContext()
+                          // )}
                         />
-                      </Flex>
-                    ) : cell.column.id === "active" ? (
-                      <Switch
-                        size="md"
-                        colorScheme="whatsapp"
-                        // isReadOnly
-                        // isChecked={flexRender(
-                        //   cell.column.columnDef.cell,
-                        //   cell.getContext()
-                        // )}
-                      />
-                    ) : (
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
-                    )}
-                  </Td>
-                );
-              })}
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      )}
+                    </Td>
+                  );
+                })}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
       <Flex justifyContent="end" mt="45px" gap="3px">
         <Button
