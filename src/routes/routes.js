@@ -8,7 +8,7 @@ import StateMaster from "../view/StateMaster/StateMaster";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
 
-const isAuth = true;
+const isAuth = false;
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
