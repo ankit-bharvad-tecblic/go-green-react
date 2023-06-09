@@ -67,7 +67,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Dashboard"}>
+          <Layout variant={headerType} title={"State Master"}>
             <StateMaster />
           </Layout>
         </Suspense>
@@ -79,7 +79,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Dashboard"}>
+          <Layout variant={headerType} title={"District Master"}>
             <DistrictMaster />
           </Layout>
         </Suspense>
@@ -91,7 +91,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Dashboard"}>
+          <Layout variant={headerType} title={"Area Master"}>
             <AreaMaster />
           </Layout>
         </Suspense>

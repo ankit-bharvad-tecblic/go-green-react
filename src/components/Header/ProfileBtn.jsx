@@ -35,7 +35,7 @@ function ProfileBtn() {
           <PopoverContent position={"absolute"} right="0px" borderRadius="20px">
             <PopoverBody>
               <Box p="10px">
-                <Flex bg="primary.100" p="16px" gap="10px" alignItems="center">
+                <Flex bg="primary.100" p="16px" gap="10px" alignItems="center" cursor="pointer">
                   <Flex
                     height="40px"
                     width="40px"
@@ -73,6 +73,7 @@ function ProfileBtn() {
                   alignItems="center"
                   borderBottom="1px"
                   borderColor="gray.100"
+                  cursor="pointer"
                 >
                   <Flex
                     height="40px"
@@ -97,6 +98,7 @@ function ProfileBtn() {
                   alignItems="center"
                   borderBottom="1px"
                   borderColor="gray.100"
+                  cursor="pointer"
                 >
                   <Flex
                     height="40px"
@@ -111,7 +113,7 @@ function ProfileBtn() {
                   </Flex>
                   <Box>
                     <Text fontSize="16px" color="black" fontWeight="600">
-                      Change password
+                      Sign out
                     </Text>
                   </Box>
                 </Flex>

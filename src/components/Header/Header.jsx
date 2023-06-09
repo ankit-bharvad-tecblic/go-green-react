@@ -16,6 +16,7 @@ import { VscThreeBars } from "react-icons/vsc";
 import Sidebar from "../Sidebar";
 import SidebarList from "../../routes/SidebarList";
 import ProfileBtn from "./ProfileBtn";
+import NotificationBtn from "./NotificationBtn";
 
 function Header({ variant, title }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,17 +48,7 @@ function Header({ variant, title }) {
             </Flex>
             <Flex gap="10px">
               <ProfileBtn />
-              <Flex
-                height="40px"
-                width="40px"
-                borderRadius="full"
-                bg="white"
-                justifyContent="center"
-                alignItems="center"
-                cursor="pointer"
-              >
-                <FaBell />
-              </Flex>
+              <NotificationBtn />
             </Flex>
           </Flex>
         </Box>
@@ -91,17 +82,7 @@ function Header({ variant, title }) {
                 </Flex>
                 <Flex gap="10px">
                   <ProfileBtn />
-                  <Flex
-                    height="40px"
-                    width="40px"
-                    borderRadius="full"
-                    bg="white"
-                    justifyContent="center"
-                    alignItems="center"
-                    cursor="pointer"
-                  >
-                    <FaBell />
-                  </Flex>
+                  <NotificationBtn />
                 </Flex>
               </Flex>
             </Box>
