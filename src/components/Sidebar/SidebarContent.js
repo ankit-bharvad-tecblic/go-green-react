@@ -72,7 +72,7 @@ const SidebarContent = ({ logoText, routes }) => {
               boxSize="initial"
               justifyContent="flex-start"
               alignItems="center"
-              bg={"#A6CE39"}
+              bg={"primary.700"}
               mb={{
                 xl: "12px",
               }}
@@ -84,7 +84,7 @@ const SidebarContent = ({ logoText, routes }) => {
               _hover="none"
               w="100%"
               _active={{
-                bg: "#A6CE39",
+                bg: "primary.700",
                 transform: "none",
                 borderColor: "transparent",
               }}
@@ -98,7 +98,7 @@ const SidebarContent = ({ logoText, routes }) => {
                 ) : (
                   <IconBox
                     bg="white"
-                    color="#A6CE39"
+                    color="primary.700"
                     h="30px"
                     w="30px"
                     me="12px"
@@ -107,7 +107,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   </IconBox>
                 )}
                 <Text
-                  color={"#FFFFFF"}
+                  color={"white"}
                   my="auto"
                   fontSize="14px"
                   fontWeight="700"

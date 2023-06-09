@@ -49,7 +49,7 @@ function Header({ varient, title }) {
                 height="40px"
                 width="40px"
                 borderRadius="full"
-                bg="#FFFFFF"
+                bg="white"
                 justifyContent="center"
                 alignItems="center"
                 cursor="pointer"
@@ -60,7 +60,7 @@ function Header({ varient, title }) {
                 height="40px"
                 width="40px"
                 borderRadius="full"
-                bg="#FFFFFF"
+                bg="white"
                 justifyContent="center"
                 alignItems="center"
                 cursor="pointer"
@@ -79,7 +79,7 @@ function Header({ varient, title }) {
             width={{ base: "calc(100% - 40px)", lg: "calc(100% - 345px)" }}
           >
             <Box
-              bg="#ffffff"
+              bg="white"
               width="100%"
               boxShadow={scrolled ? "md" : "none"}
               p={{ base: "10px", md: "10px 20px", lg: "15px 25px" }}
@@ -103,7 +103,7 @@ function Header({ varient, title }) {
                     height="40px"
                     width="40px"
                     borderRadius="full"
-                    bg="#FFFFFF"
+                    bg="white"
                     justifyContent="center"
                     alignItems="center"
                     cursor="pointer"
@@ -119,7 +119,7 @@ function Header({ varient, title }) {
                     height="40px"
                     width="40px"
                     borderRadius="full"
-                    bg="#FFFFFF"
+                    bg="white"
                     justifyContent="center"
                     alignItems="center"
                     cursor="pointer"

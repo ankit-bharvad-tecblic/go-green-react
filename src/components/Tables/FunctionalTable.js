@@ -71,7 +71,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
   };
 
   return (
-    <Box border="0px" p="30px" borderRadius="15px" background="#ffffff">
+    <Box border="0px" p="30px" borderRadius="15px" background="white">
       <Flex justifyContent="space-between" alignItems="center">
         <Flex gap="5px" alignItems="center">
           <Select
@@ -92,26 +92,27 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
               </option>
             ))}
           </Select>
-          <Text color="#ADB8CC" fontSize="sm" flex="none">
+          <Text color="gray.600" fontSize="sm" flex="none">
             ITEM PER PAGE
           </Text>
         </Flex>
         <Flex gap="20px" flex="none">
           <Button
-            leftIcon={<BsPlusCircle bg="#ADB8CC" />}
-            colorScheme="gray.300"
+            leftIcon={<BsPlusCircle bg="gray.600" />}
+            borderColor="border_light.100"
             variant="outline"
             p="0px 40px"
             height="43px"
             borderRadius="15px"
-            color="#ADB8CC"
+            color="gray.600"
           >
             Add Details
           </Button>
           <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex
-                border="1px solid #ADB8CC"
+                border="1px"
+                borderColor="border_light.100"
                 gap="5px"
                 width="200px"
                 alignItems="center"
@@ -120,10 +121,10 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                 padding="10px 10px"
                 cursor="pointer"
               >
-                <Text fontSize="14px" color="#ADB8CC">
+                <Text fontSize="14px" color="gray.600">
                   Employee id, Username{" "}
                 </Text>
-                <AiOutlineCloseCircle color="#ADB8CC" />
+                <AiOutlineCloseCircle color="gray.600" />
               </Flex>
             </PopoverTrigger>
             <PopoverContent>
@@ -131,7 +132,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
               <PopoverHeader fontSize="sm" pl="35px">
                 Filter
               </PopoverHeader>
-              <PopoverBody bg="#FAFFEE">
+              <PopoverBody bg="primary.100">
                 {filterFields.map((field, index) => {
                   const keyName = Object.keys(field)[0];
                   return (
@@ -140,7 +141,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                       justifyContent="space-between"
                       p="12px 0px"
                       alignItems="center"
-                      bg="#FAFFEE"
+                      bg="primary.100"
                     >
                       <Text fontSize="sm"> {keyName} </Text>
                       <Checkbox
@@ -210,7 +211,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                         header.column.getIsSorted() ? (
                           header.column.getIsSorted() === "desc" ? (
                             <Flex>
-                              <BsArrowDown color="#000000" fontSize="14px" />
+                              <BsArrowDown color="black" fontSize="14px" />
                               <Box ml="-7px">
                                 <BsArrowUp color="#B6B7BC" fontSize="14px" />
                               </Box>
@@ -220,7 +221,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                             <Flex>
                               <BsArrowDown color="#B6B7BC" fontSize="14px" />
                               <Box ml="-7px">
-                                <BsArrowUp color="#000000" fontSize="14px" />
+                                <BsArrowUp color="black" fontSize="14px" />
                               </Box>
                             </Flex>
                           )
@@ -258,7 +259,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
             <Tr>
               <Td colSpan={6}>
                 <Box width="full">
-                  <Text textAlign="center" color="#A6CE39">
+                  <Text textAlign="center" color="primary.700">
                     Not Found
                   </Text>
                 </Box>
@@ -282,7 +283,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
                     {cell.column.id === "UPDATE" ? (
                       <Flex justifyContent="center">
                         <BiEditAlt
-                          color="#A6CE39"
+                          color="primary.700"
                           fontSize="26px"
                           cursor="pointer"
                         />
@@ -317,7 +318,12 @@ function FunctionalTable({ setFilter, filterFields, columns, data }) {
         >
           {"<"}
         </Button>
-        <Button p="5px" color="#F08F1A" bg="#FEF4E8" borderRadius="4px">
+        <Button
+          p="5px"
+          color="secondary.500"
+          bg="secondary.100"
+          borderRadius="4px"
+        >
           1
         </Button>
         <Button isDisabled="true" p="5px" variant="ghost">

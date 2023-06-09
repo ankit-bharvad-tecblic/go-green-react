@@ -28,7 +28,7 @@ function Sidebar(props) {
   return (
     <Box
       w="250px"
-      bg="#FFFFFF"
+      bg="white"
       borderRadius="16px"
       p="10px 12px"
       minH={{
