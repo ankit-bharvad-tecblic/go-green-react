@@ -11,6 +11,7 @@ import AreaMaster from "../view/AreaMaster/AreaMaster";
 const isAuth = true;
 const headerType = "absolute";
 
+
 const GuestRoute = ({ children }) => {
   return isAuth ? (
     <Navigate to={{ pathname: "/dashboard", state: { from: "" } }} />
@@ -29,7 +30,7 @@ const ProtectedRoutes = ({ children }) => {
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     element: (
       <GuestRoute>
         <Suspense fallback={<div>Loading...</div>}>

@@ -8,11 +8,8 @@ import { BrowserRouter } from "react-router-dom";
 // import theme from "./theme/theme";
 import { globalStyles } from "./theme/styles";
 import theme from "./theme/theme";
-
-const config = {
-  initialColorMode: "dark",
-  useSystemColorMode: false,
-};
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 
 const theme_setup = extendTheme({
   ...theme,
@@ -21,11 +18,13 @@ const theme_setup = extendTheme({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ChakraProvider theme={theme_setup}>
-        <App />
-      </ChakraProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ChakraProvider theme={theme_setup}>
+          <App />
+        </ChakraProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 

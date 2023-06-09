@@ -7,6 +7,13 @@
     "@chakra-ui/react": "^2.7.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@reduxjs/toolkit": "^1.9.3",
+    "react-redux": "^8.0.5",
+    "react-select": "^5.7.2",
+    "react-hook-form": "^7.43.5",
+    "use-debounce": "^9.0.3",
+    "yup": "^1.1.1",
+    "moment": "^2.29.4",
     "@tanstack/react-table": "^8.9.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -23,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "clean": "rm -rf node_modules/ && rm -rf package-lock.json yarn.lock && yarn && yarn start"
   },
   "eslintConfig": {
     "extends": [

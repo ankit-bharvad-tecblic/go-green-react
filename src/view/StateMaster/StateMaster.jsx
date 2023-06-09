@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useState } from "react";
+import { useGetStateMasterMutation } from "../../features/master-api-slice";
 
 const StateMaster = () => {
   const columnHelper = createColumnHelper();
@@ -8,6 +9,11 @@ const StateMaster = () => {
     filter: [],
     search: "",
   });
+
+  const [
+    getStateMaster,
+    { error: getStateMasterApiErr, isLoading: getStateMasterApiIsLoading },
+  ] = useGetStateMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
@@ -61,21 +67,9 @@ const StateMaster = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://192.168.0.124:8000/warehouse/state?${paramString}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const result = await response.json();
-      console.log("Success:", result);
-      setData(result?.results || []);
+      const response = await getStateMaster(paramString).unwrap();
+      console.log("Success:", response);
+      setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -107,6 +101,7 @@ const StateMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data}
+        loading={getStateMasterApiIsLoading}
       />
     </div>
   );
