@@ -1,5 +1,7 @@
 import { HomeIcon } from "../components/Icons/Icons";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
+import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
+import BankMaster from "../view/BankMaster/BankMaster";
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
@@ -17,6 +19,18 @@ const SidebarList = [
     name: "Zone Master",
     icon: <HomeIcon color="inherit" />,
     component: ZoneMaster,
+  },
+  {
+    path: "/bank-master",
+    name: "Bank Master",
+    icon: <HomeIcon color="inherit" />,
+    component: BankMaster,
+  },
+  {
+    path: "/bank-branch-master",
+    name: "Bank Branch Master",
+    icon: <HomeIcon color="inherit" />,
+    component: BankBranchMaster,
   },
   {
     path: "/state-master",

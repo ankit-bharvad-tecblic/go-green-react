@@ -9,5 +9,7 @@ export const API = {
     STATE_MASTER: "/warehouse/state/",
     ZONE_MASTER: "/warehouse/zone/",
     AREA_MASTER: "/warehouse/area/",
+    BANK_MASTER: "/business_flow/bank",
+    BANK_BRANCH_MASTER: "/business_flow/bank_branch",
   },
 };
