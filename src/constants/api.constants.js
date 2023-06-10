@@ -9,5 +9,8 @@ export const API = {
     STATE_MASTER: "/warehouse/state/",
     ZONE_MASTER: "/warehouse/zone/",
     AREA_MASTER: "/warehouse/area/",
+    COMMODITY_TYPE_MASTER: "/warehouse/commodity_type",
+    COMMODITY_GRADE: "/warehouse/commodity_grade",
+    COMMODITY_MASTER: "/warehouse/commodity",
   },
 };
