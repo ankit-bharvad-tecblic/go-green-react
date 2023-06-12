@@ -8,6 +8,9 @@ const AreaMaster = () => {
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
+    page: 1,
+    totalPage: 1,
+    limit: 10,
   });
 
   const [
@@ -57,7 +60,7 @@ const AreaMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    if (filter.filter.length || filter.search || filter.limit) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -75,6 +78,12 @@ const AreaMaster = () => {
 
       console.log("Success:", response);
       setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old.limit),
+      }));
+
+      console.log(Math.ceil(response?.total / filter.limit), "length");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -82,7 +91,7 @@ const AreaMaster = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [filter.limit, filter.page]);
 
   useMemo(() => {
     if (filter.search !== null) {
@@ -93,6 +102,7 @@ const AreaMaster = () => {
   return (
     <div>
       <FunctionalTable
+        filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}

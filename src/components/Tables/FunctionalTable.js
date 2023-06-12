@@ -35,7 +35,14 @@ import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 
-function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
+function FunctionalTable({
+  filter,
+  setFilter,
+  filterFields,
+  columns,
+  data,
+  loading,
+}) {
   const [sorting, setSorting] = React.useState([]);
   const table = useReactTable({
     columns,
@@ -96,9 +103,12 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           alignItems="center"
         >
           <Select
-            value={table.getState().pagination.pageSize}
+            value={filter.limit}
             onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
+              setFilter((old) => ({
+                ...old,
+                limit: Number(e.target.value),
+              }));
             }}
             size="xs"
             borderRadius="8px"
@@ -357,46 +367,85 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           </Tbody>
         </Table>
       </Box>
-
-      <Flex justifyContent="end" mt="45px" gap="3px">
+      {console.log(loading)}
+      <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
         <Button
           variant="ghost"
           p="5px"
-          onClick={() => table.previousPage()}
-          isDisabled={!table.getCanPreviousPage()}
+          onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
+          isDisabled={filter.page === 1 || loading}
+        >
+          {"<<"}
+        </Button>
+        <Button
+          variant="ghost"
+          p="5px"
+          onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
+          isDisabled={filter.page === 1 || loading}
         >
           {"<"}
         </Button>
+        <Text fontSize="18px"> Page </Text>
         <Button
           p="5px"
           color="secondary.500"
           bg="secondary.100"
           borderRadius="4px"
         >
-          1
+          {filter.page}
         </Button>
-        <Button isDisabled="true" p="5px" variant="ghost">
-          2
-        </Button>
-        <Button isDisabled="true" p="5px" variant="ghost">
-          3
-        </Button>
-        <Button isDisabled="true" p="5px" variant="ghost">
-          4
-        </Button>
-        <Button isDisabled="true" p="5px" variant="ghost">
-          5
-        </Button>
+        <Text fontSize="18px"> of {filter.totalPage} </Text>
         <Button
           variant="ghost"
-          onClick={() => table.nextPage()}
-          isDisabled={
-            !table.getCanNextPage() ||
-            table.getState().pagination.pageIndex + 1 === table.getPageCount()
-          }
+          onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
+          isDisabled={filter.page === filter.totalPage || loading}
         >
           {">"}
         </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setFilter((old) => ({ ...old, page: old.totalPage }))}
+          isDisabled={filter.page === filter.totalPage || loading}
+        >
+          {">>"}
+        </Button>
+        <Text fontSize="18px" borderLeft="1px" pl="10px">
+          {" "}
+          Go to page{" "}
+        </Text>
+        {/* <Input
+          type="number"
+          value={filter.page}
+          onChange={(e) => {
+            if (
+              Number(e.target.value) <= filter.totalPage &&
+              Number(e.target.value) > 0
+            ) {
+              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+            }
+          }}
+          disabled={loading}
+          width="70px"
+          ml="10px"
+        /> */}
+        <Select
+          disabled={loading}
+          width="70px"
+          ml="10px"
+          value={filter.page}
+          onChange={(e) => {
+            if (
+              Number(e.target.value) <= filter.totalPage &&
+              Number(e.target.value) > 0
+            ) {
+              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+            }
+          }}
+        >
+          {Array.from(Array(filter.totalPage)).map((item, index) => (
+            <option value={index+1}> {index +1} </option>
+          ))}
+        </Select>
       </Flex>
     </Box>
   );

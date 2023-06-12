@@ -8,6 +8,9 @@ const ZoneMaster = () => {
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
+    page: 1,
+    totalPage: 1,
+    page_length: 10,
   });
 
   const [
@@ -60,7 +63,13 @@ const ZoneMaster = () => {
     try {
       const response = await getZoneMaster(paramString).unwrap();
       console.log("Success:", response);
+
+      console.log(Math.ceil(response?.total / filter.page_length), "length");
       setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old.page_length),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -85,7 +94,9 @@ const ZoneMaster = () => {
 
   return (
     <div>
+      {console.log(data, "data")}
       <FunctionalTable
+        filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
