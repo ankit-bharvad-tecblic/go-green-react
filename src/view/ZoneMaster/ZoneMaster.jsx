@@ -1,13 +1,13 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetZoneMasterMutation } from "../../features/master-api-slice";
 
 const ZoneMaster = () => {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
-    search: "",
+    search: null,
   });
 
   const [
@@ -37,11 +37,6 @@ const ZoneMaster = () => {
   ];
 
   const [data, setData] = useState([]);
-
-  const params = {
-    filter: [],
-    search: "",
-  };
 
   let paramString = "";
 
@@ -75,21 +70,11 @@ const ZoneMaster = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log("filter =-==> ", filter);
-
-    handleSearch();
-  }, [filter.search]);
-
-  let timeoutId;
-
-  const handleSearch = () => {
-    clearTimeout(timeoutId);
-    // Set a new timeout to call the API after 0.5 seconds
-    timeoutId = setTimeout(() => {
+  useMemo(() => {
+    if (filter.search !== null) {
       getData();
-    }, 800);
-  };
+    }
+  }, [filter.search]);
 
   const filterFields = [
     {

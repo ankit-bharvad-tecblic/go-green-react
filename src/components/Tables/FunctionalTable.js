@@ -288,7 +288,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           <Tbody>
             {!loading && table?.getRowModel().rows?.length === 0 && (
               <Tr>
-                <Td colSpan={6}>
+                <Td colSpan={columns.length}>
                   <Box width="full">
                     <Text textAlign="center" color="primary.700">
                       Not Found
@@ -300,7 +300,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
 
             {loading && (
               <Tr>
-                <Td colSpan={6}>
+                <Td colSpan={columns.length}>
                   <Box width="full">
                     <Text textAlign="center" color="primary.700">
                       Loading...

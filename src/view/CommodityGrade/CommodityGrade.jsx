@@ -1,13 +1,13 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetCommodityGradeMutation } from "../../features/master-api-slice";
 
 const CommodityGrade = () => {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
-    search: "",
+    search: null,
   });
 
   const [
@@ -84,20 +84,12 @@ const CommodityGrade = () => {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log("filter =-==> ", filter);
-    handleSearch();
+  useMemo(() => {
+    if (filter.search !== null) {
+      getData();
+    }
   }, [filter.search]);
 
-  let timeoutId;
-
-  const handleSearch = () => {
-    clearTimeout(timeoutId);
-    // Set a new timeout to call the API after 0.5 seconds
-    timeoutId = setTimeout(() => {
-      getData();
-    }, 800);
-  };
   return (
     <>
       <div>

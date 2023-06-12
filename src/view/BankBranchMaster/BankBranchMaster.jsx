@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ function BankBranchMaster() {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
-    search: "",
+    search: null,
   });
 
   const [
@@ -96,21 +96,11 @@ function BankBranchMaster() {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log("filter =-==> ", filter);
-
-    handleSearch();
-  }, [filter.search]);
-
-  let timeoutId;
-
-  const handleSearch = () => {
-    clearTimeout(timeoutId);
-    // Set a new timeout to call the API after 0.5 seconds
-    timeoutId = setTimeout(() => {
+  useMemo(() => {
+    if (filter.search !== null) {
       getData();
-    }, 800);
-  };
+    }
+  }, [filter.search]);
 
   const filterFields = [
     {

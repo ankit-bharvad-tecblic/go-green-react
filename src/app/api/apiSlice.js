@@ -9,14 +9,9 @@ const baseQuery = fetchBaseQuery({
   mode: "cors",
 
   prepareHeaders: (headers, { getState }) => {
-    let api_token = {
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2ODcxNjM5NTEsImlhdCI6MTY4NjI5OTk1MX0.bbecFRlkfeYGywqGq4zJfSnLbisOhyGNFGnwmn8zOKA",
-    };
-    // const token = localStorageService.get("GG_ADMIN")?.token;
-    const token = api_token.token;
+    const token =
+      localStorageService.get("GG_ADMIN")?.userDetails?.token?.access;
 
-    console.log("api main slice log ---> ", token);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
