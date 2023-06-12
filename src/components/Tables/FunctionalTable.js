@@ -33,6 +33,7 @@ import {
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
+import { useDebouncedCallback } from "use-debounce";
 
 function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
   const [sorting, setSorting] = React.useState([]);
@@ -63,11 +64,21 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
     }));
   };
 
-  const onSearch = (e) => {
+  const debounced = useDebouncedCallback((value) => {
+    console.log("value ===> ", value);
+    //  setPagination((prev) => ({ ...prev, search: value }));
     setFilter((prev) => ({
       ...prev,
-      search: e.target.value,
+      search: value,
     }));
+  }, 500);
+
+  const onSearch = (e) => {
+    debounced(e.target.value);
+    // setFilter((prev) => ({
+    //   ...prev,
+    //   search: e.target.value,
+    // }));
   };
 
   return (
@@ -97,7 +108,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
             fontWeight="semibold"
           >
             {[10, 20].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
+              <option key={`page_size${pageSize}`} value={pageSize}>
                 {pageSize}
               </option>
             ))}
@@ -268,81 +279,81 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                         )
                       ) : null}
                     </chakra.span> */}
-                  </Th>
-                );
-              })}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody>
-          {!loading && table?.getRowModel().rows?.length === 0 && (
-            <Tr>
-              <Td colSpan={6}>
-                <Box width="full">
-                  <Text textAlign="center" color="primary.700">
-                    Not Found
-                  </Text>
-                </Box>
-              </Td>
-            </Tr>
-          )}
-
-          {loading && (
-            <Tr>
-              <Td colSpan={6}>
-                <Box width="full">
-                  <Text textAlign="center" color="primary.700">
-                    Loading...
-                  </Text>
-                </Box>
-              </Td>
-            </Tr>
-          )}
-
-          {!loading &&
-            table?.getRowModel().rows?.map((row) => (
-              <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
-                  const meta = cell.column.columnDef.meta;
-                  return (
-                    <Td
-                      key={cell.id}
-                      isNumeric={meta?.isNumeric}
-                      p="20px 0px"
-                      textAlign="center"
-                      fontSize="14px"
-                      color="#718096"
-                    >
-                      {cell.column.id === "UPDATE" ? (
-                        <Flex justifyContent="center">
-                          <BiEditAlt
-                            color="primary.700"
-                            fontSize="26px"
-                            cursor="pointer"
-                          />
-                        </Flex>
-                      ) : cell.column.id === "active" ? (
-                        <Switch
-                          size="md"
-                          colorScheme="whatsapp"
-                          // isReadOnly
-                          // isChecked={flexRender(
-                          //   cell.column.columnDef.cell,
-                          //   cell.getContext()
-                          // )}
-                        />
-                      ) : (
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
-                      )}
-                    </Td>
+                    </Th>
                   );
                 })}
               </Tr>
             ))}
+          </Thead>
+          <Tbody>
+            {!loading && table?.getRowModel().rows?.length === 0 && (
+              <Tr>
+                <Td colSpan={6}>
+                  <Box width="full">
+                    <Text textAlign="center" color="primary.700">
+                      Not Found
+                    </Text>
+                  </Box>
+                </Td>
+              </Tr>
+            )}
+
+            {loading && (
+              <Tr>
+                <Td colSpan={6}>
+                  <Box width="full">
+                    <Text textAlign="center" color="primary.700">
+                      Loading...
+                    </Text>
+                  </Box>
+                </Td>
+              </Tr>
+            )}
+
+            {!loading &&
+              table?.getRowModel().rows?.map((row) => (
+                <Tr key={`'table_row_${row.id}`}>
+                  {row.getVisibleCells().map((cell) => {
+                    // see https://tanstack.com/table/v8/docs/api/core/column-def#meta to type this correctly
+                    const meta = cell.column.columnDef.meta;
+                    return (
+                      <Td
+                        key={`table_${cell.id}`}
+                        isNumeric={meta?.isNumeric}
+                        p="20px 0px"
+                        textAlign="center"
+                        fontSize="14px"
+                        color="#718096"
+                      >
+                        {cell.column.id === "UPDATE" ? (
+                          <Flex justifyContent="center">
+                            <BiEditAlt
+                              color="primary.700"
+                              fontSize="26px"
+                              cursor="pointer"
+                            />
+                          </Flex>
+                        ) : cell.column.id === "active" ? (
+                          <Switch
+                            size="md"
+                            colorScheme="whatsapp"
+                            // isReadOnly
+                            // isChecked={flexRender(
+                            //   cell.column.columnDef.cell,
+                            //   cell.getContext()
+                            // )}
+                          />
+                        ) : (
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
+                        )}
+                      </Td>
+                    );
+                  })}
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </Box>

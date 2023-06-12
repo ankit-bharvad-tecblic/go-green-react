@@ -1,12 +1,10 @@
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Heading,
-  Image,
   Input,
   Text,
   useToast,
@@ -15,8 +13,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Auth_Pages_IMG from "../../assets/Images/Authentication_Pages_IMG.svg";
-import logoImg from "../../components/Icons/logo.svg";
 import AuthLayout from "./AuthLayout";
 import { useForgotPasswordMutation } from "../../features/auth/loginApiSlice";
 
@@ -33,10 +29,8 @@ function ForgotPassword() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const [
-    forgotPassword,
-    { error: forgotPasswordApiErr, isLoading: forgotPasswordApiIsLoading },
-  ] = useForgotPasswordMutation();
+  const [forgotPassword, { isLoading: forgotPasswordApiIsLoading }] =
+    useForgotPasswordMutation();
 
   const onSubmit = async (data) => {
     try {
@@ -126,7 +120,8 @@ function ForgotPassword() {
                     borderColor="gray.300"
                     borderRadius={6}
                     color="gray.500"
-                    placeholder="debra.holt@example.com"
+                    _placeholder={{ color: "gray.600" }}
+                    placeholder="abc@example.com"
                     {...register("email")}
                   />
                   <FormErrorMessage>
