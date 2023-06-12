@@ -8,6 +8,9 @@ const CommodityGrade = () => {
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
+    page: 1,
+    totalPage: 1,
+    limit: 10,
   });
 
   const [
@@ -75,14 +78,17 @@ const CommodityGrade = () => {
 
       console.log("Success:", response);
       setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old.limit),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
   useEffect(() => {
     getData();
-  }, []);
+  }, [filter.limit, filter.page]);
 
   useMemo(() => {
     if (filter.search !== null) {
@@ -94,6 +100,7 @@ const CommodityGrade = () => {
     <>
       <div>
         <FunctionalTable
+          filter={filter}
           filterFields={filterFields}
           setFilter={setFilter}
           columns={columns}

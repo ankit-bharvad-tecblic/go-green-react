@@ -8,6 +8,9 @@ const CommodityType = () => {
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
+    page: 1,
+    totalPage: 1,
+    limit: 10,
   });
 
   const [
@@ -75,6 +78,10 @@ const CommodityType = () => {
 
       console.log("Success:", response);
       setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old?.limit),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -82,7 +89,7 @@ const CommodityType = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [filter.limit, filter.page]);
 
   useMemo(() => {
     if (filter.search !== null) {
@@ -94,6 +101,7 @@ const CommodityType = () => {
     <>
       <div>
         <FunctionalTable
+          filter={filter}
           filterFields={filterFields}
           setFilter={setFilter}
           columns={columns}

@@ -8,6 +8,9 @@ const DistrictMaster = () => {
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
+    page: 1,
+    totalPage: 1,
+    limit: 10,
   });
 
   const columns = [
@@ -90,6 +93,10 @@ const DistrictMaster = () => {
 
       console.log("Success:", response);
       setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old.limit),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -97,7 +104,7 @@ const DistrictMaster = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [filter.limit, filter.page]);
 
   useMemo(() => {
     if (filter.search !== null) {
@@ -108,6 +115,7 @@ const DistrictMaster = () => {
   return (
     <div>
       <FunctionalTable
+        filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}

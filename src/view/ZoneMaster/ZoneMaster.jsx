@@ -10,7 +10,7 @@ const ZoneMaster = () => {
     search: null,
     page: 1,
     totalPage: 1,
-    page_length: 10,
+    limit: 10,
   });
 
   const [
@@ -68,7 +68,7 @@ const ZoneMaster = () => {
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
-        totalPage: Math.ceil(response?.total / old.page_length),
+        totalPage: Math.ceil(response?.total / old.limit),
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -77,7 +77,7 @@ const ZoneMaster = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [filter.limit, filter.page]);
 
   useMemo(() => {
     if (filter.search !== null) {
