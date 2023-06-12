@@ -27,6 +27,20 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    getBankMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.BANK_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getBankBranchMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.BANK_BRANCH_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
     getAreaMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.AREA_MASTER,
@@ -63,6 +77,8 @@ export const {
   useGetStateMasterMutation,
   useGetZoneMasterMutation,
   useGetAreaMasterMutation,
+  useGetBankMasterMutation,
+  useGetBankBranchMasterMutation,
   useGetCommodityTypeMasterMutation,
   useGetCommodityGradeMutation,
   useGetCommodityMasterMutation,

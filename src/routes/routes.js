@@ -10,10 +10,15 @@ import AreaMaster from "../view/AreaMaster/AreaMaster";
 import { localStorageService } from "../services/localStorge.service";
 import ForgotPassword from "../view/Auth/ForgotPassword";
 import ChangePassword from "../view/Auth/ChangePassword";
+
+import BankMaster from "../view/BankMaster/BankMaster";
+import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
+
 import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
+
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -87,6 +92,30 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Zone Master"}>
             <ZoneMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/bank-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Master"}>
+            <BankMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/bank-branch-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Branch Master"}>
+            <BankBranchMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
