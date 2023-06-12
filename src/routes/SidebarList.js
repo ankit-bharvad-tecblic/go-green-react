@@ -1,7 +1,13 @@
 import { HomeIcon } from "../components/Icons/Icons";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
+
 import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
 import BankMaster from "../view/BankMaster/BankMaster";
+
+import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
+import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
+import CommodityType from "../view/CommodityTypeMaster/CommodityType";
+
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
@@ -49,6 +55,25 @@ const SidebarList = [
     name: "Area Master",
     icon: <HomeIcon color="inherit" />,
     component: AreaMaster,
+  },
+  {
+    path: "/commodity-master",
+    name: "Commodity master",
+    icon: <HomeIcon color="inherit" />,
+    component: CommodityMaster,
+  },
+
+  {
+    path: "/commodity-type",
+    name: "Commodity Type",
+    icon: <HomeIcon color="inherit" />,
+    component: CommodityType,
+  },
+  {
+    path: "/commodity-grade",
+    name: "Commodity grade",
+    icon: <HomeIcon color="inherit" />,
+    component: CommodityGrade,
   },
 ];
 

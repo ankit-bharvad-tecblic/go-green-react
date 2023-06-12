@@ -11,5 +11,8 @@ export const API = {
     AREA_MASTER: "/warehouse/area/",
     BANK_MASTER: "/business_flow/bank",
     BANK_BRANCH_MASTER: "/business_flow/bank_branch",
+    COMMODITY_TYPE_MASTER: "/warehouse/commodity_type",
+    COMMODITY_GRADE: "/warehouse/commodity_grade",
+    COMMODITY_MASTER: "/warehouse/commodity",
   },
 };

@@ -48,6 +48,27 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    getCommodityTypeMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.COMMODITY_TYPE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getCommodityGrade: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.COMMODITY_GRADE,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getCommodityMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.COMMODITY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
   }),
 });
 
@@ -58,4 +79,7 @@ export const {
   useGetAreaMasterMutation,
   useGetBankMasterMutation,
   useGetBankBranchMasterMutation,
+  useGetCommodityTypeMasterMutation,
+  useGetCommodityGradeMutation,
+  useGetCommodityMasterMutation,
 } = masterApiSlice;
