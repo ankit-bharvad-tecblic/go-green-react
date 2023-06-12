@@ -1,6 +1,11 @@
 /*eslint-disable*/
 // chakra imports
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Flex,
@@ -32,10 +37,10 @@ const SidebarContent = ({ logoText, routes }) => {
   };
   const createLinks = (routes) => {
     // Chakra Color Mode
-    const activeBg = useColorModeValue("white", "gray.700");
-    const inactiveBg = useColorModeValue("white", "gray.700");
-    const activeColor = useColorModeValue("gray.700", "white");
-    const inactiveColor = useColorModeValue("gray.400", "gray.400");
+    // const activeBg = useColorModeValue("white", "gray.700");
+    // const inactiveBg = useColorModeValue("white", "gray.700");
+    // const activeColor = useColorModeValue("gray.700", "white");
+    // const inactiveColor = useColorModeValue("gray.400", "gray.400");
 
     return routes.map((prop, key) => {
       if (prop.redirect) {
@@ -43,119 +48,163 @@ const SidebarContent = ({ logoText, routes }) => {
       }
       if (prop.category) {
         var st = {};
+        // const [hid, setHid] = useState(false);
         st[prop["state"]] = !state[prop.state];
         return (
           <div key={prop.name}>
-            <Text
-              color={activeColor}
-              fontWeight="bold"
-              mb={{
-                xl: "12px",
-              }}
-              mx="auto"
-              ps={{
-                sm: "10px",
-                xl: "16px",
-              }}
-              py="12px"
-            >
-              {prop.name}
-            </Text>
-            {createLinks(prop.views)}
+            <Accordion defaultIndex={[0]} allowMultiple>
+              <AccordionItem border={"none"}>
+                <AccordionButton p="0px">
+                  <Flex
+                    as="span"
+                    flex="1"
+                    textAlign="left"
+                    alignItems="center"
+                    gap="5px"
+                    fontWeight="bold"
+                    mx="auto"
+                    ps={{
+                      sm: "0px",
+                      xl: "0px",
+                    }}
+                    py="12px"
+                    cursor="pointer"
+                  >
+                    {typeof prop.icon === "string" ? (
+                      <Icon>{prop.icon}</Icon>
+                    ) : (
+                      <IconBox
+                        bg="white"
+                        color="gray.800"
+                        h="30px"
+                        w="30px"
+                        ms="12px"
+                      >
+                        {prop.icon}
+                      </IconBox>
+                    )}
+                    <Text color={"gray.800"}>{prop.name}</Text>
+                  </Flex>
+                  <AccordionIcon color={"gray.600"} fontSize="20px" />
+                </AccordionButton>
+                <AccordionPanel>{createLinks(prop.views)}</AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </div>
         );
       }
       return (
-        <NavLink to={prop.path} key={prop.name}>
-          {activeRoute(prop.path) === "active" ? (
-            <Button
-              boxSize="initial"
-              justifyContent="flex-start"
-              alignItems="center"
-              bg={"primary.700"}
-              mb={{
-                xl: "12px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
-              p="12px"
-              brorderRadius="15px"
-              _hover="none"
-              w="100%"
-              _active={{
-                bg: "primary.700",
-                transform: "none",
-                borderColor: "transparent",
-              }}
-              _focus={{
-                boxShadow: "none",
-              }}
-            >
-              <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
-                  <IconBox
-                    bg="white"
-                    color="primary.700"
-                    h="30px"
-                    w="30px"
-                    me="12px"
+        <Box ml={prop.secondaryNavbar ? "20px " : "0px"}>
+          <NavLink to={prop.path} key={prop.name}>
+            {activeRoute(prop.path) === "active" ? (
+              <Button
+                // boxSize="initial"
+                justifyContent="flex-start"
+                alignItems="center"
+                bg={"primary.700"}
+                mb={{
+                  xl: "12px",
+                }}
+                // ml={prop.secondaryNavbar ? "30px " : "0px"}
+                // maxWidth={prop.secondaryNavbar ? "190px" : "100%"}
+                // mx={{
+                //   xl: "auto",
+                // }}
+                p="12px"
+                brorderRadius="15px"
+                _hover="none"
+                w="100%"
+                _active={{
+                  bg: "primary.700",
+                  transform: "none",
+                  borderColor: "transparent",
+                }}
+                _focus={{
+                  boxShadow: "none",
+                }}
+              >
+                <Flex>
+                  {prop.secondaryNavbar ? (
+                    <></>
+                  ) : typeof prop.icon === "string" ? (
+                    <Icon>{prop.icon}</Icon>
+                  ) : (
+                    <IconBox
+                      bg="white"
+                      color="primary.700"
+                      h="30px"
+                      w="30px"
+                      me="12px"
+                    >
+                      {prop.icon}
+                    </IconBox>
+                  )}
+                  <Text
+                    color={"white"}
+                    my="auto"
+                    fontSize="14px"
+                    fontWeight="700"
                   >
-                    {prop.icon}
-                  </IconBox>
-                )}
-                <Text
-                  color={"white"}
-                  my="auto"
-                  fontSize="14px"
-                  fontWeight="700"
-                >
-                  {prop.name}
-                </Text>
-              </Flex>
-            </Button>
-          ) : (
-            <Button
-              boxSize="initial"
-              justifyContent="flex-start"
-              alignItems="center"
-              bg="transparent"
-              mb={{
-                xl: "12px",
-              }}
-              mx={{
-                xl: "auto",
-              }}
-              p="12px"
-              borderRadius="15px"
-              _hover="none"
-              w="100%"
-              _active={{
-                bg: "inherit",
-                transform: "none",
-                borderColor: "transparent",
-              }}
-              _focus={{
-                boxShadow: "none",
-              }}
-            >
-              <Flex>
-                {typeof prop.icon === "string" ? (
-                  <Icon>{prop.icon}</Icon>
-                ) : (
-                  <IconBox bg={""} color="#4FD1C5" h="30px" w="30px" me="12px">
-                    {prop.icon}
-                  </IconBox>
-                )}
-                <Text color={"#A0AEC0"} fontWeight="600" my="auto" fontSize="">
-                  {prop.name}
-                </Text>
-              </Flex>
-            </Button>
-          )}
-        </NavLink>
+                    {prop.name}
+                  </Text>
+                </Flex>
+              </Button>
+            ) : (
+              <Button
+                // boxSize="initial"
+                justifyContent="flex-start"
+                alignItems="center"
+                bg="transparent"
+                mb={{
+                  xl: "12px",
+                }}
+                // ml={prop.secondaryNavbar ? "30px " : "0px"}
+                // maxWidth={prop.secondaryNavbar ? "190px" : "100%"}
+                // mx={{
+                //   xl: "auto",
+                // }}
+                p="12px"
+                borderRadius="15px"
+                _hover="none"
+                w="100%"
+                _active={{
+                  bg: "inherit",
+                  transform: "none",
+                  borderColor: "transparent",
+                }}
+                _focus={{
+                  boxShadow: "none",
+                }}
+              >
+                <Flex>
+                  {prop.secondaryNavbar ? (
+                    <></>
+                  ) : typeof prop.icon === "string" ? (
+                    <Icon>{prop.icon}</Icon>
+                  ) : (
+                    <IconBox
+                      bg={""}
+                      color="gray.600"
+                      h="30px"
+                      w="30px"
+                      me="12px"
+                    >
+                      {prop.icon}
+                    </IconBox>
+                  )}
+                  <Text
+                    color={"#A0AEC0"}
+                    fontWeight="600"
+                    my="auto"
+                    fontSize="14px"
+                  >
+                    {prop.name}
+                  </Text>
+                </Flex>
+              </Button>
+            )}
+          </NavLink>
+        </Box>
       );
     });
   };

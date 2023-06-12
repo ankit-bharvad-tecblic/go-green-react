@@ -1,4 +1,4 @@
-import { HomeIcon } from "../components/Icons/Icons";
+import { CommunityIcon, HomeIcon } from "../components/Icons/Icons";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
 
 import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
@@ -17,63 +17,81 @@ const SidebarList = [
   {
     path: "/dashboard",
     name: "Dashboard",
+    secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: Dashboard,
   },
   {
-    path: "/zone-master",
-    name: "Zone Master",
-    icon: <HomeIcon color="inherit" />,
-    component: ZoneMaster,
+    name: "Commodity Master",
+    category: "commodity",
+    state: "pageCollapse",
+    icon: <CommunityIcon color="inherit" />,
+    views: [
+      {
+        path: "/commodity-master",
+        name: "Commodity master",
+        secondaryNavbar: true,
+        component: CommodityMaster,
+      },
+      {
+        path: "/commodity-type",
+        name: "Commodity Type",
+        secondaryNavbar: true,
+        component: CommodityType,
+      },
+      {
+        path: "/commodity-grade",
+        name: "Commodity grade",
+        secondaryNavbar: true,
+        component: CommodityGrade,
+      },
+    ],
+  },
+  {
+    name: "Location Master",
+    category: "location",
+    state: "pageCollapse",
+    icon: <CommunityIcon color="inherit" />,
+    views: [
+      {
+        path: "/state-master",
+        name: "State Master",
+        secondaryNavbar: true,
+        component: StateMaster,
+      },
+      {
+        path: "/zone-master",
+        name: "Zone Master",
+        secondaryNavbar: true,
+        component: ZoneMaster,
+      },
+      {
+        path: "/district-master",
+        name: "District Master",
+        secondaryNavbar: true,
+        component: DistrictMaster,
+      },
+      {
+        path: "/area-master",
+        name: "Area Master",
+        secondaryNavbar: true,
+        component: AreaMaster,
+      },
+    ],
   },
   {
     path: "/bank-master",
     name: "Bank Master",
+    secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: BankMaster,
   },
   {
     path: "/bank-branch-master",
     name: "Bank Branch Master",
+    secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: BankBranchMaster,
-  },
-  {
-    path: "/state-master",
-    name: "State Master",
-    icon: <HomeIcon color="inherit" />,
-    component: StateMaster,
-  },
-  {
-    path: "/district-master",
-    name: "District Master",
-    icon: <HomeIcon color="inherit" />,
-    component: DistrictMaster,
-  },
-  {
-    path: "/area-master",
-    name: "Area Master",
-    icon: <HomeIcon color="inherit" />,
-    component: AreaMaster,
-  },
-  {
-    path: "/commodity-master",
-    name: "Commodity master",
-    icon: <HomeIcon color="inherit" />,
-    component: CommodityMaster,
-  },
-
-  {
-    path: "/commodity-type",
-    name: "Commodity Type",
-    icon: <HomeIcon color="inherit" />,
-    component: CommodityType,
-  },
-  {
-    path: "/commodity-grade",
-    name: "Commodity grade",
-    icon: <HomeIcon color="inherit" />,
-    component: CommodityGrade,
   },
 ];
 
