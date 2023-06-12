@@ -17,8 +17,9 @@ import Sidebar from "../Sidebar";
 import SidebarList from "../../routes/SidebarList";
 import ProfileBtn from "./ProfileBtn";
 import NotificationBtn from "./NotificationBtn";
+import { CommunityIcon } from "../Icons/Icons";
 
-function Header({ variant, title }) {
+function Header({ variant, title, sidebarVisibility, setSidebarVisibility }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [scrolled, setScrolled] = useState(false);
@@ -42,6 +43,18 @@ function Header({ variant, title }) {
               <Box display={{ base: "block", lg: "none" }}>
                 <VscThreeBars fontSize="32px" onClick={onOpen} />
               </Box>
+              <Box
+                display={{ base: "none", lg: "block" }}
+                cursor="pointer"
+                mr={"10px"}
+              >
+                <VscThreeBars
+                  fontSize="32px"
+                  onClick={() => {
+                    setSidebarVisibility(!sidebarVisibility);
+                  }}
+                />
+              </Box>
               <Heading fontSize="32px" fontWeight="700">
                 {title}
               </Heading>
@@ -58,7 +71,13 @@ function Header({ variant, title }) {
             position={scrolled ? "fixed" : "absolute"}
             top={{ base: "20px", md: "30px", lg: "45px" }}
             zIndex="10"
-            width={{ base: "calc(100% - 40px)", lg: "calc(100% - 345px)" }}
+            width={{
+              base: "calc(100% - 40px)",
+              lg: sidebarVisibility
+                ? "calc(100% - 345px)"
+                : "calc(100% - 60px)",
+            }}
+            transition="width 0.5s ease-in-out"
           >
             <Box
               bg="white"
@@ -76,7 +95,23 @@ function Header({ variant, title }) {
                   <Box display={{ base: "block", lg: "none" }}>
                     <VscThreeBars fontSize="32px" onClick={onOpen} />
                   </Box>
-                  <Heading fontSize="32px" fontWeight="700">
+                  <Box
+                    display={{ base: "none", lg: "block" }}
+                    cursor="pointer"
+                    mr="10px"
+                  >
+                    <VscThreeBars
+                      fontSize="32px"
+                      onClick={() => {
+                        setSidebarVisibility(!sidebarVisibility);
+                      }}
+                    />
+                  </Box>
+                  <Heading
+                    fontSize="32px"
+                    fontWeight="700"
+                    textTransform="capitalize"
+                  >
                     {title}
                   </Heading>
                 </Flex>
