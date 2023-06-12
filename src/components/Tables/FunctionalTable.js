@@ -211,9 +211,10 @@ function FunctionalTable({
             <Input
               type="search"
               onChange={(e) => onSearch(e)}
-              placeholder="type here...."
-              color="#A0AEC0"
+              placeholder="Type here...."
+              _placeholder={{ color: "gray.600" }}
               fontWeight="600"
+              color="#A0AEC0"
               borderRadius="15px"
             />
           </InputGroup>
@@ -443,7 +444,7 @@ function FunctionalTable({
           }}
         >
           {Array.from(Array(filter.totalPage)).map((item, index) => (
-            <option value={index+1}> {index +1} </option>
+            <option value={index + 1}> {index + 1} </option>
           ))}
         </Select>
       </Flex>

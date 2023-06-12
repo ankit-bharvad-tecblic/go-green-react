@@ -24,14 +24,25 @@ export const globalStyles = {
       100: "#E2E8F0",
     },
   },
+  fonts: {
+    body: "'Poppins', sans-serif",
+    heading: "'Poppins', sans-serif",
+    mono: "'Poppins', monospace",
+  },
+  fontWeights: {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  },
   styles: {
     global: (props) => ({
       body: {
         bg: mode("gray.50", "gray.800")(props),
-        fontFamily: "'Roboto', sans-serif",
+        fontFamily: "'Poppins', sans-serif",
       },
       html: {
-        fontFamily: "'Roboto', sans-serif",
+        fontFamily: "'Poppins', sans-serif",
       },
     }),
   },
