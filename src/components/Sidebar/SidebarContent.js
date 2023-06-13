@@ -52,7 +52,7 @@ const SidebarContent = ({ logoText, routes }) => {
         st[prop["state"]] = !state[prop.state];
         return (
           <div key={prop.name}>
-            <Accordion defaultIndex={[0]} allowMultiple>
+            <Accordion allowMultiple>
               <AccordionItem border={"none"}>
                 <AccordionButton p="0px">
                   <Flex

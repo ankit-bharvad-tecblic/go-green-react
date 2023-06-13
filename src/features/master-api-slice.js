@@ -68,6 +68,10 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         method: "GET",
         params: params,
       }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
     }),
   }),
 });
@@ -83,3 +87,27 @@ export const {
   useGetCommodityGradeMutation,
   useGetCommodityMasterMutation,
 } = masterApiSlice;
+
+// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+// const api = createApi({
+//   reducerPath: 'api',
+//   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+//   endpoints: (builder) => ({
+//     getCommodityMaster: builder.query({
+//       query: (params) => ({
+//         url: API.DASHBOARD.COMMODITY_MASTER,
+//         method: 'GET',
+//         params: params,
+//       }),
+//       onError: (error, { dispatch }) => {
+//         if (error.status === 401) {
+//           // Unauthorized error handling logic
+//           // For example, redirect to login page or show an error message
+//         }
+//       },
+//     }),
+//   }),
+// });
+
+// export const { useGetCommodityMasterQuery } = api;
