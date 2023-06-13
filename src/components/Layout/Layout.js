@@ -18,7 +18,7 @@ function Layout({ variant, title, children }) {
         width={sidebarVisibility ? "250px" : 0}
         transition="width 0.5s ease-in-out"
         opacity={sidebarVisibility ? 1 : 0}
-        // display={{ base: "none", lg: sidebarVisibility ? "block" : "none" }}
+        display={{ base: "none", lg: "block" }}
       >
         <Box
           position="fixed"
