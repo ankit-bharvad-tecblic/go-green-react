@@ -18,7 +18,7 @@ import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
-
+import CustomInput from "../components/Elements/CustomInput";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -195,6 +195,19 @@ const routes = [
   },
 
   // for tasting purpose only
+  {
+    path: "/testing",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Area Master"}>
+            <CircleComponent />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
   {
     path: "/testing",
     element: (
