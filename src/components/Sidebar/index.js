@@ -41,7 +41,7 @@ function Sidebar(props) {
         md: "calc(100vh - 60px)",
         lg: "calc(100vh - 90px)",
       }}
-      overflow="auto"
+      overflow="hidden"
     >
       <Box>
         <SidebarContent

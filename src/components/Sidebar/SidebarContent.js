@@ -234,7 +234,16 @@ const SidebarContent = ({ logoText, routes }) => {
         <Separator></Separator>
       </Box>
       <Stack direction="column" mb="40px">
-        <Box>{links}</Box>
+        <Box
+          overflow="auto"
+          h={{
+            base: "calc(100vh - 190px)",
+            md: "calc(100vh - 210px)",
+            lg: "calc(100vh - 260px)",
+          }}
+        >
+          {links}
+        </Box>
       </Stack>
       {/* <SidebarHelp /> */}
     </>
