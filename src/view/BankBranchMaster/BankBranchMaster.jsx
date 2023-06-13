@@ -52,9 +52,8 @@ function BankBranchMaster() {
       header: "ADDRESS",
     }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
-
     columnHelper.accessor("", {
       header: "UPDATE",
     }),

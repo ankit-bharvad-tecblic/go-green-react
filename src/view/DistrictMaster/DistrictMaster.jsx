@@ -18,20 +18,36 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("id", {
-      cell: (info) => info.getValue(),
-      header: "DISTRICT ID",
-    }),
-    columnHelper.accessor("state.state_name", {
-      cell: (info) => info.getValue(),
-      header: "STATE NAME",
-    }),
     columnHelper.accessor("district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
+    columnHelper.accessor("state.zone.zone_name", {
+      cell: (info) => info.getValue(),
+      header: "ZONE NAME",
+    }),
+    columnHelper.accessor("state.state_code", {
+      cell: (info) => info.getValue(),
+      header: "STATE CODE",
+    }),
+    columnHelper.accessor("state.tin_no", {
+      cell: (info) => info.getValue(),
+      header: "TIN NO",
+    }),
+    columnHelper.accessor("state.gstn", {
+      cell: (info) => info.getValue(),
+      header: "GSTN",
+    }),
+    columnHelper.accessor("state.nav_code", {
+      cell: (info) => info.getValue(),
+      header: "NAV CODE",
+    }),
+    columnHelper.accessor("state.state_india_office_addr", {
+      cell: (info) => info.getValue(),
+      header: "OFFICE ADDRESS",
+    }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

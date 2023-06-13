@@ -23,16 +23,16 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("zone_type", {
+    columnHelper.accessor("zone_name", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: "ZONE NAME",
     }),
-    columnHelper.accessor("created_at", {
+    columnHelper.accessor("zone_name", {
       cell: (info) => info.getValue(),
-      header: "CREATED AT",
+      header: "STATE NAME",
     }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

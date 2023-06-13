@@ -36,18 +36,17 @@ function BankMaster() {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
-    // columnHelper.accessor("bank_type", {
-    //   cell: (info) => info.getValue(),
-    //   header: "DISTRICT NAME",
-    // }),
+    columnHelper.accessor("bank_type", {
+      cell: (info) => info.getValue(),
+      header: "DISTRICT NAME",
+    }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
       header: "BANK ADDRESS",
     }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
-
     columnHelper.accessor("", {
       header: "UPDATE",
     }),

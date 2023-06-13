@@ -36,7 +36,7 @@ const CommodityType = () => {
     }),
 
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

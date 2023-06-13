@@ -337,9 +337,9 @@ function FunctionalTable({
                         color="#718096"
                       >
                         {cell.column.id === "UPDATE" ? (
-                          <Flex justifyContent="center">
+                          <Flex justifyContent="center" color="primary.700">
                             <BiEditAlt
-                              color="primary.700"
+                              // color="#A6CE39"
                               fontSize="26px"
                               cursor="pointer"
                             />
@@ -368,7 +368,6 @@ function FunctionalTable({
           </Tbody>
         </Table>
       </Box>
-      {console.log(loading)}
       <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
         <Button
           variant="ghost"

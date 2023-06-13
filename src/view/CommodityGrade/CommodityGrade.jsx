@@ -34,9 +34,8 @@ const CommodityGrade = () => {
       cell: (info) => info.getValue(),
       header: "DESCRIPTION",
     }),
-
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

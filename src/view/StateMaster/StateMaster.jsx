@@ -23,20 +23,36 @@ const StateMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("id", {
-      cell: (info) => info.getValue(),
-      header: "STATE ID",
-    }),
-    columnHelper.accessor("zone.zone_type", {
-      cell: (info) => info.getValue(),
-      header: "ZONE TYPE",
-    }),
     columnHelper.accessor("state_name", {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
+    columnHelper.accessor("state_name", {
+      cell: (info) => info.getValue(),
+      header: "REGION NAME",
+    }),
+    columnHelper.accessor("state_code", {
+      cell: (info) => info.getValue(),
+      header: "STATE CODE",
+    }),
+    columnHelper.accessor("tin_no", {
+      cell: (info) => info.getValue(),
+      header: "TIN NO",
+    }),
+    columnHelper.accessor("gstn", {
+      cell: (info) => info.getValue(),
+      header: "GSTN",
+    }),
+    columnHelper.accessor("nav_code", {
+      cell: (info) => info.getValue(),
+      header: "NAV CODE",
+    }),
+    columnHelper.accessor("state_india_office_addr", {
+      cell: (info) => info.getValue(),
+      header: "OFFICE ADDRESS",
+    }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

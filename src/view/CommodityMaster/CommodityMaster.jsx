@@ -28,15 +28,15 @@ const CommodityMaster = () => {
     }),
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
-      header: "Commodity id",
+      header: "id",
     }),
     columnHelper.accessor("commodity_name", {
       cell: (info) => info.getValue(),
-      header: "Commodity name",
+      header: "name",
     }),
     columnHelper.accessor("commodity_type.id", {
       cell: (info) => info.getValue(),
-      header: "Commodity type id",
+      header: "type id",
     }),
     columnHelper.accessor("maximum_bag_size", {
       cell: (info) => info.getValue(),
@@ -50,9 +50,8 @@ const CommodityMaster = () => {
       cell: (info) => info.getValue(),
       header: "Rent on bag M/T",
     }),
-
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",

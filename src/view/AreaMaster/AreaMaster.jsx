@@ -23,20 +23,16 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("id", {
+    columnHelper.accessor("cluster_name", {
       cell: (info) => info.getValue(),
-      header: "AREA ID",
+      header: "AREA NAME",
     }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("cluster_name", {
-      cell: (info) => info.getValue(),
-      header: "AREA NAME",
-    }),
     columnHelper.accessor("active", {
-      header: "ACTIVE/DEACTIVE",
+      header: "ACTIVE",
     }),
     columnHelper.accessor("", {
       header: "UPDATE",
