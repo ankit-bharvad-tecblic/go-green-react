@@ -2,6 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
+import HandleError from "../../services/handleError";
 
 const DistrictMaster = () => {
   const columnHelper = createColumnHelper();
@@ -93,18 +94,6 @@ const DistrictMaster = () => {
     }
 
     try {
-      // const response = await fetch(
-      //   `http://192.168.0.124:8000/warehouse/district?${paramString}`,
-      //   {
-      //     method: "GET",
-      //     headers: {
-      //       Authorization:
-      //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODY5OTQ5NzEsImlhdCI6MTY4NjEzMDk3MX0.0mxvqjEEnPiopC_8c8PxLlAoiXMAt5__-OW55wHtaBM",
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-
       const response = await getDistrictMaster(paramString).unwrap();
 
       console.log("Success:", response);
@@ -115,6 +104,7 @@ const DistrictMaster = () => {
       }));
     } catch (error) {
       console.error("Error:", error);
+      HandleError({ msg: error?.data?.detail }, error.status);
     }
   };
 

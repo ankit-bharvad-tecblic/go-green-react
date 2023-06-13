@@ -34,6 +34,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
+import Loader from "../Loader";
 
 function FunctionalTable({
   filter,
@@ -312,10 +313,8 @@ function FunctionalTable({
             {loading && (
               <Tr>
                 <Td colSpan={columns.length}>
-                  <Box width="full">
-                    <Text textAlign="center" color="primary.700">
-                      Loading...
-                    </Text>
+                  <Box display={"flex"} justifyContent={"center"} width="full">
+                    <Loader w="50px" h="50px" />
                   </Box>
                 </Td>
               </Tr>

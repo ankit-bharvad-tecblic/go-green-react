@@ -13,6 +13,7 @@ import {
   InputRightElement,
   InputGroup,
   useToast,
+  InputLeftElement,
   Stack,
   Heading,
 } from "@chakra-ui/react";
@@ -28,6 +29,9 @@ import * as yup from "yup";
 import { useLoginMutation } from "../../features/auth/loginApiSlice";
 import { localStorageService } from "../../services/localStorge.service";
 import { Link } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
+
+import { HiOutlineUser } from "react-icons/hi";
 // import { motion } from "framer-motion";
 // import animation from "../../theme/animation";
 
@@ -100,6 +104,21 @@ function Login() {
     } finally {
       // setIsSubmitting(false); // Set submission state back to false after API call completes fs df
     }
+  };
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
   };
 
   return (
@@ -208,6 +227,47 @@ function Login() {
               Sign In
             </Button>
           </form>
+
+          {/* <FormControl>
+            <FormLabel
+              transform={
+                isFocused || inputValue
+                  ? "translateY(-80%) scale(0.95)"
+                  : "none"
+              }
+              transition="all 0.3s"
+              fontSize="lg"
+              color={isFocused ? "gray.500" : "gray.700"}
+              bg={isFocused ? "#f4f5fa" : "transparent"}
+              ml={2}
+              zIndex={1}
+              mt="2"
+              position="absolute"
+              pointerEvents="none"
+              px="1"
+              //bg="#f4f5fa"
+            >
+              Label
+            </FormLabel>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<HiOutlineUser color="gray.300" />}
+              />
+              <Input
+                type="number"
+                value={inputValue}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                borderRadius="md"
+                // boxShadow="md"
+                py={2}
+                //pl={10}
+                fontSize="lg"
+              />
+            </InputGroup>
+          </FormControl> */}
         </Box>
 
         <Box boxSize="2xl" p={{ base: "5" }}>

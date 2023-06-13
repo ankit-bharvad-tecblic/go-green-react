@@ -1,9 +1,9 @@
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { localStorageService } from "./localStorge.service";
 const defaultErrMsg = "Something went wrong !";
 
-const ThrowErrors = (obj, code) => {
-  console.log("ThrowErrors logs ---> ", obj, code);
+const HandleError = (obj, code) => {
+  console.log("handleError logs ---> ", obj, code);
   switch (code) {
     case 200:
       Ok(obj, code);
@@ -28,11 +28,11 @@ const ThrowErrors = (obj, code) => {
 };
 const Ok = (obj) => {
   console.log("okay test --> ", obj);
-  toast.success(obj?.msg || obj);
+  // toast.success(obj?.msg || obj);
 };
 
 const BadRequest = (obj) => {
-  toast.error(obj?.msg || obj);
+  //toast.error(obj?.msg || obj);
 };
 
 const unauthorized = () => {
@@ -40,8 +40,8 @@ const unauthorized = () => {
 };
 
 const redirectToLogin = () => {
-  localStorageService.remove("KE_ADMIN");
+  localStorageService.remove("GG_ADMIN");
   window.location.href = "/login";
 };
 
-export default ThrowErrors;
+export default HandleError;
