@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   Thead,
@@ -35,10 +35,12 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
+import { CSVLink } from "react-csv";
 
 function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
   const [sorting, setSorting] = React.useState([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const [csvHeaders, setCsvHeaders] = React.useState([]);
 
   const table = useReactTable({
     columns,
@@ -81,11 +83,13 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
 
   const onSearch = (e) => {
     debounced(e.target.value);
-    // setFilter((prev) => ({
-    //   ...prev,
-    //   search: e.target.value,
-    // }));
   };
+
+  useEffect(() => {
+    setCsvHeaders(() =>
+      columns.map((col) => ({ label: col.header, key: col.accessorKey }))
+    );
+  }, []);
 
   return (
     <Box border="0px" p="30px" borderRadius="15px" background="white">
@@ -157,6 +161,21 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           >
             Add Details
           </Button>
+
+          <Button
+            leftIcon={<BsPlusCircle bg="gray.600" />}
+            borderColor="border_light.100"
+            variant="outline"
+            p="0px 40px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <CSVLink data={data} headers={csvHeaders} filename="data.csv">
+              Export to CSV
+            </CSVLink>
+          </Button>
+
           <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex

@@ -300,7 +300,7 @@ function FunctionalTable({
           <Tbody>
             {!loading && table?.getRowModel().rows?.length === 0 && (
               <Tr>
-                <Td colSpan={columns.length}>
+                <Td colSpan={columns?.length}>
                   <Box width="full">
                     <Text textAlign="center" color="primary.700">
                       Not Found
@@ -312,7 +312,7 @@ function FunctionalTable({
 
             {loading && (
               <Tr>
-                <Td colSpan={columns.length}>
+                <Td colSpan={columns?.length}>
                   <Box display={"flex"} justifyContent={"center"} width="full">
                     <Loader w="50px" h="50px" />
                   </Box>
@@ -431,17 +431,17 @@ function FunctionalTable({
           disabled={loading}
           width="70px"
           ml="10px"
-          value={filter.page}
+          value={filter?.page}
           onChange={(e) => {
             if (
-              Number(e.target.value) <= filter.totalPage &&
+              Number(e.target.value) <= filter?.totalPage &&
               Number(e.target.value) > 0
             ) {
               setFilter((old) => ({ ...old, page: Number(e.target.value) }));
             }
           }}
         >
-          {Array.from(Array(filter.totalPage)).map((item, index) => (
+          {Array.from(Array(filter?.totalPage))?.map((item, index) => (
             <option value={index + 1}> {index + 1} </option>
           ))}
         </Select>

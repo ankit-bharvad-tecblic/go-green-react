@@ -1,6 +1,8 @@
 export const exportData = {
   convertToCSV: (data, columns) => {
-    const headers = columns.map((column) => column.name);
+    console.log("data ", data);
+    console.log("columns ", columns);
+    const headers = columns.map((column) => column.header);
     const csvRows = [];
 
     // Add header row
