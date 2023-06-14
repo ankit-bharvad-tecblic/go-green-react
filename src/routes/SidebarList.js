@@ -105,7 +105,7 @@ const SidebarList = [
   },
   {
     path: "/user-master",
-    name: "Bank Master",
+    name: "User Master",
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: UserMaster,

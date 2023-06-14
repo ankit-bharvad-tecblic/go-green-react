@@ -150,7 +150,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Bank Master"}>
+              <Layout variant={headerType} title={"Role Master"}>
                 <RoleMaster />
               </Layout>
             </Suspense>
@@ -162,7 +162,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Bank Master"}>
+              <Layout variant={headerType} title={"Role Page Assignment Master"}>
                 <RolePageAssignmentMaster />
               </Layout>
             </Suspense>
@@ -176,7 +176,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Master"}>
+          <Layout variant={headerType} title={"Page Master"}>
             <PageMaster />
           </Layout>
         </Suspense>
@@ -188,7 +188,7 @@ const routes = [
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Master"}>
+          <Layout variant={headerType} title={"User Master"}>
             <UserMaster />
           </Layout>
         </Suspense>

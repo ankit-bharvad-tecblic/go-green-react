@@ -17,6 +17,6 @@ export const API = {
     PAGE_MASTER:"/warehouse/page",
     ROLE_MASTER:"/warehouse/role",
     ROLE_PAGE_ASSIGNMENT_MASTER:"/warehouse/role",
-    USER_MASTER:"/warehouse/user",
+    USER_MASTER:"/user",
   },
 };

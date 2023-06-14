@@ -23,23 +23,23 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("email", {
       cell: (info) => info.getValue(),
       header: "USER NAME",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("first_name", {
       cell: (info) => info.getValue(),
       header: "FULL NAME",
     }),
-    columnHelper.accessor("state_code", {
+    columnHelper.accessor("phone", {
       cell: (info) => info.getValue(),
       header: "CONTACT NO",
     }),
-    columnHelper.accessor("tin_no", {
+    columnHelper.accessor("user_role", {
       cell: (info) => info.getValue(),
       header: "ROLE",
     }),
-    columnHelper.accessor("gstn", {
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
     }),
