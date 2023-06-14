@@ -14,5 +14,7 @@ export const API = {
     COMMODITY_TYPE_MASTER: "/warehouse/commodity_type",
     COMMODITY_GRADE: "/warehouse/commodity_grade",
     COMMODITY_MASTER: "/warehouse/commodity",
+    COMMODITY_VARIETY: "/warehouse/commodity_variety/",
+    WAREHOUSE_SUB_TYPE: "/warehouse/warehouse_sub_type/",
   },
 };

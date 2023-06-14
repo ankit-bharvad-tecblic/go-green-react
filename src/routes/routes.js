@@ -19,6 +19,8 @@ import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
 import NotFound from "../view/NotFound/NotFound";
+import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
+import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -201,7 +203,31 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "commodity-variety",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <CommodityVariety />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
     ],
+  },
+  {
+    path: "/warehouse-sub-type-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Warehouse sub type master"}>
+            <WareHouseSubType />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
   },
   // for tasting purpose only
   {

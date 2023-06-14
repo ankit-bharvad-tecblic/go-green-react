@@ -73,6 +73,28 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    getCommodityVariety: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.COMMODITY_VARIETY,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getWareHouseSubType: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.WAREHOUSE_SUB_TYPE,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -86,6 +108,8 @@ export const {
   useGetCommodityTypeMasterMutation,
   useGetCommodityGradeMutation,
   useGetCommodityMasterMutation,
+  useGetCommodityVarietyMutation,
+  useGetWareHouseSubTypeMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

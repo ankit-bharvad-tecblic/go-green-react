@@ -7,10 +7,12 @@ import BankMaster from "../view/BankMaster/BankMaster";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CommodityType from "../view/CommodityTypeMaster/CommodityType";
+import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
+import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 
 const SidebarList = [
@@ -44,6 +46,12 @@ const SidebarList = [
         name: "Commodity grade",
         secondaryNavbar: true,
         component: CommodityGrade,
+      },
+      {
+        path: "/commodity-master/commodity-variety",
+        name: "Commodity Variety",
+        secondaryNavbar: true,
+        component: CommodityVariety,
       },
     ],
   },
@@ -92,6 +100,13 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: BankBranchMaster,
+  },
+  {
+    path: "/warehouse-sub-type-master",
+    name: "Warehouse Sub Type Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: WareHouseSubType,
   },
 ];
 
