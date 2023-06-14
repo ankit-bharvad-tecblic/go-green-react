@@ -23,7 +23,9 @@ const CustomTextarea = ({ name, label, size }) => {
               placeholder={label}
               size={size}
               borderColor={error ? "red" : "primary.700"}
-              _hover={{ borderColor: error ? "red" : "primary.700" }}
+              _hover={{ borderColor: "primary.700" }}
+              _focus={{ boxShadow: "none" }}
+              _placeholder={{ color: "gray.300" }}
             />
           )}
         />

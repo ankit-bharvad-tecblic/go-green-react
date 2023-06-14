@@ -36,6 +36,7 @@ const CustomSelector = ({ name, label, options, rules }) => {
               styles={{
                 control: (base, state) => ({
                   ...base,
+                  backgroundColor: "#F0F0F0",
                   borderColor: error ? "red" : "#A6CE39",
                   "&:hover": {
                     borderColor: error ? "red" : "#A6CE39",

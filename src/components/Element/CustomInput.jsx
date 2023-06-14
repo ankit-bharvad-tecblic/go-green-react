@@ -26,7 +26,13 @@ const CustomInput = ({ name, label, color, size }) => {
             name={name}
             defaultValue={false}
             render={({ field }) => (
-              <Input {...field} label={label} size={size} colorScheme={color} />
+              <Input
+                {...field}
+                label={label}
+                size={size}
+                colorScheme={color}
+                _focus={{ boxShadow: "none", borderColor: "primary.700" }}
+              />
             )}
           />
         </Box>
