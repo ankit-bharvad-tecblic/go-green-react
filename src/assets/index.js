@@ -1,3 +1,3 @@
-import Logo from "./Images/logo.png";
+import Loader_img from "./Images/loader_img.svg";
 
-export { Logo };
+export { Loader_img };

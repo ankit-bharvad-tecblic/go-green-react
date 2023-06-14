@@ -68,10 +68,6 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         method: "GET",
         params: params,
       }),
-      onError: (error) => {
-        console.log("API Error:", error);
-        // Dispatch actions, show notification, etc.
-      },
     }),
   }),
 });
