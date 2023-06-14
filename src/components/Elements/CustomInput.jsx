@@ -24,10 +24,6 @@ function CustomInput({ name, placeholder, type }) {
               width={{ base: "90%" }}
               backgroundColor={"gray.200"}
               borderRadius={"2xl"}
-              _active={{
-                backgroundColor: "primary.200",
-                borderColor: "primary.700",
-              }}
               _placeholder={{ color: "gray.300" }}
               _hover={{
                 borderColor: "primary.700",
@@ -36,6 +32,7 @@ function CustomInput({ name, placeholder, type }) {
               _focus={{
                 borderColor: "primary.700",
                 backgroundColor: "primary.200",
+                boxShadow: "none",
               }}
               p={{ base: "6" }}
               fontWeight={{ base: "normal" }}

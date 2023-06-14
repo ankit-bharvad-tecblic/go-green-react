@@ -28,13 +28,16 @@ function CustomRadioButton({ name, options }) {
                   mx={"4"}
                   key={option.value}
                   value={option.value}
-                  _active={{
+                  // _selected={{ colorScheme: "primary.800" }}
+                  color="primary.800"
+                  borderColor="gray.100"
+                  colorScheme="white"
+                  _focus={{
                     color: "primary.800",
-                    backgroundColor: "primary.800",
+                    borderColor: "primary.800",
+                    backgroundColor: "none",
                   }}
-                  _selected={{ colorScheme: "primary.800" }}
-                  _focus={{ color: "primary.800" }}
-                  _hover={{ color: "primary.800" }}
+                  _hover={{ color: "primary.800", borderColor: "primary.800" }}
                 >
                   {option.label}
                 </Radio>
