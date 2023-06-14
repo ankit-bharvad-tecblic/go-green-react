@@ -35,6 +35,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
+import moment from "moment";
 
 function FunctionalTable({
   filter,
@@ -353,6 +354,18 @@ function FunctionalTable({
                             //   cell.getContext()
                             // )}
                           />
+                        ) : cell.column.id === "first_name" ? (
+                          <Text>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}{" "}
+                            {cell.row.original.last_name}{" "}
+                          </Text>
+                        ) : cell.column.id === "created_at" ? (
+                          <Text>
+                            {moment(cell.row.original.created_at).format("LL")}
+                          </Text>
                         ) : (
                           flexRender(
                             cell.column.columnDef.cell,

@@ -27,7 +27,7 @@ function Sidebar(props) {
   // SIDEBAR
   return (
     <Box
-      w="250px"
+      w="300px"
       bg="white"
       borderRadius="16px"
       p="10px 12px"

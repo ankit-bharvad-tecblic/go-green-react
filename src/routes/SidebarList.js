@@ -10,7 +10,11 @@ import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
+import PageMaster from "../view/PageMaster/PageMaster";
+import RoleMaster from "../view/Role Master/RoleMaster";
+import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
+import UserMaster from "../view/UserMaster/UserMaster";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 
 const SidebarList = [
@@ -78,6 +82,40 @@ const SidebarList = [
         component: AreaMaster,
       },
     ],
+  },
+  {
+    name: "Role Master",
+    category: "role",
+    state: "pageCollapse",
+    icon: <CommunityIcon color="inherit" />,
+    views: [
+      {
+        path: "/role-master/role-master",
+        name: "Role Master",
+        secondaryNavbar: true,
+        component: RoleMaster,
+      },
+      {
+        path: "/role-master/role-page-assignment-master",
+        name: "Role Page Assignment Master",
+        secondaryNavbar: true,
+        component: RolePageAssignmentMaster,
+      },
+    ],
+  },
+  {
+    path: "/user-master",
+    name: "User Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: UserMaster,
+  },
+  {
+    path: "/page-master",
+    name: "Page Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: PageMaster,
   },
   {
     path: "/bank-master",

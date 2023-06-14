@@ -11,7 +11,6 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
-
     getStateMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.STATE_MASTER,
@@ -19,7 +18,6 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
-
     getZoneMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ZONE_MASTER,
@@ -69,6 +67,50 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    getPageMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.PAGE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getRoleMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ROLE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getRolePageAssignmentMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ROLE_PAGE_ASSIGNMENT_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getUserMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.USER_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -82,6 +124,10 @@ export const {
   useGetCommodityTypeMasterMutation,
   useGetCommodityGradeMutation,
   useGetCommodityMasterMutation,
+  useGetPageMasterMutation,
+  useGetRoleMasterMutation,
+  useGetRolePageAssignmentMasterMutation,
+  useGetUserMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

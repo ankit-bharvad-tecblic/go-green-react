@@ -15,7 +15,7 @@ function Layout({ variant, title, children }) {
       <Box
         flex="none"
         // width="250px"
-        width={sidebarVisibility ? "250px" : 0}
+        width={sidebarVisibility ? "300px" : 0}
         transition="width 0.5s ease-in-out"
         opacity={sidebarVisibility ? 1 : 0}
         display={{ base: "none", lg: "block" }}
