@@ -14,6 +14,9 @@ import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import PageMaster from "../view/PageMaster/PageMaster";
 import RoleMaster from "../view/Role Master/RoleMaster";
 import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
+import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/EarthquakeZoneTypeMaster";
+import InsuranceCompanyMaster from "../view/InsuranceCompanyMaster/InsuranceCompanyMaster";
+import RegionMaster from "../view/RegionMaster/RegionMaster";
 import StateMaster from "../view/StateMaster/StateMaster";
 import UserMaster from "../view/UserMaster/UserMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
@@ -65,6 +68,12 @@ const SidebarList = [
     state: "pageCollapse",
     icon: <CommunityIcon color="inherit" />,
     views: [
+      {
+        path: "/location-master/region-master",
+        name: "Region Master",
+        secondaryNavbar: true,
+        component: RegionMaster,
+      },
       {
         path: "/location-master/state-master",
         name: "State Master",
@@ -145,6 +154,20 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: WareHouseSubType,
+  },
+  {
+    path: "/insurance-company-master",
+    name: "Insurance Company Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: InsuranceCompanyMaster,
+  },
+  {
+    path: "/earthquake-zone-type-master",
+    name: "Earthquake Zone Type Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: EarthquakeZoneTypeMaster,
   },
 ];
 

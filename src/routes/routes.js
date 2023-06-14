@@ -10,10 +10,8 @@ import AreaMaster from "../view/AreaMaster/AreaMaster";
 import { localStorageService } from "../services/localStorge.service";
 import ForgotPassword from "../view/Auth/ForgotPassword";
 import ChangePassword from "../view/Auth/ChangePassword";
-
 import BankMaster from "../view/BankMaster/BankMaster";
 import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
-
 import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
@@ -25,6 +23,9 @@ import RoleMaster from "../view/Role Master/RoleMaster";
 import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
 import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
+import RegionMaster from "../view/RegionMaster/RegionMaster";
+import InsuranceCompanyMaster from "../view/InsuranceCompanyMaster/InsuranceCompanyMaster";
+import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/EarthquakeZoneTypeMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -101,6 +102,18 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Zone Master"}>
                 <ZoneMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "region-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Region Master"}>
+                <RegionMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>
@@ -219,6 +232,32 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Bank Branch Master"}>
             <BankBranchMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/insurance-company-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Insurance Company Master"}>
+            <InsuranceCompanyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/earthquake-zone-type-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
+            <EarthquakeZoneTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

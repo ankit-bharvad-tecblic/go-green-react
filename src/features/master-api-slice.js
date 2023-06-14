@@ -39,6 +39,27 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    getEarthQuakeZoneTypeMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getInsuranceCompanyMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getRegionMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.REGION_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
     getAreaMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.AREA_MASTER,
@@ -152,6 +173,9 @@ export const {
   useGetUserMasterMutation,
   useGetCommodityVarietyMutation,
   useGetWareHouseSubTypeMutation,
+  useGetEarthQuakeZoneTypeMasterMutation,
+  useGetInsuranceCompanyMasterMutation,
+  useGetRegionMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
