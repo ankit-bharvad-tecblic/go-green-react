@@ -1,0 +1,143 @@
+import { createColumnHelper } from "@tanstack/react-table";
+import FunctionalTable from "../../components/Tables/FunctionalTable";
+import React, { useEffect, useMemo, useState } from "react";
+import { useGetCommodityVarietyMutation } from "../../features/master-api-slice";
+
+const CommodityVariety = () => {
+  const columnHelper = createColumnHelper();
+  const [filter, setFilter] = useState({
+    filter: [],
+    search: null,
+    page: 1,
+    totalPage: 1,
+    limit: 10,
+  });
+
+  const [
+    getCommodityVariety,
+    {
+      error: getCommodityVarietyApiErr,
+      isLoading: getCommodityVarietyApiIsLoading,
+    },
+  ] = useGetCommodityVarietyMutation();
+
+  const columns = [
+    columnHelper.accessor("id", {
+      cell: (info) => info.getValue(),
+      header: "SR. NO",
+    }),
+    columnHelper.accessor("commodity_variety", {
+      cell: (info) => info.getValue(),
+      header: "Commodity variety",
+    }),
+    columnHelper.accessor("description", {
+      cell: (info) => info.getValue(),
+      header: "description",
+    }),
+
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: "Created date",
+    }),
+    columnHelper.accessor("hsn_code", {
+      cell: (info) => info.getValue(),
+      header: "HSn code",
+    }),
+
+    columnHelper.accessor("fumigation_required", {
+      cell: (info) => info.getValue(),
+      header: "Fumigation required",
+    }),
+    columnHelper.accessor("lab_testing_required", {
+      cell: (info) => info.getValue(),
+      header: "lab testing required",
+    }),
+    columnHelper.accessor("active", {
+      header: "BLOCk",
+    }),
+    columnHelper.accessor("active", {
+      header: "ACTIVE",
+    }),
+    columnHelper.accessor("", {
+      header: "UPDATE",
+    }),
+  ];
+
+  const filterFields = [
+    {
+      "COMMODITY NAME": "commodity_name",
+      isActiveFilter: false,
+    },
+    {
+      "MINIMUM BAG SIZE": "minimum_bag_size",
+      isActiveFilter: false,
+    },
+    {
+      "MAXIMUM BAG SIZE": "maximum_bag_size",
+      isActiveFilter: false,
+    },
+    {
+      "RENT ON BAG M/T": "rent_on_bag",
+      isActiveFilter: false,
+    },
+  ];
+
+  const [data, setData] = useState([]);
+
+  let paramString = "";
+
+  const getData = async () => {
+    //params filter
+    if (filter.filter.length || filter.search) {
+      paramString = Object.entries(filter)
+        .map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return value
+              .map((item) => `${key}=${encodeURIComponent(item)}`)
+              .join("&");
+          }
+          return `${key}=${encodeURIComponent(value)}`;
+        })
+        .join("&");
+    }
+
+    try {
+      const response = await getCommodityVariety(paramString).unwrap();
+
+      console.log("Success:", response);
+      setData(response?.results || []);
+      setFilter((old) => ({
+        ...old,
+        totalPage: Math.ceil(response?.total / old.limit),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [filter.limit, filter.page]);
+
+  useMemo(() => {
+    if (filter.search !== null) {
+      getData();
+    }
+  }, [filter.search]);
+  return (
+    <>
+      <div>
+        <FunctionalTable
+          filter={filter}
+          filterFields={filterFields}
+          setFilter={setFilter}
+          columns={columns}
+          data={data}
+          loading={getCommodityVarietyApiIsLoading}
+        />
+      </div>
+    </>
+  );
+};
+
+export default CommodityVariety;

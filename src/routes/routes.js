@@ -23,6 +23,8 @@ import PageMaster from "../view/PageMaster/PageMaster";
 import UserMaster from "../view/UserMaster/UserMaster";
 import RoleMaster from "../view/Role Master/RoleMaster";
 import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
+import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
+import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -162,7 +164,10 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Role Page Assignment Master"}>
+              <Layout
+                variant={headerType}
+                title={"Role Page Assignment Master"}
+              >
                 <RolePageAssignmentMaster />
               </Layout>
             </Suspense>
@@ -258,7 +263,31 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "commodity-variety",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <CommodityVariety />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
     ],
+  },
+  {
+    path: "/warehouse-sub-type-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Warehouse sub type master"}>
+            <WareHouseSubType />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
   },
   // for tasting purpose only
   {
