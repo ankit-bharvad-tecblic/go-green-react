@@ -19,6 +19,10 @@ import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
 import NotFound from "../view/NotFound/NotFound";
+import PageMaster from "../view/PageMaster/PageMaster";
+import UserMaster from "../view/UserMaster/UserMaster";
+import RoleMaster from "../view/Role Master/RoleMaster";
+import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -137,6 +141,59 @@ const routes = [
         ),
       },
     ],
+  },
+  {
+    path: "/role-master",
+    children: [
+      {
+        path: "role-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Master"}>
+                <RoleMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "role-page-assignment-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Master"}>
+                <RolePageAssignmentMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/page-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Master"}>
+            <PageMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/user-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Master"}>
+            <UserMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
   },
   {
     path: "/bank-master",

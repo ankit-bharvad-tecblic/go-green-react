@@ -247,7 +247,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           </InputGroup>
         </Flex>
       </Flex>
-      <Box overflowX="auto">
+      <Box maxWidth={"100%"} width={"calc(100% - 60px)"} overflowX={"auto"}>
         <Table mt="15px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -265,17 +265,18 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                       fontSize="12px"
                       fontWeight="bold"
                       color="black"
-                      cursor="pointer"
-                    >
+                      cursor="pointer"                    >
                       <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        <Text>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </Text>
                         <Box onClick={header.column.getToggleSortingHandler()}>
                           {header.id !== "UPDATE" ? (
                             header.column.getIsSorted() ? (
@@ -490,7 +491,13 @@ function Filter({ column, table }) {
 
   const columnFilterValue = column.getFilterValue();
 
-  return typeof firstValue === "number" ? (
+  console.log(column);
+
+  return column.id === "id" ||
+    column.id === "state_tin_no" ||
+    column.id === "state_gstn" ? (
+    <Box height="30px" width="100px"></Box>
+  ) : typeof firstValue === "number" ? (
     <Flex gap="3px">
       <Input
         height={"30px"}
@@ -514,7 +521,7 @@ function Filter({ column, table }) {
         }
         px={"5px"}
         placeholder={`Max`}
-        className="border shadow rounded"
+        className="w-36 border shadow rounded"
       />
     </Flex>
   ) : (
@@ -524,7 +531,7 @@ function Filter({ column, table }) {
       value={columnFilterValue ?? ""}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="border shadow rounded"
     />
   );
 }
