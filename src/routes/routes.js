@@ -18,7 +18,7 @@ import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
-
+import NotFound from "../view/NotFound/NotFound";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -28,7 +28,7 @@ const headerType = "absolute";
 
 const GuestRoute = ({ children }) => {
   return isAuth ? (
-    <Navigate to={{ pathname: "/dashboard", state: { from: "" } }} />
+    <Navigate to={{ pathname: "/", state: { from: "" } }} />
   ) : (
     children
   );
@@ -74,7 +74,7 @@ const routes = [
     ),
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
@@ -86,16 +86,57 @@ const routes = [
     ),
   },
   {
-    path: "/zone-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Zone Master"}>
-            <ZoneMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
+    path: "/location-master",
+    children: [
+      {
+        path: "zone-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Zone Master"}>
+                <ZoneMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "state-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"State Master"}>
+                <StateMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "district-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"District Master"}>
+                <DistrictMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "area-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Area Master"}>
+                <AreaMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
   },
   {
     path: "/bank-master",
@@ -122,78 +163,46 @@ const routes = [
     ),
   },
   {
-    path: "/state-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"State Master"}>
-            <StateMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/district-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"District Master"}>
-            <DistrictMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/area-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Area Master"}>
-            <AreaMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
     path: "/commodity-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Commodity master"}>
-            <CommodityMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
+    children: [
+      {
+        path: "commodity-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity master"}>
+                <CommodityMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "commodity-type",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Type Master"}>
+                <CommodityType />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "commodity-grade",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Grade"}>
+                <CommodityGrade />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
   },
-  {
-    path: "/commodity-type",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Commodity Type Master"}>
-            <CommodityType />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/commodity-grade",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Commodity Grade"}>
-            <CommodityGrade />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-
   // for tasting purpose only
   {
     path: "/testing",
@@ -202,6 +211,18 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Area Master"}>
             <CircleComponent />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Not Found"}>
+            <NotFound />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

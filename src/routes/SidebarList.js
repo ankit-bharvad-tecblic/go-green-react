@@ -15,7 +15,7 @@ import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 
 const SidebarList = [
   {
-    path: "/dashboard",
+    path: "/",
     name: "Dashboard",
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
@@ -28,19 +28,19 @@ const SidebarList = [
     icon: <CommunityIcon color="inherit" />,
     views: [
       {
-        path: "/commodity-master",
+        path: "/commodity-master/commodity-master",
         name: "Commodity master",
         secondaryNavbar: true,
         component: CommodityMaster,
       },
       {
-        path: "/commodity-type",
+        path: "/commodity-master/commodity-type",
         name: "Commodity Type",
         secondaryNavbar: true,
         component: CommodityType,
       },
       {
-        path: "/commodity-grade",
+        path: "/commodity-master/commodity-grade",
         name: "Commodity grade",
         secondaryNavbar: true,
         component: CommodityGrade,
@@ -54,25 +54,25 @@ const SidebarList = [
     icon: <CommunityIcon color="inherit" />,
     views: [
       {
-        path: "/state-master",
+        path: "/location-master/state-master",
         name: "State Master",
         secondaryNavbar: true,
         component: StateMaster,
       },
       {
-        path: "/zone-master",
+        path: "/location-master/zone-master",
         name: "Zone Master",
         secondaryNavbar: true,
         component: ZoneMaster,
       },
       {
-        path: "/district-master",
+        path: "/location-master/district-master",
         name: "District Master",
         secondaryNavbar: true,
         component: DistrictMaster,
       },
       {
-        path: "/area-master",
+        path: "/location-master/area-master",
         name: "Area Master",
         secondaryNavbar: true,
         component: AreaMaster,

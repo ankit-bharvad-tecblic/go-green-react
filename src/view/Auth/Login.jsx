@@ -78,7 +78,7 @@ function Login() {
       console.log("login api res ---> ", res);
       if (res.status === 200 && res.data.is_superuser) {
         localStorageService.set("GG_ADMIN", { userDetails: res.data });
-        window.location.href = "/dashboard";
+        window.location.href = "/";
       } else {
         setErrorMsg({
           msg: "This account is not a superuser",
