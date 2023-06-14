@@ -23,15 +23,15 @@ const RoleMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("role_name", {
       cell: (info) => info.getValue(),
       header: "ROLE NAME",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("desdription", {
       cell: (info) => info.getValue(),
       header: "DESCRIPTION",
     }),
-    columnHelper.accessor("gstn", {
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
     }),

@@ -15,8 +15,8 @@ export const API = {
     COMMODITY_GRADE: "/warehouse/commodity_grade",
     COMMODITY_MASTER: "/warehouse/commodity",
     PAGE_MASTER:"/warehouse/page",
-    ROLE_MASTER:"/warehouse/role",
-    ROLE_PAGE_ASSIGNMENT_MASTER:"/warehouse/role",
+    ROLE_MASTER:"/role",
+    ROLE_PAGE_ASSIGNMENT_MASTER:"/role",
     USER_MASTER:"/user",
   },
 };
