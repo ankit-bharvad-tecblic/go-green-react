@@ -3,6 +3,7 @@ import FunctionalTable from "../../components/Tables/TestingTable";
 import React, { useEffect, useMemo, useState } from "react";
 import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
 import HandleError from "../../services/handleError";
+import AccessWebcamWithLocation from "../../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
 
 const Dashboard = () => {
   const columnHelper = createColumnHelper();
@@ -128,6 +129,8 @@ const Dashboard = () => {
         data={data}
         loading={getDistrictMasterApiIsLoading}
       />
+
+      <AccessWebcamWithLocation />
     </div>
   );
 };
