@@ -11,6 +11,8 @@ import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
+import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
+
 import StateMaster from "../view/StateMaster/StateMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
@@ -107,6 +109,13 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: WareHouseSubType,
+  },
+  {
+    path: "/security-agency-master",
+    name: "Security Agency Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: SecurityAgencyMaster,
   },
 ];
 

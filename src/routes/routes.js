@@ -22,6 +22,8 @@ import NotFound from "../view/NotFound/NotFound";
 import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 
+import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
+
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
 /// let isAuth = localStorageService.get("GG_ADMIN");
@@ -224,6 +226,18 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Warehouse sub type master"}>
             <WareHouseSubType />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/security-agency-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Agency Master"}>
+            <SecurityAgencyMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
