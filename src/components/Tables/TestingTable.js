@@ -265,7 +265,8 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                       fontSize="12px"
                       fontWeight="bold"
                       color="black"
-                      cursor="pointer"                    >
+                      cursor="pointer"
+                    >
                       <Flex
                         gap="7px"
                         justifyContent="center"
@@ -491,7 +492,7 @@ function Filter({ column, table }) {
 
   const columnFilterValue = column.getFilterValue();
 
-  console.log(column);
+  // console.log(column);
 
   return column.id === "id" ||
     column.id === "state_tin_no" ||
