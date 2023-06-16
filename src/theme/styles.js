@@ -24,6 +24,9 @@ export const globalStyles = {
       100: "#E2E8F0",
     },
   },
+  colorScheme: {
+    fourth: "#A6CE39",
+  },
   fonts: {
     body: "'Poppins', sans-serif",
     heading: "'Poppins', sans-serif",

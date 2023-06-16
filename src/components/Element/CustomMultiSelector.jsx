@@ -10,7 +10,7 @@ import {
 import Select from "react-select";
 import * as yup from "yup";
 
-const CustomSelector = ({ name, label, options, rules }) => {
+const CustomMultiSelector = ({ name, label, options, rules }) => {
   const {
     control,
     formState: { errors },
@@ -19,10 +19,13 @@ const CustomSelector = ({ name, label, options, rules }) => {
   } = useFormContext();
 
   const error = errors[name];
-  const selectedValue = watch(name);
+  const selectedValue = watch(name) || [];
 
-  const handleSelectChange = (selectedOption) => {
-    setValue(name, selectedOption?.value || "");
+  const handleSelectChange = (selectedOptions) => {
+    const selectedValues = selectedOptions
+      ? selectedOptions.map((option) => option.value)
+      : [];
+    setValue(name, selectedValues);
   };
 
   return (
@@ -36,8 +39,11 @@ const CustomSelector = ({ name, label, options, rules }) => {
               {...field}
               options={options}
               placeholder={label}
+              isMulti
               isClearable
-              value={options.find((option) => option.value === selectedValue)}
+              value={options.filter((option) =>
+                selectedValue.includes(option.value)
+              )}
               onChange={handleSelectChange}
               styles={{
                 control: (base, state) => ({
@@ -60,6 +66,28 @@ const CustomSelector = ({ name, label, options, rules }) => {
                     backgroundColor: "#A6CE39",
                     color: "green",
                   },
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingRight: "10px",
+                }),
+                multiValue: (base) => ({
+                  ...base,
+                  backgroundColor: "skyblue",
+                  borderRadius: "10px",
+                  alignItems: "center",
+                  display: "flex",
+                }),
+                multiValueLabel: (base) => ({
+                  ...base,
+                  color: "skyblue",
+                }),
+                multiValueRemove: (base) => ({
+                  ...base,
+                  color: "black",
+                  "&:hover": {
+                    backgroundColor: "skyblue",
+                    color: "green",
+                  },
                 }),
               }}
               formatOptionLabel={({ label, count }) => (
@@ -79,5 +107,4 @@ const CustomSelector = ({ name, label, options, rules }) => {
     </FormControl>
   );
 };
-
-export default CustomSelector;
+export default CustomMultiSelector;

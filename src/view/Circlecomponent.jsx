@@ -11,8 +11,9 @@ import CustomSelector from "../components/Element/CustomSelector";
 import CustomInput from "../components/Element/CustomInput";
 import CustomTextarea from "../components/Element/CustomTextarea";
 import CustomRadioButton from "../components/Element/CustomRadioButton";
+import CustomMultiSelector from "../components/Element/CustomMultiSelector";
 
-const Circlecomponent = () => {
+const CircleComponent = () => {
   const [clickCount, setClickCount] = useState(-1);
 
   const handleClick = () => {
@@ -61,7 +62,7 @@ const Circlecomponent = () => {
             name="checkboxField"
             label="Checkbox Label"
             color="green"
-            size={"md"}
+            size={"lg"}
           />
 
           <button type="submit">Submit</button>
@@ -70,6 +71,7 @@ const Circlecomponent = () => {
       <Testing />
       <TestTextArea />
       <RadioTest />
+      <TestingMultiSelector />
       {/* <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <CustomInput
@@ -86,7 +88,7 @@ const Circlecomponent = () => {
   );
 };
 
-export default Circlecomponent;
+export default CircleComponent;
 
 const Testing = () => {
   const schema = yup.object().shape({
@@ -108,9 +110,9 @@ const Testing = () => {
             name="selectorField"
             label="Select an option"
             options={[
-              { value: "option1", label: "Option 1" },
-              { value: "option2", label: "Option 2" },
-              { value: "option3", label: "Option 3" },
+              { value: "option1", label: "Option 1", count: 1 },
+              { value: "option2", label: "Option 2", count: 2 },
+              { value: "option3", label: "Option 3", count: 3 },
             ]}
             rules={{
               required: "Please select an option",
@@ -181,6 +183,50 @@ const RadioTest = () => {
           ))}
 
           <Button type="submit">Submit</Button>
+        </form>
+      </FormProvider>
+    </>
+  );
+};
+
+const TestingMultiSelector = () => {
+  const schema = yup.object().shape({
+    selectorField: yup
+      .array()
+      .min(1, "Please select at least one option")
+      .nullable()
+      .required("Please select an option"),
+  });
+
+  const methods = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      selectorField: null,
+    },
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <CustomMultiSelector
+            name="selectorField"
+            label="Select an option"
+            options={[
+              { value: "option1", label: "Option 1", count: 5 },
+              { value: "option2", label: "Option 2", count: 15 },
+              { value: "option3", label: "Option 3", count: 10 },
+            ]}
+            rules={{
+              required: "Please select an option",
+            }}
+          />
+
+          <button type="submit">Submit</button>
         </form>
       </FormProvider>
     </>

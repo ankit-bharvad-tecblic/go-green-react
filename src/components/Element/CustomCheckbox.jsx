@@ -20,7 +20,12 @@ const Customcheckbox = ({ name, label, color, size }) => {
           name={name}
           defaultValue={false}
           render={({ field }) => (
-            <Checkbox {...field} size={size} colorScheme={color}>
+            <Checkbox
+              {...field}
+              size={size}
+              colorScheme="fourth"
+              iconColor="white"
+            >
               {label}
             </Checkbox>
           )}
