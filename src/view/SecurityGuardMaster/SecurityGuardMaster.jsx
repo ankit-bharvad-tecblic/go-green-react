@@ -1,11 +1,11 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useGetSecurityAgencyMasterMutation } from "../../features/master-api-slice";
+import { useGetSecurityGuardMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 
-const SecurityAgencyMaster = () => {
+const SecurityGuardMaster = () => {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -16,43 +16,43 @@ const SecurityAgencyMaster = () => {
   });
 
   const [
-    getSecurityAgencyMaster,
+    getSecurityGuardMaster,
     {
-      error: getSecurityAgencyMasterApiErr,
-      isLoading: getSecurityAgencyMasterApiIsLoading,
+      error: getSecurityGuardMasterApiErr,
+      isLoading: getSecurityGuardMasterApiIsLoading,
     },
-  ] = useGetSecurityAgencyMasterMutation();
+  ] = useGetSecurityGuardMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("security_agency_name", {
+    columnHelper.accessor("security_guard_name", {
       cell: (info) => info.getValue(),
-      header: "Security agency NAME",
+      header: "SECURITY GUARD NAME",
     }),
-    columnHelper.accessor("address", {
+    columnHelper.accessor("aadhar_of_security_guard", {
       cell: (info) => info.getValue(),
-      header: "ADDRESS",
+      header: "AADHAR OF SECURITY GUARD",
     }),
-    columnHelper.accessor("contact_no", {
+    columnHelper.accessor("address_of_security_guard", {
       cell: (info) => info.getValue(),
-      header: "CONTACT NO.",
+      header: "ADDRESS OF SECURITY GUARD",
     }),
-    columnHelper.accessor("agency_contract_start_date", {
+    columnHelper.accessor("contact_number", {
       cell: (info) => info.getValue(),
-      header: "CONTRACT START DATE",
-    }),
-
-    columnHelper.accessor("agency_contract_duration", {
-      cell: (info) => info.getValue(),
-      header: "CONTRACT DURATION",
+      header: "CONTACT NUMBER",
     }),
 
-    columnHelper.accessor("service_cost", {
+    columnHelper.accessor("experience_as_security_guard", {
       cell: (info) => info.getValue(),
-      header: "SERVICE COST",
+      header: "EXPERIENCE AS SECURITY GUARD",
+    }),
+
+    columnHelper.accessor("security_agency_id", {
+      cell: (info) => info.getValue(),
+      header: "SECURITY AGENCY ID ",
     }),
 
     columnHelper.accessor("active", {
@@ -123,7 +123,7 @@ const SecurityAgencyMaster = () => {
     }
 
     try {
-      const response = await getSecurityAgencyMaster(paramString).unwrap();
+      const response = await getSecurityGuardMaster(paramString).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -155,11 +155,11 @@ const SecurityAgencyMaster = () => {
           setFilter={setFilter}
           columns={columns}
           data={data}
-          loading={getSecurityAgencyMasterApiIsLoading}
+          loading={getSecurityGuardMasterApiIsLoading}
         />
       </div>
     </>
   );
 };
 
-export default SecurityAgencyMaster;
+export default SecurityGuardMaster;
