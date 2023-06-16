@@ -36,7 +36,15 @@ function Layout({ variant, title, children }) {
           sidebarVisibility={sidebarVisibility}
           setSidebarVisibility={setSidebarVisibility}
         />
-        {children}
+        <Box
+          width={{
+            base: "calc(100vw - 40px)",
+            md: "calc(100vw - 40px)",
+            lg: sidebarVisibility ? "calc(100vw - 395px)" : "calc(100vw - 360px)",
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Flex>
   );
