@@ -47,11 +47,53 @@ const AccessWebcamWithLocation = () => {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
+    test();
   }, []);
 
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     console.log("Captured image:", imageSrc);
+  };
+
+  const test = async () => {
+    const apiKey = "AIzaSyAdl093xeazg-eo-HUhrWroyO0TkD88QTI";
+    // const apiKey = "AIzaSyB1Qeha39Kgfr4kxZJ9uu4t0B_UL3E0Mkg";
+    // //
+    // let x = await fetch(
+    //   `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
+
+    // const { location } = x;
+    // const latitude = location.lat;
+    // const longitude = location.lng;
+
+    fetch(
+      `https://maps.googleapis.com/maps/api/geolocation/json?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const { location } = data;
+        const latitude = location.lat;
+        const longitude = location.lng;
+        // Handle the accurate location data
+        console.log("############ data -> ", data);
+      })
+      .catch((error) => {
+        // Handle error
+        console.log("error -> ", error);
+      });
   };
 
   return (
@@ -73,6 +115,18 @@ const AccessWebcamWithLocation = () => {
 };
 
 export default AccessWebcamWithLocation;
+
+// if (navigator.geolocation) {
+//   navigator.geolocation.getCurrentPosition(
+//     (position) => {
+//       // Handle the accurate location data
+//     },
+//     (error) => {
+//       // Handle error
+//     },
+//     { enableHighAccuracy: true }
+//   );
+// }
 
 // import React from "react";
 // import { useGeolocated } from "react-geolocated";
