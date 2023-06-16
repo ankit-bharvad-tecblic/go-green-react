@@ -53,8 +53,10 @@ function FunctionalTable({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    debugTable: true,
     state: {
       sorting,
+      columnPinning: true,
     },
   });
 
@@ -222,7 +224,7 @@ function FunctionalTable({
           </InputGroup>
         </Flex>
       </Flex>
-      <Box overflowX="auto">
+      <Box position="relative" overflowX="auto">
         <Table mt="15px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -241,17 +243,20 @@ function FunctionalTable({
                       fontWeight="bold"
                       color="black"
                       cursor="pointer"
+                      minW={"150px"}
                     >
                       <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {header.id !== "UPDATE" ? (
+                        <Text flex="none">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </Text>
+                        {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
                               <Flex>
@@ -279,7 +284,7 @@ function FunctionalTable({
                           )
                         ) : (
                           <></>
-                        )}
+                        )} */}
                       </Flex>
 
                       {/* <chakra.span pl="4">
@@ -344,7 +349,7 @@ function FunctionalTable({
                               cursor="pointer"
                             />
                           </Flex>
-                        ) : cell.column.id === "active" ? (
+                        ) : cell.column.id === "active_test" ? (
                           <Switch
                             size="md"
                             colorScheme="whatsapp"

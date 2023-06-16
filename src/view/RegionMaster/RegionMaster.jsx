@@ -3,6 +3,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
 import { useGetRegionMasterMutation } from "../../features/master-api-slice";
+import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import { BiEditAlt } from "react-icons/bi";
 function RegionMaster() {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
@@ -33,10 +35,39 @@ function RegionMaster() {
     }),
 
     columnHelper.accessor("active", {
-      header: "ACTIVE",
+      // header: "ACTIVE",
+      header: () => <Text id="active_col">Active</Text>,
+      cell: (info) => (
+        <Box id="active_row">
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            // id="active_row"
+            // isReadOnly
+            // isChecked={flexRender(
+            //   cell.column.columnDef.cell,
+            //   cell.getContext()
+            // )}
+          />
+        </Box>
+      ),
+      id: "active",
+      accessorFn: (row) => row.active,
     }),
-    columnHelper.accessor("", {
-      header: "UPDATE",
+    columnHelper.accessor("update", {
+      // header: "UPDATE",
+      header: () => <Text id="update_col">UPDATE</Text>,
+      cell: (info) => (
+        <Flex justifyContent="center" color="primary.700" id="update_row">
+          <BiEditAlt
+            // color="#A6CE39"
+            fontSize="26px"
+            cursor="pointer"
+          />
+        </Flex>
+      ),
+      id: "update_col",
+      accessorFn: (row) => row.update_col,
     }),
   ];
 

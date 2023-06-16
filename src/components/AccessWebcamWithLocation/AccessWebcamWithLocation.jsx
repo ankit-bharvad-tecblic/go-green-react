@@ -1,9 +1,23 @@
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Heading,
+  IconButton,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import React, { useState, useEffect, useRef } from "react";
 import Webcam from "react-webcam";
+import { MdDelete } from "react-icons/md";
 
 const AccessWebcamWithLocation = () => {
   const webcamRef = useRef(null);
   const [location, setLocation] = useState(null);
+  const [capturedImage, setCapturedImage] = useState("fdfjd");
 
   useEffect(() => {
     const watchLocation = () => {
@@ -47,206 +61,139 @@ const AccessWebcamWithLocation = () => {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-    test();
   }, []);
 
+  // const capture = () => {
+  //   const imageSrc = webcamRef.current.getScreenshot();
+  //   console.log("Captured image:", imageSrc);
+  // };
+
   const capture = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    console.log("Captured image:", imageSrc);
+    const imageSrc = webcamRef?.current?.getScreenshot();
+    if (imageSrc) {
+      const blob = dataURLtoBlob(imageSrc);
+      const blobUrl = URL.createObjectURL(blob);
+      setCapturedImage(blobUrl);
+    }
   };
 
-  const test = async () => {
-    const apiKey = "AIzaSyAdl093xeazg-eo-HUhrWroyO0TkD88QTI";
-    // const apiKey = "AIzaSyB1Qeha39Kgfr4kxZJ9uu4t0B_UL3E0Mkg";
-    // //
-    // let x = await fetch(
-    //   `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   }
-    // );
-
-    // const { location } = x;
-    // const latitude = location.lat;
-    // const longitude = location.lng;
-
-    fetch(
-      `https://maps.googleapis.com/maps/api/geolocation/json?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const { location } = data;
-        const latitude = location.lat;
-        const longitude = location.lng;
-        // Handle the accurate location data
-        console.log("############ data -> ", data);
-      })
-      .catch((error) => {
-        // Handle error
-        console.log("error -> ", error);
-      });
+  // Helper function to convert Data URL to Blob
+  const dataURLtoBlob = (dataURL) => {
+    const parts = dataURL.split(";base64,");
+    const contentType = parts[0].split(":")[1];
+    const byteString = atob(parts[1]);
+    let arrayBuffer = new ArrayBuffer(byteString.length);
+    let uint8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      uint8Array[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], { type: contentType });
   };
 
   return (
-    <div>
-      <h1>Webcam Location App</h1>
+    <Box w="full">
+      {/* <h1>Webcam Location App</h1>
       {location ? (
         <div>
           <Webcam audio={false} ref={webcamRef} />
           <p>
             Current Location: {location.latitude}, {location.longitude}
           </p>
-          <button onClick={capture}>Capture</button>
+          <button onClick={capture} >Capture</button>
         </div>
       ) : (
         <p>Loading location...</p>
-      )}
-    </div>
+      )} */}
+
+      <Card align="center">
+        <CardHeader>
+          <Heading size="md"> </Heading>
+        </CardHeader>
+        <CardBody>
+          <Box>
+            {capturedImage ? (
+              <Box
+                border="1px"
+                borderColor={"primary.700"}
+                borderRadius={10}
+                display="flex"
+                boxSize="sm"
+              >
+                <Image src={capturedImage} alt="img" />
+              </Box>
+            ) : (
+              <Box
+                height={310}
+                border="1px"
+                borderColor={"primary.700"}
+                borderRadius={10}
+              >
+                <Webcam audio={false} ref={webcamRef} />
+              </Box>
+            )}
+          </Box>
+        </CardBody>
+        <CardFooter>
+          {capturedImage ? (
+            <IconButton
+              variant="outline"
+              colorScheme="teal"
+              aria-label="Call Sage"
+              fontSize="20px"
+              icon={<MdDelete />}
+              onClick={() => setCapturedImage(null)}
+            />
+          ) : (
+            <Button
+              _hover={{}}
+              onClick={capture}
+              color="white"
+              bg="primary.700"
+            >
+              Capture
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    </Box>
   );
 };
 
 export default AccessWebcamWithLocation;
 
-// if (navigator.geolocation) {
-//   navigator.geolocation.getCurrentPosition(
-//     (position) => {
-//       // Handle the accurate location data
-//     },
-//     (error) => {
-//       // Handle error
-//     },
-//     { enableHighAccuracy: true }
-//   );
-// }
+// import React, { useRef, useState } from 'react';
 
-// import React from "react";
-// import { useGeolocated } from "react-geolocated";
+// const MyComponent = () => {
+//   const webcamRef = useRef(null);
+//   const [capturedImage, setCapturedImage] = useState(null);
 
-// const AccessWebcamWithLocation = () => {
-//   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-//     useGeolocated({
-//       positionOptions: {
-//         enableHighAccuracy: false,
-//       },
-//       userDecisionTimeout: 5000,
-//     });
+//   const capture = () => {
+//     const imageSrc = webcamRef.current.getScreenshot();
+//     const blob = dataURLtoBlob(imageSrc);
+//     const blobUrl = URL.createObjectURL(blob);
+//     setCapturedImage(blobUrl);
+//   };
 
-//   return !isGeolocationAvailable ? (
-//     <div>Your browser does not support Geolocation</div>
-//   ) : !isGeolocationEnabled ? (
-//     <div>Geolocation is not enabled</div>
-//   ) : coords ? (
-//     <table>
-//       <tbody>
-//         <tr>
-//           <td>latitude</td>
-//           <td>{coords.latitude}</td>
-//         </tr>
-//         <tr>
-//           <td>longitude</td>
-//           <td>{coords.longitude}</td>
-//         </tr>
-//         <tr>
-//           <td>altitude</td>
-//           <td>{coords.altitude}</td>
-//         </tr>
-//         <tr>
-//           <td>heading</td>
-//           <td>{coords.heading}</td>
-//         </tr>
-//         <tr>
-//           <td>speed</td>
-//           <td>{coords.speed}</td>
-//         </tr>
-//       </tbody>
-//     </table>
-//   ) : (
-//     <div>Getting the location data&hellip; </div>
-//   );
-// };
-
-// export default AccessWebcamWithLocation;
-
-// --------------------------------------------------------------------------------------------------
-
-// import React, { useState, useEffect } from "react";
-
-// const AccessWebcamWithLocation = () => {
-//   const [location, setLocation] = useState(null);
-
-//   useEffect(() => {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const { latitude, longitude } = position.coords;
-//           setLocation({ lat: latitude, lng: longitude });
-//         },
-//         (error) => {
-//           console.log("Error retrieving location:", error);
-//         }
-//       );
-//     } else {
-//       console.log("Geolocation is not supported by this browser.");
+//   // Helper function to convert Data URL to Blob
+//   const dataURLtoBlob = dataURL => {
+//     const parts = dataURL.split(';base64,');
+//     const contentType = parts[0].split(':')[1];
+//     const byteString = atob(parts[1]);
+//     let arrayBuffer = new ArrayBuffer(byteString.length);
+//     let uint8Array = new Uint8Array(arrayBuffer);
+//     for (let i = 0; i < byteString.length; i++) {
+//       uint8Array[i] = byteString.charCodeAt(i);
 //     }
-//   }, []);
+//     return new Blob([arrayBuffer], { type: contentType });
+//   };
 
 //   return (
 //     <div>
-//       {location ? (
-//         <p>
-//           Latitude: {location.lat}, Longitude: {location.lng}
-//         </p>
-//       ) : (
-//         <p>Loading...</p>
-//       )}
+//       <video ref={webcamRef} autoPlay />
+//       <button onClick={capture}>Capture Image</button>
+//       {capturedImage && <img src={capturedImage} alt="Captured" />}
 //     </div>
 //   );
 // };
 
-// export default AccessWebcamWithLocation;
-
-// import React, { useState, useEffect } from "react";
-// import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
-
-// const AccessWebcamWithLocation = ({ google }) => {
-//   const [location, setLocation] = useState(null);
-
-//   useEffect(() => {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(
-//         (position) => {
-//           const { latitude, longitude } = position.coords;
-//           setLocation({ lat: latitude, lng: longitude });
-//         },
-//         (error) => {
-//           console.log("Error retrieving location:", error);
-//         }
-//       );
-//     } else {
-//       console.log("Geolocation is not supported by this browser.");
-//     }
-//   }, []);
-
-//   return (
-//     <Map
-//       google={google}
-//       zoom={14}
-//       center={location} // Set the center of the map to the user's location
-//     >
-//       {location && <Marker position={location} />}
-//     </Map>
-//   );
-// };
-
-// export default GoogleApiWrapper({
-//   apiKey: "AIzaSyAdl093xeazg-eo-HUhrWroyO0TkD88QTI",
-// })(AccessWebcamWithLocation);
+// export default MyComponent;
