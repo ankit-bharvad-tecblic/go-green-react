@@ -24,7 +24,7 @@ const CircleComponent = () => {
   const isEvenClick = clickCount >= 0 && clickCount % 2 === 0;
 
   return (
-    <Box>
+    <Box w="full">
       <Box
         w="50px"
         h="50px"

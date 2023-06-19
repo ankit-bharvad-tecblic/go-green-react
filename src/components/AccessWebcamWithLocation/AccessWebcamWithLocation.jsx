@@ -17,7 +17,7 @@ import { MdDelete } from "react-icons/md";
 const AccessWebcamWithLocation = () => {
   const webcamRef = useRef(null);
   const [location, setLocation] = useState(null);
-  const [capturedImage, setCapturedImage] = useState("fdfjd");
+  const [capturedImage, setCapturedImage] = useState(null);
 
   useEffect(() => {
     const watchLocation = () => {
