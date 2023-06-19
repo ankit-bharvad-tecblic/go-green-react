@@ -15,7 +15,6 @@ import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
 
-
 import PageMaster from "../view/PageMaster/PageMaster";
 import RoleMaster from "../view/Role Master/RoleMaster";
 import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
@@ -174,7 +173,8 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: SecurityGuardMaster,
-
+  },
+  {
     path: "/insurance-company-master",
     name: "Insurance Company Master",
     secondaryNavbar: false,
@@ -187,7 +187,6 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: EarthquakeZoneTypeMaster,
-
   },
 ];
 
