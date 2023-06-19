@@ -7,6 +7,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomRadioButton from "../components/Elements/CustomRadioButton";
+import {
+  LocationFromGoogleApi,
+  UseGeoLoaction,
+} from "../components/Elements/GeoLoactionPage";
 
 const CircleComponent = () => {
   const [clickCount, setClickCount] = useState(-1);
@@ -33,8 +37,10 @@ const CircleComponent = () => {
     { value: "female", label: "female" },
     { value: "others", label: "others" },
   ];
+
+  const location = UseGeoLoaction();
   return (
-    <Box>
+    <Box mx={"40"}>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <CustomInput name="InputFeild" placeholder="Enter here" type="text" />
@@ -56,6 +62,7 @@ const CircleComponent = () => {
       <Box
         w="50px"
         h="50px"
+        ml="28"
         borderRadius="full"
         backgroundColor="white"
         display="flex"
@@ -73,6 +80,14 @@ const CircleComponent = () => {
             )}
           </>
         )}
+
+        {location.loaded
+          ? JSON.stringify(location)
+          : "location data not available"}
+      </Box>
+
+      <Box my={'6'}>
+        <LocationFromGoogleApi />
       </Box>
     </Box>
   );
