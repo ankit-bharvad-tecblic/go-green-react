@@ -114,6 +114,12 @@ const SidebarList = [
     icon: <CommunityIcon color="inherit" />,
     views: [
       {
+        path: "/warehouse-master/warehouse-type-master",
+        name: "Warehouse Type Master",
+        secondaryNavbar: true,
+        component: WarehouseTypeMaster,
+      },
+      {
         path: "/warehouse-master/warehouse-sub-type-master",
         name: "Warehouse Sub Type Master",
         secondaryNavbar: true,
@@ -196,13 +202,6 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: PageMaster,
-  },
-  {
-    path: "/warehouse-type-master",
-    name: "Warehouse Type Master",
-    secondaryNavbar: false,
-    icon: <HomeIcon color="inherit" />,
-    component: WarehouseTypeMaster,
   },
 ];
 

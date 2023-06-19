@@ -15,7 +15,7 @@ const RoleMaster = () => {
     search: null,
     page: 1,
     totalPage: 1,
-    limit: 10,
+    limit: 25,
   });
 
   const [

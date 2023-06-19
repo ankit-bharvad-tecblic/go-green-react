@@ -8,6 +8,7 @@ export const globalStyles = {
       600: "#ADB8CC",
       500: "#344054",
       400: "#667085",
+      100: "#f3f3f3",
     },
 
     primary: {

@@ -31,12 +31,18 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { BiEditAlt } from "react-icons/bi";
-import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
+import { BiEditAlt, BiFilterAlt } from "react-icons/bi";
+import {
+  BsArrowDown,
+  BsArrowUp,
+  BsCloudDownload,
+  BsPlusCircle,
+  BsSearch,
+} from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 
 function FunctionalTable({
@@ -49,6 +55,9 @@ function FunctionalTable({
 }) {
   const dispatch = useDispatch();
   const [sorting, setSorting] = React.useState([]);
+  const { isShow } = useSelector(
+    (state) => state.dataTableFiltersReducer?.filtersFields
+  );
   const table = useReactTable({
     columns,
     data,
@@ -57,9 +66,9 @@ function FunctionalTable({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
+    pageCount: filter?.limit || 25,
     state: {
       sorting,
-      columnPinning: true,
     },
   });
 
@@ -128,7 +137,7 @@ function FunctionalTable({
             color="#8B8D97"
             fontWeight="semibold"
           >
-            {[10, 20].map((pageSize) => (
+            {[25, 50, 75, 100].map((pageSize) => (
               <option key={`page_size${pageSize}`} value={pageSize}>
                 {pageSize}
               </option>
@@ -139,7 +148,7 @@ function FunctionalTable({
           </Text>
         </Flex>
         <Flex
-          gap="20px"
+          gap="10px"
           // direction={{
           //   base: "column",
           //   sm: "row",
@@ -160,19 +169,29 @@ function FunctionalTable({
           >
             Add Details
           </Button>
+
           <Button
-            leftIcon={<BsPlusCircle bg="gray.600" />}
-            borderColor="border_light.100"
             variant="outline"
-            p="0px 40px"
+            p="0px 10px"
             height="43px"
             borderRadius="15px"
             color="gray.600"
+            bg={isShow ? "gray.100" : ""}
+            // bg="primary.100"
             onClick={() => openFilter()}
           >
-            Filter
+            <BiFilterAlt size="20px" color="#A0AEC0" />
           </Button>
-          <Popover autoFocus={false}>
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <BsCloudDownload size="20px" color="#A0AEC0" />
+          </Button>
+          {/* <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex
                 border="1px"
@@ -240,7 +259,7 @@ function FunctionalTable({
               color="#A0AEC0"
               borderRadius="15px"
             />
-          </InputGroup>
+          </InputGroup> */}
         </Flex>
       </Flex>
       <Box position="relative" overflowX="auto">
