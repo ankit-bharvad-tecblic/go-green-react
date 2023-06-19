@@ -29,7 +29,7 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "AREA NAME",
     }),
-    columnHelper.accessor("district.district_name", {
+    columnHelper.accessor("district_name.district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
