@@ -36,6 +36,8 @@ import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 function FunctionalTable({
   filter,
@@ -45,6 +47,7 @@ function FunctionalTable({
   data,
   loading,
 }) {
+  const dispatch = useDispatch();
   const [sorting, setSorting] = React.useState([]);
   const table = useReactTable({
     columns,
@@ -90,6 +93,10 @@ function FunctionalTable({
     //   ...prev,
     //   search: e.target.value,
     // }));
+  };
+
+  const openFilter = () => {
+    dispatch(setUpFilterFields({ isShow: true }));
   };
 
   return (
@@ -152,6 +159,18 @@ function FunctionalTable({
             color="gray.600"
           >
             Add Details
+          </Button>
+          <Button
+            leftIcon={<BsPlusCircle bg="gray.600" />}
+            borderColor="border_light.100"
+            variant="outline"
+            p="0px 40px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+            onClick={() => openFilter()}
+          >
+            Filter
           </Button>
           <Popover autoFocus={false}>
             <PopoverTrigger>
@@ -253,12 +272,12 @@ function FunctionalTable({
                         // maxW="500px"
                       >
                         <Text flex="none"> */}
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        {/* </Text> */}
-                        {/* {header.id !== "UPDATE" ? (
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {/* </Text> */}
+                      {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
                               <Flex>

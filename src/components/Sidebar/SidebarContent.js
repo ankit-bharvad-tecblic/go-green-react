@@ -20,6 +20,8 @@ import { Separator } from "../Separator/Separator";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../Icons/logo.svg";
+import { useSelector } from "react-redux";
+import DataTableFilter from "../DataTableFilter";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
@@ -211,6 +213,10 @@ const SidebarContent = ({ logoText, routes }) => {
 
   const links = <>{createLinks(routes)}</>;
 
+  const { isShow } = useSelector(
+    (state) => state.dataTableFiltersReducer?.filtersFields
+  );
+
   return (
     <>
       <Box pt={"25px"} mb="12px" borderRadius="16px">
@@ -242,7 +248,7 @@ const SidebarContent = ({ logoText, routes }) => {
             lg: "calc(100vh - 260px)",
           }}
         >
-          {links}
+          {isShow ? <DataTableFilter /> : links}
         </Box>
       </Stack>
       {/* <SidebarHelp /> */}

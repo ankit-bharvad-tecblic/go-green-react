@@ -4,12 +4,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useGetCommodityMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const CommodityMaster = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("CommodityMaster", filterQuery);
+
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 10,
@@ -100,20 +108,55 @@ const CommodityMaster = () => {
     {
       "COMMODITY NAME": "commodity_name",
       isActiveFilter: false,
+
+      label: "COMMODITY NAME",
+      name: "commodity_name",
+      placeholder: "COMMODITY NAME",
+      type: "text",
     },
     {
-      "MINIMUM BAG SIZE": "minimum_bag_size",
+      "CREATION DATE": "created_at",
       isActiveFilter: false,
+
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
     },
     {
-      "MAXIMUM BAG SIZE": "maximum_bag_size",
+      "LAST UPDATED DATE": "last_updated_date",
       isActiveFilter: false,
+
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
     },
     {
-      "RENT ON BAG M/T": "rent_on_bag",
+      "LAST UPDATED ACTIVE": "ACTIVE",
       isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
@@ -121,7 +164,8 @@ const CommodityMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    // filter.filter.length ||
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -135,7 +179,8 @@ const CommodityMaster = () => {
     }
 
     try {
-      const response = await getCommodityMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getCommodityMaster(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -149,6 +194,7 @@ const CommodityMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -157,6 +203,13 @@ const CommodityMaster = () => {
       getData();
     }
   }, [filter.search]);
+
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
   return (
     <>
