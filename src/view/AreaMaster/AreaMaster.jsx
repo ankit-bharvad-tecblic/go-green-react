@@ -33,6 +33,22 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
+    columnHelper.accessor("district.district_name", {
+      cell: (info) => info.getValue(),
+      header: "Earthquake zone Type  ID",
+    }),
+    columnHelper.accessor("district.district_name", {
+      cell: (info) => info.getValue(),
+      header: "Is Block",
+    }),
+    columnHelper.accessor("created_at", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date",
+    }),
+    columnHelper.accessor("district.updated_at", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date",
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

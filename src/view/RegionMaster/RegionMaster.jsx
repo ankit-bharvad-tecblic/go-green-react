@@ -33,6 +33,10 @@ function RegionMaster() {
       cell: (info) => info.getValue(),
       header: "Creation date",
     }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "  Last Updated Date",
+    }),
 
     columnHelper.accessor("active", {
       // header: "ACTIVE",

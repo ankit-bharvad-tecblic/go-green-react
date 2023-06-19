@@ -29,26 +29,35 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    columnHelper.accessor("state.state_code", {
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
-      header: "STATE CODE",
+      header: " Creation Date",
     }),
-    columnHelper.accessor("state.tin_no", {
+    columnHelper.accessor("updated_at", {
       cell: (info) => info.getValue(),
-      header: "TIN NO",
+      header: " Last Updated Date",
     }),
-    columnHelper.accessor("state.gstn", {
-      cell: (info) => info.getValue(),
-      header: "GSTN",
-    }),
-    columnHelper.accessor("state.nav_code", {
-      cell: (info) => info.getValue(),
-      header: "NAV CODE",
-    }),
-    columnHelper.accessor("state.state_india_office_addr", {
-      cell: (info) => info.getValue(),
-      header: "OFFICE ADDRESS",
-    }),
+
+    // columnHelper.accessor("state.state_code", {
+    //   cell: (info) => info.getValue(),
+    //   header: "STATE CODE",
+    // }),
+    // columnHelper.accessor("state.tin_no", {
+    //   cell: (info) => info.getValue(),
+    //   header: "TIN NO",
+    // }),
+    // columnHelper.accessor("state.gstn", {
+    //   cell: (info) => info.getValue(),
+    //   header: "GSTN",
+    // }),
+    // columnHelper.accessor("state.nav_code", {
+    //   cell: (info) => info.getValue(),
+    //   header: "NAV CODE",
+    // }),
+    // columnHelper.accessor("state.state_india_office_addr", {
+    //   cell: (info) => info.getValue(),
+    //   header: "OFFICE ADDRESS",
+    // }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

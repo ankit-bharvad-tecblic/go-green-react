@@ -33,6 +33,14 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
+    columnHelper.accessor("created_at", {
+      cell: (info) => info.getValue(),
+      header: " Creation Date",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date",
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
