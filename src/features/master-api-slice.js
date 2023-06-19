@@ -154,6 +154,28 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    getSecurityAgencyMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.SECURITY_AGENCY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getSecurityGuardMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.SECURITY_GUARD_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -173,9 +195,12 @@ export const {
   useGetUserMasterMutation,
   useGetCommodityVarietyMutation,
   useGetWareHouseSubTypeMutation,
+  useGetSecurityAgencyMasterMutation,
+  useGetSecurityGuardMasterMutation,
   useGetEarthQuakeZoneTypeMasterMutation,
   useGetInsuranceCompanyMasterMutation,
   useGetRegionMasterMutation,
+
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

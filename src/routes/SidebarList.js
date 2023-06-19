@@ -11,12 +11,18 @@ import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
+
+import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
+import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
+
+
 import PageMaster from "../view/PageMaster/PageMaster";
 import RoleMaster from "../view/Role Master/RoleMaster";
 import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
 import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/EarthquakeZoneTypeMaster";
 import InsuranceCompanyMaster from "../view/InsuranceCompanyMaster/InsuranceCompanyMaster";
 import RegionMaster from "../view/RegionMaster/RegionMaster";
+
 import StateMaster from "../view/StateMaster/StateMaster";
 import UserMaster from "../view/UserMaster/UserMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
@@ -156,6 +162,19 @@ const SidebarList = [
     component: WareHouseSubType,
   },
   {
+    path: "/security-agency-master",
+    name: "Security Agency Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: SecurityAgencyMaster,
+  },
+  {
+    path: "/security-guard-master",
+    name: "Security Guard Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: SecurityGuardMaster,
+
     path: "/insurance-company-master",
     name: "Insurance Company Master",
     secondaryNavbar: false,
@@ -168,6 +187,7 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: EarthquakeZoneTypeMaster,
+
   },
 ];
 
