@@ -1,12 +1,14 @@
+import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
-import { useGetZoneMasterMutation } from "../../features/master-api-slice";
+import { useEffect, useState } from "react";
+import { useGetEarthQuakeZoneTypeMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 
-const ZoneMaster = () => {
+function EarthquakeZoneTypeMaster() {
   const columnHelper = createColumnHelper();
+
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
@@ -16,22 +18,30 @@ const ZoneMaster = () => {
   });
 
   const [
-    getZoneMaster,
-    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
-  ] = useGetZoneMasterMutation();
+    getEarthquakeZoneTypeMaster,
+    {
+      error: getEarthquakeZoneTypeMasterApiErr,
+      isLoading: getEarthquakeZoneTypeMasterApiIsLoading,
+    },
+  ] = useGetEarthQuakeZoneTypeMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("zone_name", {
+
+    columnHelper.accessor("earthquake_zone_type", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "EARTH QUACK ZONE TYPE",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor(" ", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "DESCRIPTION",
+    }),
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: "CREATION DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
@@ -72,6 +82,11 @@ const ZoneMaster = () => {
 
   const [data, setData] = useState([]);
 
+  const params = {
+    filter: [],
+    search: "",
+  };
+
   let paramString = "";
 
   const getData = async () => {
@@ -92,10 +107,8 @@ const ZoneMaster = () => {
     console.log("paramString ---> ", paramString);
 
     try {
-      const response = await getZoneMaster(paramString).unwrap();
+      const response = await getEarthquakeZoneTypeMaster(paramString).unwrap();
       console.log("Success:", response);
-
-      console.log(Math.ceil(response?.total / filter.page_length), "length");
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -122,20 +135,18 @@ const ZoneMaster = () => {
       isActiveFilter: false,
     },
   ];
-
   return (
     <div>
-      {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getZoneMasterApiIsLoading}
+        loading={getEarthquakeZoneTypeMasterApiIsLoading}
       />
     </div>
   );
-};
+}
 
-export default ZoneMaster;
+export default EarthquakeZoneTypeMaster;

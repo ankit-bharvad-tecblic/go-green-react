@@ -1,11 +1,12 @@
+import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
-import { useGetZoneMasterMutation } from "../../features/master-api-slice";
+import { useEffect, useState } from "react";
+import { useGetInsuranceCompanyMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 
-const ZoneMaster = () => {
+function InsuranceCompanyMaster() {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -16,23 +17,32 @@ const ZoneMaster = () => {
   });
 
   const [
-    getZoneMaster,
-    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
-  ] = useGetZoneMasterMutation();
+    getInsuranceCompanyMaster,
+    {
+      error: getInsuranceCompanyMasterApiErr,
+      isLoading: getInsuranceCompanyMasterApiIsLoading,
+    },
+  ] = useGetInsuranceCompanyMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("insurance_company_name", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "Insurance company name",
     }),
-    columnHelper.accessor("zone_name", {
+
+    columnHelper.accessor("insurance_company_address", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "ADDRESS",
     }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "Creation date",
+    }),
+
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -72,6 +82,11 @@ const ZoneMaster = () => {
 
   const [data, setData] = useState([]);
 
+  const params = {
+    filter: [],
+    search: "",
+  };
+
   let paramString = "";
 
   const getData = async () => {
@@ -92,10 +107,8 @@ const ZoneMaster = () => {
     console.log("paramString ---> ", paramString);
 
     try {
-      const response = await getZoneMaster(paramString).unwrap();
+      const response = await getInsuranceCompanyMaster(paramString).unwrap();
       console.log("Success:", response);
-
-      console.log(Math.ceil(response?.total / filter.page_length), "length");
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -122,20 +135,18 @@ const ZoneMaster = () => {
       isActiveFilter: false,
     },
   ];
-
   return (
     <div>
-      {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getZoneMasterApiIsLoading}
+        loading={getInsuranceCompanyMasterApiIsLoading}
       />
     </div>
   );
-};
+}
 
-export default ZoneMaster;
+export default InsuranceCompanyMaster;

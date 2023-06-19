@@ -4,7 +4,9 @@ import { localStorageService } from "../../services/localStorge.service";
 
 const baseQuery = fetchBaseQuery({
   // baseUrl: "http://192.168.0.124:8000/",
-  baseUrl: process.env.REACT_APP_API_BASE_URL_LOCAL,
+  // baseUrl: process.env.REACT_APP_API_BASE_URL_LOCAL,
+  baseUrl: "http://192.168.0.186:8001/",
+
   // credentials: "include",
   mode: "cors",
 
@@ -22,20 +24,8 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  if (result?.error?.originalStatus === 403) {
-    console.log("sending refresh token");
-    // send refresh token to get new access token
-    const refreshResult = await baseQuery("/refresh", api, extraOptions);
-    console.log(refreshResult);
-    if (refreshResult?.data) {
-      const user = api.getState().auth.user;
-      // store the new token
-      api.dispatch(setCredentials({ ...refreshResult.data, user }));
-      // retry the original query with new access token
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      api.dispatch(logOut());
-    }
+  if (result?.error?.status === 403) {
+    api.dispatch(logOut());
   }
 
   return result;

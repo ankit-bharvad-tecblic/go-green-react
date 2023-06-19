@@ -1,11 +1,11 @@
+import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
-import { useGetZoneMasterMutation } from "../../features/master-api-slice";
+import { useEffect, useState } from "react";
+import { useGetRegionMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
-
-const ZoneMaster = () => {
+function RegionMaster() {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -16,23 +16,24 @@ const ZoneMaster = () => {
   });
 
   const [
-    getZoneMaster,
-    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
-  ] = useGetZoneMasterMutation();
+    getRegionMaster,
+    { error: getRegionMasterApiErr, isLoading: getRegionMasterApiIsLoading },
+  ] = useGetRegionMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("region_name", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "Region name",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "Creation date",
     }),
+
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -72,6 +73,11 @@ const ZoneMaster = () => {
 
   const [data, setData] = useState([]);
 
+  const params = {
+    filter: [],
+    search: "",
+  };
+
   let paramString = "";
 
   const getData = async () => {
@@ -92,10 +98,8 @@ const ZoneMaster = () => {
     console.log("paramString ---> ", paramString);
 
     try {
-      const response = await getZoneMaster(paramString).unwrap();
+      const response = await getRegionMaster(paramString).unwrap();
       console.log("Success:", response);
-
-      console.log(Math.ceil(response?.total / filter.page_length), "length");
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -122,20 +126,18 @@ const ZoneMaster = () => {
       isActiveFilter: false,
     },
   ];
-
   return (
     <div>
-      {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getZoneMasterApiIsLoading}
+        loading={getRegionMasterApiIsLoading}
       />
     </div>
   );
-};
+}
 
-export default ZoneMaster;
+export default RegionMaster;

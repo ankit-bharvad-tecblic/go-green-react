@@ -74,7 +74,7 @@ function Header({ variant, title, sidebarVisibility, setSidebarVisibility }) {
             width={{
               base: "calc(100% - 40px)",
               lg: sidebarVisibility
-                ? "calc(100% - 345px)"
+                ? "calc(100% - 395px)"
                 : "calc(100% - 60px)",
             }}
             transition="width 0.5s ease-in-out"

@@ -11,10 +11,20 @@ import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 
 import Dashboard from "../view/Dashboard/Dashboard";
 import DistrictMaster from "../view/DistrictMaster/DistrictMaster";
+
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
 
+
+import PageMaster from "../view/PageMaster/PageMaster";
+import RoleMaster from "../view/Role Master/RoleMaster";
+import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
+import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/EarthquakeZoneTypeMaster";
+import InsuranceCompanyMaster from "../view/InsuranceCompanyMaster/InsuranceCompanyMaster";
+import RegionMaster from "../view/RegionMaster/RegionMaster";
+
 import StateMaster from "../view/StateMaster/StateMaster";
+import UserMaster from "../view/UserMaster/UserMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 
@@ -65,6 +75,12 @@ const SidebarList = [
     icon: <CommunityIcon color="inherit" />,
     views: [
       {
+        path: "/location-master/region-master",
+        name: "Region Master",
+        secondaryNavbar: true,
+        component: RegionMaster,
+      },
+      {
         path: "/location-master/state-master",
         name: "State Master",
         secondaryNavbar: true,
@@ -89,6 +105,40 @@ const SidebarList = [
         component: AreaMaster,
       },
     ],
+  },
+  {
+    name: "Role Master",
+    category: "role",
+    state: "pageCollapse",
+    icon: <CommunityIcon color="inherit" />,
+    views: [
+      {
+        path: "/role-master/role-master",
+        name: "Role Master",
+        secondaryNavbar: true,
+        component: RoleMaster,
+      },
+      {
+        path: "/role-master/role-page-assignment-master",
+        name: "Role Page Assignment Master",
+        secondaryNavbar: true,
+        component: RolePageAssignmentMaster,
+      },
+    ],
+  },
+  {
+    path: "/user-master",
+    name: "User Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: UserMaster,
+  },
+  {
+    path: "/page-master",
+    name: "Page Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: PageMaster,
   },
   {
     path: "/bank-master",
@@ -124,6 +174,20 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: SecurityGuardMaster,
+
+    path: "/insurance-company-master",
+    name: "Insurance Company Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: InsuranceCompanyMaster,
+  },
+  {
+    path: "/earthquake-zone-type-master",
+    name: "Earthquake Zone Type Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: EarthquakeZoneTypeMaster,
+
   },
 ];
 

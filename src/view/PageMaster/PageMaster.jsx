@@ -1,11 +1,14 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useGetZoneMasterMutation } from "../../features/master-api-slice";
+import {
+  useGetPageMasterMutation,
+  useGetStateMasterMutation,
+} from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 
-const ZoneMaster = () => {
+const PageMaster = () => {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -16,22 +19,34 @@ const ZoneMaster = () => {
   });
 
   const [
-    getZoneMaster,
-    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
-  ] = useGetZoneMasterMutation();
+    getStateMaster,
+    { error: getPageMasterApiErr, isLoading: getPageMasterApiIsLoading },
+  ] = useGetPageMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("state_name", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "PAGE NAME",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("state_name", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "DESCRIPTION",
+    }),
+    columnHelper.accessor("state_code", {
+      cell: (info) => info.getValue(),
+      header: "CONTACT NO",
+    }),
+    columnHelper.accessor("tin_no", {
+      cell: (info) => info.getValue(),
+      header: "ROLE",
+    }),
+    columnHelper.accessor("gstn", {
+      cell: (info) => info.getValue(),
+      header: "CREATION DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
@@ -70,6 +85,13 @@ const ZoneMaster = () => {
     }),
   ];
 
+  const filterFields = [
+    {
+      "ZONE TYPE": "zone__zone_type",
+      isActiveFilter: false,
+    },
+  ];
+
   const [data, setData] = useState([]);
 
   let paramString = "";
@@ -89,13 +111,9 @@ const ZoneMaster = () => {
         .join("&");
     }
 
-    console.log("paramString ---> ", paramString);
-
     try {
-      const response = await getZoneMaster(paramString).unwrap();
+      const response = await getStateMaster(paramString).unwrap();
       console.log("Success:", response);
-
-      console.log(Math.ceil(response?.total / filter.page_length), "length");
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -116,26 +134,18 @@ const ZoneMaster = () => {
     }
   }, [filter.search]);
 
-  const filterFields = [
-    {
-      "REGION NAME": "zone_type",
-      isActiveFilter: false,
-    },
-  ];
-
   return (
     <div>
-      {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getZoneMasterApiIsLoading}
+        loading={getPageMasterApiIsLoading}
       />
     </div>
   );
 };
 
-export default ZoneMaster;
+export default PageMaster;

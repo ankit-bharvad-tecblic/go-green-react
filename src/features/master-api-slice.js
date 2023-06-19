@@ -11,7 +11,6 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
-
     getStateMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.STATE_MASTER,
@@ -19,7 +18,6 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
-
     getZoneMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ZONE_MASTER,
@@ -37,6 +35,27 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     getBankBranchMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.BANK_BRANCH_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getEarthQuakeZoneTypeMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getInsuranceCompanyMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getRegionMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.REGION_MASTER,
         method: "GET",
         params: params,
       }),
@@ -65,6 +84,46 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     getCommodityMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getPageMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.PAGE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getRoleMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ROLE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getRolePageAssignmentMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ROLE_PAGE_ASSIGNMENT_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    getUserMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.USER_MASTER,
         method: "GET",
         params: params,
       }),
@@ -130,10 +189,18 @@ export const {
   useGetCommodityTypeMasterMutation,
   useGetCommodityGradeMutation,
   useGetCommodityMasterMutation,
+  useGetPageMasterMutation,
+  useGetRoleMasterMutation,
+  useGetRolePageAssignmentMasterMutation,
+  useGetUserMasterMutation,
   useGetCommodityVarietyMutation,
   useGetWareHouseSubTypeMutation,
   useGetSecurityAgencyMasterMutation,
   useGetSecurityGuardMasterMutation,
+  useGetEarthQuakeZoneTypeMasterMutation,
+  useGetInsuranceCompanyMasterMutation,
+  useGetRegionMasterMutation,
+
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table,
   Thead,
@@ -29,31 +29,34 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
-import { CSVLink } from "react-csv";
+import Loader from "../Loader";
+import moment from "moment";
 
-function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
+function FunctionalTable({
+  filter,
+  setFilter,
+  filterFields,
+  columns,
+  data,
+  loading,
+}) {
   const [sorting, setSorting] = React.useState([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [csvHeaders, setCsvHeaders] = React.useState([]);
-
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
+    debugTable: true,
     state: {
       sorting,
-      globalFilter,
+      columnPinning: true,
     },
   });
 
@@ -83,13 +86,11 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
 
   const onSearch = (e) => {
     debounced(e.target.value);
+    // setFilter((prev) => ({
+    //   ...prev,
+    //   search: e.target.value,
+    // }));
   };
-
-  useEffect(() => {
-    setCsvHeaders(() =>
-      columns.map((col) => ({ label: col.header, key: col.accessorKey }))
-    );
-  }, []);
 
   return (
     <Box border="0px" p="30px" borderRadius="15px" background="white">
@@ -106,9 +107,12 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           alignItems="center"
         >
           <Select
-            value={table.getState().pagination.pageSize}
+            value={filter.limit}
             onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
+              setFilter((old) => ({
+                ...old,
+                limit: Number(e.target.value),
+              }));
             }}
             size="xs"
             borderRadius="8px"
@@ -117,7 +121,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
             color="#8B8D97"
             fontWeight="semibold"
           >
-            {[1, 2, 3].map((pageSize) => (
+            {[10, 20].map((pageSize) => (
               <option key={`page_size${pageSize}`} value={pageSize}>
                 {pageSize}
               </option>
@@ -126,18 +130,6 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           <Text color="gray.600" fontSize="sm" flex="none">
             ITEM PER PAGE
           </Text>
-        </Flex>
-        <Flex gap="5px" alignItems="center">
-          <Text fontSize="16px">Search:</Text>
-          <Input
-            value={globalFilter ?? ""}
-            onChange={(e) => {
-              console.log(e);
-              setGlobalFilter(String(e.target.value));
-            }}
-            className="mx-1 p-2 font-lg shadow border border-block"
-            placeholder="Search all columns..."
-          />
         </Flex>
         <Flex
           gap="20px"
@@ -161,21 +153,6 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           >
             Add Details
           </Button>
-
-          <Button
-            leftIcon={<BsPlusCircle bg="gray.600" />}
-            borderColor="border_light.100"
-            variant="outline"
-            p="0px 40px"
-            height="43px"
-            borderRadius="15px"
-            color="gray.600"
-          >
-            <CSVLink data={data} headers={csvHeaders} filename="data.csv">
-              Export to CSV
-            </CSVLink>
-          </Button>
-
           <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex
@@ -247,7 +224,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           </InputGroup>
         </Flex>
       </Flex>
-      <Box overflowX="auto">
+      <Box position="relative" overflowX="auto">
         <Table mt="15px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -258,7 +235,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                   return (
                     <Th
                       key={header.id}
-                      // onClick={header.column.getToggleSortingHandler()}
+                      onClick={header.column.getToggleSortingHandler()}
                       isNumeric={meta?.isNumeric}
                       p="12px 0px"
                       textAlign="center"
@@ -266,65 +243,60 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                       fontWeight="bold"
                       color="black"
                       cursor="pointer"
+                      minW={"150px"}
                     >
                       <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        <Box onClick={header.column.getToggleSortingHandler()}>
-                          {header.id !== "UPDATE" ? (
-                            header.column.getIsSorted() ? (
-                              header.column.getIsSorted() === "desc" ? (
-                                <Flex>
-                                  <BsArrowDown color="black" fontSize="14px" />
-                                  <Box ml="-7px">
-                                    <BsArrowUp
-                                      color="#B6B7BC"
-                                      fontSize="14px"
-                                    />
-                                  </Box>
-                                </Flex>
-                              ) : (
-                                // <TriangleDownIcon aria-label="sorted descending" />
-                                <Flex>
-                                  <BsArrowDown
-                                    color="#B6B7BC"
-                                    fontSize="14px"
-                                  />
-                                  <Box ml="-7px">
-                                    <BsArrowUp color="black" fontSize="14px" />
-                                  </Box>
-                                </Flex>
-                              )
-                            ) : (
+                        <Text flex="none">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </Text>
+                        {/* {header.id !== "UPDATE" ? (
+                          header.column.getIsSorted() ? (
+                            header.column.getIsSorted() === "desc" ? (
                               <Flex>
-                                <BsArrowDown color="#B6B7BC" fontSize="14px" />
+                                <BsArrowDown color="black" fontSize="14px" />
                                 <Box ml="-7px">
                                   <BsArrowUp color="#B6B7BC" fontSize="14px" />
                                 </Box>
                               </Flex>
+                            ) : (
+                              // <TriangleDownIcon aria-label="sorted descending" />
+                              <Flex>
+                                <BsArrowDown color="#B6B7BC" fontSize="14px" />
+                                <Box ml="-7px">
+                                  <BsArrowUp color="black" fontSize="14px" />
+                                </Box>
+                              </Flex>
                             )
                           ) : (
-                            <></>
-                          )}
-                        </Box>
+                            <Flex>
+                              <BsArrowDown color="#B6B7BC" fontSize="14px" />
+                              <Box ml="-7px">
+                                <BsArrowUp color="#B6B7BC" fontSize="14px" />
+                              </Box>
+                            </Flex>
+                          )
+                        ) : (
+                          <></>
+                        )} */}
                       </Flex>
-                      <Box
-                        borderTop={"1px solid #E2E8F0"}
-                        height={"40px"}
-                        mt="10px"
-                      >
-                        {header.column.getCanFilter() ? (
-                          <Box pt="10px" px="5px">
-                            <Filter column={header.column} table={table} />
-                          </Box>
-                        ) : null}
-                      </Box>
+
+                      {/* <chakra.span pl="4">
+                      <BsArrowDownUp />
+                     {header.column.getIsSorted() ? (
+                        header.column.getIsSorted() === "desc" ? (
+                          <TriangleDownIcon aria-label="sorted descending" />
+                        ) : (
+                          <TriangleUpIcon aria-label="sorted ascending" />
+                        )
+                      ) : null}
+                    </chakra.span> */}
                     </Th>
                   );
                 })}
@@ -334,7 +306,7 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           <Tbody>
             {!loading && table?.getRowModel().rows?.length === 0 && (
               <Tr>
-                <Td colSpan={columns.length}>
+                <Td colSpan={columns?.length}>
                   <Box width="full">
                     <Text textAlign="center" color="primary.700">
                       Not Found
@@ -346,11 +318,9 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
 
             {loading && (
               <Tr>
-                <Td colSpan={columns.length}>
-                  <Box width="full">
-                    <Text textAlign="center" color="primary.700">
-                      Loading...
-                    </Text>
+                <Td colSpan={columns?.length}>
+                  <Box display={"flex"} justifyContent={"center"} width="full">
+                    <Loader w="50px" h="50px" />
                   </Box>
                 </Td>
               </Tr>
@@ -372,14 +342,14 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                         color="#718096"
                       >
                         {cell.column.id === "UPDATE" ? (
-                          <Flex justifyContent="center">
+                          <Flex justifyContent="center" color="primary.700">
                             <BiEditAlt
-                              color="primary.700"
+                              // color="#A6CE39"
                               fontSize="26px"
                               cursor="pointer"
                             />
                           </Flex>
-                        ) : cell.column.id === "active" ? (
+                        ) : cell.column.id === "active_test" ? (
                           <Switch
                             size="md"
                             colorScheme="whatsapp"
@@ -389,6 +359,18 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
                             //   cell.getContext()
                             // )}
                           />
+                        ) : cell.column.id === "first_name" ? (
+                          <Text>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}{" "}
+                            {cell.row.original.last_name}{" "}
+                          </Text>
+                        ) : cell.column.id === "created_at" ? (
+                          <Text>
+                            {moment(cell.row.original.created_at).format("LL")}
+                          </Text>
                         ) : (
                           flexRender(
                             cell.column.columnDef.cell,
@@ -407,16 +389,16 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
         <Button
           variant="ghost"
           p="5px"
-          onClick={() => table.setPageIndex(0)}
-          isDisabled={!table.getCanPreviousPage() || loading}
+          onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
+          isDisabled={filter.page === 1 || loading}
         >
           {"<<"}
         </Button>
         <Button
           variant="ghost"
           p="5px"
-          onClick={() => table.previousPage()}
-          isDisabled={!table.getCanPreviousPage() || loading}
+          onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
+          isDisabled={filter.page === 1 || loading}
         >
           {"<"}
         </Button>
@@ -427,20 +409,20 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           bg="secondary.100"
           borderRadius="4px"
         >
-          {table.getState().pagination.pageIndex + 1}
+          {filter.page}
         </Button>
-        <Text fontSize="18px"> of {table.getPageCount()} </Text>
+        <Text fontSize="18px"> of {filter.totalPage} </Text>
         <Button
           variant="ghost"
-          onClick={() => table.nextPage()}
-          isDisabled={!table.getCanNextPage() || loading}
+          onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
+          isDisabled={filter.page === filter.totalPage || loading}
         >
           {">"}
         </Button>
         <Button
           variant="ghost"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          isDisabled={!table.getCanNextPage() || loading}
+          onClick={() => setFilter((old) => ({ ...old, page: old.totalPage }))}
+          isDisabled={filter.page === filter.totalPage || loading}
         >
           {">>"}
         </Button>
@@ -467,65 +449,22 @@ function FunctionalTable({ setFilter, filterFields, columns, data, loading }) {
           disabled={loading}
           width="70px"
           ml="10px"
-          value={table.getState().pagination.pageIndex + 1}
+          value={filter?.page}
           onChange={(e) => {
-            table.setPageIndex(Number(e.target.value) - 1);
+            if (
+              Number(e.target.value) <= filter?.totalPage &&
+              Number(e.target.value) > 0
+            ) {
+              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+            }
           }}
         >
-          {Array.from(Array(table.getPageCount() || 2 - 1)).map(
-            (item, index) => (
-              <option value={index + 1}> {index + 1} </option>
-            )
-          )}
+          {Array.from(Array(filter?.totalPage))?.map((item, index) => (
+            <option value={index + 1}> {index + 1} </option>
+          ))}
         </Select>
       </Flex>
     </Box>
-  );
-}
-
-function Filter({ column, table }) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id);
-
-  const columnFilterValue = column.getFilterValue();
-
-  return typeof firstValue === "number" ? (
-    <Flex gap="3px">
-      <Input
-        height={"30px"}
-        width={"55px"}
-        type="number"
-        value={columnFilterValue?.[0] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old) => [e.target.value, old?.[1]])
-        }
-        px={"5px"}
-        placeholder={`Min`}
-        className="border shadow rounded"
-      />
-      <Input
-        height={"30px"}
-        width="55px"
-        type="number"
-        value={columnFilterValue?.[1] ?? ""}
-        onChange={(e) =>
-          column.setFilterValue((old) => [old?.[0], e.target.value])
-        }
-        px={"5px"}
-        placeholder={`Max`}
-        className="border shadow rounded"
-      />
-    </Flex>
-  ) : (
-    <Input
-      height={"30px"}
-      type="text"
-      value={columnFilterValue ?? ""}
-      onChange={(e) => column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      className="w-36 border shadow rounded"
-    />
   );
 }
 

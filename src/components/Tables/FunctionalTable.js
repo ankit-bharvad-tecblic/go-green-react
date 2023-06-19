@@ -35,6 +35,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
+import moment from "moment";
 
 function FunctionalTable({
   filter,
@@ -52,8 +53,10 @@ function FunctionalTable({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    debugTable: true,
     state: {
       sorting,
+      columnPinning: true,
     },
   });
 
@@ -221,7 +224,7 @@ function FunctionalTable({
           </InputGroup>
         </Flex>
       </Flex>
-      <Box overflowX="auto">
+      <Box position="relative" overflowX="auto">
         <Table mt="15px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -240,17 +243,20 @@ function FunctionalTable({
                       fontWeight="bold"
                       color="black"
                       cursor="pointer"
+                      minW={"150px"}
                     >
                       <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {header.id !== "UPDATE" ? (
+                        <Text flex="none">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </Text>
+                        {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
                               <Flex>
@@ -278,7 +284,7 @@ function FunctionalTable({
                           )
                         ) : (
                           <></>
-                        )}
+                        )} */}
                       </Flex>
 
                       {/* <chakra.span pl="4">
@@ -343,7 +349,7 @@ function FunctionalTable({
                               cursor="pointer"
                             />
                           </Flex>
-                        ) : cell.column.id === "active" ? (
+                        ) : cell.column.id === "active_test" ? (
                           <Switch
                             size="md"
                             colorScheme="whatsapp"
@@ -353,6 +359,18 @@ function FunctionalTable({
                             //   cell.getContext()
                             // )}
                           />
+                        ) : cell.column.id === "first_name" ? (
+                          <Text>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}{" "}
+                            {cell.row.original.last_name}{" "}
+                          </Text>
+                        ) : cell.column.id === "created_at" ? (
+                          <Text>
+                            {moment(cell.row.original.created_at).format("LL")}
+                          </Text>
                         ) : (
                           flexRender(
                             cell.column.columnDef.cell,

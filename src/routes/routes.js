@@ -10,17 +10,22 @@ import AreaMaster from "../view/AreaMaster/AreaMaster";
 import { localStorageService } from "../services/localStorge.service";
 import ForgotPassword from "../view/Auth/ForgotPassword";
 import ChangePassword from "../view/Auth/ChangePassword";
-
 import BankMaster from "../view/BankMaster/BankMaster";
 import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
-
 import CommodityType from "../view/CommodityTypeMaster/CommodityType";
 import CommodityGrade from "../view/CommodityGrade/CommodityGrade";
 import CommodityMaster from "../view/CommodityMaster/CommodityMaster";
 import CircleComponent from "../view/Circlecomponent";
 import NotFound from "../view/NotFound/NotFound";
+import PageMaster from "../view/PageMaster/PageMaster";
+import UserMaster from "../view/UserMaster/UserMaster";
+import RoleMaster from "../view/Role Master/RoleMaster";
+import RolePageAssignmentMaster from "../view/RolePageAssignmentMaster/RolePageAssignmentMaster";
 import CommodityVariety from "../view/CommodityVarietyMaster/CommodityVariety";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
+import RegionMaster from "../view/RegionMaster/RegionMaster";
+import InsuranceCompanyMaster from "../view/InsuranceCompanyMaster/InsuranceCompanyMaster";
+import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/EarthquakeZoneTypeMaster";
 
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
@@ -106,6 +111,18 @@ const routes = [
         ),
       },
       {
+        path: "region-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Region Master"}>
+                <RegionMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "state-master",
         element: (
           <ProtectedRoutes>
@@ -144,6 +161,62 @@ const routes = [
     ],
   },
   {
+    path: "/role-master",
+    children: [
+      {
+        path: "role-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Role Master"}>
+                <RoleMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "role-page-assignment-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout
+                variant={headerType}
+                title={"Role Page Assignment Master"}
+              >
+                <RolePageAssignmentMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/page-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Page Master"}>
+            <PageMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/user-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"User Master"}>
+            <UserMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
     path: "/bank-master",
     element: (
       <ProtectedRoutes>
@@ -162,6 +235,32 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Bank Branch Master"}>
             <BankBranchMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/insurance-company-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Insurance Company Master"}>
+            <InsuranceCompanyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/earthquake-zone-type-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
+            <EarthquakeZoneTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
