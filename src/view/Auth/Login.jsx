@@ -31,8 +31,8 @@ import { localStorageService } from "../../services/localStorge.service";
 import { Link } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 
-import { HiOutlineUser } from "react-icons/hi";
-import AccessWebcamWithLocation from "../../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
+// import { HiOutlineUser } from "react-icons/hi";
+// import AccessWebcamWithLocation from "../../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
 // import { motion } from "framer-motion";
 // import animation from "../../theme/animation";
 
@@ -280,7 +280,7 @@ function Login() {
             borderRadius={"3xl"}
           />
         </Box>
-        <AccessWebcamWithLocation />
+        {/* <AccessWebcamWithLocation /> */}
       </Box>
     </>
   );
