@@ -176,6 +176,17 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    getWarehouseTypeMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.WAREHOUSE_TYPE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -200,7 +211,7 @@ export const {
   useGetEarthQuakeZoneTypeMasterMutation,
   useGetInsuranceCompanyMasterMutation,
   useGetRegionMasterMutation,
-
+  useGetWarehouseTypeMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
