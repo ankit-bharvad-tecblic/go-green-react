@@ -30,6 +30,7 @@ import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/Earthquak
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
 import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
+import FormAccordian from "../view/FormAccordian/FormAccordian";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -381,6 +382,7 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Area Master"}>
             <CircleComponent />
+            <FormAccordian />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
