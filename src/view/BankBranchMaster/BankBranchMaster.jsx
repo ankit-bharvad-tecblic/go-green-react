@@ -53,6 +53,10 @@ function BankBranchMaster() {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
     }),
+    columnHelper.accessor("pincode", {
+      cell: (info) => info.getValue(),
+      header: "PINCODE",
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

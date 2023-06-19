@@ -30,18 +30,17 @@ function EarthquakeZoneTypeMaster() {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-
     columnHelper.accessor("earthquake_zone_type", {
       cell: (info) => info.getValue(),
       header: "EARTH QUACK ZONE TYPE",
     }),
-    columnHelper.accessor(" ", {
-      cell: (info) => info.getValue(),
-      header: "DESCRIPTION",
-    }),
     columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "LAST UPDATED DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",

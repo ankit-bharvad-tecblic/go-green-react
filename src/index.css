@@ -62,7 +62,7 @@ td:has(#update_row) {
   background: White;
 }
 
-th:has(#active_col) {
+/* th:has(#active_col) {
   position: sticky;
   right: 150px;
   top: 0px;
@@ -73,4 +73,4 @@ td:has(#active_row) {
   position: sticky;
   right: 150px;
   background: white;
-}
+} */

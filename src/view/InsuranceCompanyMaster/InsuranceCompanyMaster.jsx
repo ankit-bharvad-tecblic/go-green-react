@@ -31,18 +31,12 @@ function InsuranceCompanyMaster() {
     }),
     columnHelper.accessor("insurance_company_name", {
       cell: (info) => info.getValue(),
-      header: "Insurance company name",
+      header: "company name",
     }),
-
     columnHelper.accessor("insurance_company_address", {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
     }),
-    columnHelper.accessor("", {
-      cell: (info) => info.getValue(),
-      header: "Creation date",
-    }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

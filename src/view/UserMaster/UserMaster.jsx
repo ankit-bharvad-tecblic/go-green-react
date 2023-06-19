@@ -44,9 +44,17 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "ROLE",
     }),
+    columnHelper.accessor("last_login", {
+      cell: (info) => info.getValue(),
+      header: "LAST LOGIN",
+    }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
+    }),
+    columnHelper.accessor("updated_at", {
+      cell: (info) => info.getValue(),
+      header: "LAST UPDATED DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
