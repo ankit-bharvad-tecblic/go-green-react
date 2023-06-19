@@ -1,14 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useGetRoleMasterMutation,
-  useGetStateMasterMutation,
-} from "../../features/master-api-slice";
+
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useGetWarehouseTypeMasterMutation } from "../../features/master-api-slice";
 
-const RoleMaster = () => {
+const WarehouseTypeMaster = () => {
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -19,31 +17,37 @@ const RoleMaster = () => {
   });
 
   const [
-    getStateMaster,
-    { error: getRoleMasterApiErr, isLoading: getRoleMasterApiIsLoading },
-  ] = useGetRoleMasterMutation();
+    getWarehouseTypeMaster,
+    {
+      error: getWarehouseTypeMasterApiErr,
+      isLoading: getWarehouseTypeMasterApiIsLoading,
+    },
+  ] = useGetWarehouseTypeMasterMutation();
 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("role_name", {
+    columnHelper.accessor("warehouse_type_name", {
       cell: (info) => info.getValue(),
-      header: "ROLE NAME",
+      header: "Warehouse Type Name",
     }),
-    columnHelper.accessor("desdription", {
+    columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
-      header: "DESCRIPTION",
+      header: "description",
     }),
+
     columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
-      header: "CREATION DATE",
+      header: "Created date",
     }),
+
     columnHelper.accessor("last_updated_date", {
       cell: (info) => info.getValue(),
-      header: " Last Updated Date",
+      header: "Last Updated Date ",
     }),
+
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -83,7 +87,19 @@ const RoleMaster = () => {
 
   const filterFields = [
     {
-      "ZONE TYPE": "zone__zone_type",
+      "COMMODITY NAME": "commodity_name",
+      isActiveFilter: false,
+    },
+    {
+      "MINIMUM BAG SIZE": "minimum_bag_size",
+      isActiveFilter: false,
+    },
+    {
+      "MAXIMUM BAG SIZE": "maximum_bag_size",
+      isActiveFilter: false,
+    },
+    {
+      "RENT ON BAG M/T": "rent_on_bag",
       isActiveFilter: false,
     },
   ];
@@ -108,7 +124,8 @@ const RoleMaster = () => {
     }
 
     try {
-      const response = await getStateMaster(paramString).unwrap();
+      const response = await getWarehouseTypeMaster(paramString).unwrap();
+
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -129,19 +146,20 @@ const RoleMaster = () => {
       getData();
     }
   }, [filter.search]);
-
   return (
-    <div>
-      <FunctionalTable
-        filter={filter}
-        filterFields={filterFields}
-        setFilter={setFilter}
-        columns={columns}
-        data={data}
-        loading={getRoleMasterApiErr}
-      />
-    </div>
+    <>
+      <div>
+        <FunctionalTable
+          filter={filter}
+          filterFields={filterFields}
+          setFilter={setFilter}
+          columns={columns}
+          data={data}
+          loading={getWarehouseTypeMasterApiIsLoading}
+        />
+      </div>
+    </>
   );
 };
 
-export default RoleMaster;
+export default WarehouseTypeMaster;

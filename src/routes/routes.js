@@ -29,6 +29,7 @@ import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/Earthquak
 
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
+import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -350,6 +351,18 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Security Guard Master"}>
             <SecurityGuardMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/warehouse-type-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Warehouse Type Master"}>
+            <WarehouseTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

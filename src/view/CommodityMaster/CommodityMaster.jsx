@@ -28,10 +28,7 @@ const CommodityMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("id", {
-      cell: (info) => info.getValue(),
-      header: "id",
-    }),
+
     columnHelper.accessor("commodity_name", {
       cell: (info) => info.getValue(),
       header: "name",
@@ -40,17 +37,27 @@ const CommodityMaster = () => {
       cell: (info) => info.getValue(),
       header: "type id",
     }),
-    columnHelper.accessor("maximum_bag_size", {
+    // columnHelper.accessor("minimum_bag_size", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Minimum bag size",
+    // }),
+    // columnHelper.accessor("maximum_bag_size", {
+    //   cell: (info) => info.getValue(),
+    //   header: "MAXIMUM BAG SIZE",
+    // }),
+
+    // columnHelper.accessor("rent_on_bag", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Rent on bag M/T",
+    // }),
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
-      header: "MAXIMUM BAG SIZE",
+      header: "Creation Date",
     }),
-    columnHelper.accessor("minimum_bag_size", {
+
+    columnHelper.accessor("last_updated_date", {
       cell: (info) => info.getValue(),
-      header: "Minimum bag size",
-    }),
-    columnHelper.accessor("rent_on_bag", {
-      cell: (info) => info.getValue(),
-      header: "Rent on bag M/T",
+      header: "LAST UPDATED DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",

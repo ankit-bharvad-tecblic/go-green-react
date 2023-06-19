@@ -37,10 +37,6 @@ const CommodityVariety = () => {
       header: "description",
     }),
 
-    columnHelper.accessor("creation_date", {
-      cell: (info) => info.getValue(),
-      header: "Created date",
-    }),
     columnHelper.accessor("hsn_code", {
       cell: (info) => info.getValue(),
       header: "HSn code",
@@ -50,13 +46,27 @@ const CommodityVariety = () => {
       cell: (info) => info.getValue(),
       header: "Fumigation required",
     }),
+    columnHelper.accessor("fumigation_day", {
+      cell: (info) => info.getValue(),
+      header: " Fumigation Days",
+    }),
     columnHelper.accessor("lab_testing_required", {
       cell: (info) => info.getValue(),
       header: "lab testing required",
     }),
-    columnHelper.accessor("active", {
-      header: "BLOCk",
+    columnHelper.accessor("fed", {
+      cell: (info) => info.getValue(),
+      header: "FED ",
     }),
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date ",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date ",
+    }),
+
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

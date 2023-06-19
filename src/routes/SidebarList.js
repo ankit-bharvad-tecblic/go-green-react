@@ -26,6 +26,7 @@ import StateMaster from "../view/StateMaster/StateMaster";
 import UserMaster from "../view/UserMaster/UserMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
+import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
 //
 
 const SidebarList = [
@@ -188,6 +189,13 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: EarthquakeZoneTypeMaster,
+  },
+  {
+    path: "/warehouse-type-master",
+    name: "Warehouse Type Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: WarehouseTypeMaster,
   },
 ];
 

@@ -34,7 +34,15 @@ const CommodityType = () => {
     }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
-      header: "DESCRIPTION",
+      header: "DESCRIPTION ",
+    }),
+    columnHelper.accessor("created_at", {
+      cell: (info) => info.getValue(),
+      header: " Creation Date",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: " Last Updated Date",
     }),
 
     columnHelper.accessor("active", {
