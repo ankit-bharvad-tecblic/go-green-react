@@ -25,7 +25,7 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("cluster_name", {
+    columnHelper.accessor("area_name", {
       cell: (info) => info.getValue(),
       header: "AREA NAME",
     }),
@@ -33,11 +33,11 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("district.district_name", {
+    columnHelper.accessor("earthquake_zone_type_id", {
       cell: (info) => info.getValue(),
       header: "Earthquake zone Type  ID",
     }),
-    columnHelper.accessor("district.district_name", {
+    columnHelper.accessor("is_block", {
       cell: (info) => info.getValue(),
       header: "Is Block",
     }),
@@ -45,7 +45,7 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "Creation Date",
     }),
-    columnHelper.accessor("district.updated_at", {
+    columnHelper.accessor("last_updated_date", {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
     }),
@@ -103,7 +103,7 @@ const AreaMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search || filter.limit) {
+    if (filter.filter.length || filter.search) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
