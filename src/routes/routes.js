@@ -208,6 +208,18 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "warehouse-type-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Type Master"}>
+                <WarehouseTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
     ],
   },
   {
@@ -356,18 +368,6 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Security Guard Master"}>
             <SecurityGuardMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/warehouse-type-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Warehouse Type Master"}>
-            <WarehouseTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

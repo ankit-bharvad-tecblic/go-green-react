@@ -31,8 +31,14 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { BiEditAlt } from "react-icons/bi";
-import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
+import { BiEditAlt, BiFilterAlt } from "react-icons/bi";
+import {
+  BsArrowDown,
+  BsArrowUp,
+  BsCloudDownload,
+  BsPlusCircle,
+  BsSearch,
+} from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
 import moment from "moment";
@@ -54,9 +60,9 @@ function FunctionalTable({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
+    pageCount: filter?.limit || 25,
     state: {
       sorting,
-      columnPinning: true,
     },
   });
 
@@ -121,7 +127,7 @@ function FunctionalTable({
             color="#8B8D97"
             fontWeight="semibold"
           >
-            {[10, 20].map((pageSize) => (
+            {[25, 50, 75, 100].map((pageSize) => (
               <option key={`page_size${pageSize}`} value={pageSize}>
                 {pageSize}
               </option>
@@ -132,7 +138,7 @@ function FunctionalTable({
           </Text>
         </Flex>
         <Flex
-          gap="20px"
+          gap="10px"
           // direction={{
           //   base: "column",
           //   sm: "row",
@@ -153,7 +159,34 @@ function FunctionalTable({
           >
             Add Details
           </Button>
-          <Popover autoFocus={false}>
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <BsSearch size="20px" color="#A0AEC0" />
+          </Button>
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <BiFilterAlt size="20px" color="#A0AEC0" />
+          </Button>
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <BsCloudDownload size="20px" color="#A0AEC0" />
+          </Button>
+          {/* <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex
                 border="1px"
@@ -221,7 +254,7 @@ function FunctionalTable({
               color="#A0AEC0"
               borderRadius="15px"
             />
-          </InputGroup>
+          </InputGroup> */}
         </Flex>
       </Flex>
       <Box position="relative" overflowX="auto">
@@ -253,12 +286,12 @@ function FunctionalTable({
                         // maxW="500px"
                       >
                         <Text flex="none"> */}
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        {/* </Text> */}
-                        {/* {header.id !== "UPDATE" ? (
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {/* </Text> */}
+                      {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
                               <Flex>

@@ -12,7 +12,7 @@ const CommodityVariety = () => {
     search: null,
     page: 1,
     totalPage: 1,
-    limit: 10,
+    limit: 25,
   });
 
   const [
@@ -43,16 +43,35 @@ const CommodityVariety = () => {
     }),
 
     columnHelper.accessor("fumigation_required", {
-      cell: (info) => info.getValue(),
       header: "Fumigation required",
+      cell: (info) => (
+        <Box>
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            isReadOnly
+            isChecked={info.getValue()}
+          />
+        </Box>
+      ),
     }),
     columnHelper.accessor("fumigation_day", {
       cell: (info) => info.getValue(),
       header: " Fumigation Days",
     }),
     columnHelper.accessor("lab_testing_required", {
-      cell: (info) => info.getValue(),
+      // cell: (info) => info.getValue(),
       header: "lab testing required",
+      cell: (info) => (
+        <Box>
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            isReadOnly
+            isChecked={info.getValue()}
+          />
+        </Box>
+      ),
     }),
     columnHelper.accessor("fed", {
       cell: (info) => info.getValue(),
