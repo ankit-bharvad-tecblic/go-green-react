@@ -30,11 +30,31 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("security_agency_name", {
       cell: (info) => info.getValue(),
-      header: "Security agency NAME",
+      header: "NAME",
+    }),
+    columnHelper.accessor("region", {
+      cell: (info) => info.getValue(),
+      header: "REGION ID",
+    }),
+    columnHelper.accessor("state", {
+      cell: (info) => info.getValue(),
+      header: "STATE ID",
+    }),
+    columnHelper.accessor("district", {
+      cell: (info) => info.getValue(),
+      header: "DISTRICT ID",
+    }),
+    columnHelper.accessor("area", {
+      cell: (info) => info.getValue(),
+      header: "AREA ID",
     }),
     columnHelper.accessor("address", {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
+    }),
+    columnHelper.accessor("pincode", {
+      cell: (info) => info.getValue(),
+      header: "PINCODE",
     }),
     columnHelper.accessor("contact_no", {
       cell: (info) => info.getValue(),
@@ -42,19 +62,20 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("agency_contract_start_date", {
       cell: (info) => info.getValue(),
-      header: "CONTRACT START DATE",
+      header: "CONTRACT START DATE ",
     }),
-
     columnHelper.accessor("agency_contract_duration", {
       cell: (info) => info.getValue(),
       header: "CONTRACT DURATION",
     }),
-
     columnHelper.accessor("service_cost", {
       cell: (info) => info.getValue(),
       header: "SERVICE COST",
     }),
-
+    columnHelper.accessor("remarks", {
+      cell: (info) => info.getValue(),
+      header: "REMARKS",
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

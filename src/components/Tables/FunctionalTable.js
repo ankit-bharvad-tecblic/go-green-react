@@ -245,17 +245,19 @@ function FunctionalTable({
                       cursor="pointer"
                       minW={"150px"}
                     >
-                      <Flex
+                      {/* <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
+                        // width="100px"
+                        // maxW="500px"
                       >
-                        <Text flex="none">
+                        <Text flex="none"> */}
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                        </Text>
+                        {/* </Text> */}
                         {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
@@ -285,7 +287,7 @@ function FunctionalTable({
                         ) : (
                           <></>
                         )} */}
-                      </Flex>
+                      {/* </Flex> */}
 
                       {/* <chakra.span pl="4">
                       <BsArrowDownUp />
@@ -369,7 +371,27 @@ function FunctionalTable({
                           </Text>
                         ) : cell.column.id === "created_at" ? (
                           <Text>
-                            {moment(cell.row.original.created_at).format("LL")}
+                            {cell.row.original.created_at
+                              ? moment(cell.row.original.created_at).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "last_login" ? (
+                          <Text>
+                            {cell.row.original.last_login
+                              ? moment(cell.row.original.last_login).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "updated_at" ? (
+                          <Text>
+                            {cell.row.original.updated_at
+                              ? moment(cell.row.original.updated_at).format(
+                                  "LL"
+                                )
+                              : " - "}
                           </Text>
                         ) : (
                           flexRender(

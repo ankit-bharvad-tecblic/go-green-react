@@ -30,31 +30,48 @@ const SecurityGuardMaster = () => {
     }),
     columnHelper.accessor("security_guard_name", {
       cell: (info) => info.getValue(),
-      header: "SECURITY GUARD NAME",
+      header: "NAME",
     }),
-    columnHelper.accessor("aadhar_of_security_guard", {
+    columnHelper.accessor("security_agency_id", {
       cell: (info) => info.getValue(),
-      header: "AADHAR OF SECURITY GUARD",
+      header: "AGENCY ID",
+    }),
+    columnHelper.accessor("region", {
+      cell: (info) => info.getValue(),
+      header: "REGION ID",
+    }),
+    columnHelper.accessor("state", {
+      cell: (info) => info.getValue(),
+      header: "STATE ID",
+    }),
+    columnHelper.accessor("district", {
+      cell: (info) => info.getValue(),
+      header: "DISTRICT ID",
     }),
     columnHelper.accessor("address_of_security_guard", {
       cell: (info) => info.getValue(),
-      header: "ADDRESS OF SECURITY GUARD",
+      header: "ADDRESS",
+    }),
+    columnHelper.accessor("aadhar_of_security_guard", {
+      cell: (info) => info.getValue(),
+      header: "AADHAR",
+    }),
+    columnHelper.accessor("dob_of_security_guard", {
+      cell: (info) => info.getValue(),
+      header: "BIRTH DATE",
     }),
     columnHelper.accessor("contact_number", {
       cell: (info) => info.getValue(),
       header: "CONTACT NUMBER",
     }),
-
+    columnHelper.accessor("alternate_contact_number", {
+      cell: (info) => info.getValue(),
+      header: "ALTERNATE CONTACT NUMBER",
+    }),
     columnHelper.accessor("experience_as_security_guard", {
       cell: (info) => info.getValue(),
       header: "EXPERIENCE AS SECURITY GUARD",
     }),
-
-    columnHelper.accessor("security_agency_id", {
-      cell: (info) => info.getValue(),
-      header: "SECURITY AGENCY ID ",
-    }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,

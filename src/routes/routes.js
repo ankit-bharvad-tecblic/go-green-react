@@ -193,6 +193,23 @@ const routes = [
     ],
   },
   {
+    path: "/warehouse-master",
+    children: [
+      {
+        path: "warehouse-sub-type-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse sub type master"}>
+                <WareHouseSubType />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
+  },
+  {
     path: "/page-master",
     element: (
       <ProtectedRoutes>
@@ -318,18 +335,6 @@ const routes = [
         ),
       },
     ],
-  },
-  {
-    path: "/warehouse-sub-type-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Warehouse sub type master"}>
-            <WareHouseSubType />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
   },
   {
     path: "/security-agency-master",

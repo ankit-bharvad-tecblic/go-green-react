@@ -28,25 +28,21 @@ const PageMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("page_name", {
       cell: (info) => info.getValue(),
       header: "PAGE NAME",
     }),
-    columnHelper.accessor("state_name", {
+    columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
       header: "DESCRIPTION",
     }),
-    columnHelper.accessor("state_code", {
-      cell: (info) => info.getValue(),
-      header: "CONTACT NO",
-    }),
-    columnHelper.accessor("tin_no", {
-      cell: (info) => info.getValue(),
-      header: "ROLE",
-    }),
-    columnHelper.accessor("gstn", {
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "LAST UPDATED DATE",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",

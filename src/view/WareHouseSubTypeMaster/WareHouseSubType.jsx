@@ -32,10 +32,6 @@ const WareHouseSubType = () => {
       cell: (info) => info.getValue(),
       header: "Warehouse sub type",
     }),
-    columnHelper.accessor("commodity_name", {
-      cell: (info) => info.getValue(),
-      header: "Warehouse type",
-    }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
       header: "Description",
@@ -44,7 +40,10 @@ const WareHouseSubType = () => {
       cell: (info) => info.getValue(),
       header: "Creation date",
     }),
-
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "LAST UPDATED date",
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
