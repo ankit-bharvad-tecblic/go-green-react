@@ -30,6 +30,7 @@ import EarthquakeZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/Earthquak
 import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMaster";
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
 import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
+import FormDesign from "../view/FormDesign";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -296,6 +297,7 @@ const routes = [
       </ProtectedRoutes>
     ),
   },
+
   {
     path: "/commodity-master",
     children: [

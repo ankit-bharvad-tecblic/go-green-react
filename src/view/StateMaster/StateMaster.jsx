@@ -51,7 +51,15 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("state_india_office_addr", {
       cell: (info) => info.getValue(),
-      header: "OFFICE ADDRESS",
+      header: "Office Address",
+    }),
+    columnHelper.accessor("created_at", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date",
+    }),
+    columnHelper.accessor("updated_at", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",

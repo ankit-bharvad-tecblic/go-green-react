@@ -10,22 +10,23 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import RightTickImage from "../assets/Images/RightTickImage.svg";
-import WrongTickImage from "../assets/Images/WrongTickImage.svg";
-import AccessWebcamWithLocation from "../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
+import FormDesign from "./FormDesign";
+// import RightTickImage from "../assets/Images/RightTickImage.svg";
+// import WrongTickImage from "../assets/Images/WrongTickImage.svg";
+// import AccessWebcamWithLocation from "../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
 
 const CircleComponent = () => {
-  const [clickCount, setClickCount] = useState(-1);
+  // const [clickCount, setClickCount] = useState(-1);
 
-  const handleClick = () => {
-    setClickCount((prevCount) => prevCount + 1);
-  };
+  // const handleClick = () => {
+  //   setClickCount((prevCount) => prevCount + 1);
+  // };
 
-  const isEvenClick = clickCount >= 0 && clickCount % 2 === 0;
+  // const isEvenClick = clickCount >= 0 && clickCount % 2 === 0;
 
   return (
     <Box w="full">
-      <Box
+      {/* <Box
         w="50px"
         h="50px"
         borderRadius="full"
@@ -46,7 +47,9 @@ const CircleComponent = () => {
           </>
         )}
       </Box>
-      <AccessWebcamWithLocation />
+      <AccessWebcamWithLocation /> */}
+
+      <FormDesign />
     </Box>
   );
 };
