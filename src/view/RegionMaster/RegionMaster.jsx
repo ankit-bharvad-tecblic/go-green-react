@@ -101,6 +101,14 @@ function RegionMaster() {
       type: "date",
     },
     {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
       "LAST UPDATED ACTIVE": "ACTIVE",
       isActiveFilter: false,
       label: "ACTIVE/DeActive",
