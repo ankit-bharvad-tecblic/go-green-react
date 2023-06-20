@@ -7,12 +7,19 @@ import {
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const PageMaster = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("Pagemaster", filterQuery);
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -83,10 +90,66 @@ const PageMaster = () => {
 
   const filterFields = [
     {
-      "ZONE TYPE": "zone__zone_type",
+      "PAGE NAME": "page_name",
       isActiveFilter: false,
+
+      label: "PAGE NAME",
+      name: "page_name",
+      placeholder: "PAGE NAME",
+      type: "text",
+    },
+    {
+      DESCRIPTION: "description",
+      isActiveFilter: false,
+
+      label: "DESCRIPTION",
+      name: "description",
+      placeholder: "DESCRIPTION",
+      type: "text",
+    },
+    {
+      "CREATION DATE": "creation_date",
+      isActiveFilter: false,
+
+      label: "CREATION DATE",
+      name: "creation_date",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
@@ -94,7 +157,7 @@ const PageMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -108,7 +171,8 @@ const PageMaster = () => {
     }
 
     try {
-      const response = await getStateMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getStateMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -121,6 +185,7 @@ const PageMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -129,6 +194,12 @@ const PageMaster = () => {
       getData();
     }
   }, [filter.search]);
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
   return (
     <div>

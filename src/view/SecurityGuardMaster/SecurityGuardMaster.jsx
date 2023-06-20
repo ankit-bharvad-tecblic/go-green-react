@@ -4,12 +4,19 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useGetSecurityGuardMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const SecurityGuardMaster = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("SecurityGuradMaster", filterQuery);
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -32,21 +39,21 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "NAME",
     }),
-    columnHelper.accessor("security_agency_id", {
+    columnHelper.accessor("security_agency_id.security_agency_name", {
       cell: (info) => info.getValue(),
-      header: "AGENCY ID",
+      header: "AGENCY NAME",
     }),
-    columnHelper.accessor("region", {
+    columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
-      header: "REGION ID",
+      header: "REGION NAME",
     }),
-    columnHelper.accessor("state", {
+    columnHelper.accessor("state.state_name", {
       cell: (info) => info.getValue(),
-      header: "STATE ID",
+      header: "STATE NAME",
     }),
-    columnHelper.accessor("district", {
+    columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
-      header: "DISTRICT ID",
+      header: "DISTRICT NAME",
     }),
     columnHelper.accessor("address_of_security_guard", {
       cell: (info) => info.getValue(),
@@ -111,8 +118,114 @@ const SecurityGuardMaster = () => {
 
   const filterFields = [
     {
-      "COMMODITY TYPE NAME": "commodity_type",
+      NAME: "security_guard_name",
       isActiveFilter: false,
+
+      label: "NAME",
+      name: "security_guard_name",
+      placeholder: "NAME",
+      type: "text",
+    },
+    {
+      "REGION NAME": "region__region_name",
+      isActiveFilter: false,
+
+      label: "REGION NAME",
+      name: "region__region_name",
+      placeholder: "REGION NAME",
+      type: "text",
+    },
+    {
+      "STATE NAME": "state__state_name",
+      isActiveFilter: false,
+
+      label: "STATE NAME",
+      name: "state__state_name",
+      placeholder: "STATE NAME",
+      type: "text",
+    },
+    {
+      "DISTRICT NAME": "district__district_name",
+      isActiveFilter: false,
+
+      label: "DISTRICT NAME",
+      name: "district__district_name",
+      placeholder: "DISTRICT NAME",
+      type: "text",
+    },
+    {
+      ADDRESS: "address_of_security_guard",
+      isActiveFilter: false,
+
+      label: "ADDRESS",
+      name: "security_agency_id__security_agency_name",
+      placeholder: "ADDRESS",
+      type: "text",
+    },
+    {
+      AADHAR: "aadhar_of_security_guard",
+      isActiveFilter: false,
+
+      label: "AADHAR",
+      name: "aadhar_of_security_guard",
+      placeholder: "AADHAR",
+      type: "text",
+    },
+    {
+      "BIRTH DATE": "dob_of_security_guard",
+      isActiveFilter: false,
+
+      label: "BIRTH DATE",
+      name: "dob_of_security_guard",
+      placeholder: "BIRTH DATE",
+      type: "text",
+    },
+    {
+      "CONTACT NUMBER": "contact_number",
+      isActiveFilter: false,
+
+      label: "CONTACT NUMBER",
+      name: "contact_number",
+      placeholder: "CONTACT NUMBER",
+      type: "number",
+    },
+    {
+      "ALTERNATE CONTACT NUMBER": "alternate_contact_number",
+      isActiveFilter: false,
+
+      label: "ALTERNATE CONTACT NUMBER",
+      name: "alternate_contact_number",
+      placeholder: "ALTERNATE CONTACT NUMBER",
+      type: "number",
+    },
+    {
+      "EXPERIENCE AS SECURITY GUARD": "experience_as_security_guard",
+      isActiveFilter: false,
+
+      label: "EXPERIENCE AS SECURITY GUARD",
+      name: "experience_as_security_guard",
+      placeholder: "EXPERIENCE AS SECURITY GUARD",
+      type: "number",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
     {
       DESCRIPTION: "description",
@@ -120,13 +233,17 @@ const SecurityGuardMaster = () => {
     },
   ];
 
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
+
   const [data, setData] = useState([]);
 
   let paramString = "";
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -140,7 +257,8 @@ const SecurityGuardMaster = () => {
     }
 
     try {
-      const response = await getSecurityGuardMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getSecurityGuardMaster(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -154,6 +272,7 @@ const SecurityGuardMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -162,6 +281,12 @@ const SecurityGuardMaster = () => {
       getData();
     }
   }, [filter.search]);
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
   return (
     <>
