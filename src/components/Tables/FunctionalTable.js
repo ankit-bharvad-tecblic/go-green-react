@@ -376,7 +376,7 @@ function FunctionalTable({
                       <Td
                         key={`table_${cell.id}`}
                         isNumeric={meta?.isNumeric}
-                        p="20px 0px"
+                        p="7px 0px"
                         textAlign="center"
                         fontSize="14px"
                         color="#718096"

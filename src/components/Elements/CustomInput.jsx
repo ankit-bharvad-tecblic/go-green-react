@@ -28,7 +28,7 @@ function CustomInput({ name, placeholder, type, label, style }) {
             <Input
               {...field}
               type={type}
-              width={{ base: "90%" }}
+              // width={{ base: "90%" }}
               backgroundColor={"gray.200"}
               borderRadius={"lg"}
               _placeholder={{ color: "gray.400" }}

@@ -5,12 +5,20 @@ import { useEffect, useState } from "react";
 import { useGetBankMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 function BankMaster() {
+  const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
+
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("Bank Master", filterQuery);
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -79,13 +87,78 @@ function BankMaster() {
     }),
   ];
 
+  const filterFields = [
+    {
+      "BANK NAME": "bank_name",
+      isActiveFilter: false,
+
+      label: "BANK NAME",
+      name: "bank_name",
+      placeholder: "BANK NAME",
+      type: "text",
+    },
+    {
+      "REGION NAME": "region__region_name",
+      isActiveFilter: false,
+
+      label: "REGION NAME",
+      name: "region__region_name",
+      placeholder: "REGION NAME",
+      type: "text",
+    },
+    {
+      "STATE NAME": "state__state_name",
+      isActiveFilter: false,
+
+      label: "STATE NAME",
+      name: "state__state_name",
+      placeholder: "STATE NAME",
+      type: "text",
+    },
+
+    {
+      "BANK ADDRESS": "bank_address",
+      isActiveFilter: false,
+
+      label: "BANK ADDRESS",
+      name: "bank_address",
+      placeholder: "BANK ADDRESS",
+      type: "text",
+    },
+
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
+    },
+  ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
   const [data, setData] = useState([]);
 
   let paramString = "";
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    //filter.filter.length || filter.search
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -101,7 +174,8 @@ function BankMaster() {
     console.log("paramString ---> ", paramString);
 
     try {
-      const response = await getBankMaster(paramString).unwrap();
+      const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getBankMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -114,6 +188,7 @@ function BankMaster() {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -123,12 +198,12 @@ function BankMaster() {
     }
   }, [filter.search]);
 
-  const filterFields = [
-    {
-      "REGION NAME": "zone_type",
-      isActiveFilter: false,
-    },
-  ];
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
   return (
     <div>

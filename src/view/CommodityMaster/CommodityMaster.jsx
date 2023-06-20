@@ -108,7 +108,6 @@ const CommodityMaster = () => {
     {
       "COMMODITY NAME": "commodity_name",
       isActiveFilter: false,
-
       label: "COMMODITY NAME",
       name: "commodity_name",
       placeholder: "COMMODITY NAME",
@@ -198,11 +197,11 @@ const CommodityMaster = () => {
     getData();
   }, [filter.limit, filter.page]);
 
-  useMemo(() => {
-    if (filter.search !== null) {
-      getData();
-    }
-  }, [filter.search]);
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
 
   useMemo(() => {
     console.log("filter query", filterQuery);

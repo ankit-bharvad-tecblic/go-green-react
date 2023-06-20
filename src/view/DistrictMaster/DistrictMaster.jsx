@@ -5,12 +5,19 @@ import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
 import HandleError from "../../services/handleError";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { setUpFilterFields } from "../../features/filter.slice";
+import { useDispatch, useSelector } from "react-redux";
 
 const DistrictMaster = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -29,26 +36,35 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    columnHelper.accessor("state.state_code", {
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
-      header: "STATE CODE",
+      header: " Creation Date",
     }),
-    columnHelper.accessor("state.tin_no", {
+    columnHelper.accessor("updated_at", {
       cell: (info) => info.getValue(),
-      header: "TIN NO",
+      header: " Last Updated Date",
     }),
-    columnHelper.accessor("state.gstn", {
-      cell: (info) => info.getValue(),
-      header: "GSTN",
-    }),
-    columnHelper.accessor("state.nav_code", {
-      cell: (info) => info.getValue(),
-      header: "NAV CODE",
-    }),
-    columnHelper.accessor("state.state_india_office_addr", {
-      cell: (info) => info.getValue(),
-      header: "OFFICE ADDRESS",
-    }),
+
+    // columnHelper.accessor("state.state_code", {
+    //   cell: (info) => info.getValue(),
+    //   header: "STATE CODE",
+    // }),
+    // columnHelper.accessor("state.tin_no", {
+    //   cell: (info) => info.getValue(),
+    //   header: "TIN NO",
+    // }),
+    // columnHelper.accessor("state.gstn", {
+    //   cell: (info) => info.getValue(),
+    //   header: "GSTN",
+    // }),
+    // columnHelper.accessor("state.nav_code", {
+    //   cell: (info) => info.getValue(),
+    //   header: "NAV CODE",
+    // }),
+    // columnHelper.accessor("state.state_india_office_addr", {
+    //   cell: (info) => info.getValue(),
+    //   header: "OFFICE ADDRESS",
+    // }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -88,14 +104,61 @@ const DistrictMaster = () => {
 
   const filterFields = [
     {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-    },
-    {
       "DISTRICT NAME": "district_name",
       isActiveFilter: false,
+      label: "DISTRICT NAME",
+      name: "district_name",
+      placeholder: "DISTRICT NAME",
+      type: "text",
+    },
+    {
+      "ZONE NAME": "state__zone__zone_name",
+      isActiveFilter: false,
+      label: "ZONE NAME",
+      name: "state__zone__zone_name",
+      placeholder: "ZONE NAME",
+      type: "text",
+    },
+    {
+      "CREATION DATE": "created_at",
+      isActiveFilter: false,
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
@@ -111,7 +174,8 @@ const DistrictMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    // if (filter.filter.length || filter.search) {
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -125,7 +189,9 @@ const DistrictMaster = () => {
     }
 
     try {
-      const response = await getDistrictMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
+      const response = await getDistrictMaster(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -140,14 +206,23 @@ const DistrictMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
+
     getData();
   }, [filter.limit, filter.page]);
 
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
+
   useMemo(() => {
-    if (filter.search !== null) {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
       getData();
     }
-  }, [filter.search]);
+  }, [filterQuery]);
 
   return (
     <div>

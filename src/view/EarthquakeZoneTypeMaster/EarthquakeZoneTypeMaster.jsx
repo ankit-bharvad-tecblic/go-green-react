@@ -5,13 +5,20 @@ import { useEffect, useState } from "react";
 import { useGetEarthQuakeZoneTypeMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 function EarthquakeZoneTypeMaster() {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("EarthquakeZoneTypeMaster", filterQuery);
   const columnHelper = createColumnHelper();
 
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -78,19 +85,66 @@ function EarthquakeZoneTypeMaster() {
       accessorFn: (row) => row.update_col,
     }),
   ];
+  const filterFields = [
+    {
+      "EARTH QUACK ZONE TYPE": "earthquake_zone_type",
+      isActiveFilter: false,
+
+      label: "EARTH QUACK ZONE TYPE",
+      name: "earthquake_zone_type",
+      placeholder: "EARTH QUACK ZONE TYPE",
+      type: "text",
+    },
+    {
+      "CREATION DATE": "creation_date",
+      isActiveFilter: false,
+
+      label: "CREATION DATE",
+      name: "creation_date",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
+    },
+  ];
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
-
-  const params = {
-    filter: [],
-    search: "",
-  };
 
   let paramString = "";
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -106,7 +160,8 @@ function EarthquakeZoneTypeMaster() {
     console.log("paramString ---> ", paramString);
 
     try {
-      const response = await getEarthquakeZoneTypeMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getEarthquakeZoneTypeMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -119,6 +174,7 @@ function EarthquakeZoneTypeMaster() {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -127,13 +183,13 @@ function EarthquakeZoneTypeMaster() {
       getData();
     }
   }, [filter.search]);
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
-  const filterFields = [
-    {
-      "REGION NAME": "zone_type",
-      isActiveFilter: false,
-    },
-  ];
   return (
     <div>
       <FunctionalTable
