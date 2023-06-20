@@ -195,9 +195,9 @@ const ZoneMaster = () => {
 
   useMemo(() => {
     console.log("filter query", filterQuery);
-    if (filterQuery) {
+    //  if (filterQuery) {
       getData();
-    }
+    // }
   }, [filterQuery]);
 
   return (

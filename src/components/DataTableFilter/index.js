@@ -41,6 +41,12 @@ const Index = () => {
   console.log("filterFields", fields);
   const closeFilter = () => {
     dispatch(setUpFilterFields({ isShow: false }));
+    // dispatch(setUpFilterQuery(""));
+    let filters = [];
+
+    let filterString = filters.join("&");
+
+    dispatch(setUpFilterQuery(filterString));
   };
 
   const onSubmit = (data) => {

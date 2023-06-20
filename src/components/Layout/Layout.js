@@ -40,7 +40,7 @@ function Layout({ variant, title, children }) {
           width={{
             base: "calc(100vw - 40px)",
             md: "calc(100vw - 40px)",
-            lg: sidebarVisibility ? "calc(100vw - 395px)" : "calc(100vw - 360px)",
+            lg: sidebarVisibility ? "calc(100vw - 395px)" : "calc(100vw - 60px)",
           }}
         >
           {children}
