@@ -1,18 +1,25 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useGetStateMasterMutation,
-  useGetUserMasterMutation,
-} from "../../features/master-api-slice";
+import { useGetUserMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const UserMaster = () => {
+  const dispatch = useDispatch();
+
   const columnHelper = createColumnHelper();
+
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("User Master", filterQuery);
+
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -95,18 +102,101 @@ const UserMaster = () => {
 
   const filterFields = [
     {
-      "ZONE TYPE": "zone__zone_type",
+      "USER NAME": "email",
       isActiveFilter: false,
+
+      label: "USER NAME",
+      name: "email",
+      placeholder: "USER NAME",
+      type: "text",
+    },
+    {
+      "FULL NAME": "first_name",
+      isActiveFilter: false,
+
+      label: "FULL NAME",
+      name: "first_name",
+      placeholder: "FULL NAME",
+      type: "text",
+    },
+    {
+      "CONTACT NO": "phone",
+      isActiveFilter: false,
+
+      label: "CONTACT NO",
+      name: "phone",
+      placeholder: "CONTACT NO",
+      type: "number",
+    },
+    {
+      ROLE: "user_role",
+      isActiveFilter: false,
+
+      label: "ROLE",
+      name: "user_role",
+      placeholder: "ROLE",
+      type: "number",
+    },
+    {
+      "LAST LOGIN": "last_login",
+      isActiveFilter: false,
+
+      label: "LAST LOGIN",
+      name: "last_login",
+      placeholder: "LAST LOGIN",
+      type: "date",
+    },
+    {
+      "CREATION DATE": "created_at",
+      isActiveFilter: false,
+
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "updated_at",
+      isActiveFilter: false,
+
+      label: "LAST UPDATED DATE",
+      name: "updated_at",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
 
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
   const [data, setData] = useState([]);
 
   let paramString = "";
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    //filter.filter.length || filter.search
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -120,7 +210,8 @@ const UserMaster = () => {
     }
 
     try {
-      const response = await getStateMaster(paramString).unwrap();
+      const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getStateMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -133,6 +224,7 @@ const UserMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -141,6 +233,13 @@ const UserMaster = () => {
       getData();
     }
   }, [filter.search]);
+
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
 
   return (
     <div>

@@ -5,12 +5,21 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { useGetWarehouseTypeMasterMutation } from "../../features/master-api-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const WarehouseTypeMaster = () => {
+  const dispatch = useDispatch();
+
   const columnHelper = createColumnHelper();
+
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("Warehouse Type Master", filterQuery);
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -87,8 +96,60 @@ const WarehouseTypeMaster = () => {
 
   const filterFields = [
     {
-      "COMMODITY NAME": "commodity_name",
+      "WAREHOUSE TYPE NAME": "warehouse_type_name",
       isActiveFilter: false,
+
+      label: "WAREHOUSE TYPE NAME",
+      name: "warehouse_type_name",
+      placeholder: "WAREHOUSE TYPE NAME",
+      type: "text",
+    },
+    {
+      DESCRIPTION: "description",
+      isActiveFilter: false,
+
+      label: "DESCRIPTION",
+      name: "description",
+      placeholder: "DESCRIPTION",
+      type: "text",
+    },
+    {
+      "CREATION DATE": "created_at",
+      isActiveFilter: false,
+
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+
+      label: "LAST UPDATED DATE",
+      name: "last_updated_date",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
     {
       "MINIMUM BAG SIZE": "minimum_bag_size",
@@ -104,13 +165,17 @@ const WarehouseTypeMaster = () => {
     },
   ];
 
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
   const [data, setData] = useState([]);
 
   let paramString = "";
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    //filter.filter.length || filter.search
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -124,7 +189,8 @@ const WarehouseTypeMaster = () => {
     }
 
     try {
-      const response = await getWarehouseTypeMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getWarehouseTypeMaster(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -138,6 +204,7 @@ const WarehouseTypeMaster = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
@@ -146,6 +213,14 @@ const WarehouseTypeMaster = () => {
       getData();
     }
   }, [filter.search]);
+
+  useMemo(() => {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
+      getData();
+    }
+  }, [filterQuery]);
+
   return (
     <>
       <div>
