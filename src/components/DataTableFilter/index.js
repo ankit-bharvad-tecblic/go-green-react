@@ -48,7 +48,9 @@ const Index = () => {
 
     let filters = [];
     for (let key in data) {
-      filters.push(`filter=${key}&${key}=${data[key]}`);
+      if (data[key]) {
+        filters.push(`filter=${key}&${key}=${data[key]}`);
+      }
     }
     let filterString = filters.join("&");
 
