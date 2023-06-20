@@ -4,12 +4,19 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useGetCommodityTypeMasterMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const CommodityType = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
-    filter: [],
-    search: null,
+    // filter: [],
+    // search: null,
     page: 1,
     totalPage: 1,
     limit: 25,
@@ -84,14 +91,61 @@ const CommodityType = () => {
 
   const filterFields = [
     {
-      "COMMODITY TYPE NAME": "commodity_type",
+      "COMMODITY NAME": "commodity_type",
       isActiveFilter: false,
+      label: "COMMODITY TYPE",
+      name: "commodity_type",
+      placeholder: "COMMODITY TYPE",
+      type: "text",
     },
     {
-      DESCRIPTION: "description",
+      "DESCRIPTION": "description",
       isActiveFilter: false,
+      label: "DESCRIPTION",
+      name: "description",
+      placeholder: "DESCRIPTION",
+      type: "text",
+    },
+    {
+      "CREATION DATE": "created_at",
+      isActiveFilter: false,
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+      label: "LAST UPDATED DATE",
+      name: "created_at",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
@@ -99,7 +153,8 @@ const CommodityType = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
+    // if (filter.filter.length || filter.search) {
+    if (filterQuery) {
       paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
@@ -113,7 +168,9 @@ const CommodityType = () => {
     }
 
     try {
-      const response = await getCommodityTypeMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+    
+      const response = await getCommodityTypeMaster(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -127,14 +184,22 @@ const CommodityType = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
+
   useMemo(() => {
-    if (filter.search !== null) {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
       getData();
     }
-  }, [filter.search]);
+  }, [filterQuery]);
 
   return (
     <>

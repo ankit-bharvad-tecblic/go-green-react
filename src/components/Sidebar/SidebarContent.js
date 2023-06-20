@@ -242,6 +242,7 @@ const SidebarContent = ({ logoText, routes }) => {
       <Stack direction="column" mb="40px">
         <Box
           overflow="auto"
+          pr={"10px"}
           h={{
             base: "calc(100vh - 190px)",
             md: "calc(100vh - 210px)",

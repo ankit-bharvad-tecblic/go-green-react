@@ -4,8 +4,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useGetCommodityVarietyMutation } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const CommodityVariety = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -36,12 +43,10 @@ const CommodityVariety = () => {
       cell: (info) => info.getValue(),
       header: "description",
     }),
-
     columnHelper.accessor("hsn_code", {
       cell: (info) => info.getValue(),
       header: "HSn code",
     }),
-
     columnHelper.accessor("fumigation_required", {
       header: "Fumigation required",
       cell: (info) => (
@@ -75,7 +80,7 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("fed", {
       cell: (info) => info.getValue(),
-      header: "FED ",
+      header: "Final expiry date",
     }),
     columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
@@ -85,7 +90,6 @@ const CommodityVariety = () => {
       cell: (info) => info.getValue(),
       header: "Last Updated Date ",
     }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -125,22 +129,123 @@ const CommodityVariety = () => {
 
   const filterFields = [
     {
-      "COMMODITY NAME": "commodity_name",
+      "COMMODITY VARIETY": "commodity_variety",
       isActiveFilter: false,
+      label: "COMMODITY VARIETY",
+      name: "commodity_variety",
+      placeholder: "COMMODITY VARIETY",
+      type: "text",
     },
     {
-      "MINIMUM BAG SIZE": "minimum_bag_size",
+      DESCRIPTION: "description",
       isActiveFilter: false,
+      label: "DESCRIPTION",
+      name: "description",
+      placeholder: "DESCRIPTION",
+      type: "text",
     },
     {
-      "MAXIMUM BAG SIZE": "maximum_bag_size",
+      "HCN CODE": "hsn_code",
       isActiveFilter: false,
+      label: "HCN CODE",
+      name: "hsn_code",
+      placeholder: "HCN CODE",
+      type: "number",
     },
     {
-      "RENT ON BAG M/T": "rent_on_bag",
+      "FUMIGATION REQUIRED": "fumigation_required",
       isActiveFilter: false,
+      label: "FUMIGATION REQUIRED",
+      name: "fumigation_required",
+      placeholder: "FUMIGATION REQUIRED",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DEACTIVE",
+          value: "False",
+        },
+      ],
+    },
+    {
+      "FUMIGATION DAYS": "fumigation_day",
+      isActiveFilter: false,
+      label: "FUMIGATION DAYS",
+      name: "fumigation_day",
+      placeholder: "FUMIGATION DAYS",
+      type: "number",
+    },
+    {
+      "LAB TESTING REQUIRED": "lab_testing_required",
+      isActiveFilter: false,
+      label: "LAB TESTING REQUIRED",
+      name: "active",
+      placeholder: "LAB TESTING REQUIRED",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DEACTIVE",
+          value: "False",
+        },
+      ],
+    },
+    {
+      "FINAL EXPIRY DATE": "fed",
+      isActiveFilter: false,
+      label: "FINAL EXPIRY DATE",
+      name: "fed",
+      placeholder: "FINAL EXPIRY DATE",
+      type: "date",
+    },
+    {
+      "CREATION DATE": "created_at",
+      isActiveFilter: false,
+      label: "CREATION DATE",
+      name: "created_at",
+      placeholder: "CREATION DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED DATE": "last_updated_date",
+      isActiveFilter: false,
+      label: "LAST UPDATED DATE",
+      name: "created_at",
+      placeholder: "LAST UPDATED DATE",
+      type: "date",
+    },
+    {
+      "LAST UPDATED ACTIVE": "ACTIVE",
+      isActiveFilter: false,
+      label: "ACTIVE/DeActive",
+      name: "active",
+      placeholder: "Active/DeActive",
+      type: "select",
+      multi: false,
+      options: [
+        {
+          label: "ACTIVE",
+          value: "True",
+        },
+        {
+          label: "DeActive",
+          value: "False",
+        },
+      ],
     },
   ];
+
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
@@ -148,8 +253,10 @@ const CommodityVariety = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
-      paramString = Object.entries(filter)
+    // if (filter.filter.length || filter.search) {
+      if (filterQuery) {
+   
+    paramString = Object.entries(filter)
         .map(([key, value]) => {
           if (Array.isArray(value)) {
             return value
@@ -162,7 +269,9 @@ const CommodityVariety = () => {
     }
 
     try {
-      const response = await getCommodityVariety(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
+      const response = await getCommodityVariety(query).unwrap();
 
       console.log("Success:", response);
       setData(response?.results || []);
@@ -176,14 +285,23 @@ const CommodityVariety = () => {
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
+
   useMemo(() => {
-    if (filter.search !== null) {
+    console.log("filter query", filterQuery);
+    if (filterQuery) {
       getData();
     }
-  }, [filter.search]);
+  }, [filterQuery]);
+
   return (
     <>
       <div>

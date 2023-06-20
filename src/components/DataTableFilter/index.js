@@ -48,7 +48,9 @@ const Index = () => {
 
     let filters = [];
     for (let key in data) {
-      filters.push(`filter=${key}&${key}=${data[key]}`);
+      if (data[key]) {
+        filters.push(`filter=${key}&${key}=${data[key]}`);
+      }
     }
     let filterString = filters.join("&");
 
@@ -59,13 +61,7 @@ const Index = () => {
 
   return (
     <Box>
-      <Flex
-        borderBottom="1px"
-        alignItems="center"
-        borderColor="gray.100"
-        justifyContent="space-between"
-        p="2"
-      >
+      <Flex justifyContent="space-between" alignItems={"center"} py="2">
         <Text fontWeight={"bold"}>Filters</Text>
         <Box>
           <Button onClick={() => closeFilter()} p="1">
