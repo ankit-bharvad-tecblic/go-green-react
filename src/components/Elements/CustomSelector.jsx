@@ -51,15 +51,15 @@ const CustomSelector = ({ name, label, options, rules }) => {
                 }),
                 menu: (base) => ({
                   ...base,
-                  backgroundColor: "#A6CE39",
+                  // backgroundColor: "#A6CE39",
                 }),
                 option: (base, state) => ({
                   ...base,
                   backgroundColor: state.isFocused ? "#A6CE39" : "white",
                   color: state.isFocused ? "green" : "black",
                   "&:hover": {
-                    backgroundColor: "#A6CE39",
-                    color: "green",
+                    backgroundColor: "#C2DE8C",
+                    color: "black",
                   },
                 }),
               }}

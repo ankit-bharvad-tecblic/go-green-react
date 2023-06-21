@@ -27,5 +27,10 @@ export const API = {
     SECURITY_GUARD_MASTER: "/warehouse/security_guard/",
     WAREHOUSE_TYPE_MASTER: "/warehouse/warehouse_type/",
     COMMODITY_ACTIVE: "/warehouse/commodity_active/",
+    INSURANCE_ACTIVE: "/business_flow/insurance/",
+    SECURITY_AGENCY_ACTIVE: "",
+    SECURITY_GUARD_ACTIVE: "",
+    EARTHQUAKE_ZONE_ACTIVE: "/warehouse/earthquake_zone_active/",
+    PAGE_MASTER_ACTIVE: "",
   },
 };
