@@ -36,10 +36,10 @@ const StateMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
-    columnHelper.accessor("state_name", {
-      cell: (info) => info.getValue(),
-      header: "REGION NAME",
-    }),
+    // columnHelper.accessor("state_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "REGION NAME",
+    // }),
     columnHelper.accessor("state_code", {
       cell: (info) => info.getValue(),
       header: "STATE CODE",
@@ -114,14 +114,14 @@ const StateMaster = () => {
       placeholder: "STATE NAME",
       type: "text",
     },
-    {
-      "REGION NAME": "state_name",
-      isActiveFilter: false,
-      label: "REGION NAME",
-      name: "state_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
+    // {
+    //   "REGION NAME": "state_name",
+    //   isActiveFilter: false,
+    //   label: "REGION NAME",
+    //   name: "state_name",
+    //   placeholder: "REGION NAME",
+    //   type: "text",
+    // },
     {
       "STATE CODE": "state_code",
       isActiveFilter: false,
@@ -139,7 +139,7 @@ const StateMaster = () => {
       type: "number",
     },
     {
-      "GSTN": "gstn",
+      GSTN: "gstn",
       isActiveFilter: false,
       label: "GSTN",
       name: "gstn",
@@ -203,7 +203,6 @@ const StateMaster = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
 
-
   const [data, setData] = useState([]);
 
   let paramString = "";
@@ -211,19 +210,19 @@ const StateMaster = () => {
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
-      if (filterQuery) {
+    // if (filterQuery) {
 
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
-    }
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+    // }
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
@@ -242,9 +241,8 @@ const StateMaster = () => {
 
   useEffect(() => {
     tableFilterSet();
-
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {
@@ -252,12 +250,12 @@ const StateMaster = () => {
   //   }
   // }, [filter.search]);
 
-  useMemo(() => {
-    console.log("filter query", filterQuery);
-    if (filterQuery) {
-      getData();
-    }
-  }, [filterQuery]);
+  // useMemo(() => {
+  //   console.log("filter query", filterQuery);
+  //   if (filterQuery) {
+  //     getData();
+  //   }
+  // }, [filterQuery]);
 
   return (
     <div>
