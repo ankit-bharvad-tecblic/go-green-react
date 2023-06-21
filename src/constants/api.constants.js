@@ -27,5 +27,13 @@ export const API = {
     SECURITY_GUARD_MASTER: "/warehouse/security_guard/",
     WAREHOUSE_TYPE_MASTER: "/warehouse/warehouse_type/",
     COMMODITY_ACTIVE: "/warehouse/commodity_active/",
+    COMMODITY_TYPE_ACTIVE: "",
+    COMMODITY_GRADE_ACTIVE: "/warehouse/commodity_grade_active/",
+    COMMODITY_VARIETY_ACTIVE: "/warehouse/commodity_variety_active/",
+    STATE_ACTIVE:"/warehouse/state_active/",
+    ZONE_ACTIVE:"/warehouse/zone_active/",
+    REGION_ACTIVE:"",
+    DISTRICT_ACTIVE:"",
+    AREA_ACTIVE:"",
   },
 };

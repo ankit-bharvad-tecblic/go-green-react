@@ -188,18 +188,18 @@ const CommodityMaster = () => {
   const getData = async () => {
     //params filter
     // filter.filter.length ||
-    if (filterQuery) {
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
-    }
+    // if (filterQuery) {
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+    // }
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
@@ -219,7 +219,7 @@ const CommodityMaster = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {
@@ -227,12 +227,12 @@ const CommodityMaster = () => {
   //   }
   // }, [filter.search]);
 
-  useMemo(() => {
-    console.log("filter query", filterQuery);
-    if (filterQuery) {
-      getData();
-    }
-  }, [filterQuery]);
+  // useMemo(() => {
+  //   console.log("filter query", filterQuery);
+  //   if (filterQuery) {
+  //     getData();
+  //   }
+  // }, [filterQuery]);
 
   return (
     <>

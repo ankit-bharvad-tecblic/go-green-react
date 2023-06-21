@@ -1,18 +1,22 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useGetCommodityVarietyMutation } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import {
+  useActiveDeActiveMutation,
+  useGetCommodityVarietyMutation,
+} from "../../features/master-api-slice";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
+import { API } from "../../constants/api.constants";
 
 const CommodityVariety = () => {
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
-  
+
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
@@ -98,6 +102,8 @@ const CommodityVariety = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
+            onChange={(e) => handleActiveDeActive(e, info)}
+            isChecked={info.row.original.active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -247,6 +253,58 @@ const CommodityVariety = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
 
+  const [
+    activeDeActive,
+    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
+  ] = useActiveDeActiveMutation();
+
+  const toast = useToast();
+
+  const handleActiveDeActive = async (e, info) => {
+    console.log("event --> ", e.target.checked, info);
+    let obj = {
+      id: info.row.original.id,
+      active: e.target.checked,
+      endPoint: API.DASHBOARD.COMMODITY_VARIETY_ACTIVE,
+    };
+
+    try {
+      const response = await activeDeActive(obj).unwrap();
+
+      if (response.status === 201) {
+        toast({
+          title: `${response.message}`,
+          status: "success",
+          position: "top-right",
+          isClosable: true,
+          duration: 2000,
+        });
+        let table_data = data;
+        console.log("table_data", data);
+
+        const updatedData = table_data.map((item) => {
+          if (item.id === obj.id) {
+            return {
+              ...item,
+              active: obj.active,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        console.log("updatedData", updatedData);
+
+        setData(updatedData);
+        // getData();
+      }
+
+      console.log("response --> ", response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const [data, setData] = useState([]);
 
   let paramString = "";
@@ -254,19 +312,19 @@ const CommodityVariety = () => {
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
-      if (filterQuery) {
-   
+    // if (filterQuery) {
+
     paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
-    }
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+    // }
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
@@ -287,7 +345,7 @@ const CommodityVariety = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {
@@ -295,12 +353,12 @@ const CommodityVariety = () => {
   //   }
   // }, [filter.search]);
 
-  useMemo(() => {
-    console.log("filter query", filterQuery);
-    if (filterQuery) {
-      getData();
-    }
-  }, [filterQuery]);
+  // useMemo(() => {
+  //   console.log("filter query", filterQuery);
+  //   if (filterQuery) {
+  //     getData();
+  //   }
+  // }, [filterQuery]);
 
   return (
     <>
