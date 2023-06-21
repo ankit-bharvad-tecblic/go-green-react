@@ -31,6 +31,7 @@ import SecurityAgencyMaster from "../view/SecurityAgencyMaster/SecurityAgencyMas
 import SecurityGuardMaster from "../view/SecurityGuardMaster/SecurityGuardMaster";
 import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
 import FormDesign from "../view/FormDesign";
+import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCommodityType";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -320,6 +321,30 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Commodity Type Master"}>
                 <CommodityType />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/commodity-type",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Type Master"}>
+                <AddEditFormCommodityType />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/commodity-type/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Type Master"}>
+                <AddEditFormCommodityType />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

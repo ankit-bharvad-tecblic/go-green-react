@@ -54,7 +54,7 @@ function FunctionalTable({
   loading,
 }) {
   const dispatch = useDispatch();
-  const [sorting, setSorting] = React.useState([]);
+  // const [sorting, setSorting] = React.useState([]);
   const { isShow } = useSelector(
     (state) => state.dataTableFiltersReducer?.filtersFields
   );
@@ -75,37 +75,37 @@ function FunctionalTable({
     },
   });
 
-  const handleFilterChange = (e, index) => {
-    let isChecked = e.target.checked;
-    const updatedFilterFields = [...filterFields];
-    updatedFilterFields[index].isActiveFilter = isChecked;
+  // const handleFilterChange = (e, index) => {
+  //   let isChecked = e.target.checked;
+  //   const updatedFilterFields = [...filterFields];
+  //   updatedFilterFields[index].isActiveFilter = isChecked;
 
-    const activeFilterValues = updatedFilterFields
-      .filter((field) => field.isActiveFilter) // Filter the objects where isActiveFilter is true
-      .map((field) => Object.values(field)[0]); // Get the values of the filtered objects
+  //   const activeFilterValues = updatedFilterFields
+  //     .filter((field) => field.isActiveFilter) // Filter the objects where isActiveFilter is true
+  //     .map((field) => Object.values(field)[0]); // Get the values of the filtered objects
 
-    setFilter((prev) => ({
-      ...prev,
-      filter: activeFilterValues,
-    }));
-  };
+  //   setFilter((prev) => ({
+  //     ...prev,
+  //     filter: activeFilterValues,
+  //   }));
+  // };
 
-  const debounced = useDebouncedCallback((value) => {
-    console.log("value ===> ", value);
-    //  setPagination((prev) => ({ ...prev, search: value }));
-    setFilter((prev) => ({
-      ...prev,
-      search: value,
-    }));
-  }, 500);
+  // const debounced = useDebouncedCallback((value) => {
+  //   console.log("value ===> ", value);
+  //   //  setPagination((prev) => ({ ...prev, search: value }));
+  //   setFilter((prev) => ({
+  //     ...prev,
+  //     search: value,
+  //   }));
+  // }, 500);
 
-  const onSearch = (e) => {
-    debounced(e.target.value);
-    // setFilter((prev) => ({
-    //   ...prev,
-    //   search: e.target.value,
-    // }));
-  };
+  // const onSearch = (e) => {
+  //   debounced(e.target.value);
+  //   // setFilter((prev) => ({
+  //   //   ...prev,
+  //   //   search: e.target.value,
+  //   // }));
+  // };
 
   const openFilter = () => {
     dispatch(setUpFilterFields({ isShow: true }));
@@ -449,12 +449,16 @@ function FunctionalTable({
           </Tbody>
         </Table>
       </Box>
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justifyContent="space-between" alignItems="center" mt="30px">
         <Box>
-          <Text> Total Record According to filter : 20 </Text>
+          {isShow ? (
+            <Text> Total Record According to filter : 20 </Text>
+          ) : (
+            <></>
+          )}
           <Text>Total Record In Database : 20 </Text>
         </Box>
-        <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
+        <Flex justifyContent="end" alignItems="center" gap="3px">
           <Button
             variant="ghost"
             p="5px"
