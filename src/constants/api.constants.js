@@ -27,5 +27,10 @@ export const API = {
     SECURITY_GUARD_MASTER: "/warehouse/security_guard/",
     WAREHOUSE_TYPE_MASTER: "/warehouse/warehouse_type/",
     COMMODITY_ACTIVE: "/warehouse/commodity_active/",
+    BANK_MASTER_ACTIVE: "",
+    BANK_BRANCH_MASTER_ACTIVE: "",
+    WAREHOUSE_TYPE_MASTER_ACTIVE: "",
+    WAREHOUSE_SUB_TYPE_MASTER_ACTIVE: "",
+    USER_MASTER_ACTIVE: "",
   },
 };
