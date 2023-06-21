@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import {
   Box,
@@ -10,19 +10,31 @@ import {
 } from "@chakra-ui/react";
 import Select from "react-select";
 
-const CustomSelector = ({ name, label, options, rules }) => {
+const CustomSelector = ({
+  name,
+  label,
+  options,
+  rules,
+  selectedValue,
+  isClearable,
+}) => {
   const {
     control,
     formState: { errors },
     setValue,
     watch,
   } = useFormContext();
+  const [selectedVal, setSelectedVal] = useState(selectedValue);
 
   const error = errors[name];
-  const selectedValue = watch(name);
+  const selectedValue_xyz = watch(name);
+
+  console.log("selectedValue value: " + selectedValue);
 
   const handleSelectChange = (selectedOption) => {
+    console.log("handleSelectChange", selectedOption);
     setValue(name, selectedOption?.value || "");
+    setSelectedVal(selectedOption);
   };
 
   return (
@@ -37,8 +49,9 @@ const CustomSelector = ({ name, label, options, rules }) => {
               {...field}
               options={options || []}
               placeholder={label}
-              isClearable
-              value={options?.find((option) => option.value === selectedValue)}
+              isClearable={isClearable}
+              //   value={selectedVal}
+              value={selectedVal}
               onChange={handleSelectChange}
               styles={{
                 control: (base, state) => ({

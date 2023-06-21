@@ -2,7 +2,8 @@ import CustomInput from "./CustomInput";
 import CustomSelector from "./CustomSelector";
 
 function generateFormField(obj) {
-  const { name, placeholder, type, label, style } = obj;
+  const { name, placeholder, type, label, isClearable, selectedValue, style } =
+    obj;
   switch (type) {
     case "text":
       return (
@@ -53,6 +54,8 @@ function generateFormField(obj) {
           type={type}
           label={label}
           style={style}
+          isClearable={isClearable}
+          selectedValue={selectedValue}
           options={obj.options}
         />
       );

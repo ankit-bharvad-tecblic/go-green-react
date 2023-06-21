@@ -10,6 +10,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { useNavigate } from "react-router-dom";
+import { filterFields } from "./fields";
 
 const CommodityMaster = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,8 @@ const CommodityMaster = () => {
     (state) => state.dataTableFiltersReducer.filterQuery
   );
   console.log("CommodityMaster", filterQuery);
+
+  const navigate = useNavigate();
 
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
@@ -87,6 +91,15 @@ const CommodityMaster = () => {
     }
   };
 
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/commodity-master/edit/commodity-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
+
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -97,9 +110,9 @@ const CommodityMaster = () => {
       cell: (info) => info.getValue(),
       header: "name",
     }),
-    columnHelper.accessor("commodity_type.id", {
+    columnHelper.accessor("commodity_type.commodity_type", {
       cell: (info) => info.getValue(),
-      header: "type id",
+      header: "Type",
     }),
     // columnHelper.accessor("minimum_bag_size", {
     //   cell: (info) => info.getValue(),
@@ -155,61 +168,13 @@ const CommodityMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "COMMODITY NAME": "commodity_name",
-      isActiveFilter: false,
-      label: "COMMODITY NAME",
-      name: "commodity_name",
-      placeholder: "COMMODITY NAME",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
