@@ -40,5 +40,10 @@ export const API = {
     SECURITY_GUARD_ACTIVE: "",
     EARTHQUAKE_ZONE_ACTIVE: "/warehouse/earthquake_zone_active/",
     PAGE_MASTER_ACTIVE: "",
+    BANK_MASTER_ACTIVE: "",
+    BANK_BRANCH_MASTER_ACTIVE: "",
+    WAREHOUSE_TYPE_MASTER_ACTIVE: "",
+    WAREHOUSE_SUB_TYPE_MASTER_ACTIVE: "",
+    USER_MASTER_ACTIVE: "",
   },
 };

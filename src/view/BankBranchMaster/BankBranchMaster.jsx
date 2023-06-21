@@ -2,11 +2,15 @@ import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
-import { useGetBankBranchMasterMutation } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import {
+  useActiveDeActiveMutation,
+  useGetBankBranchMasterMutation,
+} from "../../features/master-api-slice";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
+import { API } from "../../constants/api.constants";
 
 function BankBranchMaster() {
   const dispatch = useDispatch();
@@ -32,6 +36,56 @@ function BankBranchMaster() {
     },
   ] = useGetBankBranchMasterMutation();
 
+  const [
+    activeDeActive,
+    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
+  ] = useActiveDeActiveMutation();
+
+  const toast = useToast();
+
+  const handleActiveDeActive = async (e, info) => {
+    console.log("event --> ", e.target.checked, info);
+    let obj = {
+      id: info.row.original.id,
+      active: e.target.checked,
+      endPoint: API.DASHBOARD.BANK_BRANCH_MASTER_ACTIVE,
+    };
+    try {
+      const response = await activeDeActive(obj).unwrap();
+
+      if (response.status === 201) {
+        toast({
+          title: `${response.message}`,
+          status: "success",
+          position: "top-right",
+          isClosable: true,
+          duration: 2000,
+        });
+        let table_data = data;
+        console.log("table_data", data);
+
+        const updatedData = table_data.map((item) => {
+          if (item.id === obj.id) {
+            return {
+              ...item,
+              active: obj.active,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        console.log("updatedData", updatedData);
+
+        setData(updatedData);
+        // getData();
+      }
+
+      console.log("response --> ", response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -73,6 +127,8 @@ function BankBranchMaster() {
           <Switch
             size="md"
             colorScheme="whatsapp"
+            onChange={(e) => handleActiveDeActive(e, info)}
+            isChecked={info.row.original.active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -202,18 +258,18 @@ function BankBranchMaster() {
   const getData = async () => {
     //params filter
     //filter.filter.length || filter.search
-    if (filterQuery) {
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
-    }
+    // if (filterQuery) {
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+    // }
 
     console.log("paramString ---> ", paramString);
 
@@ -234,20 +290,20 @@ function BankBranchMaster() {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
-  useMemo(() => {
-    if (filter.search !== null) {
-      getData();
-    }
-  }, [filter.search]);
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
 
-  useMemo(() => {
-    console.log("filter query", filterQuery);
-    if (filterQuery) {
-      getData();
-    }
-  }, [filterQuery]);
+  // useMemo(() => {
+  //   console.log("filter query", filterQuery);
+  //   if (filterQuery) {
+  //     getData();
+  //   }
+  // }, [filterQuery]);
   return (
     <div>
       <FunctionalTable
