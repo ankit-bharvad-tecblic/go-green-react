@@ -62,13 +62,16 @@ function FunctionalTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // onSortingChange: setSorting,
+    // getSortedRowModel: getSortedRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
-    pageCount: filter?.limit || 25,
+    //  pageCount: filter?.limit || 25,
     state: {
-      sorting,
+      // sorting,
+      pagination: {
+        pageSize: filter?.limit || 25,
+      },
     },
   });
 
@@ -446,84 +449,77 @@ function FunctionalTable({
           </Tbody>
         </Table>
       </Box>
-      <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
-        <Button
-          variant="ghost"
-          p="5px"
-          onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
-          isDisabled={filter.page === 1 || loading}
-        >
-          {"<<"}
-        </Button>
-        <Button
-          variant="ghost"
-          p="5px"
-          onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
-          isDisabled={filter.page === 1 || loading}
-        >
-          {"<"}
-        </Button>
-        <Text fontSize="18px"> Page </Text>
-        <Button
-          p="5px"
-          color="secondary.500"
-          bg="secondary.100"
-          borderRadius="4px"
-        >
-          {filter.page}
-        </Button>
-        <Text fontSize="18px"> of {filter.totalPage} </Text>
-        <Button
-          variant="ghost"
-          onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
-          isDisabled={filter.page === filter.totalPage || loading}
-        >
-          {">"}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => setFilter((old) => ({ ...old, page: old.totalPage }))}
-          isDisabled={filter.page === filter.totalPage || loading}
-        >
-          {">>"}
-        </Button>
-        <Text fontSize="18px" borderLeft="1px" pl="10px">
-          {" "}
-          Go to page{" "}
-        </Text>
-        {/* <Input
-          type="number"
-          value={filter.page}
-          onChange={(e) => {
-            if (
-              Number(e.target.value) <= filter.totalPage &&
-              Number(e.target.value) > 0
-            ) {
-              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+      <Flex justifyContent="space-between" alignItems="center">
+        <Box>
+          <Text> Total Record According to filter : 20 </Text>
+          <Text>Total Record In Database : 20 </Text>
+        </Box>
+        <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
+          <Button
+            variant="ghost"
+            p="5px"
+            onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
+            isDisabled={filter.page === 1 || loading}
+          >
+            {"<<"}
+          </Button>
+          <Button
+            variant="ghost"
+            p="5px"
+            onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
+            isDisabled={filter.page === 1 || loading}
+          >
+            {"<"}
+          </Button>
+          <Text fontSize="18px"> Page </Text>
+          <Button
+            p="5px"
+            color="secondary.500"
+            bg="secondary.100"
+            borderRadius="4px"
+          >
+            {filter.page}
+          </Button>
+          <Text fontSize="18px"> of {filter.totalPage} </Text>
+          <Button
+            variant="ghost"
+            onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
+            isDisabled={filter.page === filter.totalPage || loading}
+          >
+            {">"}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() =>
+              setFilter((old) => ({ ...old, page: old.totalPage }))
             }
-          }}
-          disabled={loading}
-          width="70px"
-          ml="10px"
-        /> */}
-        <Select
-          disabled={loading}
-          width="70px"
-          ml="10px"
-          value={filter?.page}
-          onChange={(e) => {
-            if (
-              Number(e.target.value) <= filter?.totalPage &&
-              Number(e.target.value) > 0
-            ) {
-              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
-            }
-          }}
-        >
-          {Array.from(Array(filter?.totalPage))?.map((item, index) => (
-            <option value={index + 1}> {index + 1} </option>
-          ))}
-        </Select>
+            isDisabled={filter.page === filter.totalPage || loading}
+          >
+            {">>"}
+          </Button>
+          <Text fontSize="18px" borderLeft="1px" pl="10px">
+            {" "}
+            Go to page{" "}
+          </Text>
+          <Select
+            disabled={loading}
+            width="70px"
+            ml="10px"
+            value={filter?.page}
+            onChange={(e) => {
+              if (
+                Number(e.target.value) <= filter?.totalPage &&
+                Number(e.target.value) > 0
+              ) {
+                setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+              }
+            }}
+          >
+            {Array.from(Array(filter?.totalPage))?.map((item, index) => (
+              <option value={index + 1}> {index + 1} </option>
+            ))}
+          </Select>
+        </Flex>
       </Flex>
     </Box>
   );
