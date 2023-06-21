@@ -36,7 +36,7 @@ import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCom
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
-/// let isAuth = localStorageService.get("GG_ADMIN");
+/// let isAuth = localStorageService.get("GG_ADMIN"); d
 
 const headerType = "absolute";
 
