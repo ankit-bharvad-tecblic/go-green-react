@@ -3,12 +3,14 @@ import { mode } from "@chakra-ui/theme-tools";
 export const globalStyles = {
   colors: {
     gray: {
-      900:'#45464E',
+      900: "#45464E",
       800: "#636363",
       700: "#1f2733",
       600: "#ADB8CC",
       500: "#344054",
       400: "#667085",
+      300: "#9F9F9F", //Placeholder color
+      200: "#F8F8F8", // Input box color
       100: "#f3f3f3",
     },
 
