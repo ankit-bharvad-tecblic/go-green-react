@@ -26,5 +26,6 @@ export const API = {
     SECURITY_AGENCY_MASTER: "/business_flow/security_agency/",
     SECURITY_GUARD_MASTER: "/warehouse/security_guard/",
     WAREHOUSE_TYPE_MASTER: "/warehouse/warehouse_type/",
+    COMMODITY_ACTIVE: "/warehouse/commodity_active/",
   },
 };

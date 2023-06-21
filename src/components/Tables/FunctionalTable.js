@@ -182,6 +182,7 @@ function FunctionalTable({
           >
             <BiFilterAlt size="20px" color="#A0AEC0" />
           </Button>
+
           <Button
             variant="outline"
             p="0px 10px"

@@ -187,6 +187,17 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    activeDeActive: builder.mutation({
+      query: (data) => ({
+        url: data.endPoint,
+        method: "POST",
+        body: data,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -212,6 +223,7 @@ export const {
   useGetInsuranceCompanyMasterMutation,
   useGetRegionMasterMutation,
   useGetWarehouseTypeMasterMutation,
+  useActiveDeActiveMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
