@@ -31,7 +31,7 @@ function CustomInput({ name, placeholder, type, label, style }) {
               // width={{ base: "90%" }}
               backgroundColor={"gray.200"}
               borderRadius={"lg"}
-              _placeholder={{ color: "gray.400" }}
+              _placeholder={{ color: "gray.300" }}
               _hover={{
                 borderColor: "primary.700",
                 backgroundColor: "primary.200",
