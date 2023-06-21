@@ -41,10 +41,7 @@ const AddEditFormCommodityMaster = () => {
       // setHandleSelectBoxVal
 
       Object.keys(obj).forEach(function (key) {
-        if (key === "active") {
-        } else {
-          methods.setValue(key, obj[key], { shouldValidate: true });
-        }
+        methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
   }, [details]);
@@ -63,13 +60,12 @@ const AddEditFormCommodityMaster = () => {
                 {generateFormField({
                   ...item,
                   label: "",
-                  //   selectedValue: details?.active ? "True" : "False",
                   selectedValue:
                     item.type === "select" &&
                     item?.options?.find((opt) => {
-                      console.log("opt ", opt.value === details?.active);
                       return opt.value === details?.active ? "True" : "False";
                     }),
+                  isChecked: details?.active,
                   isClearable: false,
                   style: { mb: 4, mt: 3 },
                 })}

@@ -1,9 +1,18 @@
 import CustomInput from "./CustomInput";
 import CustomSelector from "./CustomSelector";
+import CustomSwitch from "./CustomSwitch";
 
 function generateFormField(obj) {
-  const { name, placeholder, type, label, isClearable, selectedValue, style } =
-    obj;
+  const {
+    name,
+    placeholder,
+    type,
+    label,
+    isClearable,
+    selectedValue,
+    isChecked,
+    style,
+  } = obj;
   switch (type) {
     case "text":
       return (
@@ -44,8 +53,16 @@ function generateFormField(obj) {
           label={label}
         />
       );
-    case "checkbox":
-      return '<input type="checkbox">';
+    case "switch":
+      return (
+        <CustomSwitch
+          name={name}
+          type={type}
+          label={label}
+          style={style}
+          isChecked={isChecked}
+        />
+      );
     case "select":
       return (
         <CustomSelector
