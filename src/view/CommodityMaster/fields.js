@@ -77,25 +77,15 @@ const addEditFormFields = [
   {
     label: "ACTIVE/DeActive",
     name: "active",
-    placeholder: "Active/DeActive",
-    type: "select",
-    multi: false,
-    options: [
-      {
-        label: "ACTIVE",
-        value: "True",
-      },
-      {
-        label: "DeActive",
-        value: "False",
-      },
-    ],
+    type: "switch",
   },
   {
-    name: "commodity_type",
     label: "COMMODITY TYPE",
+    name: "commodity_type",
     placeholder: "COMMODITY TYPE",
-    type: "text",
+    type: "select",
+    multi: false,
+    options: [],
   },
 ];
 
@@ -104,7 +94,7 @@ const schema = yup.object().shape({
   minimum_bag_size: yup.number().required("Minimum bag size is required"),
   maximum_bag_size: yup.string().required("Maximum bag size is required"),
   rent_on_bag: yup.string().required("Rent on bag is required"),
-  active: yup.string().required("active / deActive state is required"),
+  active: yup.string(),
   commodity_type: yup.string().required("Commodity type is required"),
 });
 
