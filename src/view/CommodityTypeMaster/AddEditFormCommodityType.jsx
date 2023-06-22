@@ -5,6 +5,7 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { formFields } from "./fields";
 
 const schema = yup.object().shape({
   commodity_type: yup.string().required("please fill the commodity type."),
@@ -19,21 +20,6 @@ function AddEditFormCommodityType() {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-
-  const formFields = [
-    {
-      label: "COMMODITY TYPE",
-      name: "commodity_type",
-      placeholder: "COMMODITY TYPE",
-      type: "text",
-    },
-    {
-      label: "DESCRIPTION",
-      name: "description",
-      placeholder: "DESCRIPTION",
-      type: "text",
-    },
-  ];
 
   useEffect(() => {
     if (details?.id) {

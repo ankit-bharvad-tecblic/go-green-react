@@ -7,6 +7,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
 
 const StateMaster = () => {
   const dispatch = useDispatch();
@@ -158,100 +159,6 @@ const StateMaster = () => {
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "STATE NAME": "state_name",
-      isActiveFilter: false,
-      label: "STATE NAME",
-      name: "state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-    // {
-    //   "REGION NAME": "state_name",
-    //   isActiveFilter: false,
-    //   label: "REGION NAME",
-    //   name: "state_name",
-    //   placeholder: "REGION NAME",
-    //   type: "text",
-    // },
-    {
-      "STATE CODE": "state_code",
-      isActiveFilter: false,
-      label: "STATE CODE",
-      name: "state_code",
-      placeholder: "STATE CODE",
-      type: "number",
-    },
-    {
-      "TIN NO": "tin_no",
-      isActiveFilter: false,
-      label: "TIN NO",
-      name: "tin_no",
-      placeholder: "TIN NO",
-      type: "number",
-    },
-    {
-      GSTN: "gstn",
-      isActiveFilter: false,
-      label: "GSTN",
-      name: "gstn",
-      placeholder: "GSTN",
-      type: "number",
-    },
-    {
-      "NAV CODE": "nav_code",
-      isActiveFilter: false,
-      label: "NAV CODE",
-      name: "nav_code",
-      placeholder: "NAV CODE",
-      type: "number",
-    },
-    {
-      "OFFICE ADDRESS": "state_india_office_addr",
-      isActiveFilter: false,
-      label: "OFFICE ADDRESS",
-      name: "state_india_office_addr",
-      placeholder: "OFFICE ADDRESS",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
