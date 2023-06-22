@@ -10,6 +10,7 @@ function generateFormField(obj) {
     label,
     isClearable,
     selectedValue,
+    selectType,
     isChecked,
     style,
   } = obj;
@@ -71,6 +72,7 @@ function generateFormField(obj) {
           type={type}
           label={label}
           style={style}
+          selectType={selectType}
           isClearable={isClearable}
           selectedValue={selectedValue}
           options={obj.options}

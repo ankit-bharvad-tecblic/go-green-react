@@ -11,15 +11,16 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
+import { useGetCommodityTypeMasterMutation } from "../../features/master-api-slice";
 
 const AddEditFormCommodityMaster = () => {
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const [handleSelectBoxVal, setHandleSelectBoxVal] = useState({
-    active: {},
-  });
+  const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
+  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+
   const details = location.state?.details;
   console.log("details ---> ", details);
 
@@ -27,7 +28,67 @@ const AddEditFormCommodityMaster = () => {
     console.log("data==>", data);
   };
 
+  const [
+    getCommodityTypeMaster,
+    {
+      error: getCommodityTypeMasterApiErr,
+      isLoading: getCommodityTypeMasterApiIsLoading,
+    },
+  ] = useGetCommodityTypeMasterMutation();
+
+  const getCommodityType = async () => {
+    //params filter
+    // if (filter.filter.length || filter.search) {
+    // if (filterQuery) {
+    // paramString = Object.entries(filter)
+    //   .map(([key, value]) => {
+    //     if (Array.isArray(value)) {
+    //       return value
+    //         .map((item) => `${key}=${encodeURIComponent(item)}`)
+    //         .join("&");
+    //     }
+    //     return `${key}=${encodeURIComponent(value)}`;
+    //   })
+    //   .join("&");
+    // }
+
+    try {
+      // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
+      const response = await getCommodityTypeMaster().unwrap();
+
+      console.log("Success:", response);
+      // setCommodityTypeMaster();
+      let arr = response?.results.map((type) => ({
+        label: type.commodity_type,
+        value: type.id,
+      }));
+
+      setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+              options: arr,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+
+      // setData(response?.results || []);
+      // setFilter((old) => ({
+      //   ...old,
+      //   totalPage: Math.ceil(response?.total / old?.limit),
+      // }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
+    getCommodityType();
     if (details?.id) {
       let obj = {
         commodity_name: details.commodity_name,
@@ -50,8 +111,8 @@ const AddEditFormCommodityMaster = () => {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {addEditFormFields &&
-            addEditFormFields.map((item) => (
+          {addEditFormFieldsList &&
+            addEditFormFieldsList.map((item) => (
               <Box gap="10" display={{ base: "flex" }} alignItems="center">
                 {" "}
                 <Text textAlign="right" w="250px">
@@ -60,30 +121,35 @@ const AddEditFormCommodityMaster = () => {
                 {generateFormField({
                   ...item,
                   label: "",
+                  // options: item.type === "select" && commodityTypeMaster,
                   selectedValue:
                     item.type === "select" &&
-                    item?.options?.find((opt) => {
-                      return opt.value === details?.active ? "True" : "False";
-                    }),
+                    item?.options?.find(
+                      (opt) =>
+                        opt.label === details?.commodity_type?.commodity_type
+                    ),
+                  selectType: "label",
                   isChecked: details?.active,
                   isClearable: false,
-                  style: { mb: 4, mt: 3 },
+                  style: { mb: 2, mt: 2 },
                 })}
               </Box>
             ))}
 
-          <Button
-            type="submit"
-            //w="full"
-            backgroundColor={"primary.700"}
-            _hover={{ backgroundColor: "primary.700" }}
-            color={"white"}
-            borderRadius={"full"}
-            my={"4"}
-            px={"10"}
-          >
-            Update
-          </Button>
+          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+            <Button
+              type="submit"
+              //w="full"
+              backgroundColor={"primary.700"}
+              _hover={{ backgroundColor: "primary.700" }}
+              color={"white"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+            >
+              Update
+            </Button>
+          </Box>
         </form>
       </FormProvider>
     </Box>

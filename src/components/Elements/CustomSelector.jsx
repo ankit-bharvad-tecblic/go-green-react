@@ -17,6 +17,8 @@ const CustomSelector = ({
   rules,
   selectedValue,
   isClearable,
+  selectType,
+  style,
 }) => {
   const {
     control,
@@ -27,18 +29,17 @@ const CustomSelector = ({
   const [selectedVal, setSelectedVal] = useState(selectedValue);
 
   const error = errors[name];
-  const selectedValue_xyz = watch(name);
 
-  console.log("selectedValue value: " + selectedValue);
+  console.log("selectedValue value: ", selectedValue);
 
   const handleSelectChange = (selectedOption) => {
     console.log("handleSelectChange", selectedOption);
-    setValue(name, selectedOption?.value || "");
+    setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
   };
 
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl {...style} isInvalid={!!error}>
       <FormLabel>{label}</FormLabel>
       <Box>
         <Controller

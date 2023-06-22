@@ -80,10 +80,12 @@ const addEditFormFields = [
     type: "switch",
   },
   {
-    name: "commodity_type",
     label: "COMMODITY TYPE",
+    name: "commodity_type",
     placeholder: "COMMODITY TYPE",
-    type: "text",
+    type: "select",
+    multi: false,
+    options: [],
   },
 ];
 
