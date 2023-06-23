@@ -82,6 +82,10 @@ const DistrictMaster = () => {
     }
   };
 
+  const addForm = () => {
+    navigate(`/manage-location/add/district-master`);
+  };
+
   const editForm = (info) => {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
@@ -250,6 +254,7 @@ const DistrictMaster = () => {
         columns={columns}
         data={data}
         loading={getDistrictMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

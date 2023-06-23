@@ -2,6 +2,7 @@ import moment from "moment/moment";
 import CustomInput from "./CustomInput";
 import CustomSelector from "./CustomSelector";
 import CustomSwitch from "./CustomSwitch";
+import CustomTextArea from "./CustomTextArea";
 
 function generateFormField(obj) {
   const {
@@ -58,6 +59,16 @@ function generateFormField(obj) {
           placeholder={placeholder}
           type={type}
           label={label}
+        />
+      );
+    case "textArea":
+      return (
+        <CustomTextArea
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          label={label}
+          style={style}
         />
       );
     case "switch":

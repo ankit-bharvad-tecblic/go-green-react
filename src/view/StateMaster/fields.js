@@ -130,10 +130,10 @@ const addEditFormFields = [
     name: "state_india_office_addr",
     label: "OFFICE ADDRESS",
     placeholder: "OFFICE ADDRESS",
-    type: "text",
+    type: "textArea",
   },
   {
-    label: "ACTIVE/DeActive",
+    label: "ACTIVE",
     name: "active",
     type: "switch",
   },

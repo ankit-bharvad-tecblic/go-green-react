@@ -68,7 +68,8 @@ const AddEditFormDistrictMaster = () => {
   };
 
   useEffect(() => {
-    getDistrict();
+    //  getDistrict();
+
     if (details?.id) {
       let obj = {
         district_name: details.district_name,
@@ -82,6 +83,7 @@ const AddEditFormDistrictMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    setAddEditFormFieldsList(addEditFormFields);
   }, [details]);
 
   return (
@@ -124,7 +126,7 @@ const AddEditFormDistrictMaster = () => {
               my={"4"}
               px={"10"}
             >
-              Update
+              {details?.id ? "Update" : "Add"}
             </Button>
           </Box>
         </form>
