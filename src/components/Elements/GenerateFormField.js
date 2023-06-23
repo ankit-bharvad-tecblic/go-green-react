@@ -1,3 +1,4 @@
+import moment from "moment/moment";
 import CustomInput from "./CustomInput";
 import CustomSelector from "./CustomSelector";
 import CustomSwitch from "./CustomSwitch";
@@ -14,6 +15,10 @@ function generateFormField(obj) {
     isChecked,
     style,
   } = obj;
+  const formatDate = (value) => {
+    const formattedDate = moment(value).format("YYYY-MM-DD");
+    return formattedDate;
+  };
   switch (type) {
     case "text":
       return (
@@ -33,6 +38,7 @@ function generateFormField(obj) {
           type={type}
           label={label}
           style={style}
+          formatDate={formatDate}
         />
       );
     case "number":

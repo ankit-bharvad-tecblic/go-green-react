@@ -11,12 +11,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function InsuranceCompanyMaster() {
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
+  const navigate = useNavigate();
   console.log("InsuranceCompanyMaster", filterQuery);
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
@@ -29,15 +32,10 @@ function InsuranceCompanyMaster() {
 
   const [
     getInsuranceCompanyMaster,
-    {
-      error: getInsuranceCompanyMasterApiErr,
-      isLoading: getInsuranceCompanyMasterApiIsLoading,
-    },
+    { isLoading: getInsuranceCompanyMasterApiIsLoading },
   ] = useGetInsuranceCompanyMasterMutation();
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive, { isLoading: activeDeActiveApiIsLoading }] =
+    useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -85,6 +83,17 @@ function InsuranceCompanyMaster() {
       console.error("Error:", error);
     }
   };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(
+      `/insurance-company-master/edit/insurance-company-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
+  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -130,52 +139,13 @@ function InsuranceCompanyMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-  const filterFields = [
-    {
-      "company name": "insurance_company_name",
-      isActiveFilter: false,
-
-      label: "company name",
-      name: "insurance_company_name",
-      placeholder: "company name",
-      type: "text",
-    },
-    {
-      ADDRESS: "insurance_company_address",
-      isActiveFilter: false,
-
-      label: "ADDRESS",
-      name: "insurance_company_address",
-      placeholder: "ADDRESS",
-      type: "text",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
@@ -226,18 +196,6 @@ function InsuranceCompanyMaster() {
     tableFilterSet();
     getData();
   }, [filter.limit, filter.page, filterQuery]);
-
-  // useMemo(() => {
-  //   if (filter.search !== null) {
-  //     getData();
-  //   }
-  // }, [filter.search]);
-  // useMemo(() => {
-  //   console.log("filter query", filterQuery);
-  //   if (filterQuery) {
-  //     getData();
-  //   }
-  // }, [filterQuery]);
 
   return (
     <div>

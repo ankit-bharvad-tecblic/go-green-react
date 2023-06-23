@@ -33,6 +33,11 @@ import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster
 import FormDesign from "../view/FormDesign";
 import AddEditFormCommodityMaster from "../view/CommodityMaster/AddEditFormCommodityMaster";
 import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCommodityType";
+import AddEditFormInsuranceCompanyMaster from "../view/InsuranceCompanyMaster/AddEditFormInsuranceCompanyMaster";
+import AddEditFormSecurityAgencyMaster from "../view/SecurityAgencyMaster/AddEditFormSecurityAgencyMaster";
+import AddEditSecurityGuardMaster from "../view/SecurityGuardMaster/AddEditSecurityGuardMaster";
+import AddEditFormEarthQuackZoneTypeMaster from "../view/EarthquakeZoneTypeMaster/AddEditFormEarthQuackZoneTypeMaster";
+import AddEditPageMaster from "../view/PageMaster/AddEditPageMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -238,6 +243,18 @@ const routes = [
     ),
   },
   {
+    path: "/page-master/edit/page-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Page Master"}>
+            <AddEditPageMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
     path: "/user-master",
     element: (
       <ProtectedRoutes>
@@ -288,12 +305,75 @@ const routes = [
   },
 
   {
+    path: "add/insurance-company-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Insurance Company Master"}>
+            <AddEditFormInsuranceCompanyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/insurance-company-master/edit/insurance-company-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Insurance Company Master"}>
+            <AddEditFormInsuranceCompanyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "/security-guard-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Guard Master"}>
+            <SecurityGuardMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/security-guard-master/edit/security-guard-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Guard Master"}>
+            <AddEditSecurityGuardMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
     path: "/earthquake-zone-type-master",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
             <EarthquakeZoneTypeMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/earthquake-zone-type-master/edit/security-guard-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
+            <AddEditFormEarthQuackZoneTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
@@ -339,6 +419,7 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+
       {
         path: "commodity-type",
         element: (
@@ -351,6 +432,7 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+
       {
         path: "add/commodity-type",
         element: (
@@ -414,17 +496,18 @@ const routes = [
     ),
   },
   {
-    path: "/security-guard-master",
+    path: "/security-agency-master/edit/security-agency-master/:id",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Security Guard Master"}>
-            <SecurityGuardMaster />
+          <Layout variant={headerType} title={"Security Agency Master"}>
+            <AddEditFormSecurityAgencyMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
     ),
   },
+
   // for tasting purpose only
   {
     path: "/testing",

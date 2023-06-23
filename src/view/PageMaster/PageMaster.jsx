@@ -11,6 +11,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { useNavigate } from "react-router-dom";
+import { filterFields } from "./fields";
 
 const PageMaster = () => {
   const dispatch = useDispatch();
@@ -26,7 +28,7 @@ const PageMaster = () => {
     totalPage: 1,
     limit: 25,
   });
-
+  const navigate = useNavigate();
   const [
     getStateMaster,
     { error: getPageMasterApiErr, isLoading: getPageMasterApiIsLoading },
@@ -82,6 +84,14 @@ const PageMaster = () => {
       console.error("Error:", error);
     }
   };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/page-master/edit/page-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -135,71 +145,13 @@ const PageMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "PAGE NAME": "page_name",
-      isActiveFilter: false,
-
-      label: "PAGE NAME",
-      name: "page_name",
-      placeholder: "PAGE NAME",
-      type: "text",
-    },
-    {
-      DESCRIPTION: "description",
-      isActiveFilter: false,
-
-      label: "DESCRIPTION",
-      name: "description",
-      placeholder: "DESCRIPTION",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "creation_date",
-      isActiveFilter: false,
-
-      label: "CREATION DATE",
-      name: "creation_date",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
