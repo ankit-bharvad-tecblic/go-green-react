@@ -67,7 +67,7 @@ const AddEditFormRegionMaster = () => {
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
-      x;
+
       toasterAlert(error);
     }
   };
