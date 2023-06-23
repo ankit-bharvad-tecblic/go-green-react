@@ -2,14 +2,20 @@ import React, { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
-import { useActiveDeActiveMutation, useGetRegionMasterMutation } from "../../features/master-api-slice";
+import {
+  useActiveDeActiveMutation,
+  useGetRegionMasterMutation,
+} from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function RegionMaster() {
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -28,7 +34,6 @@ function RegionMaster() {
     getRegionMaster,
     { error: getRegionMasterApiErr, isLoading: getRegionMasterApiIsLoading },
   ] = useGetRegionMasterMutation();
-
 
   const [
     activeDeActive,
@@ -131,58 +136,20 @@ function RegionMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => {
+              navigation(
+                `/location-master/edit/region-master/${info.row.original.id}`,
+                {
+                  state: { details: info.row.original },
+                }
+              );
+            }}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "REGION NAME": "region_name",
-      isActiveFilter: false,
-      label: "REGION NAME",
-      name: "region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
@@ -202,16 +169,16 @@ function RegionMaster() {
     //params filter
     // if (filter.filter.length || filter.search) {
     // if (filterQuery) {
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
     // }
 
     console.log("paramString ---> ", paramString);

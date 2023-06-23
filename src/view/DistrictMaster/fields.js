@@ -2,17 +2,24 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "COMMODITY NAME": "commodity_name",
+    "DISTRICT NAME": "district_name",
     isActiveFilter: false,
-    label: "COMMODITY NAME",
-    name: "commodity_name",
-    placeholder: "COMMODITY NAME",
+    label: "DISTRICT NAME",
+    name: "district_name",
+    placeholder: "DISTRICT NAME",
+    type: "text",
+  },
+  {
+    "ZONE NAME": "state__zone__zone_name",
+    isActiveFilter: false,
+    label: "ZONE NAME",
+    name: "state__zone__zone_name",
+    placeholder: "ZONE NAME",
     type: "text",
   },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
-
     label: "CREATION DATE",
     name: "created_at",
     placeholder: "CREATION DATE",
@@ -29,10 +36,9 @@ const filterFields = [
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
-
     label: "ACTIVE/DeActive",
     name: "active",
-    placeholder: "Active / DeActive",
+    placeholder: "Active/DeActive",
     type: "select",
     multi: false,
     options: [
@@ -50,28 +56,29 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    name: "zone_name",
+    label: "DISTRICT NAME",
+    name: "commodity_type",
+    placeholder: "DISTRICT NAME",
+    type: "text",
+  },
+  {
     label: "ZONE NAME",
+    name: "description",
     placeholder: "ZONE NAME",
     type: "text",
   },
   {
-    name: "state",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
-    type: "select",
-  },
-  {
     label: "ACTIVE/DeActive",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
-  zone_name: yup.string().required("Zone name is required"),
-  state: yup.string().required("State name is required"),
-  active: yup.string(),
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
+  commodity_type: yup.string().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };
+

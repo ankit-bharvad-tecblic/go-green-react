@@ -88,7 +88,7 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("state.zone.zone_name", {
+    columnHelper.accessor("zone.zone_name", {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),

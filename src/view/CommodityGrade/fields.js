@@ -2,17 +2,24 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "COMMODITY NAME": "commodity_name",
+    "COMMODITY GRADE NAME": "commodity_grade",
     isActiveFilter: false,
-    label: "COMMODITY NAME",
-    name: "commodity_name",
-    placeholder: "COMMODITY NAME",
+    label: "COMMODITY GRADE NAME",
+    name: "commodity_grade",
+    placeholder: "COMMODITY GRADE NAME",
+    type: "text",
+  },
+  {
+    DESCRIPTION: "description",
+    isActiveFilter: false,
+    label: "DESCRIPTION",
+    name: "description",
+    placeholder: "DESCRIPTION",
     type: "text",
   },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
-
     label: "CREATION DATE",
     name: "created_at",
     placeholder: "CREATION DATE",
@@ -22,17 +29,16 @@ const filterFields = [
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
     label: "LAST UPDATED DATE",
-    name: "last_updated_date",
+    name: "created_at",
     placeholder: "LAST UPDATED DATE",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
-
     label: "ACTIVE/DeActive",
     name: "active",
-    placeholder: "Active / DeActive",
+    placeholder: "Active/DeActive",
     type: "select",
     multi: false,
     options: [
@@ -50,28 +56,28 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    name: "zone_name",
-    label: "ZONE NAME",
-    placeholder: "ZONE NAME",
+    label: "COMMODITY GRADE",
+    name: "commodity_grade",
+    placeholder: "COMMODITY GRADE",
     type: "text",
   },
   {
-    name: "state",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
-    type: "select",
+    label: "DESCRIPTION",
+    name: "description",
+    placeholder: "DESCRIPTION",
+    type: "text",
   },
   {
     label: "ACTIVE/DeActive",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
-  zone_name: yup.string().required("Zone name is required"),
-  state: yup.string().required("State name is required"),
-  active: yup.string(),
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
+  commodity_grade: yup.string().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

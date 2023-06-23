@@ -13,11 +13,14 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
   useAddCommodityTypeMasterMutation,
+  useAddCommodityVarietyMutation,
+  useGetCommodityMasterMutation,
   useGetCommodityTypeMasterMutation,
   useUpdateCommodityTypeMasterMutation,
+  useUpdateCommodityVarietyMutation,
 } from "../../features/master-api-slice";
 
-const AddEditFormCommodityType = () => {
+const AddEditFormCommodityVariety = () => {
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -29,27 +32,30 @@ const AddEditFormCommodityType = () => {
   console.log("details ---> ", details);
 
   const [
-    UpdateCommodityType,
-    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityTypeLoading },
-  ] = useUpdateCommodityTypeMasterMutation();
+    UpdateCommodityVariety,
+    {
+      /* error: activeDeActiveApiErr,*/ isLoading:
+        UpdateCommodityVarietyLoading,
+    },
+  ] = useUpdateCommodityVarietyMutation();
 
   const [
-    AddCommodityType,
-    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityTypeLoading },
-  ] = useAddCommodityTypeMasterMutation();
+    AddCommodityVariety,
+    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityVarietyLoading },
+  ] = useAddCommodityVarietyMutation();
 
-  const updateCommodityTypeData = async (data) => {
+  const updateCommodityVarietyData = async (data) => {
     try {
-      const response = await UpdateCommodityType(data).unwrap();
+      const response = await UpdateCommodityVariety(data).unwrap();
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const addCommodityTypeData = async (data) => {
+  const addCommodityVarityData = async (data) => {
     try {
-      const response = await AddCommodityType(data).unwrap();
+      const response = await AddCommodityVariety(data).unwrap();
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
@@ -58,20 +64,20 @@ const AddEditFormCommodityType = () => {
 
   const onSubmit = (data) => {
     if (details?.id) {
-      updateCommodityTypeData(data);
+      updateCommodityVarietyData(data);
     } else {
-      addCommodityTypeData(data);
+      addCommodityVarityData(data);
     }
     console.log("data==>", data);
   };
 
   const [
-    getCommodityTypeMaster,
+    getCommodityMaster,
     {
       error: getCommodityTypeMasterApiErr,
       isLoading: getCommodityTypeMasterApiIsLoading,
     },
-  ] = useGetCommodityTypeMasterMutation();
+  ] = useGetCommodityMasterMutation();
 
   const getCommodityType = async () => {
     //params filter
@@ -92,12 +98,12 @@ const AddEditFormCommodityType = () => {
     try {
       // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
 
-      const response = await getCommodityTypeMaster().unwrap();
+      const response = await getCommodityMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
+        label: type.commodity_name,
         value: type.id,
       }));
 
@@ -128,9 +134,16 @@ const AddEditFormCommodityType = () => {
     getCommodityType();
     if (details?.id) {
       let obj = {
-        commodity_type: details.commodity_type,
+        commodity_variety: details.commodity_variety,
         description: details.description,
-        is_active: details.active,
+        hsn_code: details.hsn_code,
+        fumigation_required: details.fumigation_required,
+        fumigation_day: details.fumigation_day,
+        lab_testing_required: details.lab_testing_required,
+        fed: details.fed,
+        is_block: details.is_block,
+        is_active: details.is_active,
+        commodity_id: details.commodity_id,
       };
 
       // setHandleSelectBoxVal
@@ -163,7 +176,7 @@ const AddEditFormCommodityType = () => {
                         opt.label === details?.commodity_type?.commodity_type
                     ),
                   selectType: "label",
-                  isChecked: details?.active,
+                  isChecked: details[item.name], 
                   isClearable: false,
                   style: { mb: 2, mt: 2 },
                 })}
@@ -190,4 +203,4 @@ const AddEditFormCommodityType = () => {
   );
 };
 
-export default AddEditFormCommodityType;
+export default AddEditFormCommodityVariety;

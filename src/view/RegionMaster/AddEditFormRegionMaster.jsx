@@ -12,12 +12,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
+    useAddCommodityGradeMutation,
   useAddCommodityTypeMasterMutation,
+  useAddRegionMasterMutation,
   useGetCommodityTypeMasterMutation,
+  useUpdateCommodityGradeMutation,
   useUpdateCommodityTypeMasterMutation,
+  useUpdateRegionMasterMutation,
 } from "../../features/master-api-slice";
 
-const AddEditFormCommodityType = () => {
+const AddEditFormRegionMaster = () => {
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -29,27 +33,27 @@ const AddEditFormCommodityType = () => {
   console.log("details ---> ", details);
 
   const [
-    UpdateCommodityType,
-    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityTypeLoading },
-  ] = useUpdateCommodityTypeMasterMutation();
+    UpdateRegionMaster,
+    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading },
+  ] = useUpdateRegionMasterMutation();
 
   const [
-    AddCommodityType,
-    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityTypeLoading },
-  ] = useAddCommodityTypeMasterMutation();
+    AddRegionMaster,
+    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityGradeLoading },
+  ] = useAddRegionMasterMutation();
 
-  const updateCommodityTypeData = async (data) => {
+  const updateCommodityGradeData = async (data) => {
     try {
-      const response = await UpdateCommodityType(data).unwrap();
+      const response = await UpdateRegionMaster(data).unwrap();
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const addCommodityTypeData = async (data) => {
+  const addCommodityGradeData = async (data) => {
     try {
-      const response = await AddCommodityType(data).unwrap();
+      const response = await AddRegionMaster(data).unwrap();
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
@@ -58,9 +62,9 @@ const AddEditFormCommodityType = () => {
 
   const onSubmit = (data) => {
     if (details?.id) {
-      updateCommodityTypeData(data);
+      updateCommodityGradeData(data);
     } else {
-      addCommodityTypeData(data);
+      addCommodityGradeData(data);
     }
     console.log("data==>", data);
   };
@@ -128,9 +132,8 @@ const AddEditFormCommodityType = () => {
     getCommodityType();
     if (details?.id) {
       let obj = {
-        commodity_type: details.commodity_type,
-        description: details.description,
-        is_active: details.active,
+        region_name: details.region_name,
+        active: details.is_active,
       };
 
       // setHandleSelectBoxVal
@@ -190,4 +193,4 @@ const AddEditFormCommodityType = () => {
   );
 };
 
-export default AddEditFormCommodityType;
+export default AddEditFormRegionMaster;

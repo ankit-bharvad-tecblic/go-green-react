@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { useLocation, useNavigate } from "react-router-dom";
+import { filterFields } from "./fields";
 
 const CommodityType = () => {
   const dispatch = useDispatch();
@@ -109,7 +110,6 @@ const CommodityType = () => {
       cell: (info) => info.getValue(),
       header: " Last Updated Date",
     }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -143,7 +143,7 @@ const CommodityType = () => {
             cursor="pointer"
             onClick={() => {
               navigation(`/commodity-master/edit/commodity-type/${info.row.original.id}`, {
-                state: { detail: info.row.original },
+                state: { details: info.row.original },
               });
             }}
           />
@@ -152,60 +152,6 @@ const CommodityType = () => {
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "COMMODITY NAME": "commodity_type",
-      isActiveFilter: false,
-      label: "COMMODITY TYPE",
-      name: "commodity_type",
-      placeholder: "COMMODITY TYPE",
-      type: "text",
-    },
-    {
-      DESCRIPTION: "description",
-      isActiveFilter: false,
-      label: "DESCRIPTION",
-      name: "description",
-      placeholder: "DESCRIPTION",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "created_at",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {
