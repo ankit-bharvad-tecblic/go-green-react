@@ -28,6 +28,9 @@ import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
 import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMaster";
+import EmployeeMaster from "../view/EmployeeMaster/EmployeeMaster";
+import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
+import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
 //
 
 const SidebarList = [
@@ -233,6 +236,27 @@ const SidebarList = [
         component: RolePageAssignmentMaster,
       },
     ],
+  },
+  {
+    path: "/employee-master",
+    name: "Employee Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: EmployeeMaster,
+  },
+  {
+    path: "/department-master",
+    name: "Department Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: DepartmentMaster,
+  },
+  {
+    path: "/hiring-proposal-master",
+    name: "Hiring Proposal Master",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: HiringProposalMaster,
   },
 ];
 

@@ -220,6 +220,43 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+
+    getEmployeeMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.EMPLOYEE_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+
+    getDepartmentMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.DEPARTMENT_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+
+    getHiringProposalMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.HIRING_PROPOSAL_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+
     getCommodityVariety: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_VARIETY,
@@ -369,6 +406,9 @@ export const {
   useAddCommodityMasterMutation,
   useUpdateCommodityMasterMutation,
   useGetBankCMLocationMasterMutation,
+  useGetEmployeeMasterMutation,
+  useGetDepartmentMasterMutation,
+  useGetHiringProposalMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

@@ -51,6 +51,9 @@ import AddEditFormWareHouseSubTypeMaster from "../view/WareHouseSubTypeMaster/Ad
 import AddEditFormUserMaster from "../view/UserMaster/AddEditFormUserMaster";
 import AddEditFormStateMaster from "../view/StateMaster/AddEditFormStateMaster";
 import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMaster";
+import EmployeeMaster from "../view/EmployeeMaster/EmployeeMaster";
+import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
+import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -505,7 +508,42 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: "/employee-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Employee Master"}>
+            <EmployeeMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/department-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Department Master"}>
+            <DepartmentMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/hiring-proposal-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Hiring Proposal Master"}>
+            <HiringProposalMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
   {
     path: "/bank-master",
     children: [
