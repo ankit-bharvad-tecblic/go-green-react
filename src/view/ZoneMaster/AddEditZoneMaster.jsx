@@ -17,6 +17,12 @@ import {
   useGetStateMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { motion } from "framer-motion";
+import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
+
+// export const MotionSlideUp = motion.custom((props) => (
+//   <motion.div variants={slideUp} {...props} />
+// ))
 
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
@@ -108,9 +114,11 @@ const AddEditZoneMaster = () => {
     if (details?.id) {
       let obj = {
         zone_name: details.zone_name,
-        state: details.state,
+        state: details.state.state_name,
         active: details.active,
       };
+
+      console.log(obj);
 
       Object.keys(obj).forEach(function (key) {
         methods.setValue(key, obj[key], { shouldValidate: true });
@@ -128,29 +136,38 @@ const AddEditZoneMaster = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                <Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box
+                  w="full"
+                  gap="10"
+                  display={{ base: "flex" }}
+                  alignItems="center"
+                >
+                  {" "}
+                  <Text textAlign="right" w="210px">
+                    {item.label}
+                  </Text>{" "}
                   {generateFormField({
                     ...item,
                     label: "",
                     isChecked: details?.active,
-                    style: { mb: 2, mt: 2, w: 250 },
+                    style: {
+                      mb: 2,
+                      mt: 2,
+                      w: 300,
+                    },
 
                     selectedValue:
                       item.type === "select" &&
                       item?.options?.find(
-                        (opt) => opt.label === details?.state
+                        (opt) => opt.label === details?.state.state_name
                       ),
                     selectType: "value",
                     isClearable: false,
                   })}
                 </Box>
-              </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
