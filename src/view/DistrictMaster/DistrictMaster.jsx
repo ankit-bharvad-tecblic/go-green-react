@@ -11,12 +11,15 @@ import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
+import { useNavigate } from "react-router";
+import { filterFields } from "./fields";
 
 const DistrictMaster = () => {
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
+  const navigate = useNavigate();
 
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
@@ -77,6 +80,15 @@ const DistrictMaster = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/manage-location/edit/district-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
   };
 
   const columns = [
@@ -152,66 +164,13 @@ const DistrictMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "DISTRICT NAME": "district_name",
-      isActiveFilter: false,
-      label: "DISTRICT NAME",
-      name: "district_name",
-      placeholder: "DISTRICT NAME",
-      type: "text",
-    },
-    {
-      "ZONE NAME": "state__zone__zone_name",
-      isActiveFilter: false,
-      label: "ZONE NAME",
-      name: "state__zone__zone_name",
-      placeholder: "ZONE NAME",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {

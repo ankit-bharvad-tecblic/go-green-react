@@ -11,15 +11,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
-import {
-    useAddCommodityGradeMutation,
-  useAddCommodityTypeMasterMutation,
-  useAddRegionMasterMutation,
-  useGetCommodityTypeMasterMutation,
-  useUpdateCommodityGradeMutation,
-  useUpdateCommodityTypeMasterMutation,
-  useUpdateRegionMasterMutation,
-} from "../../features/master-api-slice";
+import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
 
 const AddEditFormDistrictMaster = () => {
   const location = useLocation();
@@ -32,77 +24,24 @@ const AddEditFormDistrictMaster = () => {
   const details = location.state?.details;
   console.log("details ---> ", details);
 
-  const [
-    UpdateRegionMaster,
-    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading },
-  ] = useUpdateRegionMasterMutation();
-
-  const [
-    AddRegionMaster,
-    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityGradeLoading },
-  ] = useAddRegionMasterMutation();
-
-  const updateCommodityGradeData = async (data) => {
-    try {
-      const response = await UpdateRegionMaster(data).unwrap();
-      console.log("update commodity master res", response);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const addCommodityGradeData = async (data) => {
-    try {
-      const response = await AddRegionMaster(data).unwrap();
-      console.log("update commodity master res", response);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const onSubmit = (data) => {
-    if (details?.id) {
-      updateCommodityGradeData(data);
-    } else {
-      addCommodityGradeData(data);
-    }
     console.log("data==>", data);
   };
 
-  const [
-    getCommodityTypeMaster,
-    {
-      error: getCommodityTypeMasterApiErr,
-      isLoading: getCommodityTypeMasterApiIsLoading,
-    },
-  ] = useGetCommodityTypeMasterMutation();
-
-  const getCommodityType = async () => {
-    //params filter
-    // if (filter.filter.length || filter.search) {
-    // if (filterQuery) {
-    // paramString = Object.entries(filter)
-    //   .map(([key, value]) => {
-    //     if (Array.isArray(value)) {
-    //       return value
-    //         .map((item) => `${key}=${encodeURIComponent(item)}`)
-    //         .join("&");
-    //     }
-    //     return `${key}=${encodeURIComponent(value)}`;
-    //   })
-    //   .join("&");
-    // }
-
+  const [getDistrictMaster] = useGetDistrictMasterMutation();
+  const getDistrict = async () => {
     try {
       // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
 
-      const response = await getCommodityTypeMaster().unwrap();
+      const response = await getDistrictMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
-        value: type.id,
+        district_name: details.district_name,
+        zone__zone_name: details.zone.zone_name,
+
+        active: details.active,
       }));
 
       setAddEditFormFieldsList(
@@ -129,11 +68,12 @@ const AddEditFormDistrictMaster = () => {
   };
 
   useEffect(() => {
-    getCommodityType();
+    getDistrict();
     if (details?.id) {
       let obj = {
-        region_name: details.region_name,
-        active: details.is_active,
+        district_name: details.district_name,
+        zone_name: details.zone.zone_name,
+        active: details.active,
       };
 
       // setHandleSelectBoxVal

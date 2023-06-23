@@ -86,7 +86,7 @@ const UserMaster = () => {
   const editForm = (info) => {
     console.log("bank info --->", info);
     const editedFormId = info.row.original.id;
-    navigate(`/edit/user-master/${editedFormId}`, {
+    navigate(`/manage-users/edit/user-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };

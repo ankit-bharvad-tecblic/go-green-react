@@ -138,7 +138,7 @@ function RegionMaster() {
             cursor="pointer"
             onClick={() => {
               navigation(
-                `/location-master/edit/region-master/${info.row.original.id}`,
+                `/manage-location/edit/region-master/${info.row.original.id}`,
                 {
                   state: { details: info.row.original },
                 }

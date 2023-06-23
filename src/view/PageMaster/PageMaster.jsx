@@ -88,7 +88,7 @@ const PageMaster = () => {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(`/page-master/edit/page-master/${editedFormId}`, {
+    navigate(`/manage-users/edit/page-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };

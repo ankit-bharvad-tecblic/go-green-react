@@ -88,7 +88,7 @@ function InsuranceCompanyMaster() {
     let editedFormId = info.row.original.id;
 
     navigate(
-      `/insurance-company-master/edit/insurance-company-master/${editedFormId}`,
+      `/manage-insurance/edit/insurance-company-master/${editedFormId}`,
       {
         state: { details: info.row.original },
       }

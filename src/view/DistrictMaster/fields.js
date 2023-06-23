@@ -10,10 +10,10 @@ const filterFields = [
     type: "text",
   },
   {
-    "ZONE NAME": "state__zone__zone_name",
+    "ZONE NAME": "zone__zone_name",
     isActiveFilter: false,
     label: "ZONE NAME",
-    name: "state__zone__zone_name",
+    name: "zone__zone_name",
     placeholder: "ZONE NAME",
     type: "text",
   },
@@ -57,13 +57,13 @@ const filterFields = [
 const addEditFormFields = [
   {
     label: "DISTRICT NAME",
-    name: "commodity_type",
+    name: "district_name",
     placeholder: "DISTRICT NAME",
     type: "text",
   },
   {
     label: "ZONE NAME",
-    name: "description",
+    name: "zone_name",
     placeholder: "ZONE NAME",
     type: "text",
   },
@@ -75,10 +75,9 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  description: yup.string().required("Description is required"),
+  district_name: yup.string().required("District  is required"),
   is_active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
+  zone_name: yup.string().required("Zone name type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };
-

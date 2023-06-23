@@ -159,7 +159,7 @@ const AreaMaster = () => {
             cursor="pointer"
             onClick={() => {
               navigation(
-                `/location-master/edit/area-master/${info.row.original.id}`,
+                `/manage-location/edit/area-master/${info.row.original.id}`,
                 {
                   state: { details: info.row.original },
                 }
