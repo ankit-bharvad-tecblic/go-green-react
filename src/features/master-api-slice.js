@@ -60,10 +60,38 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    updateRegionMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.UPDATE_REGION_MASTER}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    addRegionMaster: builder.mutation({
+      query: (data) => ({
+        url: API.ADD_DASHBOARD.REGION_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
     getAreaMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.AREA_MASTER,
         method: "GET",
+        params: params,
+      }),
+    }),
+    updateAreaMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.UPDATE_AREA_MASTER}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    addAreaMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ADD_AREA_MASTER,
+        method: "POST",
         params: params,
       }),
     }),
@@ -74,10 +102,38 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    updateCommodityTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.UPDATE_COMMODITY_TYPE_MASTER}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    addCommodityTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.ADD_COMMODITY_TYPE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
     getCommodityGrade: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_GRADE,
         method: "GET",
+        params: params,
+      }),
+    }),
+    updateCommodityGrade: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.UPDATE_COMMODITY_GRADE}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    addCommodityGrade: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.ADD_COMMODITY_GRADE,
+        method: "POST",
         params: params,
       }),
     }),
@@ -137,6 +193,28 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         url: API.DASHBOARD.COMMODITY_VARIETY,
         method: "GET",
         params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    updateCommodityVariety: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.UPDATE_COMMODITY_VARIETY}/${data.id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    addCommodityVariety: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.ADD_COMMODITY_VARIETY,
+        method: "POST",
+        body: data,
       }),
       onError: (error) => {
         console.log("API Error:", error);
@@ -205,23 +283,43 @@ export const {
   useGetDistrictMasterMutation,
   useGetStateMasterMutation,
   useGetZoneMasterMutation,
+  // Api mutation for area master starts
   useGetAreaMasterMutation,
+  useUpdateAreaMasterMutation,
+  useAddAreaMasterMutation,
+  // Api mutation for area master ends
   useGetBankMasterMutation,
   useGetBankBranchMasterMutation,
+  // Api mutation for commodity type starts
   useGetCommodityTypeMasterMutation,
+  useUpdateCommodityTypeMasterMutation,
+  useAddCommodityTypeMasterMutation,
+  // Api mutation for commodity type ends
+  // Api mutation for commodity grade starts
   useGetCommodityGradeMutation,
+  useUpdateCommodityGradeMutation,
+  useAddCommodityGradeMutation,
+  // Api mutation for commodity grade ends
   useGetCommodityMasterMutation,
   useGetPageMasterMutation,
   useGetRoleMasterMutation,
   useGetRolePageAssignmentMasterMutation,
   useGetUserMasterMutation,
+  // Api mutation for commodity variety starts
   useGetCommodityVarietyMutation,
+  useUpdateCommodityVarietyMutation,
+  useAddCommodityVarietyMutation,
+  // Api mutation for commodity variety ends
   useGetWareHouseSubTypeMutation,
   useGetSecurityAgencyMasterMutation,
   useGetSecurityGuardMasterMutation,
   useGetEarthQuakeZoneTypeMasterMutation,
   useGetInsuranceCompanyMasterMutation,
+  //Apis mutation for region master starts
   useGetRegionMasterMutation,
+  useAddRegionMasterMutation,
+  useUpdateRegionMasterMutation,
+  //Api mutation for region master ends
   useGetWarehouseTypeMasterMutation,
   useActiveDeActiveMutation,
 } = masterApiSlice;

@@ -33,6 +33,11 @@ import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster
 import FormDesign from "../view/FormDesign";
 import AddEditFormCommodityMaster from "../view/CommodityMaster/AddEditFormCommodityMaster";
 import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCommodityType";
+import AddEditFormCommodityGrade from "../view/CommodityGrade/AddEditCommodityGrade";
+import AddEditFormCommodityVariety from "../view/CommodityVarietyMaster/AddEditFormCommodityVariety";
+import AddEditFormArea from "../view/AreaMaster/AddEditAreaMaster";
+import AddEditFormRegionMaster from "../view/RegionMaster/AddEditFormRegionMaster";
+import AddEditFormDistrictMaster from "../view/DistrictMaster/AddEditDistrictMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -127,6 +132,30 @@ const routes = [
         ),
       },
       {
+        path: "add/region-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Region Master"}>
+                <AddEditFormRegionMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/region-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Region Master"}>
+                <AddEditFormRegionMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "state-master",
         element: (
           <ProtectedRoutes>
@@ -151,12 +180,69 @@ const routes = [
         ),
       },
       {
+        path: "add/district-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"District Master"}>
+                <AddEditFormDistrictMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/district-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"District Master"}>
+                <AddEditFormDistrictMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "area-master",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Area Master"}>
                 <AreaMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },{
+        path: "area-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Area Master"}>
+                <AreaMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },{
+        path: "add/area-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Area Master"}>
+                <AddEditFormArea />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },{
+        path: "edit/area-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Area Master"}>
+                <AddEditFormArea />
               </Layout>
             </Suspense>
           </ProtectedRoutes>
@@ -299,7 +385,6 @@ const routes = [
       </ProtectedRoutes>
     ),
   },
-
   {
     path: "/commodity-master",
     children: [
@@ -388,12 +473,60 @@ const routes = [
         ),
       },
       {
+        path: "add/commodity-grade",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Grade"}>
+                <AddEditFormCommodityGrade />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/commodity-grade/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Grade"}>
+                <AddEditFormCommodityGrade />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "commodity-variety",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Commodity variety master"}>
                 <CommodityVariety />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/commodity-variety",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <AddEditFormCommodityVariety />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/commodity-variety/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <AddEditFormCommodityVariety />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

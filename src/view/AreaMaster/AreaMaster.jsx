@@ -11,9 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const AreaMaster = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
+
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -154,6 +157,14 @@ const AreaMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => {
+              navigation(
+                `/location-master/edit/area-master/${info.row.original.id}`,
+                {
+                  state: { details: info.row.original },
+                }
+              );
+            }}
           />
         </Flex>
       ),

@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 const filterFields = [
   {
     "DISTRICT NAME": "district_name",
@@ -52,4 +54,31 @@ const filterFields = [
   },
 ];
 
-export { filterFields };
+const addEditFormFields = [
+  {
+    label: "DISTRICT NAME",
+    name: "commodity_type",
+    placeholder: "DISTRICT NAME",
+    type: "text",
+  },
+  {
+    label: "ZONE NAME",
+    name: "description",
+    placeholder: "ZONE NAME",
+    type: "text",
+  },
+  {
+    label: "ACTIVE/DeActive",
+    name: "is_active",
+    type: "switch",
+  },
+];
+
+const schema = yup.object().shape({
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
+  commodity_type: yup.string().required("Commodity type is required"),
+});
+
+export { filterFields, addEditFormFields, schema };
+

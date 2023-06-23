@@ -11,9 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const CommodityVariety = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
+
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -43,6 +46,10 @@ const CommodityVariety = () => {
     columnHelper.accessor("commodity_variety", {
       cell: (info) => info.getValue(),
       header: "Commodity variety",
+    }),
+    columnHelper.accessor("commodity_id", {
+      cell: (info) => info.getValue(),
+      header: "Commodity Id",
     }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
@@ -95,6 +102,20 @@ const CommodityVariety = () => {
       cell: (info) => info.getValue(),
       header: "Last Updated Date ",
     }),
+    columnHelper.accessor("is_block", {
+      // cell: (info) => info.getValue(),
+      header: "IS BLOCK",
+      cell: (info) => (
+        <Box>
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            isReadOnly
+            isChecked={info.getValue()}
+          />
+        </Box>
+      ),
+    }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -104,7 +125,7 @@ const CommodityVariety = () => {
             size="md"
             colorScheme="whatsapp"
             onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -126,6 +147,14 @@ const CommodityVariety = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => {
+              navigation(
+                `/commodity-master/edit/commodity-variety/${info.row.original.id}`,
+                {
+                  state: { details: info.row.original },
+                }
+              );
+            }}
           />
         </Flex>
       ),
@@ -171,7 +200,7 @@ const CommodityVariety = () => {
           if (item.id === obj.id) {
             return {
               ...item,
-              active: obj.active,
+              is_active: obj.active,
             };
           } else {
             return item;

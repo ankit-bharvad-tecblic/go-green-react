@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 const filterFields = [
   {
     "REGION NAME": "region_name",
@@ -44,4 +46,23 @@ const filterFields = [
   },
 ];
 
-export { filterFields };
+const addEditFormFields = [
+  {
+    label: "REGION NAME",
+    name: "region_name",
+    placeholder: "REGION NAME",
+    type: "text",
+  },
+  {
+    label: "ACTIVE/DeActive",
+    name: "is_active",
+    type: "switch",
+  },
+];
+
+const schema = yup.object().shape({
+  is_active: yup.string(),
+  region_name: yup.string().required("Commodity type is required"),
+});
+
+export { filterFields, addEditFormFields, schema };

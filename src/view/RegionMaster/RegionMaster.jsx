@@ -12,8 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function RegionMaster() {
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -134,6 +136,14 @@ function RegionMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => {
+              navigation(
+                `/location-master/edit/region-master/${info.row.original.id}`,
+                {
+                  state: { details: info.row.original },
+                }
+              );
+            }}
           />
         </Flex>
       ),

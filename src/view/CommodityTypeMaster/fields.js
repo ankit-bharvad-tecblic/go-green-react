@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 const filterFields = [
   {
     "COMMODITY NAME": "commodity_type",
@@ -52,7 +54,7 @@ const filterFields = [
   },
 ];
 
-const formFields = [
+const addEditFormFields = [
   {
     label: "COMMODITY TYPE",
     name: "commodity_type",
@@ -65,7 +67,17 @@ const formFields = [
     placeholder: "DESCRIPTION",
     type: "text",
   },
+  {
+    label: "ACTIVE/DeActive",
+    name: "is_active",
+    type: "switch",
+  },
 ];
 
+const schema = yup.object().shape({
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
+  commodity_type: yup.string().required("Commodity type is required"),
+});
 
-export { filterFields, formFields };
+export { filterFields, addEditFormFields, schema };

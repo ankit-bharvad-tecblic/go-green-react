@@ -251,12 +251,3 @@ const CommodityMaster = () => {
 };
 
 export default CommodityMaster;
-
-// ankit :
-
-// 1. set up nuvu project
-// 2. redux set up in nuvu project
-
-// aasim :
-
-// 1. update filter api and desing changes in GG

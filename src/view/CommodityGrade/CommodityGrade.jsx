@@ -1,16 +1,22 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useActiveDeActiveMutation, useGetCommodityGradeMutation } from "../../features/master-api-slice";
+import {
+  useActiveDeActiveMutation,
+  useGetCommodityGradeMutation,
+} from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const CommodityGrade = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
+
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -45,7 +51,6 @@ const CommodityGrade = () => {
       cell: (info) => info.getValue(),
       header: "DESCRIPTION",
     }),
-
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "Creation Date",
@@ -85,6 +90,14 @@ const CommodityGrade = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => {
+              navigation(
+                `/commodity-master/edit/commodity-grade/${info.row.original.id}`,
+                {
+                  state: { details: info.row.original },
+                }
+              );
+            }}
           />
         </Flex>
       ),
@@ -171,7 +184,7 @@ const CommodityGrade = () => {
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-    
+
       const response = await getCommodityGrade(query).unwrap();
 
       console.log("Success:", response);
@@ -188,7 +201,7 @@ const CommodityGrade = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page,filterQuery]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {

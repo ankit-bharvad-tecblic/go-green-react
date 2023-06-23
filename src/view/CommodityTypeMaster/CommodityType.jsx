@@ -110,7 +110,6 @@ const CommodityType = () => {
       cell: (info) => info.getValue(),
       header: " Last Updated Date",
     }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
@@ -144,7 +143,7 @@ const CommodityType = () => {
             cursor="pointer"
             onClick={() => {
               navigation(`/commodity-master/edit/commodity-type/${info.row.original.id}`, {
-                state: { detail: info.row.original },
+                state: { details: info.row.original },
               });
             }}
           />
