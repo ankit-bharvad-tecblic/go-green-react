@@ -1,15 +1,20 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useActiveDeActiveMutation, useGetStateMasterMutation } from "../../features/master-api-slice";
+import {
+  useActiveDeActiveMutation,
+  useGetStateMasterMutation,
+} from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const StateMaster = () => {
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -153,6 +158,7 @@ const StateMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -168,6 +174,17 @@ const StateMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+
+  const addForm = () => {
+    navigation(`/location-master/add/state-master`);
+  };
+
+  const editForm = (info) => {
+    console.log(info.row);
+    navigation(`/location-master/edit/state-master/${info.row.original.id}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getData = async () => {
     //params filter
@@ -228,6 +245,7 @@ const StateMaster = () => {
         columns={columns}
         data={data}
         loading={getStateMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

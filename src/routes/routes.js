@@ -49,6 +49,7 @@ import AddEditFormBankBranchMaster from "../view/BankBranchMaster/AddEditFormBan
 import AddEditFormWareHouseTypeMaster from "../view/WarehouseTypeMaster/AddEditFormWareHouseTypeMaster";
 import AddEditFormWareHouseSubTypeMaster from "../view/WareHouseSubTypeMaster/AddEditFormWareHouseSubTypeMaster";
 import AddEditFormUserMaster from "../view/UserMaster/AddEditFormUserMaster";
+import AddEditFormStateMaster from "../view/StateMaster/AddEditFormStateMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -118,6 +119,7 @@ const routes = [
   {
     path: "/location-master",
     children: [
+      // zone master get add update start
       {
         path: "zone-master",
         element: (
@@ -154,6 +156,9 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      // zone master get add update end
+
+      // region-master get add update start
       {
         path: "region-master",
         element: (
@@ -190,6 +195,9 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      // region-master get add update end
+
+      //  state-master get add update start
       {
         path: "state-master",
         element: (
@@ -202,6 +210,44 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "add/state-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"State Master"}>
+                <AddEditFormStateMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/state-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"State Master"}>
+                <AddEditFormStateMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      //  state-master get add update end
+      {
+        path: "state-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"State Master"}>
+                <StateMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      //  state-master get add update end
       {
         path: "district-master",
         element: (

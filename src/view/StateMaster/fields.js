@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 const filterFields = [
   {
     "STATE NAME": "state_name",
@@ -92,4 +94,59 @@ const filterFields = [
   },
 ];
 
-export { filterFields };
+const addEditFormFields = [
+  {
+    name: "state_name",
+    label: "STATE NAME",
+    placeholder: "STATE NAME",
+    type: "text",
+  },
+  {
+    name: "state_code",
+    label: "STATE CODE",
+    placeholder: "STATE CODE",
+    type: "text",
+  },
+  {
+    name: "tin_no",
+    label: "TIN NO",
+    placeholder: "TIN NO",
+    type: "number",
+  },
+  {
+    name: "gstn",
+    label: "GSTN",
+    placeholder: "GSTN",
+    type: "text",
+  },
+  {
+    name: "nav_code",
+    label: "NAV CODE",
+    placeholder: "NAV CODE",
+    type: "number",
+  },
+
+  {
+    name: "state_india_office_addr",
+    label: "OFFICE ADDRESS",
+    placeholder: "OFFICE ADDRESS",
+    type: "text",
+  },
+  {
+    label: "ACTIVE/DeActive",
+    name: "active",
+    type: "switch",
+  },
+];
+
+const schema = yup.object().shape({
+  state_name: yup.string().required("State name is required"),
+  state_code: yup.string().required("State code is required"),
+  tin_no: yup.string().required("Tin no is required"),
+  gstn: yup.string().required("Gstn no is required"),
+  nav_code: yup.string().required("Nav code is required"),
+  state_india_office_addr: yup.string().required("Office address is required"),
+  active: yup.string(),
+});
+
+export { filterFields, addEditFormFields, schema };

@@ -15,6 +15,7 @@ import { filterFields } from "./fields";
 import { useNavigate } from "react-router-dom";
 
 function RegionMaster() {
+  const navigate = useNavigate();
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const filterQuery = useSelector(
@@ -136,14 +137,7 @@ function RegionMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            onClick={() => {
-              navigation(
-                `/location-master/edit/region-master/${info.row.original.id}`,
-                {
-                  state: { details: info.row.original },
-                }
-              );
-            }}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -198,6 +192,17 @@ function RegionMaster() {
     }
   };
 
+  const addForm = () => {
+    navigate(`/location-master/add/region-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log(info.row);
+    navigation(`/location-master/edit/region-master/${info.row.original.id}`, {
+      state: { details: info.row.original },
+    });
+  };
+
   useEffect(() => {
     tableFilterSet();
     getData();
@@ -225,6 +230,7 @@ function RegionMaster() {
         columns={columns}
         data={data}
         loading={getRegionMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

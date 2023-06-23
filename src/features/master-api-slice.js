@@ -78,14 +78,14 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateRegionMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_REGION_MASTER}/${data.id}`,
+        url: `${API.DASHBOARD.UPDATE_REGION_MASTER}/${data.id}/`,
         method: "PATCH",
         body: data,
       }),
     }),
     addRegionMaster: builder.mutation({
       query: (data) => ({
-        url: API.ADD_DASHBOARD.REGION_MASTER,
+        url: API.DASHBOARD.REGION_MASTER,
         method: "POST",
         body: data,
       }),

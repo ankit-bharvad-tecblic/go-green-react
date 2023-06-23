@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Controller,
   FormProvider,
@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-    useAddCommodityGradeMutation,
+  useAddCommodityGradeMutation,
   useAddCommodityTypeMasterMutation,
   useAddRegionMasterMutation,
   useGetCommodityTypeMasterMutation,
@@ -20,9 +20,11 @@ import {
   useUpdateCommodityTypeMasterMutation,
   useUpdateRegionMasterMutation,
 } from "../../features/master-api-slice";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 const AddEditFormRegionMaster = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -32,108 +34,60 @@ const AddEditFormRegionMaster = () => {
   const details = location.state?.details;
   console.log("details ---> ", details);
 
-  const [
-    UpdateRegionMaster,
-    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading },
-  ] = useUpdateRegionMasterMutation();
+  const [updateRegionMaster, { isLoading: updateCommodityGradeLoading }] =
+    useUpdateRegionMasterMutation();
 
-  const [
-    AddRegionMaster,
-    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityGradeLoading },
-  ] = useAddRegionMasterMutation();
+  const [addRegionMaster, { isLoading: addCommodityGradeLoading }] =
+    useAddRegionMasterMutation();
 
-  const updateCommodityGradeData = async (data) => {
+  const updateData = async (data) => {
     try {
-      const response = await UpdateRegionMaster(data).unwrap();
+      const response = await updateRegionMaster({
+        ...data,
+        id: details.id,
+      }).unwrap();
+      if (response.status === 200) {
+        toasterAlert(response);
+        navigate(`/location-master/region-master`);
+      }
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
+      toasterAlert(error);
     }
   };
 
-  const addCommodityGradeData = async (data) => {
+  const addData = async (data) => {
     try {
-      const response = await AddRegionMaster(data).unwrap();
+      const response = await addRegionMaster(data).unwrap();
+      if (response.status === 201) {
+        toasterAlert(response);
+        navigate("/location-master/region-master");
+      }
       console.log("update commodity master res", response);
     } catch (error) {
       console.error("Error:", error);
+      x;
+      toasterAlert(error);
     }
   };
 
   const onSubmit = (data) => {
-    if (details?.id) {
-      updateCommodityGradeData(data);
-    } else {
-      addCommodityGradeData(data);
-    }
     console.log("data==>", data);
-  };
-
-  const [
-    getCommodityTypeMaster,
-    {
-      error: getCommodityTypeMasterApiErr,
-      isLoading: getCommodityTypeMasterApiIsLoading,
-    },
-  ] = useGetCommodityTypeMasterMutation();
-
-  const getCommodityType = async () => {
-    //params filter
-    // if (filter.filter.length || filter.search) {
-    // if (filterQuery) {
-    // paramString = Object.entries(filter)
-    //   .map(([key, value]) => {
-    //     if (Array.isArray(value)) {
-    //       return value
-    //         .map((item) => `${key}=${encodeURIComponent(item)}`)
-    //         .join("&");
-    //     }
-    //     return `${key}=${encodeURIComponent(value)}`;
-    //   })
-    //   .join("&");
-    // }
-
-    try {
-      // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-
-      const response = await getCommodityTypeMaster().unwrap();
-
-      console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
-        value: type.id,
-      }));
-
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
-
-      // setData(response?.results || []);
-      // setFilter((old) => ({
-      //   ...old,
-      //   totalPage: Math.ceil(response?.total / old?.limit),
-      // }));
-    } catch (error) {
-      console.error("Error:", error);
+    if (details?.id) {
+      updateData(data);
+    } else {
+      addData(data);
     }
   };
 
   useEffect(() => {
-    getCommodityType();
+    setAddEditFormFieldsList(addEditFormFields);
     if (details?.id) {
+      console.log(details);
       let obj = {
         region_name: details.region_name,
-        active: details.is_active,
+        active: details.active,
       };
 
       // setHandleSelectBoxVal
@@ -158,14 +112,6 @@ const AddEditFormRegionMaster = () => {
                 {generateFormField({
                   ...item,
                   label: "",
-                  // options: item.type === "select" && commodityTypeMaster,
-                  selectedValue:
-                    item.type === "select" &&
-                    item?.options?.find(
-                      (opt) =>
-                        opt.label === details?.commodity_type?.commodity_type
-                    ),
-                  selectType: "label",
                   isChecked: details?.active,
                   isClearable: false,
                   style: { mb: 2, mt: 2 },
@@ -183,8 +129,11 @@ const AddEditFormRegionMaster = () => {
               borderRadius={"full"}
               my={"4"}
               px={"10"}
+              isLoading={
+                updateCommodityGradeLoading || addCommodityGradeLoading
+              }
             >
-              Update
+              {details?.id ? " Update" : "Add"}
             </Button>
           </Box>
         </form>
@@ -194,3 +143,22 @@ const AddEditFormRegionMaster = () => {
 };
 
 export default AddEditFormRegionMaster;
+
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};

@@ -55,14 +55,14 @@ const addEditFormFields = [
   },
   {
     label: "ACTIVE/DeActive",
-    name: "is_active",
+    name: "active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
-  is_active: yup.string(),
-  region_name: yup.string().required("Commodity type is required"),
+  active: yup.string(),
+  region_name: yup.string().required("Region name is required"),
 });
 
 export { filterFields, addEditFormFields, schema };
