@@ -10,6 +10,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const SecurityAgencyMaster = () => {
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ const SecurityAgencyMaster = () => {
     (state) => state.dataTableFiltersReducer.filterQuery
   );
   console.log("SecurityAgencyMaster", filterQuery);
-
+  const navigate = useNavigate();
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     // filter: [],
@@ -84,6 +86,18 @@ const SecurityAgencyMaster = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(
+      `/security-agency-master/edit/security-agency-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
   };
 
   const columns = [
@@ -170,6 +184,7 @@ const SecurityAgencyMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -178,140 +193,6 @@ const SecurityAgencyMaster = () => {
     }),
   ];
 
-  const filterFields = [
-    {
-      NAME: "security_agency_name",
-      isActiveFilter: false,
-
-      label: "NAME",
-      name: "security_agency_name",
-      placeholder: "NAME",
-      type: "text",
-    },
-    {
-      NAME: "region__region_name",
-      isActiveFilter: false,
-
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      NAME: "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-    {
-      NAME: "district__district_name",
-      isActiveFilter: false,
-
-      label: "DISTRICT NAME",
-      name: "district__district_name",
-      placeholder: "DISTRICT NAME",
-      type: "text",
-    },
-    {
-      NAME: "area__area_name",
-      isActiveFilter: false,
-
-      label: "AREA NAME",
-      name: "area__area_name",
-      placeholder: "AREA NAME",
-      type: "text",
-    },
-    {
-      NAME: "address",
-      isActiveFilter: false,
-
-      label: "ADDRESS",
-      name: "address",
-      placeholder: "ADDRESS",
-      type: "text",
-    },
-    {
-      NAME: "pincode",
-      isActiveFilter: false,
-
-      label: "PINCODE",
-      name: "pincode",
-      placeholder: "PINCODE",
-      type: "number",
-    },
-    {
-      NAME: "contact_no",
-      isActiveFilter: false,
-
-      label: "CONTACT NO.",
-      name: "contact_no",
-      placeholder: "CONTACT NO.",
-      type: "number",
-    },
-    {
-      NAME: "agency_contract_start_date",
-      isActiveFilter: false,
-
-      label: "CONTRACT START DATE",
-      name: "agency_contract_start_date",
-      placeholder: "CONTRACT START DATE",
-      type: "date",
-    },
-    {
-      NAME: "agency_contract_duration",
-      isActiveFilter: false,
-
-      label: "CONTRACT DURATION",
-      name: "agency_contract_duration",
-      placeholder: "CONTRACT DURATION",
-      type: "text",
-    },
-    {
-      NAME: "service_cost",
-      isActiveFilter: false,
-
-      label: "SERVICE COST",
-      name: "service_cost",
-      placeholder: "SERVICE COST",
-      type: "number",
-    },
-    {
-      NAME: "remarks",
-      isActiveFilter: false,
-
-      label: "REMARKS",
-      name: "remarks",
-      placeholder: "REMARKS",
-      type: "text",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-    {
-      DESCRIPTION: "description",
-      isActiveFilter: false,
-    },
-  ];
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };

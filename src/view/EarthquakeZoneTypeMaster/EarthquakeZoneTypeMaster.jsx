@@ -11,6 +11,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function EarthquakeZoneTypeMaster() {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ function EarthquakeZoneTypeMaster() {
     (state) => state.dataTableFiltersReducer.filterQuery
   );
   console.log("EarthquakeZoneTypeMaster", filterQuery);
+  const navigate = useNavigate();
   const columnHelper = createColumnHelper();
 
   const [filter, setFilter] = useState({
@@ -95,6 +98,17 @@ function EarthquakeZoneTypeMaster() {
       });
     }
   };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(
+      `/earthquake-zone-type-master/edit/security-guard-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
+  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -144,6 +158,7 @@ function EarthquakeZoneTypeMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -151,55 +166,7 @@ function EarthquakeZoneTypeMaster() {
       accessorFn: (row) => row.update_col,
     }),
   ];
-  const filterFields = [
-    {
-      "EARTH QUACK ZONE TYPE": "earthquake_zone_type",
-      isActiveFilter: false,
 
-      label: "EARTH QUACK ZONE TYPE",
-      name: "earthquake_zone_type",
-      placeholder: "EARTH QUACK ZONE TYPE",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "creation_date",
-      isActiveFilter: false,
-
-      label: "CREATION DATE",
-      name: "creation_date",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
