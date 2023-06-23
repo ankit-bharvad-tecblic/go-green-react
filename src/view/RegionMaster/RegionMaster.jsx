@@ -193,12 +193,11 @@ function RegionMaster() {
   };
 
   const addForm = () => {
-    navigate(`/location-master/add/region-master/`);
+    navigate(`/manage-location/add/region-master`);
   };
 
   const editForm = (info) => {
-    console.log(info.row);
-    navigation(`/location-master/edit/region-master/${info.row.original.id}`, {
+    navigation(`/manage-location/edit/region-master/${info.row.original.id}`, {
       state: { details: info.row.original },
     });
   };

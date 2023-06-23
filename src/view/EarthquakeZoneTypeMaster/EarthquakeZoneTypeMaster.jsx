@@ -102,12 +102,9 @@ function EarthquakeZoneTypeMaster() {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(
-      `/earthquake-zone-type-master/edit/security-guard-master/${editedFormId}`,
-      {
-        state: { details: info.row.original },
-      }
-    );
+    navigate(`/manage-insurance/edit/security-guard-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
   };
 
   const columns = [

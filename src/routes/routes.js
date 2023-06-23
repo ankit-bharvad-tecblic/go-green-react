@@ -117,7 +117,7 @@ const routes = [
     ),
   },
   {
-    path: "/location-master",
+    path: "/manage-location",
     children: [
       // zone master get add update start
       {
@@ -335,8 +335,68 @@ const routes = [
     ],
   },
   {
-    path: "/role-master",
+    path: "/manage-users",
     children: [
+      {
+        path: "user-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"User Master"}>
+                <UserMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/user-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"User Master"}>
+                <AddEditFormUserMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/user-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"User master"}>
+                <AddEditFormUserMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "page-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Page Master"}>
+                <PageMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/page-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Page Master"}>
+                <AddEditPageMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
       {
         path: "role-master",
         element: (
@@ -349,6 +409,7 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+
       {
         path: "role-page-assignment-master",
         element: (
@@ -443,177 +504,155 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/page-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Page Master"}>
-            <PageMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/page-master/edit/page-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Page Master"}>
-            <AddEditPageMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/user-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"User Master"}>
-            <UserMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "add/user-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"User Master"}>
-            <AddEditFormUserMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "edit/user-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"User master"}>
-            <AddEditFormUserMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
+
   {
     path: "/bank-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Master"}>
-            <BankMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "add/bank-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Master"}>
-            <AddEditFormBankMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "edit/bank-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank master"}>
-            <AddEditFormBankMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/bank-branch-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Branch Master"}>
-            <BankBranchMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
+    children: [
+      {
+        path: "bank-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Master"}>
+                <BankMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/bank-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Master"}>
+                <AddEditFormBankMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/bank-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank master"}>
+                <AddEditFormBankMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "bank-branch-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Branch Master"}>
+                <BankBranchMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
 
-  {
-    path: "add/bank-branch-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Branch Master"}>
-            <AddEditFormBankBranchMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
+      {
+        path: "add/bank-branch-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Branch Master"}>
+                <AddEditFormBankBranchMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/bank-branch-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank Branch Master"}>
+                <AddEditFormBankBranchMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
   },
   {
-    path: "edit/bank-branch-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Bank Branch Master"}>
-            <AddEditFormBankBranchMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-
-  {
-    path: "/insurance-company-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Insurance Company Master"}>
-            <InsuranceCompanyMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-
-  {
-    path: "add/insurance-company-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Insurance Company Master"}>
-            <AddEditFormInsuranceCompanyMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-
-  {
-    path: "/insurance-company-master/edit/insurance-company-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Insurance Company Master"}>
-            <AddEditFormInsuranceCompanyMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
+    path: "/manage-insurance",
+    children: [
+      {
+        path: "insurance-company-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Company Master"}>
+                <InsuranceCompanyMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/insurance-company-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Company Master"}>
+                <AddEditFormInsuranceCompanyMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/insurance-company-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Company Master"}>
+                <AddEditFormInsuranceCompanyMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "earthquake-zone-type-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout
+                variant={headerType}
+                title={"Earthquake Zone Type Master"}
+              >
+                <EarthquakeZoneTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/security-guard-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout
+                variant={headerType}
+                title={"Earthquake Zone Type Master"}
+              >
+                <AddEditFormEarthQuackZoneTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
   },
 
   {
@@ -635,31 +674,6 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Security Guard Master"}>
             <AddEditSecurityGuardMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-
-  {
-    path: "/earthquake-zone-type-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
-            <EarthquakeZoneTypeMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/earthquake-zone-type-master/edit/security-guard-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Earthquake Zone Type Master"}>
-            <AddEditFormEarthQuackZoneTypeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

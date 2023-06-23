@@ -176,12 +176,12 @@ const StateMaster = () => {
   let paramString = "";
 
   const addForm = () => {
-    navigation(`/location-master/add/state-master`);
+    navigation(`/manage-location/add/state-master`);
   };
 
   const editForm = (info) => {
     console.log(info.row);
-    navigation(`/location-master/edit/state-master/${info.row.original.id}`, {
+    navigation(`/manage-location/edit/state-master/${info.row.original.id}`, {
       state: { details: info.row.original },
     });
   };

@@ -84,7 +84,7 @@ function BankBranchMaster() {
   const editForm = (info) => {
     console.log("bank branch info", info);
     const editedFormId = info.row.original.id;
-    navigate(`/edit/bank-branch-master/${editedFormId}`, {
+    navigate(`/bank-master/edit/bank-branch-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };
@@ -238,4 +238,3 @@ function BankBranchMaster() {
 }
 
 export default BankBranchMaster;
- 

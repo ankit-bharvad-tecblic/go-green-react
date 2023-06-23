@@ -210,14 +210,14 @@ const ZoneMaster = () => {
   let paramString = "";
 
   const addForm = () => {
-    navigate(`/location-master/add/zone-master/`);
+    navigate(`/manage-location/add/zone-master/`);
   };
 
   const editForm = (info) => {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(`/location-master/edit/zone-master/${editedFormId}`, {
+    navigate(`/manage-location/edit/zone-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };
