@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetWareHouseSubTypeMutation,
@@ -10,10 +10,12 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const WareHouseSubType = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const columnHelper = createColumnHelper();
 
   const filterQuery = useSelector(
@@ -28,18 +30,10 @@ const WareHouseSubType = () => {
     limit: 25,
   });
 
-  const [
-    getWareHouseSubType,
-    {
-      error: getWareHouseSubTypeApiErr,
-      isLoading: getWareHouseSubTypeApiIsLoading,
-    },
-  ] = useGetWareHouseSubTypeMutation();
+  const [getWareHouseSubType, { isLoading: getWareHouseSubTypeApiIsLoading }] =
+    useGetWareHouseSubTypeMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -88,6 +82,16 @@ const WareHouseSubType = () => {
     }
   };
 
+  const editForm = (info) => {
+    console.log("Warehouse Sub type info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(
+      `/warehouse-master/edit/warehouse-sub-type-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -140,83 +144,13 @@ const WareHouseSubType = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "WAREHOUSE SUB TYPE": "warehouse_subtype",
-      isActiveFilter: false,
-
-      label: "WAREHOUSE SUB TYPE",
-      name: "warehouse_subtype",
-      placeholder: "WAREHOUSE SUB TYPE",
-      type: "text",
-    },
-    {
-      DESCRIPTION: "description",
-      isActiveFilter: false,
-
-      label: "DESCRIPTION",
-      name: "description",
-      placeholder: "DESCRIPTION",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "creation_date",
-      isActiveFilter: false,
-
-      label: "CREATION DATE",
-      name: "creation_date",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-    {
-      "MINIMUM BAG SIZE": "minimum_bag_size",
-      isActiveFilter: false,
-    },
-    {
-      "MAXIMUM BAG SIZE": "maximum_bag_size",
-      isActiveFilter: false,
-    },
-    {
-      "RENT ON BAG M/T": "rent_on_bag",
-      isActiveFilter: false,
-    },
   ];
 
   const tableFilterSet = () => {

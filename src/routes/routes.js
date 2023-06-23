@@ -33,6 +33,11 @@ import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster
 import FormDesign from "../view/FormDesign";
 import AddEditFormCommodityMaster from "../view/CommodityMaster/AddEditFormCommodityMaster";
 import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCommodityType";
+import AddEditFormBankMaster from "../view/BankMaster/AddEditFormBankMaster";
+import AddEditFormBankBranchMaster from "../view/BankBranchMaster/AddEditFormBankBranchMaster";
+import AddEditFormWareHouseTypeMaster from "../view/WarehouseTypeMaster/AddEditFormWareHouseTypeMaster";
+import AddEditFormWareHouseSubTypeMaster from "../view/WareHouseSubTypeMaster/AddEditFormWareHouseSubTypeMaster";
+import AddEditFormUserMaster from "../view/UserMaster/AddEditFormUserMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -212,12 +217,60 @@ const routes = [
         ),
       },
       {
+        path: "add/warehouse-sub-type-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Type Master"}>
+                <AddEditFormWareHouseSubTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/warehouse-sub-type-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Type Master"}>
+                <AddEditFormWareHouseSubTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "warehouse-type-master",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Warehouse Type Master"}>
                 <WarehouseTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/warehouse-type-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Type Master"}>
+                <AddEditFormWareHouseTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/warehouse-type-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Type Master"}>
+                <AddEditFormWareHouseTypeMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>
@@ -250,6 +303,30 @@ const routes = [
     ),
   },
   {
+    path: "add/user-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"User Master"}>
+            <AddEditFormUserMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/user-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"User master"}>
+            <AddEditFormUserMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
     path: "/bank-master",
     element: (
       <ProtectedRoutes>
@@ -262,12 +339,61 @@ const routes = [
     ),
   },
   {
+    path: "add/bank-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Master"}>
+            <AddEditFormBankMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/bank-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank master"}>
+            <AddEditFormBankMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
     path: "/bank-branch-master",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Bank Branch Master"}>
             <BankBranchMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "add/bank-branch-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Branch Master"}>
+            <AddEditFormBankBranchMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/bank-branch-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Bank Branch Master"}>
+            <AddEditFormBankBranchMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

@@ -11,7 +11,7 @@ const filterFields = [
   },
   {
     "CREATION DATE": "created_at",
-    isActiveFilter: false,
+    isActiveFilter: false, 
 
     label: "CREATION DATE",
     name: "created_at",
