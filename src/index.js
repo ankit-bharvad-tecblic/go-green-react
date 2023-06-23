@@ -10,6 +10,8 @@ import { globalStyles } from "./theme/styles";
 import theme from "./theme/theme";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const theme_setup = extendTheme({
   ...theme,
@@ -21,6 +23,18 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <ChakraProvider theme={theme_setup}>
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <App />
         </ChakraProvider>
       </BrowserRouter>

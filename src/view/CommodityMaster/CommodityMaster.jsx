@@ -100,6 +100,10 @@ const CommodityMaster = () => {
     });
   };
 
+  const addForm = () => {
+    navigate(`/commodity-master/add/commodity-master/`);
+  };
+
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -244,6 +248,7 @@ const CommodityMaster = () => {
           columns={columns}
           data={data}
           loading={getCommodityMasterApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>
@@ -251,12 +256,3 @@ const CommodityMaster = () => {
 };
 
 export default CommodityMaster;
-
-// ankit :
-
-// 1. set up nuvu project
-// 2. redux set up in nuvu project
-
-// aasim :
-
-// 1. update filter api and desing changes in GG

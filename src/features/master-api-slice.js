@@ -18,6 +18,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    // start Zone-Master get add update mutation methods
     getZoneMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ZONE_MASTER,
@@ -25,6 +26,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addZoneMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.ZONE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateZoneMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.ZONE_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // start Zone-Master get add update mutation methods
     getBankMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.BANK_MASTER,
@@ -81,6 +97,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    // start Commodity-Master get add update mutation methods
     getCommodityMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_MASTER,
@@ -88,6 +105,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addCommodityMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.COMMODITY_MASTER}/`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateCommodityMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.COMMODITY_MASTER}/${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // end Commodity-Master add update mutation methods
     getPageMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.PAGE_MASTER,
@@ -204,13 +236,16 @@ export const masterApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetDistrictMasterMutation,
   useGetStateMasterMutation,
+
   useGetZoneMasterMutation,
+  useAddZoneMasterMutation,
+  useUpdateZoneMasterMutation,
+
   useGetAreaMasterMutation,
   useGetBankMasterMutation,
   useGetBankBranchMasterMutation,
   useGetCommodityTypeMasterMutation,
   useGetCommodityGradeMutation,
-  useGetCommodityMasterMutation,
   useGetPageMasterMutation,
   useGetRoleMasterMutation,
   useGetRolePageAssignmentMasterMutation,
@@ -224,6 +259,10 @@ export const {
   useGetRegionMasterMutation,
   useGetWarehouseTypeMasterMutation,
   useActiveDeActiveMutation,
+
+  useGetCommodityMasterMutation,
+  useAddCommodityMasterMutation,
+  useUpdateCommodityMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

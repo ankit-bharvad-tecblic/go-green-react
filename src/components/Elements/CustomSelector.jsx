@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import {
   Box,
@@ -31,12 +31,15 @@ const CustomSelector = ({
   const error = errors[name];
 
   console.log("selectedValue value: ", selectedValue);
-
   const handleSelectChange = (selectedOption) => {
     console.log("handleSelectChange", selectedOption);
     setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
   };
+
+  useEffect(() => {
+    setValue(name, selectedValue?.[selectType] || "");
+  }, [selectedValue]);
 
   return (
     <FormControl {...style} isInvalid={!!error}>

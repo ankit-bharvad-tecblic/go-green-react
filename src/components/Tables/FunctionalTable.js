@@ -52,6 +52,7 @@ function FunctionalTable({
   columns,
   data,
   loading,
+  addForm,
 }) {
   const dispatch = useDispatch();
   // const [sorting, setSorting] = React.useState([]);
@@ -169,6 +170,7 @@ function FunctionalTable({
             height="43px"
             borderRadius="15px"
             color="gray.600"
+            onClick={() => addForm()}
           >
             Add Details
           </Button>

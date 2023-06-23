@@ -33,6 +33,7 @@ import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster
 import FormDesign from "../view/FormDesign";
 import AddEditFormCommodityMaster from "../view/CommodityMaster/AddEditFormCommodityMaster";
 import AddEditFormCommodityType from "../view/CommodityTypeMaster/AddEditFormCommodityType";
+import AddEditZoneMaster from "../view/ZoneMaster/AddEditZoneMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -109,6 +110,30 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Zone Master"}>
                 <ZoneMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/zone-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Zone Master"}>
+                <AddEditZoneMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/zone-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Zone Master"}>
+                <AddEditZoneMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

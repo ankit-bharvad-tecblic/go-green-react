@@ -1,14 +1,20 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
-import { useActiveDeActiveMutation, useGetZoneMasterMutation } from "../../features/master-api-slice";
+import {
+  useActiveDeActiveMutation,
+  useGetZoneMasterMutation,
+} from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
+import { useNavigate } from "react-router-dom";
 
 const ZoneMaster = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -33,7 +39,18 @@ const ZoneMaster = () => {
     { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
   ] = useActiveDeActiveMutation();
 
-  const toast = useToast();
+  const addForm = () => {
+    navigate(`/location-master/add/zone-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/location-master/edit/zone-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const handleActiveDeActive = async (e, info) => {
     console.log("event --> ", e.target.checked, info);
@@ -78,7 +95,7 @@ const ZoneMaster = () => {
     } catch (error) {
       console.error("Error:", error);
     }
-  };  
+  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -89,10 +106,10 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    // columnHelper.accessor("zone_name", {
-    //   cell: (info) => info.getValue(),
-    //   header: "STATE NAME",
-    // }),
+    columnHelper.accessor("state", {
+      cell: (info) => info.getValue(),
+      header: "STATE NAME",
+    }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: " Creation Date",
@@ -111,7 +128,7 @@ const ZoneMaster = () => {
             colorScheme="whatsapp"
             onChange={(e) => handleActiveDeActive(e, info)}
             isChecked={info.row.original.active}
-           
+
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -133,6 +150,7 @@ const ZoneMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -207,16 +225,16 @@ const ZoneMaster = () => {
     //params filter
     // if (filter.filter.length || filter.search) {
     // if (filterQuery) {
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
     // }
 
     console.log("paramString ---> ", paramString);
@@ -241,7 +259,7 @@ const ZoneMaster = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page,filterQuery]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {
@@ -266,6 +284,7 @@ const ZoneMaster = () => {
         columns={columns}
         data={data}
         loading={getZoneMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );
