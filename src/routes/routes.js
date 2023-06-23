@@ -50,6 +50,7 @@ import AddEditFormWareHouseTypeMaster from "../view/WarehouseTypeMaster/AddEditF
 import AddEditFormWareHouseSubTypeMaster from "../view/WareHouseSubTypeMaster/AddEditFormWareHouseSubTypeMaster";
 import AddEditFormUserMaster from "../view/UserMaster/AddEditFormUserMaster";
 import AddEditFormStateMaster from "../view/StateMaster/AddEditFormStateMaster";
+import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -576,6 +577,18 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Bank Branch Master"}>
                 <AddEditFormBankBranchMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "bank-cm-location-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank CM Location Master"}>
+                <BankCMLocationMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>
