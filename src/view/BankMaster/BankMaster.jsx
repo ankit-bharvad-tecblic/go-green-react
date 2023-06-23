@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
-import {
+import { 
   useActiveDeActiveMutation,
   useGetBankMasterMutation,
 } from "../../features/master-api-slice";
@@ -11,11 +11,13 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function BankMaster() {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -28,15 +30,10 @@ function BankMaster() {
     limit: 25,
   });
 
-  const [
-    getBankMaster,
-    { error: getBankMasterApiErr, isLoading: getBankMasterApiIsLoading },
-  ] = useGetBankMasterMutation();
+  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
+    useGetBankMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -85,6 +82,13 @@ function BankMaster() {
     }
   };
 
+  const editForm = (info) => {
+    console.log("bank info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/edit/bank-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -137,73 +141,13 @@ function BankMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
       id: "update_col",
       accessorFn: (row) => row.update_col,
     }),
-  ];
-
-  const filterFields = [
-    {
-      "BANK NAME": "bank_name",
-      isActiveFilter: false,
-
-      label: "BANK NAME",
-      name: "bank_name",
-      placeholder: "BANK NAME",
-      type: "text",
-    },
-    {
-      "REGION NAME": "region__region_name",
-      isActiveFilter: false,
-
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-
-    {
-      "BANK ADDRESS": "bank_address",
-      isActiveFilter: false,
-
-      label: "BANK ADDRESS",
-      name: "bank_address",
-      placeholder: "BANK ADDRESS",
-      type: "text",
-    },
-
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
   ];
 
   const tableFilterSet = () => {

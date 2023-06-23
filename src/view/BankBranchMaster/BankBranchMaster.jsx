@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
@@ -11,11 +11,13 @@ import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function BankBranchMaster() {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -28,18 +30,10 @@ function BankBranchMaster() {
     limit: 25,
   });
 
-  const [
-    getBankBranchMaster,
-    {
-      error: getBankBranchMasterApiErr,
-      isLoading: getBankBranchMasterApiIsLoading,
-    },
-  ] = useGetBankBranchMasterMutation();
+  const [getBankBranchMaster, { isLoading: getBankBranchMasterApiIsLoading }] =
+    useGetBankBranchMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -86,6 +80,15 @@ function BankBranchMaster() {
       console.error("Error:", error);
     }
   };
+
+  const editForm = (info) => {
+    console.log("bank branch info", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/edit/bank-branch-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
+
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -150,6 +153,7 @@ function BankBranchMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -158,100 +162,15 @@ function BankBranchMaster() {
     }),
   ];
 
-  const filterFields = [
-    {
-      "BRANCH NAME": "branch_name",
-      isActiveFilter: false,
-
-      label: "BRANCH NAME",
-      name: "branch_name",
-      placeholder: "BRANCH NAME",
-      type: "text",
-    },
-    {
-      "BANK NAME": "bank__bank_name",
-      isActiveFilter: false,
-
-      label: "BANK NAME",
-      name: "bank__bank_name",
-      placeholder: "BANK NAME",
-      type: "text",
-    },
-    {
-      "REGION NAME": "region__region_name",
-      isActiveFilter: false,
-
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-    {
-      "DISTRICT NAME": "district__district_name",
-      isActiveFilter: false,
-
-      label: "DISTRICT NAME",
-      name: "district__district_name",
-      placeholder: "DISTRICT NAME",
-      type: "text",
-    },
-    {
-      ADDRESS: "branch_address",
-      isActiveFilter: false,
-
-      label: "ADDRESS",
-      name: "branch_address",
-      placeholder: "ADDRESS",
-      type: "text",
-    },
-    {
-      PINCODE: "pincode",
-      isActiveFilter: false,
-
-      label: "PINCODE ",
-      name: "pincode",
-      placeholder: "PINCODE ",
-      type: "number",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
   const [data, setData] = useState([]);
 
-  const params = {
-    filter: [],
-    search: "",
-  };
+  // const params = {
+  //   filter: [],
+  //   search: "",
+  // };
 
   let paramString = "";
 
@@ -319,3 +238,4 @@ function BankBranchMaster() {
 }
 
 export default BankBranchMaster;
+ 

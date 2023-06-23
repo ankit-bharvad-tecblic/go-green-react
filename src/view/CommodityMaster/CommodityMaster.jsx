@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetCommodityMasterMutation,
@@ -13,7 +13,7 @@ import { API } from "../../constants/api.constants";
 import { useNavigate } from "react-router-dom";
 import { filterFields } from "./fields";
 
-const CommodityMaster = () => {
+const CommodityMaster = () => { 
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery

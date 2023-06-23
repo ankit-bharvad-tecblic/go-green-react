@@ -20,10 +20,6 @@ import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { motion } from "framer-motion";
 import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
 
-// export const MotionSlideUp = motion.custom((props) => (
-//   <motion.div variants={slideUp} {...props} />
-// ))
-
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
