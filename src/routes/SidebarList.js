@@ -27,6 +27,7 @@ import UserMaster from "../view/UserMaster/UserMaster";
 import WareHouseSubType from "../view/WareHouseSubTypeMaster/WareHouseSubType";
 import ZoneMaster from "../view/ZoneMaster/ZoneMaster";
 import WarehouseTypeMaster from "../view/WarehouseTypeMaster/WarehouseTypeMaster";
+import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMaster";
 //
 
 const SidebarList = [
@@ -146,6 +147,13 @@ const SidebarList = [
         secondaryNavbar: true,
         icon: <HomeIcon color="inherit" />,
         component: BankBranchMaster,
+      },
+      {
+        path: "/bank-master/bank-cm-location-master",
+        name: "Bank CM Location Master",
+        secondaryNavbar: true,
+        icon: <HomeIcon color="inherit" />,
+        component: BankCMLocationMaster,
       },
     ],
   },

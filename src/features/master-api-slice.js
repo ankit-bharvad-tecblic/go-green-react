@@ -297,6 +297,13 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    getBankCMLocationMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.BANK_CM_LOCATION_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
     activeDeActive: builder.mutation({
       query: (data) => ({
         url: data.endPoint,
@@ -361,6 +368,7 @@ export const {
   useGetCommodityMasterMutation,
   useAddCommodityMasterMutation,
   useUpdateCommodityMasterMutation,
+  useGetBankCMLocationMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
