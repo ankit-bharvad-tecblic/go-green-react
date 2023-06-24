@@ -98,14 +98,6 @@ function EarthquakeZoneTypeMaster() {
       });
     }
   };
-  const editForm = (info) => {
-    console.log("info --> ", info);
-    let editedFormId = info.row.original.id;
-
-    navigate(`/manage-insurance/edit/security-guard-master/${editedFormId}`, {
-      state: { details: info.row.original },
-    });
-  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -172,6 +164,22 @@ function EarthquakeZoneTypeMaster() {
 
   let paramString = "";
 
+  const addForm = () => {
+    navigate(`/manage-insurance/add/earthquake-zone-type-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(
+      `/manage-insurance/edit/earthquake-zone-type-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
+  };
+
   const getData = async () => {
     //params filter
     //if (filterQuery) {
@@ -229,6 +237,7 @@ function EarthquakeZoneTypeMaster() {
         columns={columns}
         data={data}
         loading={getEarthquakeZoneTypeMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

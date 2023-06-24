@@ -228,7 +228,6 @@ const schema = yup.object().shape({
   service_cost: yup.number().required("service_cost  is required"),
   remarks: yup.string().required("remarks is required"),
   active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

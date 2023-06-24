@@ -14,7 +14,7 @@ export const API = {
     BANK_MASTER: "/business_flow/bank",
     BANK_BRANCH_MASTER: "/business_flow/bank_branch",
     EARTHQUAKE_ZONE_TYPE_MASTER: "/warehouse/earthquake_zone_type",
-    INSURANCE_COMPANY_MASTER: "/business_flow/insurance",
+    INSURANCE_COMPANY_MASTER: "/business_flow/insurance/",
     REGION_MASTER: "/warehouse/region/",
     ADD_REGION_MASTER: "",
     UPDATE_REGION_MASTER: "/warehouse/region",

@@ -83,17 +83,6 @@ function InsuranceCompanyMaster() {
       console.error("Error:", error);
     }
   };
-  const editForm = (info) => {
-    console.log("info --> ", info);
-    let editedFormId = info.row.original.id;
-
-    navigate(
-      `/manage-insurance/edit/insurance-company-master/${editedFormId}`,
-      {
-        state: { details: info.row.original },
-      }
-    );
-  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -160,6 +149,20 @@ function InsuranceCompanyMaster() {
   // };
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/manage-insurance/add/insurance-company-master/`);
+  };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(
+      `/manage-insurance/edit/insurance-company-master/${editedFormId}`,
+      {
+        state: { details: info.row.original },
+      }
+    );
+  };
 
   const getData = async () => {
     //params filter
@@ -176,7 +179,7 @@ function InsuranceCompanyMaster() {
       .join("&");
     //}
 
-    // console.log("paramString ---> ", paramString);
+    console.log("paramString ---> ", paramString);
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
@@ -199,6 +202,7 @@ function InsuranceCompanyMaster() {
 
   return (
     <div>
+      {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
         filterFields={filterFields}
@@ -206,6 +210,7 @@ function InsuranceCompanyMaster() {
         columns={columns}
         data={data}
         loading={getInsuranceCompanyMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

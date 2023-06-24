@@ -43,7 +43,7 @@ const CommodityGrade = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("commodity_grade", {
+    columnHelper.accessor("commodity_grade_name", {
       cell: (info) => info.getValue(),
       header: " COMMODITY GRADE NAME",
     }),
@@ -122,7 +122,7 @@ const CommodityGrade = () => {
     let obj = {
       id: info.row.original.id,
       active: e.target.checked,
-      endPoint: API.DASHBOARD.COMMODITY_GRADE_ACTIVE,
+      commodity_grade_name: API.DASHBOARD.COMMODITY_GRADE_ACTIVE,
     };
 
     try {

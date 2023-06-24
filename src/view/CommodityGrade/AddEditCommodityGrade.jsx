@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-    useAddCommodityGradeMutation,
+  useAddCommodityGradeMutation,
   useAddCommodityTypeMasterMutation,
   useGetCommodityTypeMasterMutation,
   useUpdateCommodityGradeMutation,
@@ -32,7 +32,9 @@ const AddEditFormCommodityGrade = () => {
 
   const [
     UpdateCommodityGrade,
-    { /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading },
+    {
+      /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading,
+    },
   ] = useUpdateCommodityGradeMutation();
 
   const [
@@ -130,7 +132,7 @@ const AddEditFormCommodityGrade = () => {
     getCommodityType();
     if (details?.id) {
       let obj = {
-        commodity_grade: details.commodity_grade,
+        commodity_grade_name: details.commodity_grade_name,
         description: details.description,
         active: details.is_active,
       };

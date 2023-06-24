@@ -197,6 +197,9 @@ const SecurityGuardMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/security-guard-master/add/security-guard-master/`);
+  };
 
   const getData = async () => {
     //params filter
@@ -255,6 +258,7 @@ const SecurityGuardMaster = () => {
           columns={columns}
           data={data}
           loading={getSecurityGuardMasterApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

@@ -201,6 +201,10 @@ const SecurityAgencyMaster = () => {
 
   let paramString = "";
 
+  const addForm = () => {
+    navigate(`/security-agency-master/add/security-agency-master/`);
+  };
+
   const getData = async () => {
     //params filter
     //if (filterQuery) {
@@ -258,6 +262,7 @@ const SecurityAgencyMaster = () => {
           columns={columns}
           data={data}
           loading={getSecurityAgencyMasterApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

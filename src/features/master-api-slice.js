@@ -55,6 +55,8 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+
+    // start earthquack-master get add update mutation methods
     getEarthQuakeZoneTypeMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
@@ -62,6 +64,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addEarthQuakeZoneTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateEarthQuakeZoneTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
+    //start Insurance-Master get add update mutation methods
     getInsuranceCompanyMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
@@ -69,6 +87,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addInsuranceCompanyMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateInsuranceCompanyMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
     getRegionMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.REGION_MASTER,
@@ -176,6 +209,8 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     // end Commodity-Master add update mutation methods
+
+    //start page master get add update mutation methods
     getPageMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.PAGE_MASTER,
@@ -187,6 +222,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addPageMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.PAGE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updatePageMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.PAGE_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
+    // end page master get add update mutation method
     getRoleMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ROLE_MASTER,
@@ -301,6 +352,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    // start security agency get add update mutation methods
     getSecurityAgencyMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.SECURITY_AGENCY_MASTER,
@@ -312,6 +364,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addSecurityAgencyMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.SECURITY_AGENCY_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateSecurityAgencyMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.SECURITY_AGENCY_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // start security guard get add update mutation methods
     getSecurityGuardMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.SECURITY_GUARD_MASTER,
@@ -323,6 +390,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addSecurityGuardMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.SECURITY_GUARD_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateSecurityGuardMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.SECURITY_GUARD_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
     getWarehouseTypeMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.WAREHOUSE_TYPE_MASTER,
@@ -382,6 +464,7 @@ export const {
   useUpdateAreaMasterMutation,
   useAddAreaMasterMutation,
   // Api mutation for area master ends
+
   useGetBankMasterMutation,
   useGetBankBranchMasterMutation,
   // Api mutation for commodity type starts
@@ -389,12 +472,17 @@ export const {
   useUpdateCommodityTypeMasterMutation,
   useAddCommodityTypeMasterMutation,
   // Api mutation for commodity type ends
+
   // Api mutation for commodity grade starts
   useGetCommodityGradeMutation,
   useUpdateCommodityGradeMutation,
   useAddCommodityGradeMutation,
   // Api mutation for commodity grade ends
+  // Api mutation for page master starts
   useGetPageMasterMutation,
+  useAddPageMasterMutation,
+  useUpdatePageMasterMutation,
+  // Api mutation for page master ends
   useGetRoleMasterMutation,
   useGetRolePageAssignmentMasterMutation,
   useGetUserMasterMutation,
@@ -403,11 +491,34 @@ export const {
   useUpdateCommodityVarietyMutation,
   useAddCommodityVarietyMutation,
   // Api mutation for commodity variety ends
+
   useGetWareHouseSubTypeMutation,
+
+  // Api mutation for security agency starts
   useGetSecurityAgencyMasterMutation,
+  useAddSecurityAgencyMasterMutation,
+  useUpdateSecurityAgencyMasterMutation,
+  // Api mutation for security agency end
+
+  // Api mutation for security Guard starts
   useGetSecurityGuardMasterMutation,
+  useAddSecurityGuardMasterMutation,
+  useUpdateSecurityGuardMasterMutation,
+
+  // Api mutation for security Guard end
+
+  // Api mutation for earthquack zone type start
   useGetEarthQuakeZoneTypeMasterMutation,
+  useAddEarthQuakeZoneTypeMasterMutation,
+  useUpdateEarthQuakeZoneTypeMasterMutation,
+  // Api mutation for earthquack zone type end
+
+  //Api mutation for Insurance variety starts
   useGetInsuranceCompanyMasterMutation,
+  useUpdateInsuranceCompanyMasterMutation,
+  useAddInsuranceCompanyMasterMutation,
+  // Api mutation for Insurance variety ends
+
   //Apis mutation for region master starts
   useGetRegionMasterMutation,
   useAddRegionMasterMutation,

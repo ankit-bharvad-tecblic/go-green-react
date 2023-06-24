@@ -162,6 +162,10 @@ const PageMaster = () => {
 
   let paramString = "";
 
+  const addForm = () => {
+    navigate(`/manage-users/add/page-master/`);
+  };
+
   const getData = async () => {
     //params filter
     // if (filterQuery) {
@@ -217,6 +221,7 @@ const PageMaster = () => {
         columns={columns}
         data={data}
         loading={getPageMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

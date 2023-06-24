@@ -2,10 +2,10 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "COMMODITY GRADE NAME": "commodity_grade",
+    "COMMODITY GRADE NAME": "commodity_grade_name",
     isActiveFilter: false,
     label: "COMMODITY GRADE NAME",
-    name: "commodity_grade",
+    name: "commodity_grade_name",
     placeholder: "COMMODITY GRADE NAME",
     type: "text",
   },
@@ -57,7 +57,7 @@ const filterFields = [
 const addEditFormFields = [
   {
     label: "COMMODITY GRADE",
-    name: "commodity_grade",
+    name: "commodity_grade_name",
     placeholder: "COMMODITY GRADE",
     type: "text",
   },
@@ -77,7 +77,7 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   description: yup.string().required("Description is required"),
   is_active: yup.string(),
-  commodity_grade: yup.string().required("Commodity type is required"),
+  commodity_grade_name: yup.string().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

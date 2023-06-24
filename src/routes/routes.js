@@ -404,6 +404,18 @@ const routes = [
         ),
       },
       {
+        path: "add/page-master/",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Page Master"}>
+                <AddEditPageMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "role-master",
         element: (
           <ProtectedRoutes>
@@ -639,6 +651,7 @@ const routes = [
   {
     path: "/manage-insurance",
     children: [
+      // insurance company master get add update start
       {
         path: "insurance-company-master",
         element: (
@@ -675,6 +688,9 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      // insurance company master get add update end
+
+      // earthQuack zone type master get add update start
       {
         path: "earthquake-zone-type-master",
         element: (
@@ -691,7 +707,7 @@ const routes = [
         ),
       },
       {
-        path: "edit/security-guard-master/:id",
+        path: "add/earthquake-zone-type-master",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
@@ -705,32 +721,23 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "edit/earthquake-zone-type-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout
+                variant={headerType}
+                title={"Earthquake Zone Type Master"}
+              >
+                <AddEditFormEarthQuackZoneTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      // earthQuackZone type master get add update end
     ],
-  },
-
-  {
-    path: "/security-guard-master",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Security Guard Master"}>
-            <SecurityGuardMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/security-guard-master/edit/security-guard-master/:id",
-    element: (
-      <ProtectedRoutes>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Layout variant={headerType} title={"Security Guard Master"}>
-            <AddEditSecurityGuardMaster />
-          </Layout>
-        </Suspense>
-      </ProtectedRoutes>
-    ),
   },
 
   {
@@ -908,6 +915,7 @@ const routes = [
       },
     ],
   },
+  // routes for security agency add update edit started
   {
     path: "/security-agency-master",
     element: (
@@ -927,6 +935,55 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Security Agency Master"}>
             <AddEditFormSecurityAgencyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/security-agency-master/add/security-agency-master/",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Agency Master"}>
+            <AddEditFormSecurityAgencyMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  // Securiyu guard master routes update add edit
+  {
+    path: "/security-guard-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Guard Master"}>
+            <SecurityGuardMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/security-guard-master/edit/security-guard-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Guard Master"}>
+            <AddEditSecurityGuardMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "/security-guard-master/add/security-guard-master/",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Security Guard Master"}>
+            <AddEditSecurityGuardMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
