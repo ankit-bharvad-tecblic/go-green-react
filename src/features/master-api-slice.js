@@ -48,11 +48,39 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addBankMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.BANK_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateBankMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.BANK_MASTER,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
     getBankBranchMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.BANK_BRANCH_MASTER,
         method: "GET",
         params: params,
+      }),
+    }),
+    addBankBranchMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.BANK_BRANCH_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateBankBranchMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.BANK_BRANCH_MASTER,
+        method: "PATCH",
+        body: data,
       }),
     }),
     getEarthQuakeZoneTypeMaster: builder.mutation({
@@ -356,6 +384,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  
   useGetDistrictMasterMutation,
   useGetStateMasterMutation,
 
@@ -369,7 +398,11 @@ export const {
   useAddAreaMasterMutation,
   // Api mutation for area master ends
   useGetBankMasterMutation,
+  useAddBankMasterMutation,
+  useUpdateBankMasterMutation,
   useGetBankBranchMasterMutation,
+  useAddBankBranchMasterMutation,
+  useUpdateBankBranchMasterMutation,
   // Api mutation for commodity type starts
   useGetCommodityTypeMasterMutation,
   useUpdateCommodityTypeMasterMutation,

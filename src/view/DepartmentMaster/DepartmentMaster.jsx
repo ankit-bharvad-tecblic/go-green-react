@@ -81,40 +81,12 @@ function DepartmentMaster() {
 
   const filterFields = [
     {
-      "BANK NAME": "bank_name",
+      "Department Name": "bank_name",
       isActiveFilter: false,
 
-      label: "BANK NAME",
+      label: "Department Name",
       name: "bank_name",
-      placeholder: "BANK NAME",
-      type: "text",
-    },
-    {
-      "REGION NAME": "region__region_name",
-      isActiveFilter: false,
-
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-
-    {
-      "BANK ADDRESS": "bank_address",
-      isActiveFilter: false,
-
-      label: "BANK ADDRESS",
-      name: "bank_address",
-      placeholder: "BANK ADDRESS",
+      placeholder: "Department Name",
       type: "text",
     },
 
@@ -144,21 +116,18 @@ function DepartmentMaster() {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("employee_full_name", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "Department Name",
     }),
-    columnHelper.accessor("region.region_name", {
+
+    columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
-    }),
-    columnHelper.accessor("state.state_name", {
-      cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "Creation Date",
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "Last Updated Date",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
@@ -203,7 +172,6 @@ function DepartmentMaster() {
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
-
 
   let paramString = "";
 

@@ -81,41 +81,113 @@ function EmployeeMaster() {
 
   const filterFields = [
     {
-      "BANK NAME": "bank_name",
+      "Employee Full Name": "employee_full_name",
       isActiveFilter: false,
 
-      label: "BANK NAME",
-      name: "bank_name",
-      placeholder: "BANK NAME",
+      label: "Employee Full Name",
+      name: "employee_full_name",
+      placeholder: "Employee Full Name",
       type: "text",
     },
     {
-      "REGION NAME": "region__region_name",
+      "Contact Number": "contact_number",
       isActiveFilter: false,
 
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
+      label: "Contact Number",
+      name: "contact_number",
+      placeholder: "Contact Number",
+      type: "number",
+    },
+    {
+      "REGION ID": "region_id",
+      isActiveFilter: false,
+
+      label: "REGION ID",
+      name: "region_id",
+      placeholder: "REGION ID",
+      type: "number",
+    },
+    {
+      "STATE ID": "state_id",
+      isActiveFilter: false,
+
+      label: "STATE ID",
+      name: "state_id",
+      placeholder: "STATE ID",
+      type: "number",
+    },
+    {
+      "Zone ID": "zone_id",
+      isActiveFilter: false,
+
+      label: "Zone ID",
+      name: "zone_id",
+      placeholder: "Zone ID",
+      type: "number",
+    },
+    {
+      "District ID": "district_id",
+      isActiveFilter: false,
+
+      label: "District ID",
+      name: "district_id",
+      placeholder: "District ID",
+      type: "number",
+    },
+    {
+      ADDRESS: "address",
+      isActiveFilter: false,
+
+      label: "ADDRESS",
+      name: "address",
+      placeholder: "ADDRESS",
+      type: "text",
+    },
+
+    {
+      "Pin Code": "pin_code",
+      isActiveFilter: false,
+
+      label: "Pin Code",
+      name: "pin_code",
+      placeholder: "Pin Code",
+      type: "number",
+    },
+    {
+      "Email ID": "email_id",
+      isActiveFilter: false,
+
+      label: "Email ID",
+      name: "email_id",
+      placeholder: "Email ID",
       type: "text",
     },
     {
-      "STATE NAME": "state__state_name",
+      "Department ID": "email_id",
       isActiveFilter: false,
 
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
+      label: "Department ID",
+      name: "email_id",
+      placeholder: "Department ID",
       type: "text",
     },
-
     {
-      "BANK ADDRESS": "bank_address",
+      "Job Title": "job_title",
       isActiveFilter: false,
 
-      label: "BANK ADDRESS",
-      name: "bank_address",
-      placeholder: "BANK ADDRESS",
+      label: "Job Title",
+      name: "job_title",
+      placeholder: "Job Title",
       type: "text",
+    },
+    {
+      "Reporting Manager ID": "reporting_manager_id",
+      isActiveFilter: false,
+
+      label: "Reporting Manager ID",
+      name: "reporting_manager_id",
+      placeholder: "Reporting Manager ID",
+      type: "number",
     },
 
     {
@@ -144,23 +216,63 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("employee_full_name", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "Employee Full Name",
     }),
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("contact_number", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: "Contact Number",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("region_id", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "Region ID",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("state_id", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "State ID",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("zone_id", {
+      cell: (info) => info.getValue(),
+      header: "Zone ID",
+    }),
+    columnHelper.accessor("district_id", {
+      cell: (info) => info.getValue(),
+      header: "District ID",
+    }),
+    columnHelper.accessor("address", {
+      cell: (info) => info.getValue(),
+      header: "ADDRESS",
+    }),
+    columnHelper.accessor("pin_code", {
+      cell: (info) => info.getValue(),
+      header: "Pin Code",
+    }),
+    columnHelper.accessor("email_id", {
+      cell: (info) => info.getValue(),
+      header: "Email ID",
+    }),
+    columnHelper.accessor("email_id", {
+      cell: (info) => info.getValue(),
+      header: "Department ID",
+    }),
+    columnHelper.accessor("job_title", {
+      cell: (info) => info.getValue(),
+      header: "Job Title",
+    }),
+    columnHelper.accessor("reporting_manager_id", {
+      cell: (info) => info.getValue(),
+      header: "Reporting Manager ID",
+    }),
+    columnHelper.accessor("created_at", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date",
+    }),
+    columnHelper.accessor("updated_at", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date",
+    }),
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
