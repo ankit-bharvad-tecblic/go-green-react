@@ -3,7 +3,7 @@ import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useActiveDeActiveMutation,
-  useGetBankCMLocationMasterMutation,
+  useGetCommodityBagMasterMutation,
 } from "../../features/master-api-slice";
 
 import { BiEditAlt } from "react-icons/bi";
@@ -12,7 +12,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 
-const BankCMLocationMaster = () => {
+const CommodityBagMaster = () => {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
 
@@ -29,9 +29,9 @@ const BankCMLocationMaster = () => {
   });
 
   const [
-    getBankCMLocationMaster,
-    { isLoading: getBankCMLocationMasterApiIsLoading },
-  ] = useGetBankCMLocationMasterMutation();
+    getCommodityBagMaster,
+    { isLoading: getCommodityBagMasterApiIsLoading },
+  ] = useGetCommodityBagMasterMutation();
 
   const [activeDeActive] = useActiveDeActiveMutation();
 
@@ -83,21 +83,21 @@ const BankCMLocationMaster = () => {
 
   const filterFields = [
     {
-      "BRANCH NAME": "branch_name",
+      "BANK NAME": "bank_name",
       isActiveFilter: false,
 
-      label: "BRANCH NAME",
-      name: "branch_name",
-      placeholder: "BRANCH NAME",
+      label: "BANK NAME",
+      name: "bank_name",
+      placeholder: "BANK NAME",
       type: "text",
     },
     {
-      "Bank CM Location Name": "region__region_name",
+      "REGION NAME": "region__region_name",
       isActiveFilter: false,
 
-      label: "Bank CM Location Name",
+      label: "REGION NAME",
       name: "region__region_name",
-      placeholder: "Bank CM Location Name",
+      placeholder: "REGION NAME",
       type: "text",
     },
     {
@@ -162,13 +162,13 @@ const BankCMLocationMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("branch_name", {
+    columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "BRANCH NAME",
+      header: "BANK NAME",
     }),
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
-      header: "Bank CM Location Name",
+      header: "REGION NAME",
     }),
     columnHelper.accessor("state.state_name", {
       cell: (info) => info.getValue(),
@@ -233,7 +233,7 @@ const BankCMLocationMaster = () => {
 
   let paramString = "";
 
-  const getBankCMLocation = async () => {
+  const getCommodityBag = async () => {
     //params filter
     //filter.filter.length || filter.search
     // if (filterQuery) {
@@ -253,7 +253,7 @@ const BankCMLocationMaster = () => {
 
     try {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-      const response = await getBankCMLocationMaster(query).unwrap();
+      const response = await getCommodityBagMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -267,7 +267,7 @@ const BankCMLocationMaster = () => {
 
   useEffect(() => {
     tableFilterSet();
-    getBankCMLocation();
+    getCommodityBag();
   }, [filter.limit, filter.page, filterQuery]);
   return (
     <div>
@@ -277,10 +277,10 @@ const BankCMLocationMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data || []}
-        loading={getBankCMLocationMasterApiIsLoading}
+        loading={getCommodityBagMasterApiIsLoading}
       />
     </div>
   );
 };
 
-export default BankCMLocationMaster;
+export default CommodityBagMaster;

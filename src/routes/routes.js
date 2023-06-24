@@ -54,6 +54,8 @@ import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMas
 import EmployeeMaster from "../view/EmployeeMaster/EmployeeMaster";
 import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
 import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
+import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
+import HsnMaster from "../view/HsnMaster/HsnMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -875,6 +877,30 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Commodity variety master"}>
                 <AddEditFormCommodityVariety />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "commodity-bag-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity Bag Master"}>
+                <CommodityBagMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "hsn-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"HSN Master"}>
+                <HsnMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

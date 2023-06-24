@@ -341,6 +341,20 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    getCommodityBagMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.COMMODITY_BAG_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    getHsnMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.HSN_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
     activeDeActive: builder.mutation({
       query: (data) => ({
         url: data.endPoint,
@@ -409,6 +423,8 @@ export const {
   useGetEmployeeMasterMutation,
   useGetDepartmentMasterMutation,
   useGetHiringProposalMasterMutation,
+  useGetCommodityBagMasterMutation,
+  useGetHsnMasterMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

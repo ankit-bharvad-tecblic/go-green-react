@@ -31,6 +31,8 @@ import BankCMLocationMaster from "../view/BankCMLocationMaster/BankCMLocationMas
 import EmployeeMaster from "../view/EmployeeMaster/EmployeeMaster";
 import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
 import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
+import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
+import HsnMaster from "../view/HsnMaster/HsnMaster";
 //
 
 const SidebarList = [
@@ -70,6 +72,18 @@ const SidebarList = [
         name: "Commodity Variety",
         secondaryNavbar: true,
         component: CommodityVariety,
+      },
+      {
+        path: "/commodity-master/commodity-bag-master",
+        name: "Commodity Bag Master",
+        secondaryNavbar: true,
+        component: CommodityBagMaster,
+      },
+      {
+        path: "/commodity-master/hsn-master",
+        name: "HSN Master",
+        secondaryNavbar: true,
+        component: HsnMaster,
       },
     ],
   },
