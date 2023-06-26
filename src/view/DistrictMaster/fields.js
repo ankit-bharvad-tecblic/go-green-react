@@ -63,21 +63,21 @@ const addEditFormFields = [
   },
   {
     label: "ZONE NAME",
-    name: "zone_name",
+    name: "zone",
     placeholder: "ZONE NAME",
     type: "text",
   },
   {
     label: "ACTIVE/DeActive",
-    name: "is_active",
+    name: "active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
   district_name: yup.string().required("District  is required"),
-  is_active: yup.string(),
-  zone_name: yup.string().required("Zone name  is required"),
+  active: yup.string(),
+  zone: yup.string().required("Zone name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

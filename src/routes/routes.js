@@ -241,18 +241,18 @@ const routes = [
         ),
       },
       //  state-master get add update end
-      {
-        path: "state-master",
-        element: (
-          <ProtectedRoutes>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"State Master"}>
-                <StateMaster />
-              </Layout>
-            </Suspense>
-          </ProtectedRoutes>
-        ),
-      },
+      // {
+      //   path: "state-master",
+      //   element: (
+      //     <ProtectedRoutes>
+      //       <Suspense fallback={<div>Loading...</div>}>
+      //         <Layout variant={headerType} title={"State Master"}>
+      //           <StateMaster />
+      //         </Layout>
+      //       </Suspense>
+      //     </ProtectedRoutes>
+      //   ),
+      // },
       //  state-master get add update end
       {
         path: "district-master",
@@ -290,18 +290,18 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
-      {
-        path: "area-master",
-        element: (
-          <ProtectedRoutes>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Area Master"}>
-                <AreaMaster />
-              </Layout>
-            </Suspense>
-          </ProtectedRoutes>
-        ),
-      },
+      // {
+      //   path: "area-master",
+      //   element: (
+      //     <ProtectedRoutes>
+      //       <Suspense fallback={<div>Loading...</div>}>
+      //         <Layout variant={headerType} title={"Area Master"}>
+      //           <AreaMaster />
+      //         </Layout>
+      //       </Suspense>
+      //     </ProtectedRoutes>
+      //   ),
+      // },
       {
         path: "area-master",
         element: (

@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const CommodityVariety = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -37,6 +37,51 @@ const CommodityVariety = () => {
       isLoading: getCommodityVarietyApiIsLoading,
     },
   ] = useGetCommodityVarietyMutation();
+
+  const handleActiveDeActive = async (e, info) => {
+    console.log("event --> ", e.target.checked, info);
+    let obj = {
+      id: info.row.original.id,
+      active: e.target.checked,
+      endPoint: API.DASHBOARD.COMMODITY_VARIETY_ACTIVE,
+    };
+
+    try {
+      const response = await activeDeActive(obj).unwrap();
+
+      if (response.status === 201) {
+        toast({
+          title: `${response.message}`,
+          status: "success",
+          position: "top-right",
+          isClosable: true,
+          duration: 2000,
+        });
+        let table_data = data;
+        console.log("table_data", data);
+
+        const updatedData = table_data.map((item) => {
+          if (item.id === obj.id) {
+            return {
+              ...item,
+              is_active: obj.active,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        console.log("updatedData", updatedData);
+
+        setData(updatedData);
+        // getData();
+      }
+
+      console.log("response --> ", response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -147,14 +192,7 @@ const CommodityVariety = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            onClick={() => {
-              navigation(
-                `/commodity-master/edit/commodity-variety/${info.row.original.id}`,
-                {
-                  state: { details: info.row.original },
-                }
-              );
-            }}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -174,54 +212,21 @@ const CommodityVariety = () => {
 
   const toast = useToast();
 
-  const handleActiveDeActive = async (e, info) => {
-    console.log("event --> ", e.target.checked, info);
-    let obj = {
-      id: info.row.original.id,
-      active: e.target.checked,
-      endPoint: API.DASHBOARD.COMMODITY_VARIETY_ACTIVE,
-    };
-
-    try {
-      const response = await activeDeActive(obj).unwrap();
-
-      if (response.status === 201) {
-        toast({
-          title: `${response.message}`,
-          status: "success",
-          position: "top-right",
-          isClosable: true,
-          duration: 2000,
-        });
-        let table_data = data;
-        console.log("table_data", data);
-
-        const updatedData = table_data.map((item) => {
-          if (item.id === obj.id) {
-            return {
-              ...item,
-              is_active: obj.active,
-            };
-          } else {
-            return item;
-          }
-        });
-
-        console.log("updatedData", updatedData);
-
-        setData(updatedData);
-        // getData();
-      }
-
-      console.log("response --> ", response);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/commodity-master/add/commodity-variety/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/commodity-master/edit/commodity-variety/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getData = async () => {
     //params filter
@@ -284,6 +289,7 @@ const CommodityVariety = () => {
           columns={columns}
           data={data}
           loading={getCommodityVarietyApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

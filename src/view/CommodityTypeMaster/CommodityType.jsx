@@ -15,7 +15,7 @@ import { filterFields } from "./fields";
 
 const CommodityType = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -141,11 +141,7 @@ const CommodityType = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            onClick={() => {
-              navigation(`/commodity-master/edit/commodity-type/${info.row.original.id}`, {
-                state: { details: info.row.original },
-              });
-            }}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -161,7 +157,17 @@ const CommodityType = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/commodity-master/add/commodity-type/`);
+  };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
 
+    navigate(`/commodity-master/edit/commodity-type/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
@@ -222,6 +228,7 @@ const CommodityType = () => {
           columns={columns}
           data={data}
           loading={getCommodityTypeMasterApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

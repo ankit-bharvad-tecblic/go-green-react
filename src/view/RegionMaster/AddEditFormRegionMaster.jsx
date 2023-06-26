@@ -21,6 +21,7 @@ import {
   useUpdateRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { MotionSlideUp } from "../../utils/animation";
 
 const AddEditFormRegionMaster = () => {
   const location = useLocation();
@@ -48,9 +49,9 @@ const AddEditFormRegionMaster = () => {
       }).unwrap();
       if (response.status === 200) {
         toasterAlert(response);
-        navigate(`/location-master/region-master`);
+        navigate(`/manage-location/region-master`);
       }
-      console.log("update commodity master res", response);
+      console.log("update region master res", response);
     } catch (error) {
       console.error("Error:", error);
       toasterAlert(error);
@@ -62,9 +63,9 @@ const AddEditFormRegionMaster = () => {
       const response = await addRegionMaster(data).unwrap();
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/location-master/region-master");
+        navigate("/manage-location/region-master");
       }
-      console.log("update commodity master res", response);
+      console.log("update region master res", response);
     } catch (error) {
       console.error("Error:", error);
 
@@ -103,20 +104,22 @@ const AddEditFormRegionMaster = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  isChecked: details?.active,
-                  isClearable: false,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  {" "}
+                  <Text textAlign="right" w="250px">
+                    {item.label}
+                  </Text>{" "}
+                  {generateFormField({
+                    ...item,
+                    label: "",
+                    isChecked: details?.active,
+                    isClearable: false,
+                    style: { mb: 2, mt: 2 },
+                  })}
+                </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">

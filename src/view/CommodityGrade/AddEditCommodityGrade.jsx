@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Controller,
   FormProvider,
@@ -14,12 +14,16 @@ import { addEditFormFields, schema } from "./fields";
 import {
   useAddCommodityGradeMutation,
   useAddCommodityTypeMasterMutation,
+  useGetCommodityGradeMutation,
   useGetCommodityTypeMasterMutation,
   useUpdateCommodityGradeMutation,
   useUpdateCommodityTypeMasterMutation,
 } from "../../features/master-api-slice";
+import { MotionSlideUp } from "../../utils/animation";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 const AddEditFormCommodityGrade = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -29,82 +33,51 @@ const AddEditFormCommodityGrade = () => {
 
   const details = location.state?.details;
   console.log("details ---> ", details);
+  const onSubmit = (data) => {
+    console.log("data==>", data);
+    if (details?.id) {
+      updateData({ ...data, id: details.id });
+    } else {
+      addData(data);
+    }
+  };
+
+  const [getCommodityGrade, { isLoading: getCommodityGradeApiIsLoading }] =
+    useGetCommodityGradeMutation();
+
+  const [addCommodityGrade, { isLoading: addCommodityGradeApiIsLoading }] =
+    useAddCommodityGradeMutation();
 
   const [
-    UpdateCommodityGrade,
-    {
-      /* error: activeDeActiveApiErr,*/ isLoading: UpdateCommodityGradeLoading,
-    },
+    updateCommodityGrade,
+    { isLoading: updateCommodityGradeApiIsLoading },
   ] = useUpdateCommodityGradeMutation();
 
-  const [
-    AddCommodityGrade,
-    { /* error: activeDeActiveApiErr,*/ isLoading: AddCommodityGradeLoading },
-  ] = useAddCommodityGradeMutation();
-
-  const updateCommodityGradeData = async (data) => {
+  const addData = async (data) => {
     try {
-      const response = await UpdateCommodityGrade(data).unwrap();
-      console.log("update commodity master res", response);
+      const response = await addCommodityGrade(data).unwrap();
+      console.log("add commodity grade res", response);
+      if (response.status === 201) {
+        toasterAlert(response);
+        navigate("/commodity-master/commodity-grade");
+      }
     } catch (error) {
       console.error("Error:", error);
+      toasterAlert(error);
     }
   };
-
-  const addCommodityGradeData = async (data) => {
-    try {
-      const response = await AddCommodityGrade(data).unwrap();
-      console.log("update commodity master res", response);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const onSubmit = (data) => {
-    if (details?.id) {
-      updateCommodityGradeData(data);
-    } else {
-      addCommodityGradeData(data);
-    }
-    console.log("data==>", data);
-  };
-
-  const [
-    getCommodityTypeMaster,
-    {
-      error: getCommodityTypeMasterApiErr,
-      isLoading: getCommodityTypeMasterApiIsLoading,
-    },
-  ] = useGetCommodityTypeMasterMutation();
 
   const getCommodityType = async () => {
-    //params filter
-    // if (filter.filter.length || filter.search) {
-    // if (filterQuery) {
-    // paramString = Object.entries(filter)
-    //   .map(([key, value]) => {
-    //     if (Array.isArray(value)) {
-    //       return value
-    //         .map((item) => `${key}=${encodeURIComponent(item)}`)
-    //         .join("&");
-    //     }
-    //     return `${key}=${encodeURIComponent(value)}`;
-    //   })
-    //   .join("&");
-    // }
-
     try {
-      // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-
-      const response = await getCommodityTypeMaster().unwrap();
+      const response = await getCommodityGrade().unwrap();
 
       console.log("Success:", response);
-      // setCommodityTypeMaster();
+
       let arr = response?.results.map((type) => ({
         label: type.commodity_type,
         value: type.id,
       }));
-
+      console.log(arr);
       setAddEditFormFieldsList(
         addEditFormFields.map((field) => {
           if (field.type === "select") {
@@ -117,14 +90,21 @@ const AddEditFormCommodityGrade = () => {
           }
         })
       );
-
-      // setData(response?.results || []);
-      // setFilter((old) => ({
-      //   ...old,
-      //   totalPage: Math.ceil(response?.total / old?.limit),
-      // }));
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+  const updateData = async (data) => {
+    try {
+      const response = await updateCommodityGrade(data).unwrap();
+      if (response.status === 200) {
+        console.log("update commodity grade res", response);
+        toasterAlert(response);
+        navigate("/commodity-master/commodity-grade");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
     }
   };
 
@@ -150,28 +130,38 @@ const AddEditFormCommodityGrade = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  // options: item.type === "select" && commodityTypeMaster,
-                  selectedValue:
-                    item.type === "select" &&
-                    item?.options?.find(
-                      (opt) =>
-                        opt.label === details?.commodity_type?.commodity_type
-                    ),
-                  selectType: "label",
-                  isChecked: details?.active,
-                  isClearable: false,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box
+                  w="full"
+                  gap="10"
+                  display={{ base: "flex" }}
+                  alignItems="center"
+                >
+                  {" "}
+                  <Text textAlign="right" w="210px">
+                    {item.label}
+                  </Text>{" "}
+                  {generateFormField({
+                    ...item,
+                    label: "",
+                    isChecked: details?.active,
+                    style: {
+                      mb: 2,
+                      mt: 2,
+                      w: 300,
+                    },
+
+                    selectedValue:
+                      item.type === "select" &&
+                      item?.options?.find(
+                        (opt) => opt.label === details?.state.state_name
+                      ),
+                    selectType: "value",
+                    isClearable: false,
+                  })}
+                </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
@@ -182,10 +172,14 @@ const AddEditFormCommodityGrade = () => {
               _hover={{ backgroundColor: "primary.700" }}
               color={"white"}
               borderRadius={"full"}
+              isLoading={
+                addCommodityGradeApiIsLoading ||
+                updateCommodityGradeApiIsLoading
+              }
               my={"4"}
               px={"10"}
             >
-              Update
+              {details?.id ? "Update" : "Add"}
             </Button>
           </Box>
         </form>
@@ -195,3 +189,22 @@ const AddEditFormCommodityGrade = () => {
 };
 
 export default AddEditFormCommodityGrade;
+
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};

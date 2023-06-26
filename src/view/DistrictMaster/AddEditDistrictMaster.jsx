@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Controller,
   FormProvider,
@@ -11,10 +11,17 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
-import { useGetDistrictMasterMutation } from "../../features/master-api-slice";
+import {
+  useAddDistrictMasterMutation,
+  useGetDistrictMasterMutation,
+  useUpdateDistrictMasterMutation,
+} from "../../features/master-api-slice";
+import { MotionSlideUp } from "../../utils/animation";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 const AddEditFormDistrictMaster = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -26,9 +33,33 @@ const AddEditFormDistrictMaster = () => {
 
   const onSubmit = (data) => {
     console.log("data==>", data);
+    if (details?.id) {
+      updateData({ ...data, id: details.id });
+    } else {
+      addData(data);
+    }
   };
 
   const [getDistrictMaster] = useGetDistrictMasterMutation();
+  const [addDistrictMaster, { isLoading: addDistrictMasterApiIsLoading }] =
+    useAddDistrictMasterMutation();
+
+  const [updateZoneMaster, { isLoading: updateDistrictMasterApiIsLoading }] =
+    useUpdateDistrictMasterMutation();
+  const addData = async (data) => {
+    try {
+      const response = await addDistrictMaster(data).unwrap();
+      console.log("add district master res", response);
+      if (response.status === 201) {
+        toasterAlert(response);
+        navigate("/manage-location/district-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
+  };
+
   const getDistrict = async () => {
     try {
       // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
@@ -36,10 +67,11 @@ const AddEditFormDistrictMaster = () => {
       const response = await getDistrictMaster().unwrap();
 
       console.log("Success:", response);
+      console.log(details);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
         district_name: details.district_name,
-        zone__zone_name: details.zone.zone_name,
+        zone: details.zone.zone_name,
 
         active: details.active,
       }));
@@ -56,24 +88,33 @@ const AddEditFormDistrictMaster = () => {
           }
         })
       );
-
-      // setData(response?.results || []);
-      // setFilter((old) => ({
-      //   ...old,
-      //   totalPage: Math.ceil(response?.total / old?.limit),
-      // }));
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+  const updateData = async (data) => {
+    try {
+      const response = await updateZoneMaster(data).unwrap();
+      if (response.status === 200) {
+        console.log("update update master res", response);
+        toasterAlert(response);
+        navigate("/manage-location/district-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
     }
   };
 
   useEffect(() => {
     //  getDistrict();
 
+    console.log(details);
+
     if (details?.id) {
       let obj = {
         district_name: details.district_name,
-        zone_name: details.zone.zone_name,
+        zone: details.zone.zone_name,
         active: details.active,
       };
 
@@ -91,28 +132,30 @@ const AddEditFormDistrictMaster = () => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  // options: item.type === "select" && commodityTypeMaster,
-                  selectedValue:
-                    item.type === "select" &&
-                    item?.options?.find(
-                      (opt) =>
-                        opt.label === details?.commodity_type?.commodity_type
-                    ),
-                  selectType: "label",
-                  isChecked: details?.active,
-                  isClearable: false,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  {" "}
+                  <Text textAlign="right" w="250px">
+                    {item.label}
+                  </Text>{" "}
+                  {generateFormField({
+                    ...item,
+                    label: "",
+                    // options: item.type === "select" && commodityTypeMaster,
+                    selectedValue:
+                      item.type === "select" &&
+                      item?.options?.find(
+                        (opt) =>
+                          opt.label === details?.commodity_type?.commodity_type
+                      ),
+                    selectType: "label",
+                    isChecked: details?.active,
+                    isClearable: false,
+                    style: { mb: 2, mt: 2 },
+                  })}
+                </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
@@ -123,6 +166,10 @@ const AddEditFormDistrictMaster = () => {
               _hover={{ backgroundColor: "primary.700" }}
               color={"white"}
               borderRadius={"full"}
+              isLoading={
+                addDistrictMasterApiIsLoading ||
+                updateDistrictMasterApiIsLoading
+              }
               my={"4"}
               px={"10"}
             >
@@ -136,3 +183,21 @@ const AddEditFormDistrictMaster = () => {
 };
 
 export default AddEditFormDistrictMaster;
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};

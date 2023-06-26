@@ -3,7 +3,7 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   useActiveDeActiveMutation,
-  useGetZoneMasterMutation, 
+  useGetZoneMasterMutation,
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
