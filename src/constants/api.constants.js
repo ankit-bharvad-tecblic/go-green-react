@@ -30,7 +30,7 @@ export const API = {
     EMPLOYEE_MASTER_ACTIVE: "",
     DEPARTMENT_MASTER: "",
     DEPARTMENT_MASTER_ACTIVE: "",
-    HIRING_PROPOSAL_MASTER: "",
+    HIRING_PROPOSAL_MASTER: "/warehouse/warehousehiring_proposal/",
     HIRING_PROPOSAL_MASTER_ACTIVE: "",
     ROLE_MASTER: "/role",
     ROLE_PAGE_ASSIGNMENT_MASTER: "/role",

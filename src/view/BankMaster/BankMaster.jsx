@@ -82,6 +82,10 @@ function BankMaster() {
     }
   };
 
+  const addForm = () => {
+    navigate(`/bank-master/add/bank-master/`);
+  };
+
   const editForm = (info) => {
     console.log("bank info --->", info);
     const editedFormId = info.row.original.id;
@@ -216,6 +220,7 @@ function BankMaster() {
         columns={columns}
         data={data}
         loading={getBankMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );
