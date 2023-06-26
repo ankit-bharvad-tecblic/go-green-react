@@ -39,6 +39,25 @@ const filterFields = [
     type: "number",
   },
   {
+    "LAST NAME": "last_name",
+    isActiveFilter: false,
+
+    label: "LAST NAME",
+    name: "last_name",
+    placeholder: "LAST NAME",
+    type: "text",
+  },
+  {
+    PASSWORD: "password",
+    isActiveFilter: false,
+
+    label: "PASSWORD",
+    name: "password",
+    placeholder: "PASSWORD",
+    type: "password",
+  },
+
+  {
     "LAST LOGIN": "last_login",
     isActiveFilter: false,
 
@@ -113,11 +132,24 @@ const addEditFormFields = [
     type: "number",
   },
   {
+    name: "last_name",
+    label: "LAST NAME",
+    placeholder: "LAST NAME",
+    type: "text",
+  },
+  {
+    name: "password",
+    label: "PASSWORD",
+    placeholder: "PASSWORD",
+    type: "password",
+  },
+  {
     name: "last_login",
     label: "LAST LOGIN",
     placeholder: "LAST LOGIN",
     type: "date",
   },
+
   {
     label: "ACTIVE/DeActive",
     name: "active",
@@ -133,6 +165,8 @@ const schema = yup.object().shape({
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
   user_role: yup.string().required("role is required"),
+  last_name: yup.string().required("last name is required"),
+  password: yup.string().required("password is required"),
   last_login: yup.date().required("last login is required"),
   active: yup.string(),
 });

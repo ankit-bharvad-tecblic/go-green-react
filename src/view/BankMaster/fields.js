@@ -17,7 +17,7 @@ const filterFields = [
     label: "REGION NAME",
     name: "region__region_name",
     placeholder: "REGION NAME",
-    type: "text",
+    type: "select",
   },
   {
     "STATE NAME": "state__state_name",
@@ -26,7 +26,7 @@ const filterFields = [
     label: "STATE NAME",
     name: "state__state_name",
     placeholder: "STATE NAME",
-    type: "text",
+    type: "select",
   },
 
   {
@@ -69,16 +69,16 @@ const addEditFormFields = [
     type: "text",
   },
   {
-    name: "region__region_name",
+    name: "region",
     label: "REGION NAME",
     placeholder: "REGION NAME",
-    type: "text",
+    type: "select",
   },
   {
-    name: "statestate_name",
+    name: "state",
     label: "STATE NAME",
     placeholder: "STATE NAME",
-    type: "text",
+    type: "select",
   },
   {
     name: "bank_address",
@@ -95,8 +95,8 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   bank_name: yup.string().required("bank name is required"),
-  region__region_name: yup.string().required("region name is required"),
-  state__state_name: yup.string().required("state name  is required"),
+  region: yup.string().required("region name is required"),
+  state: yup.string().required("state name  is required"),
   bank_address: yup.string().required("bank address is required"),
   active: yup.string(),
 });

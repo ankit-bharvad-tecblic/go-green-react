@@ -31,6 +31,16 @@ function generateFormField(obj) {
           style={style}
         />
       );
+    case "password":
+      return (
+        <CustomInput
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          label={label}
+          style={style}
+        />
+      );
     case "date":
       return (
         <CustomInput

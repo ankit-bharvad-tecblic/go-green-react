@@ -94,25 +94,25 @@ const addEditFormFields = [
     type: "text",
   },
   {
-    name: "bank__bank_name",
+    name: "bank",
     label: "BANK NAME",
     placeholder: "BANK NAME",
     type: "text",
   },
   {
-    name: "region__region_name",
+    name: "region",
     label: "REGION NAME",
     placeholder: "REGION NAME",
     type: "text",
   },
   {
-    name: "state__state_name",
+    name: "state",
     label: "STATE NAME",
     placeholder: "STATE NAME",
     type: "text",
   },
   {
-    name: "district__district_name",
+    name: "district",
     label: "DISTRICT NAME",
     placeholder: "DISTRICT NAME",
     type: "text",
@@ -133,19 +133,19 @@ const addEditFormFields = [
     label: "ACTIVE/DeActive",
     name: "active",
     type: "switch",
-  }, 
+  },
 ];
 
 const schema = yup.object().shape({
   branch_name: yup.string().required("Branch name is required"),
-  bank_name: yup.number().required("Bank name is required"),
-  region_name: yup.string().required("Region name size is required"),
-  state_name: yup.string().required("State name is required"),
-  district_name: yup.string().required("District name is required"),
+  bank: yup.string().required("Bank name is required"),
+  region: yup.string().required("Region name size is required"),
+  state: yup.string().required("State name is required"),
+  district: yup.string().required("District name is required"),
   branch_address: yup.string().required("Branch address name is required"),
   pincode: yup.number().required("pincode is required"),
   active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
+  // commodity_type: yup.string().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

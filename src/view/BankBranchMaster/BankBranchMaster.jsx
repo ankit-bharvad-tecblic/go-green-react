@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 
 function BankBranchMaster() {
   const dispatch = useDispatch();
@@ -79,14 +79,6 @@ function BankBranchMaster() {
     } catch (error) {
       console.error("Error:", error);
     }
-  };
-
-  const editForm = (info) => {
-    console.log("bank branch info", info);
-    const editedFormId = info.row.original.id;
-    navigate(`/bank-master/edit/bank-branch-master/${editedFormId}`, {
-      state: { details: info.row.original },
-    });
   };
 
   const columns = [
@@ -167,12 +159,19 @@ function BankBranchMaster() {
   };
   const [data, setData] = useState([]);
 
-  // const params = {
-  //   filter: [],
-  //   search: "",
-  // };
-
   let paramString = "";
+
+  const addForm = () => {
+    navigate(`/bank-master/add/bank-branch-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("bank branch info", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/bank-master/edit/bank-branch-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getData = async () => {
     //params filter
@@ -232,6 +231,7 @@ function BankBranchMaster() {
         columns={columns}
         data={data}
         loading={getBankBranchMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

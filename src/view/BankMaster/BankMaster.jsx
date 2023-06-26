@@ -161,7 +161,7 @@ function BankMaster() {
 
   let paramString = "";
 
-  const getData = async () => {
+  const getData = async () => { 
     //params filter
     //filter.filter.length || filter.search
     // if (filterQuery) {

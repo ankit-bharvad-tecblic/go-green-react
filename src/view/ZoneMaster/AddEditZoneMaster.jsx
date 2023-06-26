@@ -1,13 +1,8 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
-import * as yup from "yup";
+import { FormProvider, useForm } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
@@ -17,8 +12,8 @@ import {
   useGetStateMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
-import { motion } from "framer-motion";
-import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
+
+import { MotionSlideUp } from "../../utils/animation";
 
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
@@ -38,10 +33,10 @@ const AddEditZoneMaster = () => {
       updateData({ ...data, id: details.id });
     } else {
       addData(data);
-    }
+    } 
   };
 
-  const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
+  const [getStateMaster, ] =
     useGetStateMasterMutation();
 
   const [addZoneMaster, { isLoading: addZoneMasterApiIsLoading }] =
@@ -56,7 +51,7 @@ const AddEditZoneMaster = () => {
       console.log("add commodity master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/location-master/zone-master");
+        navigate("/manage-location/zone-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -98,7 +93,7 @@ const AddEditZoneMaster = () => {
       if (response.status === 200) {
         console.log("update commodity master res", response);
         toasterAlert(response);
-        navigate("/location-master/zone-master");
+        navigate("/manage-location/zone-master");
       }
     } catch (error) {
       console.error("Error:", error);

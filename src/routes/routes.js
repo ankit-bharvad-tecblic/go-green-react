@@ -545,7 +545,7 @@ const routes = [
         </Suspense>
       </ProtectedRoutes>
     ),
-  },
+  }, 
   {
     path: "/hiring-proposal-master",
     element: (
