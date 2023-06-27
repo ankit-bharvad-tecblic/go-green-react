@@ -83,28 +83,28 @@ const WarehouseProposal = () => {
     }
   };
 
-  const getZonesList = async () => {
-    try {
-      const response = await getZoneMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          zones: response?.results.map(({ zone_name, id }) => ({
-            label: zone_name,
-            id: id,
-          })),
-        }));
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  // const getZonesList = async () => {
+  //   try {
+  //     const response = await getZoneMaster().unwrap();
+  //     console.log("Success:", response);
+  //     if (response.status === 200) {
+  //       setSelectBoxOptions((prev) => ({
+  //         ...prev,
+  //         zones: response?.results.map(({ zone_name, id }) => ({
+  //           label: zone_name,
+  //           id: id,
+  //         })),
+  //       }));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   useEffect(() => {
     getRegionMasterList();
     getStateList();
-    getZonesList();
+    // getZonesList();
     getDistrictList();
   }, []);
 
@@ -318,7 +318,7 @@ const WarehouseProposal = () => {
                                 selectedValue={{}}
                                 isClearable={false}
                                 selectType="label"
-                                isLoading={getDistrictApiIsLoading}
+                                isLoading={false}
                                 style={{ w: "full" }}
                                 handleOnChange={(val) =>
                                   console.log(
