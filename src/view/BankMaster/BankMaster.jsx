@@ -83,7 +83,7 @@ function BankMaster() {
   };
 
   const addForm = () => {
-    navigate(`/bank-master/add/bank-master/`);
+    navigate(`/bank-master/add/bank-master/`); 
   };
 
   const editForm = (info) => {
@@ -183,7 +183,7 @@ function BankMaster() {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
       const response = await getBankMaster(query).unwrap();
       console.log("Success:", response);
-      setData(response?.results || []);
+      setData(response?.results || []); 
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),

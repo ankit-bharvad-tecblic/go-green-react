@@ -6,13 +6,14 @@ import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import {
   useAddBankMasterMutation,
-  useGetBankMasterMutation,
+  useGetRegionMasterMutation,
   useGetStateMasterMutation,
   useUpdateBankMasterMutation,
 } from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
@@ -21,7 +22,12 @@ function AddEditFormBankMaster() {
     resolver: yupResolver(schema),
   });
   const [getStateMaster] = useGetStateMasterMutation();
-  const [getBankMaster] = useGetBankMasterMutation();
+  // const [getBankMaster] = useGetBankMasterMutation();
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    regions: [],
+  });
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
   const [updateBankMaster, { isLoading: updateBankMasterApiIsLoading }] =
@@ -82,6 +88,24 @@ function AddEditFormBankMaster() {
       console.error("Error:", error);
     }
   };
+
+  const getRegionMasterList = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: response?.results.map(({ region_name, id }) => ({
+            label: region_name,
+            id: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   // const getBank = async () => {
   //   try {
   //     const response = await getBankMaster().unwrap();
@@ -126,6 +150,7 @@ function AddEditFormBankMaster() {
 
   useEffect(() => {
     getAllStateMaster();
+    getRegionMasterList();
     // getBank();
     if (details?.id) {
       let obj = {
@@ -174,6 +199,26 @@ function AddEditFormBankMaster() {
                 </Box>
               </MotionSlideUp>
             ))}
+
+          <Box w="full" gap="10" display={{ base: "flex" }} alignItems="center">
+            {" "}
+            <Text textAlign="right" w="210px">
+              Region
+            </Text>{" "}
+            <ReactCustomSelect
+              name="Select-warehouse-Type"
+              label=""
+              isLoading={getRegionMasterApiIsLoading}
+              options={selectBoxOptions?.regions || []}
+              selectedValue={{}}
+              isClearable={false}
+              selectType="label"
+              style={{ w: "full" }}
+              handleOnChange={(val) =>
+                console.log("selectedOption @@@@@@@@@@@------> ", val)
+              }
+            />
+          </Box>
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
             <Button

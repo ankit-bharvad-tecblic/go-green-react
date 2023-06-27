@@ -5,7 +5,7 @@ export const API = {
   CHANGE_PASSWORD: "/verify_password/",
 
   DASHBOARD: {
-    DISTRICT_MASTER: "/warehouse/district/",
+    DISTRICT_MASTER: "/warehouse/district/", 
     STATE_MASTER: "/warehouse/state/",
     ZONE_MASTER: "/warehouse/zone/",
     AREA_MASTER: "/warehouse/area/",

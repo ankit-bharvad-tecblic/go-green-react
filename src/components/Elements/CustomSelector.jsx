@@ -19,6 +19,7 @@ const CustomSelector = ({
   isClearable,
   selectType,
   style,
+  // handleOnChange,
 }) => {
   const {
     control,
@@ -35,7 +36,7 @@ const CustomSelector = ({
     console.log("handleSelectChange", selectedOption);
     setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
-    //handleOnChange(selectedOption);
+    // handleOnChange(selectedOption);
   };
 
   useEffect(() => {

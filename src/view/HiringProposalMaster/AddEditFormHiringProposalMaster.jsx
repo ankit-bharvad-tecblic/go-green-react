@@ -1,21 +1,20 @@
+import { MotionSlideUp } from "../../utils/animation";
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form"; 
+import { FormProvider, useForm } from "react-hook-form";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-  useAddZoneMasterMutation,
-  useUpdateZoneMasterMutation,
   useGetStateMasterMutation,
+  useAddHiringProposalMasterMutation,
+  useUpdateHiringProposalMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
-import { MotionSlideUp } from "../../utils/animation";
-
-const AddEditZoneMaster = () => {
+function AddEditFormHiringProposalMaster() {
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
@@ -38,19 +37,23 @@ const AddEditZoneMaster = () => {
 
   const [getStateMaster] = useGetStateMasterMutation();
 
-  const [addZoneMaster, { isLoading: addZoneMasterApiIsLoading }] =
-    useAddZoneMasterMutation();
+  const [
+    addHiringProposalMaster,
+    { isLoading: addHiringProposalMasterApiIsLoading },
+  ] = useAddHiringProposalMasterMutation();
 
-  const [updateZoneMaster, { isLoading: updateZoneMasterApiIsLoading }] =
-    useUpdateZoneMasterMutation();
+  const [
+    updateHiringProposalMaster,
+    { isLoading: updateHiringProposalMasterApiIsLoading },
+  ] = useUpdateHiringProposalMasterMutation();
 
   const addData = async (data) => {
     try {
-      const response = await addZoneMaster(data).unwrap();
-      console.log("add commodity master res", response);
+      const response = await addHiringProposalMaster(data).unwrap();
+      console.log("add Hiring Proposal Master  res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/manage-location/zone-master");
+        navigate("/hiring-proposal-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -88,11 +91,11 @@ const AddEditZoneMaster = () => {
 
   const updateData = async (data) => {
     try {
-      const response = await updateZoneMaster(data).unwrap();
+      const response = await updateHiringProposalMaster(data).unwrap();
       if (response.status === 200) {
-        console.log("update commodity master res", response);
+        console.log("update Hiring Proposal Master res", response);
         toasterAlert(response);
-        navigate("/manage-location/zone-master");
+        navigate("/hiring-proposal-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -100,11 +103,51 @@ const AddEditZoneMaster = () => {
     }
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     if (details?.id) {
       let obj = {
-        zone_name: details.zone_name,
-        state: details.state.state_name,
+        warehouse_type: details.warehouse_type,
+        warehouse_subtype: details.warehouse_subtype,
+        warehouse_name: details.warehouse_name,
+        region: details.region,
+        state: details.state,
+        // warehouse_type: details.warehouse_type,
+        district: details.district,
+        area: details.area,
+        warehouse_address: details.warehouse_address,
+        warehouse_pincode: details.warehouse_pincode,
+        no_of_chambers: details.no_of_chambers,
+        standard_capacity: details.standard_capacity,
+
+        currrent_capacity: details.currrent_capacity,
+        currrent_utilised_capacity: details.currrent_utilised_capacity,
+        no_of_warehouse_in_area: details.no_of_warehouse_in_area,
+        lock_in_period: details.lock_in_period,
+        lock_in_period_month: details.lock_in_period_month,
+        covered_area: details.covered_area,
+        supervisor_day_shift: details.supervisor_day_shift,
+        supervisor_night_shift: details.supervisor_night_shift,
+        security_guard_day_shift: details.security_guard_day_shift,
+        security_guard_night_shift: details.security_guard_night_shift,
+        expected_commodity: details.expected_commodity,
+
+        commodity_inward_type: details.commodity_inward_type,
+        prestack_commodity: details.prestack_commodity,
+        prestack_commodity_qty: details.prestack_commodity_qty,
+
+        banker_id: details.banker_id,
+        rent: details.rent,
+        gg_revenue_ratio: details.gg_revenue_ratio,
+        security_deposit_month: details.security_deposit_month,
+        advance_rent: details.advance_rent,
+        advance_rent_month: details.advance_rent_month,
+        notice_period_month: details.notice_period_month,
+        remarks: details.remarks,
+        l1_user: details.l1_user,
+        l2_user: details.l2_user,
+        // warehouse_type: details.warehouse_type,
+        // warehouse_type: details.warehouse_type,
+
         active: details.active,
       };
 
@@ -120,7 +163,6 @@ const AddEditZoneMaster = () => {
     getAllStateMaster();
     // setAddEditFormFieldsList(addEditFormFields);
   }, []);
-
   return (
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
@@ -169,7 +211,8 @@ const AddEditZoneMaster = () => {
               color={"white"}
               borderRadius={"full"}
               isLoading={
-                addZoneMasterApiIsLoading || updateZoneMasterApiIsLoading
+                addHiringProposalMasterApiIsLoading ||
+                updateHiringProposalMasterApiIsLoading
               }
               my={"4"}
               px={"10"}
@@ -181,9 +224,8 @@ const AddEditZoneMaster = () => {
       </FormProvider>
     </Box>
   );
-};
-
-export default AddEditZoneMaster;
+}
+export default AddEditFormHiringProposalMaster;
 
 const toasterAlert = (obj) => {
   let msg = obj?.message;

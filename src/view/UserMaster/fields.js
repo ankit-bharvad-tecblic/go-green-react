@@ -137,12 +137,7 @@ const addEditFormFields = [
     placeholder: "LAST NAME",
     type: "text",
   },
-  {
-    name: "password",
-    label: "PASSWORD",
-    placeholder: "PASSWORD",
-    type: "password",
-  },
+
   {
     name: "last_login",
     label: "LAST LOGIN",

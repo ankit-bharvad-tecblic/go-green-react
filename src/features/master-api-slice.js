@@ -387,6 +387,20 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       },
     }),
 
+    addHiringProposalMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.HIRING_PROPOSAL_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateHiringProposalMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.HIRING_PROPOSAL_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
     getCommodityVariety: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_VARIETY,
@@ -671,6 +685,8 @@ export const {
   useGetEmployeeMasterMutation,
   useGetDepartmentMasterMutation,
   useGetHiringProposalMasterMutation,
+  useAddHiringProposalMasterMutation,
+  useUpdateHiringProposalMasterMutation,
   useGetCommodityBagMasterMutation,
   useGetHsnMasterMutation,
 } = masterApiSlice;
