@@ -65,7 +65,7 @@ const addEditFormFields = [
     label: "ZONE NAME",
     name: "zone",
     placeholder: "ZONE NAME",
-    type: "text",
+    type: "select",
   },
   {
     label: "ACTIVE/DeActive",

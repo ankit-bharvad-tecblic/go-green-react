@@ -33,11 +33,10 @@ const AddEditZoneMaster = () => {
       updateData({ ...data, id: details.id });
     } else {
       addData(data);
-    } 
+    }
   };
 
-  const [getStateMaster, ] =
-    useGetStateMasterMutation();
+  const [getStateMaster] = useGetStateMasterMutation();
 
   const [addZoneMaster, { isLoading: addZoneMasterApiIsLoading }] =
     useAddZoneMasterMutation();

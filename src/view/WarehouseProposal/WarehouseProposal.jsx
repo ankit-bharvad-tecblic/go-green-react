@@ -105,7 +105,7 @@ const WarehouseProposal = () => {
     getRegionMasterList();
     getStateList();
     // getZonesList();
-    getDistrictList();
+    //getDistrictList();
   }, []);
 
   return (

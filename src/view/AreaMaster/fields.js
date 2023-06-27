@@ -88,12 +88,19 @@ const addEditFormFields = [
     placeholder: "AREA NAME",
     type: "text",
   },
+
   {
     label: "EARTHQUAKE ZONE TYPE ID",
     name: "earthquake_zone_type_id",
     placeholder: "EARTHQUAKE ZONE TYPE ID",
     type: "number",
   },
+  // {
+  //   label: "DISTRICT NAME",
+  //   name: "district_name",
+  //   placeholder: "DISTRICT NAME",
+  //   type: "select",
+  // },
   {
     label: "IS BLOCK",
     name: "is_block",
@@ -111,7 +118,9 @@ const schema = yup.object().shape({
     .string()
     .required("Earthquake zone type id is required"),
   is_active: yup.string(),
+  district: yup.string().required("District name is"),
   is_block: yup.string(),
+
   area_name: yup.string().required("Area Name is required"),
 });
 

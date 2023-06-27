@@ -261,14 +261,14 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     addCommodityMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.COMMODITY_MASTER}/`,
+        url: `${API.DASHBOARD.COMMODITY_MASTER}`,
         method: "POST",
         body: data,
       }),
     }),
     updateCommodityMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.COMMODITY_MASTER}/${data.id}/`,
+        url: `${API.DASHBOARD.COMMODITY_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),

@@ -14,6 +14,7 @@ import { addEditFormFields, schema } from "./fields";
 import {
   useAddDistrictMasterMutation,
   useGetDistrictMasterMutation,
+  useGetZoneMasterMutation,
   useUpdateDistrictMasterMutation,
 } from "../../features/master-api-slice";
 import { MotionSlideUp } from "../../utils/animation";
@@ -39,7 +40,7 @@ const AddEditFormDistrictMaster = () => {
       addData(data);
     }
   };
-
+  const [getZoneMaster] = useGetZoneMasterMutation();
   const [getDistrictMaster] = useGetDistrictMasterMutation();
   const [addDistrictMaster, { isLoading: addDistrictMasterApiIsLoading }] =
     useAddDistrictMasterMutation();
@@ -60,20 +61,18 @@ const AddEditFormDistrictMaster = () => {
     }
   };
 
-  const getDistrict = async () => {
+  const getAllZone = async () => {
     try {
       // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
 
-      const response = await getDistrictMaster().unwrap();
+      const response = await getZoneMaster().unwrap();
 
       console.log("Success:", response);
       console.log(details);
       // setCommodityTypeMaster();
-      let arr = response?.results.map((type) => ({
-        district_name: details.district_name,
-        zone: details.zone.zone_name,
-
-        active: details.active,
+      let arr = response?.results.map((item) => ({
+        label: item.zone_name,
+        value: item.id,
       }));
 
       setAddEditFormFieldsList(
@@ -126,6 +125,9 @@ const AddEditFormDistrictMaster = () => {
     }
     setAddEditFormFieldsList(addEditFormFields);
   }, [details]);
+  useEffect(() => {
+    getAllZone();
+  }, []);
 
   return (
     <Box bg="white" borderRadius={10} p="10">
@@ -142,17 +144,20 @@ const AddEditFormDistrictMaster = () => {
                   {generateFormField({
                     ...item,
                     label: "",
-                    // options: item.type === "select" && commodityTypeMaster,
+                    isChecked: details?.active,
+                    style: {
+                      mb: 2,
+                      mt: 2,
+                      w: 300,
+                    },
+
                     selectedValue:
                       item.type === "select" &&
                       item?.options?.find(
-                        (opt) =>
-                          opt.label === details?.commodity_type?.commodity_type
+                        (opt) => opt.label === details?.zone.zone_name
                       ),
-                    selectType: "label",
-                    isChecked: details?.active,
+                    selectType: "value",
                     isClearable: false,
-                    style: { mb: 2, mt: 2 },
                   })}
                 </Box>
               </MotionSlideUp>
