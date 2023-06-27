@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 
 const UserMaster = () => {
   const dispatch = useDispatch();
-
   const columnHelper = createColumnHelper();
   const navigate = useNavigate();
   const filterQuery = useSelector(
@@ -31,7 +30,7 @@ const UserMaster = () => {
     limit: 25,
   });
 
-  const [getStateMaster, { isLoading: getUserMasterApiIsLoading }] =
+  const [getUserMaster, { isLoading: getUserMasterApiIsLoading }] =
     useGetUserMasterMutation();
 
   const [activeDeActive] = useActiveDeActiveMutation();
@@ -82,6 +81,9 @@ const UserMaster = () => {
       console.error("Error:", error);
     }
   };
+  const addForm = () => {
+    navigate(`/manage-users/add/user-master/`);
+  };
 
   const editForm = (info) => {
     console.log("bank info --->", info);
@@ -111,6 +113,14 @@ const UserMaster = () => {
     columnHelper.accessor("user_role", {
       cell: (info) => info.getValue(),
       header: "ROLE",
+    }),
+    columnHelper.accessor("last_name", {
+      cell: (info) => info.getValue(),
+      header: "LAST NAME",
+    }),
+    columnHelper.accessor("password", {
+      cell: (info) => info.getValue(),
+      header: " PASSWORD",
     }),
     columnHelper.accessor("last_login", {
       cell: (info) => info.getValue(),
@@ -189,7 +199,7 @@ const UserMaster = () => {
 
     try {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-      const response = await getStateMaster(query).unwrap();
+      const response = await getUserMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -228,6 +238,7 @@ const UserMaster = () => {
         columns={columns}
         data={data}
         loading={getUserMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

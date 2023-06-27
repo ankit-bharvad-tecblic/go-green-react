@@ -90,7 +90,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateBankMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.BANK_MASTER,
+        url: `${API.DASHBOARD.BANK_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -113,7 +113,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateBankBranchMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.BANK_BRANCH_MASTER,
+        url: `${API.DASHBOARD.BANK_BRANCH_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -337,6 +337,20 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       },
     }),
 
+    addUserMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.USER_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateUserMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.USER_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
     getEmployeeMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.EMPLOYEE_MASTER,
@@ -597,6 +611,8 @@ export const {
   useGetRoleMasterMutation,
   useGetRolePageAssignmentMasterMutation,
   useGetUserMasterMutation,
+  useAddUserMasterMutation,
+  useUpdateUserMasterMutation,
   // Api mutation for commodity variety starts
   useGetCommodityVarietyMutation,
   useUpdateCommodityVarietyMutation,

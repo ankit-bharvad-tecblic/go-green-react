@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetZoneMasterMutation,
@@ -30,15 +30,10 @@ const ZoneMaster = () => {
     limit: 25,
   });
 
-  const [
-    getZoneMaster,
-    { error: getZoneMasterApiErr, isLoading: getZoneMasterApiIsLoading },
-  ] = useGetZoneMasterMutation();
+  const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =
+    useGetZoneMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -210,7 +205,7 @@ const ZoneMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
-
+ 
   const addForm = () => {
     navigate(`/manage-location/add/zone-master/`);
   };

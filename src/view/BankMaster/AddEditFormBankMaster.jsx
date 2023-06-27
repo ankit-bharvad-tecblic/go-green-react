@@ -7,6 +7,7 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import {
   useAddBankMasterMutation,
   useGetBankMasterMutation,
+  useGetStateMasterMutation,
   useUpdateBankMasterMutation,
 } from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
@@ -19,13 +20,12 @@ function AddEditFormBankMaster() {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-
+  const [getStateMaster] = useGetStateMasterMutation();
   const [getBankMaster] = useGetBankMasterMutation();
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
   const [updateBankMaster, { isLoading: updateBankMasterApiIsLoading }] =
     useUpdateBankMasterMutation();
-
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
@@ -55,16 +55,16 @@ function AddEditFormBankMaster() {
     }
   };
 
-  const getBank = async () => {
+  const getAllStateMaster = async () => {
     try {
-      const response = await getBankMaster().unwrap();
-
-      console.log("Success:", response);
-
-      let arr = response?.results.map((type) => ({
-        // label: type.commodity_type,
-        value: type.id,
+      const response = await getStateMaster().unwrap();
+      console.log("response ", response);
+      let arr = response?.results.map((item) => ({
+        label: item.state_name,
+        value: item.id,
       }));
+
+      console.log(arr);
 
       setAddEditFormFieldsList(
         addEditFormFields.map((field) => {
@@ -82,6 +82,33 @@ function AddEditFormBankMaster() {
       console.error("Error:", error);
     }
   };
+  // const getBank = async () => {
+  //   try {
+  //     const response = await getBankMaster().unwrap();
+
+  //     console.log("Success:", response);
+
+  //     let arr = response?.results.map((type) => ({
+  //       // label: type.commodity_type,
+  //       value: type.id,
+  //     }));
+
+  //     setAddEditFormFieldsList(
+  //       addEditFormFields.map((field) => {
+  //         if (field.type === "select") {
+  //           return {
+  //             ...field,
+  //             options: arr,
+  //           };
+  //         } else {
+  //           return field;
+  //         }
+  //       })
+  //     );
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   const updateData = async (data) => {
     try {
@@ -96,14 +123,15 @@ function AddEditFormBankMaster() {
       toasterAlert(error);
     }
   };
-  
+
   useEffect(() => {
-    getBank();
+    getAllStateMaster();
+    // getBank();
     if (details?.id) {
       let obj = {
         bank_name: details.bank_name,
-        region__region_name: details?.region?.region_name,
-        state__state_name: details?.state?.state_name,
+        region: details?.region,
+        state: details?.state,
         bank_address: details.bank_address,
         active: details.active,
       };
@@ -134,6 +162,14 @@ function AddEditFormBankMaster() {
                     // options: item.type === "select" && commodityTypeMaster,
                     isChecked: details?.active,
                     style: { mb: 2, mt: 2 },
+
+                    selectedValue:
+                      item.type === "select" &&
+                      item?.options?.find(
+                        (opt) => opt.label === details?.state
+                      ),
+                    selectType: "value",
+                    isClearable: false,
                   })}
                 </Box>
               </MotionSlideUp>
