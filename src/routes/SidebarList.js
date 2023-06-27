@@ -33,6 +33,7 @@ import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
 import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
 import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
 import HsnMaster from "../view/HsnMaster/HsnMaster";
+import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
 //
 
 const SidebarList = [
@@ -42,6 +43,14 @@ const SidebarList = [
     secondaryNavbar: false,
     icon: <HomeIcon color="inherit" />,
     component: Dashboard,
+  },
+
+  {
+    path: "/warehouse-proposal",
+    name: "Warehouse Proposal",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: WarehouseProposal,
   },
   {
     name: "Commodity Master",

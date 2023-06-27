@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import Select from "react-select";
 
-const CustomSelector = ({
+const ReactCustomSelect = ({
   name,
   label,
   options,
@@ -20,6 +20,7 @@ const CustomSelector = ({
   selectType,
   style,
   handleOnChange,
+  isLoading,
 }) => {
   const {
     control,
@@ -57,15 +58,18 @@ const CustomSelector = ({
               placeholder={label}
               isClearable={isClearable}
               //   value={selectedVal}
+              isLoading={isLoading}
               value={selectedVal}
               onChange={handleSelectChange}
               styles={{
                 control: (base, state) => ({
                   ...base,
                   backgroundColor: "#F0F0F0",
-                  borderColor: error ? "red" : "#A6CE39",
+                  borderColor: error ? "red" : "",
+                  padding: "4px",
+
                   "&:hover": {
-                    borderColor: error ? "red" : "#A6CE39",
+                    //borderColor: error ? "red" : "#A6CE39",
                   },
                 }),
                 menu: (base) => ({
@@ -77,7 +81,7 @@ const CustomSelector = ({
                   backgroundColor: state.isFocused ? "#A6CE39" : "white",
                   color: state.isFocused ? "green" : "black",
                   "&:hover": {
-                    backgroundColor: "#C2DE8C",
+                    //  backgroundColor: "#C2DE8C",
                     color: "black",
                   },
                 }),
@@ -102,4 +106,4 @@ const CustomSelector = ({
   );
 };
 
-export default CustomSelector;
+export default ReactCustomSelect;

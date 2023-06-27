@@ -3,7 +3,7 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   useActiveDeActiveMutation,
-  useGetZoneMasterMutation, 
+  useGetZoneMasterMutation,
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
@@ -11,6 +11,8 @@ import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
 import { useNavigate } from "react-router-dom";
+import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
+import { BreadcrumbLinks } from "./fields";
 
 const ZoneMaster = () => {
   const navigate = useNavigate();
@@ -276,7 +278,10 @@ const ZoneMaster = () => {
   // }, [filterQuery]);
 
   return (
-    <div>
+    <Box position="relative">
+      {/* <Box position="sticky" p="2">
+        <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
+      </Box> */}
       {console.log(data, "data")}
       <FunctionalTable
         filter={filter}
@@ -287,7 +292,7 @@ const ZoneMaster = () => {
         loading={getZoneMasterApiIsLoading}
         addForm={() => addForm()}
       />
-    </div>
+    </Box>
   );
 };
 

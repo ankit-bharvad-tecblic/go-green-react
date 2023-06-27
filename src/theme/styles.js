@@ -12,6 +12,7 @@ export const globalStyles = {
       300: "#9F9F9F", //Placeholder color
       200: "#F8F8F8", // Input box color
       100: "#f3f3f3",
+      50: "#f4f5fa",
     },
 
     primary: {

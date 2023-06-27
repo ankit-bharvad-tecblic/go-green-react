@@ -56,6 +56,8 @@ import DepartmentMaster from "../view/DepartmentMaster/DepartmentMaster";
 import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMaster";
 import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
 import HsnMaster from "../view/HsnMaster/HsnMaster";
+import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
+import { Box } from "@chakra-ui/react";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -122,6 +124,30 @@ const routes = [
       </ProtectedRoutes>
     ),
   },
+  {
+    path: "/warehouse-proposal",
+    element: (
+      <ProtectedRoutes>
+        <Suspense
+          fallback={
+            <Box
+              color="red"
+              display={"flex"}
+              justifyContent="center"
+              alignItems="center"
+            >
+              Loading...
+            </Box>
+          }
+        >
+          <Layout variant={headerType} title={"warehouseProposal"}>
+            <WarehouseProposal />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
   {
     path: "/manage-location",
     children: [
