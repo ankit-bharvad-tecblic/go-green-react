@@ -17,6 +17,7 @@ import {
   useGetStateMasterMutation,
   useAddStateMasterMutation,
   useUpdateStateMasterMutation,
+  useGetRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { motion } from "framer-motion";
@@ -42,7 +43,7 @@ const AddEditFormStateMaster = () => {
       addData(data);
     }
   };
-
+  const [getRegionMaster] = useGetRegionMasterMutation();
   const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
     useGetStateMasterMutation();
 
@@ -66,6 +67,34 @@ const AddEditFormStateMaster = () => {
     }
   };
 
+  const getAllRegionMaster = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("response ", response);
+      let arr = response?.results.map((item) => ({
+        label: item.region_name,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+              options: arr,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const updateData = async (data) => {
     try {
       const response = await updateStateMaster(data).unwrap();
@@ -85,10 +114,13 @@ const AddEditFormStateMaster = () => {
       console.log(details);
       let obj = {
         state_name: details.state_name,
+        region: details.region.region_name,
         state_code: details.state_code,
         tin_no: details.tin_no,
         gstn: details.gstn,
         nav_code: details.nav_code,
+        ho_overhead: details.ho_overhead,
+        state_overhead: details.state_overhead,
         state_india_office_addr: details.state_india_office_addr,
         active: details.active,
       };
@@ -103,6 +135,9 @@ const AddEditFormStateMaster = () => {
 
   useEffect(() => {
     setAddEditFormFieldsList(addEditFormFields);
+  }, []);
+  useEffect(() => {
+    getAllRegionMaster();
   }, []);
 
   return (
@@ -134,9 +169,11 @@ const AddEditFormStateMaster = () => {
 
                     selectedValue:
                       item.type === "select" &&
-                      item?.options?.find(
-                        (opt) => opt.label === details?.state.state_name
-                      ),
+                      item?.options?.find((opt) => {
+                        console.log("opt", opt);
+                        console.log("details", details);
+                        return opt.label === details?.region.region_name;
+                      }),
                     selectType: "value",
                     isClearable: false,
                   })}

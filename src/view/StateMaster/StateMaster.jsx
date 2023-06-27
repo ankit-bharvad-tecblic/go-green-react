@@ -95,10 +95,10 @@ const StateMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
-    // columnHelper.accessor("state_name", {
-    //   cell: (info) => info.getValue(),
-    //   header: "REGION NAME",
-    // }),
+    columnHelper.accessor("region.region_name", {
+      cell: (info) => info.getValue(),
+      header: "REGION NAME",
+    }),
     columnHelper.accessor("state_code", {
       cell: (info) => info.getValue(),
       header: "STATE CODE",

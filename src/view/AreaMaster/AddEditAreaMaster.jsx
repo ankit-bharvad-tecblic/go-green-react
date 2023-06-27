@@ -20,9 +20,12 @@ import {
   useUpdateAreaMasterMutation,
   useAddAreaMasterMutation,
   useGetAreaMasterMutation,
+  useGetDistrictMasterMutation,
+  useGetEarthQuakeZoneTypeMasterMutation,
 } from "../../features/master-api-slice";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import CustomSelector from "../../components/Elements/CustomSelector";
 
 const AddEditFormArea = () => {
   const navigate = useNavigate();
@@ -31,7 +34,12 @@ const AddEditFormArea = () => {
     resolver: yupResolver(schema),
   });
   const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
-  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+  const [addEditFormFieldsList, setAddEditFormFieldsList] =
+    useState(addEditFormFields);
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    district: [],
+    earthQuack: [],
+  });
 
   const details = location.state?.details;
   console.log("details ---> ", details);
@@ -43,6 +51,8 @@ const AddEditFormArea = () => {
       addData(data);
     }
   };
+
+  const [getDistrictMaster] = useGetDistrictMasterMutation();
   const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
     useGetAreaMasterMutation();
 
@@ -64,34 +74,24 @@ const AddEditFormArea = () => {
       toasterAlert(error);
     }
   };
-
-  const getArea = async () => {
+  // get all district data
+  const getAllDistrict = async () => {
     try {
-      const response = await getAreaMaster().unwrap();
+      const response = await getDistrictMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
-      let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
-        value: type.id,
+      let arr = response?.results.map((item) => ({
+        label: item.district_name,
+        value: item.id,
       }));
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
+      setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
   const updateData = async (data) => {
     try {
       const response = await updateAreaMaster(data).unwrap();
@@ -107,10 +107,10 @@ const AddEditFormArea = () => {
   };
 
   useEffect(() => {
-    getArea();
     if (details?.id) {
       let obj = {
         earthquake_zone_type_id: details.earthquake_zone_type_id,
+        district_name: details.district.district_name,
         is_active: details.is_active,
         is_block: details.is_block,
         area_name: details.area_name,
@@ -123,6 +123,11 @@ const AddEditFormArea = () => {
       });
     }
   }, [details]);
+  useEffect(() => {
+    getAllDistrict();
+
+    // setAddEditFormFieldsList(addEditFormFields);
+  }, []);
 
   return (
     <Box bg="white" borderRadius={10} p="10">
@@ -139,22 +144,94 @@ const AddEditFormArea = () => {
                   {generateFormField({
                     ...item,
                     label: "",
-                    // options: item.type === "select" && commodityTypeMaster,
+                    isChecked: details?.active,
+                    style: {
+                      mb: 2,
+                      mt: 2,
+                      w: 300,
+                    },
+
                     selectedValue:
                       item.type === "select" &&
                       item?.options?.find(
-                        (opt) =>
-                          opt.label === details?.commodity_type?.commodity_type
+                        (opt) => opt.label === details?.district.district_name
                       ),
-                    selectType: "label",
-                    isChecked: details?.active,
+                    selectType: "value",
                     isClearable: false,
-                    style: { mb: 2, mt: 2 },
                   })}
                 </Box>
               </MotionSlideUp>
             ))}
 
+          <Box>
+            <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                <Text textAlign="right" w="250px">
+                  District NAME
+                </Text>{" "}
+                <CustomSelector
+                  name="district"
+                  label=""
+                  isChecked="details?.active"
+                  options={selectBoxOptions.district}
+                  selectedValue={selectBoxOptions.district.find(
+                    (opt) => opt.label === details?.district.district_name
+                  )}
+                  isClearable={false}
+                  selectType={"value"}
+                  style={{
+                    mb: 2,
+                    mt: 2,
+                    w: 300,
+                  }}
+                />
+              </Box>
+            </MotionSlideUp>{" "}
+            {/* <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                <Text textAlign="right" w="250px">
+                  test
+                </Text>{" "}
+                <CustomSelector
+                  name="select"
+                  label=""
+                  options={[]}
+                  selectedValue={[].find(
+                    (opt) => opt.label === details?.district.district_name
+                  )}
+                  isClearable={false}
+                  selectType={"value"}
+                  style={{
+                    mb: 2,
+                    mt: 2,
+                    w: 300,
+                  }}
+                />
+              </Box>
+            </MotionSlideUp>{" "}
+            <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                <Text textAlign="right" w="250px">
+                  test
+                </Text>{" "}
+                <CustomSelector
+                  name="select"
+                  label=""
+                  options={[]}
+                  selectedValue={[].find(
+                    (opt) => opt.label === details?.district.district_name
+                  )}
+                  isClearable={false}
+                  selectType={"value"}
+                  style={{
+                    mb: 2,
+                    mt: 2,
+                    w: 300,
+                  }}
+                />
+              </Box>
+            </MotionSlideUp>{" "} */}
+          </Box>
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
             <Button
               type="submit"

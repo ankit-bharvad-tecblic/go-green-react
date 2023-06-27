@@ -9,14 +9,14 @@ const filterFields = [
     placeholder: "STATE NAME",
     type: "text",
   },
-  // {
-  //   "REGION NAME": "state_nam e",
-  //   isActiveFilter: false,
-  //   label: "REGION NAME",
-  //   name: "state_name",
-  //   placeholder: "REGION NAME",
-  //   type: "text",
-  // },
+  {
+    "REGION NAME": "region.region_name",
+    isActiveFilter: false,
+    label: "REGION NAME",
+    name: "region.region_name",
+    placeholder: "REGION NAME",
+    type: "text",
+  },
   {
     "STATE CODE": "state_code",
     isActiveFilter: false,
@@ -102,10 +102,16 @@ const addEditFormFields = [
     type: "text",
   },
   {
+    label: "REGION NAME",
+    name: "region",
+    placeholder: "REGION NAME",
+    type: "select",
+  },
+  {
     name: "state_code",
     label: "STATE CODE",
     placeholder: "STATE CODE",
-    type: "text",
+    type: "number",
   },
   {
     name: "tin_no",
@@ -117,12 +123,24 @@ const addEditFormFields = [
     name: "gstn",
     label: "GSTN",
     placeholder: "GSTN",
-    type: "text",
+    type: "number",
   },
   {
     name: "nav_code",
     label: "NAV CODE",
     placeholder: "NAV CODE",
+    type: "number",
+  },
+  {
+    name: "ho_overhead",
+    label: "hO OVERHEAD",
+    placeholder: "hO OVERHEAD",
+    type: "number",
+  },
+  {
+    name: "state_overhead",
+    label: "STATE OVERHEAD",
+    placeholder: "STATE OVERHEAD",
     type: "number",
   },
 
@@ -147,6 +165,9 @@ const schema = yup.object().shape({
   nav_code: yup.string().required("Nav code is required"),
   state_india_office_addr: yup.string().required("Office address is required"),
   active: yup.string(),
+  state_overhead: yup.number().required("state overhead is required"),
+  ho_overhead: yup.number().required("ho overhead is required"),
+  region: yup.string().required("region is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

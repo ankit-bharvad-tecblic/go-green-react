@@ -112,6 +112,7 @@ const AddEditFormCommodityVariety = () => {
         commodity_variety: details.commodity_variety,
         description: details.description,
         hsn_code: details.hsn_code,
+        commodity_id: details.commodity_id,
         fumigation_required: details.fumigation_required,
         fumigation_day: details.fumigation_day,
         lab_testing_required: details.lab_testing_required,
