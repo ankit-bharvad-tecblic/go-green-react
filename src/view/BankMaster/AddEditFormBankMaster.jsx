@@ -14,6 +14,7 @@ import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomSelector from "../../components/Elements/CustomSelector";
 
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function AddEditFormBankMaster() {
     useGetRegionMasterMutation();
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
+    state: [],
   });
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
@@ -93,15 +95,16 @@ function AddEditFormBankMaster() {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          regions: response?.results.map(({ region_name, id }) => ({
-            label: region_name,
-            id: id,
-          })),
-        }));
-      }
+
+      let arr = response?.results.map((item) => ({
+        label: item.region_name,
+        value: item.id,
+      }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: arr,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -200,24 +203,30 @@ function AddEditFormBankMaster() {
               </MotionSlideUp>
             ))}
 
-          <Box w="full" gap="10" display={{ base: "flex" }} alignItems="center">
-            {" "}
-            <Text textAlign="right" w="210px">
-              Region
-            </Text>{" "}
-            <ReactCustomSelect
-              name="Select-warehouse-Type"
-              label=""
-              isLoading={getRegionMasterApiIsLoading}
-              options={selectBoxOptions?.regions || []}
-              selectedValue={{}}
-              isClearable={false}
-              selectType="label"
-              style={{ w: "full" }}
-              handleOnChange={(val) =>
-                console.log("selectedOption @@@@@@@@@@@------> ", val)
-              }
-            />
+          <Box>
+            <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                <Text textAlign="right" w="250px">
+                  REGION NAME
+                </Text>
+                <CustomSelector
+                  name=" "
+                  label=""
+                  isChecked="regions?.active"
+                  options={selectBoxOptions.regions}
+                  selectedValue={selectBoxOptions.regions.find(
+                    (opt) => opt.label === regions?.regions.regions_name
+                  )}
+                  isClearable={false}
+                  selectType={"value"}
+                  style={{
+                    mb: 2,
+                    mt: 2,
+                    w: 300,
+                  }}
+                />
+              </Box>
+            </MotionSlideUp>
           </Box>
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
