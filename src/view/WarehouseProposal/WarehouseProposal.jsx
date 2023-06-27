@@ -7,6 +7,9 @@ import {
   Box,
   Button,
   Heading,
+  Radio,
+  RadioGroup,
+  Stack,
   Text,
   list,
 } from "@chakra-ui/react";
@@ -21,10 +24,49 @@ import ReactCustomSelect from "../../components/Elements/CommonFielsElement/Reac
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
+  useGetAreaMasterMutation,
+  useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
   useGetZoneMasterMutation,
 } from "../../features/master-api-slice";
+import CustomTextArea from "../../components/Elements/CustomTextArea";
+
+const commonStyle = {
+  mt: 2,
+  w: {
+    base: "100%",
+    sm: "80%",
+    md: "60%",
+    lg: "55%",
+  },
+};
+
+const formFieldsName = {
+  pwh_warehouse_details: {
+    warehouse_name: "warehouse_name",
+    region_name: "region_name",
+    state_name: "state_name",
+    zone_name: "zone_name",
+    district_name: "district_name",
+    area_name: "area_name",
+    warehouse_address: "warehouse_address",
+    pin_code: "pin_code",
+    no_of_chamber: "no_of_chamber",
+    warehouse_in_factory_premises: "warehouse_in_factory_premises",
+    standard_capacity: "standard_capacity",
+    standard_warehouse_capacity: "standard_warehouse_capacity",
+    standard_utilizes_capacity: "standard_utilised_capacity",
+    lock_in_period: "lock_in_period",
+    lock_in_period_month: "lock_in_period_month",
+    covered_area: "covered_area",
+    supervisor_for_day_shift: "supervisor_for_day_shift",
+    supervisor_for_night_shift: "supervisor_for_night_shift",
+
+    security_guard_for_day_shift: "security_guard_for_day_shift",
+    security_guard_for_night_shift: "security_guard_for_night_shift",
+  },
+};
 
 const WarehouseProposal = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
@@ -46,6 +88,12 @@ const WarehouseProposal = () => {
 
   const [getZoneMaster, { isLoading: getZoneApiIsLoading }] =
     useGetZoneMasterMutation();
+
+  const [getDistrictMaster, { isLoading: getDistrictApiIsLoading }] =
+    useGetDistrictMasterMutation();
+
+  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
+    useGetAreaMasterMutation();
 
   const getRegionMasterList = async () => {
     try {
@@ -83,29 +131,66 @@ const WarehouseProposal = () => {
     }
   };
 
-  // const getZonesList = async () => {
-  //   try {
-  //     const response = await getZoneMaster().unwrap();
-  //     console.log("Success:", response);
-  //     if (response.status === 200) {
-  //       setSelectBoxOptions((prev) => ({
-  //         ...prev,
-  //         zones: response?.results.map(({ zone_name, id }) => ({
-  //           label: zone_name,
-  //           id: id,
-  //         })),
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
+  const getZonesList = async () => {
+    try {
+      const response = await getZoneMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          zones: response?.results.map(({ zone_name, id }) => ({
+            label: zone_name,
+            id: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getDistrictMasterList = async () => {
+    try {
+      const response = await getDistrictMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          districts: response?.results.map(({ district_name, id }) => ({
+            label: district_name,
+            id: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAreaMasterList = async () => {
+    try {
+      const response = await getAreaMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          areas: response?.results.map(({ area_name, id }) => ({
+            label: area_name,
+            id: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
     getRegionMasterList();
     getStateList();
-    // getZonesList();
-    getDistrictList();
+    getZonesList();
+    getDistrictMasterList();
+    getAreaMasterList();
   }, []);
 
   return (
@@ -138,7 +223,7 @@ const WarehouseProposal = () => {
                   selectedValue={{ label: "test", value: "test" }}
                   isClearable={false}
                   selectType="label"
-                  style={{ w: "full" }}
+                  style={{ w: commonStyle.w }}
                   handleOnChange={(val) =>
                     console.log("selectedOption @@@@@@@@@@@------> ", val)
                   }
@@ -155,7 +240,7 @@ const WarehouseProposal = () => {
                   selectedValue={{ label: "test", value: "test" }}
                   isClearable={false}
                   selectType="label"
-                  style={{ w: "full" }}
+                  style={{ w: commonStyle.w }}
                   handleOnChange={(val) =>
                     console.log("selectedOption @@@@@@@@@@@------> ", val)
                   }
@@ -188,8 +273,27 @@ const WarehouseProposal = () => {
                           )}
                         </AccordionButton>
 
-                        <AccordionPanel height={450} bg="white" mt="3" pb={4}>
-                          <Box ml={{ base: 26 }} w="60%" p="4">
+                        <AccordionPanel
+                          height={"auto"}
+                          bg="white"
+                          mt="3"
+                          pb={4}
+                          //position="relative"
+                        >
+                          <Box
+                            //  border="1px"
+                            ml={{ base: 28 }}
+                            w={{
+                              base: "100%",
+                              sm: "80%",
+                              md: "60%",
+                              lg: "80%",
+                              xl: "50%",
+                            }}
+                            // position="absolute"
+                            // left={0}
+                            p="4"
+                          >
                             {/* --------------  Warehouse Name -------------- */}
                             <Box
                               // w="full"
@@ -202,11 +306,14 @@ const WarehouseProposal = () => {
                                 Warehouse Name
                               </Text>{" "}
                               <CustomInput
-                                name="warehouse_name"
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .warehouse_name
+                                }
                                 placeholder="Warehouse Name"
                                 type="text"
                                 label=""
-                                style={{}}
+                                style={{ w: commonStyle.w }}
                               />
                             </Box>
 
@@ -216,20 +323,24 @@ const WarehouseProposal = () => {
                               gap="10"
                               display={{ base: "flex" }}
                               alignItems="center"
+                              mt={commonStyle.mt}
                             >
                               {" "}
                               <Text textAlign="right" w="210px">
                                 Region
                               </Text>{" "}
                               <ReactCustomSelect
-                                name="Select-warehouse-Type"
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .region_name
+                                }
                                 label=""
                                 isLoading={getRegionMasterApiIsLoading}
                                 options={selectBoxOptions?.regions || []}
                                 selectedValue={{}}
                                 isClearable={false}
                                 selectType="label"
-                                style={{ w: "full" }}
+                                style={{ w: commonStyle.w }}
                                 handleOnChange={(val) =>
                                   console.log(
                                     "selectedOption @@@@@@@@@@@------> ",
@@ -242,6 +353,7 @@ const WarehouseProposal = () => {
                             {/* -------------- State -------------- */}
 
                             <Box
+                              mt={commonStyle.mt}
                               w="full"
                               gap="10"
                               display={{ base: "flex" }}
@@ -252,13 +364,16 @@ const WarehouseProposal = () => {
                                 State
                               </Text>{" "}
                               <ReactCustomSelect
-                                name="Select-warehouse-Type"
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .state_name
+                                }
                                 label=""
                                 options={selectBoxOptions?.states || []}
                                 selectedValue={{}}
                                 isClearable={false}
                                 selectType="label"
-                                style={{ w: "full" }}
+                                style={{ w: commonStyle.w }}
                                 isLoading={getStateApiIsLoading}
                                 handleOnChange={(val) =>
                                   console.log(
@@ -272,6 +387,7 @@ const WarehouseProposal = () => {
                             {/* -------------- Zone -------------- */}
 
                             <Box
+                              mt={commonStyle.mt}
                               w="full"
                               gap="10"
                               display={{ base: "flex" }}
@@ -282,14 +398,16 @@ const WarehouseProposal = () => {
                                 Zone
                               </Text>{" "}
                               <ReactCustomSelect
-                                name="Select-warehouse-Type"
+                                name={
+                                  formFieldsName.pwh_warehouse_details.zone_name
+                                }
                                 label=""
                                 options={selectBoxOptions?.zones || []}
                                 selectedValue={{}}
                                 isClearable={false}
                                 selectType="label"
                                 isLoading={getZoneApiIsLoading}
-                                style={{ w: "full" }}
+                                style={{ w: commonStyle.w }}
                                 handleOnChange={(val) =>
                                   console.log(
                                     "selectedOption @@@@@@@@@@@------> ",
@@ -302,6 +420,7 @@ const WarehouseProposal = () => {
                             {/* -------------- District -------------- */}
 
                             <Box
+                              mt={commonStyle.mt}
                               w="full"
                               gap="10"
                               display={{ base: "flex" }}
@@ -312,14 +431,390 @@ const WarehouseProposal = () => {
                                 District
                               </Text>{" "}
                               <ReactCustomSelect
-                                name="Select-warehouse-Type"
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .district_name
+                                }
                                 label=""
                                 options={selectBoxOptions?.districts || []}
                                 selectedValue={{}}
                                 isClearable={false}
                                 selectType="label"
+                                isLoading={getDistrictApiIsLoading}
+                                style={{ w: commonStyle.w }}
+                                handleOnChange={(val) =>
+                                  console.log(
+                                    "selectedOption @@@@@@@@@@@------> ",
+                                    val
+                                  )
+                                }
+                              />
+                            </Box>
+
+                            {/* -------------- Area -------------- */}
+
+                            <Box
+                              mt={commonStyle.mt}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Area
+                              </Text>{" "}
+                              <ReactCustomSelect
+                                name={
+                                  formFieldsName.pwh_warehouse_details.area_name
+                                }
+                                label=""
+                                options={selectBoxOptions?.areas || []}
+                                selectedValue={{}}
+                                isClearable={false}
+                                selectType="label"
+                                isLoading={getAreaMasterApiIsLoading}
+                                style={{ w: commonStyle.w }}
+                                handleOnChange={(val) =>
+                                  console.log(
+                                    "selectedOption @@@@@@@@@@@------> ",
+                                    val
+                                  )
+                                }
+                              />
+                            </Box>
+
+                            {/* -------------- Warehouse address -------------- */}
+
+                            <Box
+                              mt={commonStyle.mt}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Warehouse Address
+                              </Text>{" "}
+                              <CustomTextArea
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .warehouse_address
+                                }
+                                placeholder="Warehouse Address"
+                                type="textarea"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* --------------  Pin Code -------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Pin Code
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details.pin_code
+                                }
+                                placeholder="Pin Code"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* -------------- No of chamber -------------- */}
+
+                            <Box
+                              mt={commonStyle.mt}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                No Of Chambers
+                              </Text>{" "}
+                              <ReactCustomSelect
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .no_of_chamber
+                                }
+                                label=""
+                                options={[
+                                  {
+                                    label: "1",
+                                    value: 1,
+                                  },
+                                ]}
+                                selectedValue={{}}
+                                isClearable={false}
+                                selectType="label"
                                 isLoading={false}
-                                style={{ w: "full" }}
+                                style={{ w: commonStyle.w }}
+                                handleOnChange={(val) =>
+                                  console.log(
+                                    "selectedOption @@@@@@@@@@@------> ",
+                                    val
+                                  )
+                                }
+                              />
+                            </Box>
+
+                            {/* --------------warehouse_in_factory_premises radio button -------------- */}
+
+                            <Box
+                              // mt={commonStyle.mt}
+                              mt={4}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right">
+                                Warehouse In Factory Premises
+                              </Text>{" "}
+                              <Box
+                                // w={commonStyle.w}
+
+                                textAlign="right"
+                              >
+                                <RadioGroup p="0" defaultValue="2">
+                                  <Stack spacing={5} direction="row">
+                                    <Radio colorScheme="red" value="1">
+                                      Radio
+                                    </Radio>
+                                    <Radio colorScheme="green" value="2">
+                                      Radio
+                                    </Radio>
+                                  </Stack>
+                                </RadioGroup>
+                              </Box>
+                            </Box>
+
+                            {/* --------------  standard_capacity (in MT)-------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Standard Capacity (in MT)
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .standard_capacity
+                                }
+                                placeholder=" Standard Capacity (in MT)"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* --------------  standard_warehouse_capacity (in MT)-------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Standard Warehouse Capacity (in MT)
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .standard_warehouse_capacity
+                                }
+                                placeholder=" Standard Warehouse Capacity (in MT)"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* --------------  standard_warehouse_capacity (in MT)-------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Standard Utilizes Capacity (in MT)
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .standard_utilizes_capacity
+                                }
+                                placeholder="Standard Utilizes Capacity (in MT)"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* --------------lock_in_period radio button -------------- */}
+
+                            <Box
+                              // mt={commonStyle.mt}
+                              mt={4}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                {" "}
+                                Lock In Period
+                              </Text>{" "}
+                              <Box w={commonStyle.w} textAlign="right">
+                                <RadioGroup p="0" defaultValue="2">
+                                  <Stack spacing={5} direction="row">
+                                    <Radio colorScheme="red" value="1">
+                                      Radio
+                                    </Radio>
+                                    <Radio colorScheme="green" value="2">
+                                      Radio
+                                    </Radio>
+                                  </Stack>
+                                </RadioGroup>
+                              </Box>
+                            </Box>
+
+                            {/* --------------  lock_in_period_month------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Lock In Period Month
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .lock_in_period_month
+                                }
+                                placeholder=" Lock In Period Month"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* --------------  covered_area------------- */}
+                            <Box
+                              // w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Covered Area (In Sq.Ft)
+                              </Text>{" "}
+                              <CustomInput
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .lock_in_period_month
+                                }
+                                placeholder="Covered Area (In Sq.Ft)"
+                                type="text"
+                                label=""
+                                style={{ w: commonStyle.w }}
+                              />
+                            </Box>
+
+                            {/* -------------- supervisor_for_day_shift -------------- */}
+
+                            <Box
+                              mt={commonStyle.mt}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Supervisor For day Shift
+                              </Text>{" "}
+                              <ReactCustomSelect
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .supervisor_for_day_shift
+                                }
+                                label=""
+                                options={[
+                                  {
+                                    label: "1",
+                                    value: 1,
+                                  },
+                                ]}
+                                selectedValue={{}}
+                                isClearable={false}
+                                selectType="label"
+                                isLoading={false}
+                                style={{ w: commonStyle.w }}
+                                handleOnChange={(val) =>
+                                  console.log(
+                                    "selectedOption @@@@@@@@@@@------> ",
+                                    val
+                                  )
+                                }
+                              />
+                            </Box>
+
+                            {/* -------------- supervisor_for_night_shift -------------- */}
+
+                            <Box
+                              mt={commonStyle.mt}
+                              w="full"
+                              gap="10"
+                              display={{ base: "flex" }}
+                              alignItems="center"
+                            >
+                              {" "}
+                              <Text textAlign="right" w="210px">
+                                Supervisor For day Shift
+                              </Text>{" "}
+                              <ReactCustomSelect
+                                name={
+                                  formFieldsName.pwh_warehouse_details
+                                    .supervisor_for_night_shift
+                                }
+                                label=""
+                                options={[
+                                  {
+                                    label: "1",
+                                    value: 1,
+                                  },
+                                ]}
+                                selectedValue={{}}
+                                isClearable={false}
+                                selectType="label"
+                                isLoading={false}
+                                style={{ w: commonStyle.w }}
                                 handleOnChange={(val) =>
                                   console.log(
                                     "selectedOption @@@@@@@@@@@------> ",

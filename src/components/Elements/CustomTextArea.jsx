@@ -31,7 +31,8 @@ function CustomTextArea({ name, placeholder, type, label, style }) {
               {...field}
               type={type}
               // width={{ base: "90%" }}
-              backgroundColor={"gray.200"}
+              backgroundColor={"white"}
+              borderColor="#c3c3c3"
               borderRadius={"lg"}
               _placeholder={{ color: "gray.300" }}
               _hover={{
