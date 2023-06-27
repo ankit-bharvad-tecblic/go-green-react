@@ -9,21 +9,19 @@ export const API = {
     STATE_MASTER: "/warehouse/state/",
     ZONE_MASTER: "/warehouse/zone/",
     AREA_MASTER: "/warehouse/area/",
-    ADD_AREA_MASTER: "",
-    UPDATE_AREA_MASTER: "",
+
     BANK_MASTER: "/business_flow/bank",
     BANK_BRANCH_MASTER: "/business_flow/bank_branch",
-    EARTHQUAKE_ZONE_TYPE_MASTER: "/warehouse/earthquake_zone_type",
+    EARTHQUAKE_ZONE_TYPE_MASTER: "/warehouse/earthquake_zone_type/",
+
+    EARTHQUAKE_ZONE_ACTIVE: "/warehouse/earthquake_zone_active/",
     INSURANCE_COMPANY_MASTER: "/business_flow/insurance/",
     REGION_MASTER: "/warehouse/region/",
-    ADD_REGION_MASTER: "",
-    UPDATE_REGION_MASTER: "/warehouse/region",
-    COMMODITY_TYPE_MASTER: "/warehouse/commodity_type",
-    ADD_COMMODITY_TYPE_MASTER: "",
-    UPDATE_COMMODITY_TYPE_MASTER: "",
-    COMMODITY_GRADE: "/warehouse/commodity_grade",
-    ADD_COMMODITY_GRADE: "",
-    UPDATE_COMMODITY_GRADE: "",
+
+    COMMODITY_TYPE_MASTER: "/warehouse/commodity_type/",
+
+    COMMODITY_GRADE: "/warehouse/commodity_grade/",
+
     COMMODITY_MASTER: "/warehouse/commodity",
     PAGE_MASTER: "/page",
     EMPLOYEE_MASTER: "/list/all/employee ",
@@ -52,7 +50,7 @@ export const API = {
     INSURANCE_ACTIVE: "/business_flow/insurance/",
     SECURITY_AGENCY_ACTIVE: "",
     SECURITY_GUARD_ACTIVE: "",
-    EARTHQUAKE_ZONE_ACTIVE: "/warehouse/earthquake_zone_active/",
+
     PAGE_MASTER_ACTIVE: "",
     BANK_MASTER_ACTIVE: "",
     BANK_BRANCH_MASTER_ACTIVE: "",

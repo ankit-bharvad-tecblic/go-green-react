@@ -159,6 +159,9 @@ const WareHouseSubType = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/warehouse-master/add/warehouse-sub-type-master/`);
+  };
 
   const getData = async () => {
     //params filter
@@ -219,6 +222,7 @@ const WareHouseSubType = () => {
           columns={columns}
           data={data}
           loading={getWareHouseSubTypeApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

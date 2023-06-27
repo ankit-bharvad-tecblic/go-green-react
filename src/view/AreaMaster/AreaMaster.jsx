@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const AreaMaster = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -157,14 +157,7 @@ const AreaMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            onClick={() => {
-              navigation(
-                `/manage-location/edit/area-master/${info.row.original.id}`,
-                {
-                  state: { details: info.row.original },
-                }
-              );
-            }}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -180,6 +173,18 @@ const AreaMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/manage-location/add/area-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/manage-location/edit/area-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getData = async () => {
     //params filter
@@ -244,6 +249,7 @@ const AreaMaster = () => {
         columns={columns}
         data={data}
         loading={getAreaMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

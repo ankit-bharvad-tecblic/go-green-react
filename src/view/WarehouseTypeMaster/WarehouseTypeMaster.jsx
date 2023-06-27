@@ -29,7 +29,7 @@ const WarehouseTypeMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, 
+    limit: 25,
   });
 
   const [
@@ -163,6 +163,9 @@ const WarehouseTypeMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/warehouse-master/add/warehouse-type-master`);
+  };
 
   const getData = async () => {
     //params filter
@@ -176,7 +179,7 @@ const WarehouseTypeMaster = () => {
             .join("&");
         }
         return `${key}=${encodeURIComponent(value)}`;
-      }) 
+      })
       .join("&");
     // }
 
@@ -223,6 +226,7 @@ const WarehouseTypeMaster = () => {
           columns={columns}
           data={data}
           loading={getWarehouseTypeMasterApiIsLoading}
+          addForm={() => addForm()}
         />
       </div>
     </>

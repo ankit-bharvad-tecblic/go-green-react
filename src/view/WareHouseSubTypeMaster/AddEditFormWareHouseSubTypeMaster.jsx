@@ -1,29 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
-import { useGetWareHouseSubTypeMutation } from "../../features/master-api-slice";
+import {
+  useAddWareHouseSubTypeMutation,
+  useGetWareHouseSubTypeMutation,
+  useUpdateWareHouseSubTypeMutation,
+} from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
+import { MotionSlideUp } from "../../utils/animation";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 function AddEditFormWareHouseSubTypeMaster() {
+  const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const [getWareHouseSubType] = useGetWareHouseSubTypeMutation();
-
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+  const [getWareHouseSubType] = useGetWareHouseSubTypeMutation();
+  const [addWareHouseSubType, { isLoading: addWareHouseSubTypeApiIsLoading }] =
+    useAddWareHouseSubTypeMutation();
+
+  const [
+    updateWareHouseSubType,
+    { isLoading: updateWareHouseSubTypeApiIsLoading },
+  ] = useUpdateWareHouseSubTypeMutation();
 
   const details = location.state?.details;
   console.log("details", details);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
+    if (details?.id) {
+      updateData({ ...data, id: details.id });
+    } else {
+      addData(data);
+    }
   };
 
+  const addData = async (data) => {
+    try {
+      const response = await addWareHouseSubType(data).unwrap();
+      console.log("add warehouse sub type master res", response);
+      if (response.status === 201) {
+        toasterAlert(response);
+        navigate("/warehouse-master/warehouse-sub-type-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
+  };
   const getWareHouseSub = async (data) => {
     try {
       const response = await getWareHouseSubType().unwrap();
@@ -52,6 +83,20 @@ function AddEditFormWareHouseSubTypeMaster() {
     }
   };
 
+  const updateData = async (data) => {
+    try {
+      const response = await updateWareHouseSubType(data).unwrap();
+      if (response.status === 200) {
+        console.log("update warehouse sub type master res", response);
+        toasterAlert(response);
+        navigate("/warehouse-master/warehouse-sub-type-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
+  };
+
   useEffect(() => {
     getWareHouseSub();
     if (details?.id) {
@@ -74,20 +119,22 @@ function AddEditFormWareHouseSubTypeMaster() {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  // options: item.type === "select" && commodityTypeMaster,
-                  isChecked: details?.active,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  {" "}
+                  <Text textAlign="right" w="250px">
+                    {item.label}
+                  </Text>{" "}
+                  {generateFormField({
+                    ...item,
+                    label: "",
+                    // options: item.type === "select" && commodityTypeMaster,
+                    isChecked: details?.active,
+                    style: { mb: 2, mt: 2 },
+                  })}
+                </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
@@ -98,10 +145,14 @@ function AddEditFormWareHouseSubTypeMaster() {
               _hover={{ backgroundColor: "primary.700" }}
               color={"white"}
               borderRadius={"full"}
+              isLoading={
+                addWareHouseSubTypeApiIsLoading ||
+                updateWareHouseSubTypeApiIsLoading
+              }
               my={"4"}
               px={"10"}
             >
-              Update
+              {details?.id ? "Update" : "Add"}
             </Button>
           </Box>
         </form>
@@ -111,3 +162,22 @@ function AddEditFormWareHouseSubTypeMaster() {
 }
 
 export default AddEditFormWareHouseSubTypeMaster;
+
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};

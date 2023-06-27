@@ -2,26 +2,60 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState, useEffect } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import generateFormField from "../../components/Elements/GenerateFormField";
 
-import { useGetWarehouseTypeMasterMutation } from "../../features/master-api-slice";
+import {
+  useAddWarehouseTypeMasterMutation,
+  useGetWarehouseTypeMasterMutation,
+  useUpdateWarehouseTypeMasterMutation,
+} from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
+import { MotionSlideUp } from "../../utils/animation";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 function AddEditFormWareHouseTypeMaster() {
+  const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const [getWarehouseTypeMaster] = useGetWarehouseTypeMasterMutation();
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState();
+  const [getWarehouseTypeMaster] = useGetWarehouseTypeMasterMutation();
+  const [
+    addWarehouseTypeMaster,
+    { isLoading: addWarehouseTypeMasterApiIsLoading },
+  ] = useAddWarehouseTypeMasterMutation();
+
+  const [
+    updateWarehouseTypeMaster,
+    { isLoading: updateWarehouseTypeMasterApiIsLoading },
+  ] = useUpdateWarehouseTypeMasterMutation();
 
   const details = location.state?.details;
   console.log("details", details);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
+    if (details?.id) {
+      updateData({ ...data, id: details.id });
+    } else {
+      addData(data);
+    }
+  };
+  const addData = async (data) => {
+    try {
+      const response = await addWarehouseTypeMaster(data).unwrap();
+      console.log("add warehouse type master res", response);
+      if (response.status === 201) {
+        toasterAlert(response);
+        navigate("/warehouse-master/warehouse-type-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
   };
 
   const getWarehouseType = async () => {
@@ -50,6 +84,20 @@ function AddEditFormWareHouseTypeMaster() {
     }
   };
 
+  const updateData = async (data) => {
+    try {
+      const response = await updateWarehouseTypeMaster(data).unwrap();
+      if (response.status === 200) {
+        console.log("update warehouse type master res", response);
+        toasterAlert(response);
+        navigate("/warehouse-master/warehouse-type-master");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
+  };
+
   useEffect(() => {
     getWarehouseType();
     if (details?.id) {
@@ -70,28 +118,30 @@ function AddEditFormWareHouseTypeMaster() {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  // options: item.type === "select" && commodityTypeMaster,
-                  selectedValue:
-                    item.type === "select" &&
-                    item?.options?.find(
-                      (opt) =>
-                        opt.label === details?.commodity_type?.commodity_type
-                    ),
-                  selectType: "label",
-                  isChecked: details?.active,
-                  isClearable: false,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
+            addEditFormFieldsList.map((item, i) => (
+              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  {" "}
+                  <Text textAlign="right" w="250px">
+                    {item.label}
+                  </Text>{" "}
+                  {generateFormField({
+                    ...item,
+                    label: "",
+                    // options: item.type === "select" && commodityTypeMaster,
+                    selectedValue:
+                      item.type === "select" &&
+                      item?.options?.find(
+                        (opt) =>
+                          opt.label === details?.commodity_type?.commodity_type
+                      ),
+                    selectType: "label",
+                    isChecked: details?.active,
+                    isClearable: false,
+                    style: { mb: 2, mt: 2 },
+                  })}
+                </Box>
+              </MotionSlideUp>
             ))}
 
           <Box display="flex" justifyContent="flex-end" mt="10" px="0">
@@ -102,10 +152,14 @@ function AddEditFormWareHouseTypeMaster() {
               _hover={{ backgroundColor: "primary.700" }}
               color={"white"}
               borderRadius={"full"}
+              isLoading={
+                addWarehouseTypeMasterApiIsLoading ||
+                updateWarehouseTypeMasterApiIsLoading
+              }
               my={"4"}
               px={"10"}
             >
-              Update
+              {details?.id ? "Update" : "Add"}
             </Button>
           </Box>
         </form>
@@ -115,3 +169,22 @@ function AddEditFormWareHouseTypeMaster() {
 }
 
 export default AddEditFormWareHouseTypeMaster;
+
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};

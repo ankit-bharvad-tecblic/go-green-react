@@ -15,6 +15,8 @@ import {
   useAddZoneMasterMutation,
   useUpdateZoneMasterMutation,
   useGetStateMasterMutation,
+  useAddStateMasterMutation,
+  useUpdateStateMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { motion } from "framer-motion";
@@ -44,19 +46,19 @@ const AddEditFormStateMaster = () => {
   const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
     useGetStateMasterMutation();
 
-  const [addZoneMaster, { isLoading: addZoneMasterApiIsLoading }] =
-    useAddZoneMasterMutation();
+  const [addStateMaster, { isLoading: addStateMasterApiIsLoading }] =
+    useAddStateMasterMutation();
 
-  const [updateZoneMaster, { isLoading: updateZoneMasterApiIsLoading }] =
-    useUpdateZoneMasterMutation();
+  const [updateStateMaster, { isLoading: updateStateMasterApiIsLoading }] =
+    useUpdateStateMasterMutation();
 
   const addData = async (data) => {
     try {
-      const response = await addZoneMaster(data).unwrap();
-      console.log("add commodity master res", response);
+      const response = await addStateMaster(data).unwrap();
+      console.log("add state master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/location-master/zone-master");
+        navigate("/manage-location/state-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -66,11 +68,11 @@ const AddEditFormStateMaster = () => {
 
   const updateData = async (data) => {
     try {
-      const response = await updateZoneMaster(data).unwrap();
+      const response = await updateStateMaster(data).unwrap();
       if (response.status === 200) {
-        console.log("update commodity master res", response);
+        console.log("update state master res", response);
         toasterAlert(response);
-        navigate("/location-master/zone-master");
+        navigate("/manage-location/state-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -151,7 +153,7 @@ const AddEditFormStateMaster = () => {
               color={"white"}
               borderRadius={"full"}
               isLoading={
-                addZoneMasterApiIsLoading || updateZoneMasterApiIsLoading
+                addStateMasterApiIsLoading || updateStateMasterApiIsLoading
               }
               my={"4"}
               px={"10"}

@@ -10,7 +10,7 @@ const filterFields = [
     type: "text",
   },
   // {
-  //   "REGION NAME": "state_name",
+  //   "REGION NAME": "state_nam e",
   //   isActiveFilter: false,
   //   label: "REGION NAME",
   //   name: "state_name",

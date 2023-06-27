@@ -4,6 +4,7 @@ import { API } from "../constants/api.constants";
 
 export const masterApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // start district-master get add update mutation
     getDistrictMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.DISTRICT_MASTER,
@@ -11,6 +12,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addDistrictMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.DISTRICT_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateDistrictMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.DISTRICT_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // end district-master get add update mutation
+    // start state-master get add update mutation
     getStateMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.STATE_MASTER,
@@ -18,6 +35,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addStateMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.STATE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateStateMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.STATE_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // end state-master get add update mutation
+
     // start Zone-Master get add update mutation methods
     getZoneMaster: builder.mutation({
       query: (params) => ({
@@ -35,7 +68,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateZoneMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.ZONE_MASTER,
+        url: `${API.DASHBOARD.ZONE_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -101,7 +134,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateEarthQuakeZoneTypeMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER,
+        url: `${API.DASHBOARD.EARTHQUAKE_ZONE_TYPE_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -124,7 +157,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateInsuranceCompanyMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.INSURANCE_COMPANY_MASTER,
+        url: `${API.DASHBOARD.INSURANCE_COMPANY_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -139,7 +172,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateRegionMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_REGION_MASTER}/${data.id}/`,
+        url: `${API.DASHBOARD.REGION_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -160,18 +193,19 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateAreaMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_AREA_MASTER}/${data.id}`,
+        url: `${API.DASHBOARD.AREA_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
     }),
     addAreaMaster: builder.mutation({
-      query: (params) => ({
-        url: API.DASHBOARD.ADD_AREA_MASTER,
+      query: (data) => ({
+        url: API.DASHBOARD.AREA_MASTER,
         method: "POST",
-        params: params,
+        body: data,
       }),
     }),
+    // commodity type master add edit update start
     getCommodityTypeMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_TYPE_MASTER,
@@ -181,18 +215,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateCommodityTypeMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_COMMODITY_TYPE_MASTER}/${data.id}`,
+        url: `${API.DASHBOARD.COMMODITY_TYPE_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
     }),
     addCommodityTypeMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.ADD_COMMODITY_TYPE_MASTER,
+        url: API.DASHBOARD.COMMODITY_TYPE_MASTER,
         method: "POST",
         body: data,
       }),
     }),
+    //commodity type master add update edit end
+
+    //commodity grade master add edit update start
     getCommodityGrade: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_GRADE,
@@ -202,16 +239,16 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateCommodityGrade: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_COMMODITY_GRADE}/${data.id}`,
+        url: `${API.DASHBOARD.COMMODITY_GRADE}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
     }),
     addCommodityGrade: builder.mutation({
-      query: (params) => ({
-        url: API.DASHBOARD.ADD_COMMODITY_GRADE,
+      query: (data) => ({
+        url: API.DASHBOARD.COMMODITY_GRADE,
         method: "POST",
-        params: params,
+        body: data,
       }),
     }),
     // start Commodity-Master get add update mutation methods
@@ -259,7 +296,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updatePageMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.PAGE_MASTER,
+        url: `${API.DASHBOARD.PAGE_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -349,7 +386,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateCommodityVariety: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.UPDATE_COMMODITY_VARIETY}/${data.id}`,
+        url: `${API.DASHBOARD.COMMODITY_VARIETY}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -360,7 +397,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     addCommodityVariety: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.ADD_COMMODITY_VARIETY,
+        url: API.DASHBOARD.COMMODITY_VARIETY,
         method: "POST",
         body: data,
       }),
@@ -369,6 +406,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    //warehouse sub type get add update mutation start
     getWareHouseSubType: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.WAREHOUSE_SUB_TYPE,
@@ -380,6 +418,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addWareHouseSubType: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.WAREHOUSE_SUB_TYPE,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateWareHouseSubType: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.WAREHOUSE_SUB_TYPE}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    //warehouse sub type get add update mutation end
+
     // start security agency get add update mutation methods
     getSecurityAgencyMaster: builder.mutation({
       query: (params) => ({
@@ -401,7 +455,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateSecurityAgencyMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.SECURITY_AGENCY_MASTER,
+        url: `${API.DASHBOARD.SECURITY_AGENCY_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
@@ -427,12 +481,12 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
     updateSecurityGuardMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.SECURITY_GUARD_MASTER,
+        url: `${API.DASHBOARD.SECURITY_GUARD_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),
     }),
-
+    // Warehouse type master update add patch start
     getWarehouseTypeMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.WAREHOUSE_TYPE_MASTER,
@@ -444,6 +498,22 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addWarehouseTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.WAREHOUSE_TYPE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateWarehouseTypeMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.WAREHOUSE_TYPE_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
+    // warehouse type master update add patch end
     getBankCMLocationMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.BANK_CM_LOCATION_MASTER,
@@ -480,8 +550,16 @@ export const masterApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  // Api mutation for district master starts
   useGetDistrictMasterMutation,
+  useAddDistrictMasterMutation,
+  useUpdateDistrictMasterMutation,
+  // Api mutation for district master ends
+  //Api mutation for state master starts
   useGetStateMasterMutation,
+  useAddStateMasterMutation,
+  useUpdateStateMasterMutation,
+  //Api mutation for state master ends
 
   useGetZoneMasterMutation,
   useAddZoneMasterMutation,
@@ -510,6 +588,7 @@ export const {
   useUpdateCommodityGradeMutation,
   useAddCommodityGradeMutation,
   // Api mutation for commodity grade ends
+
   // Api mutation for page master starts
   useGetPageMasterMutation,
   useAddPageMasterMutation,
@@ -524,7 +603,17 @@ export const {
   useAddCommodityVarietyMutation,
   // Api mutation for commodity variety ends
 
+  // Api mutation for warehouse sub type start
   useGetWareHouseSubTypeMutation,
+  useAddWareHouseSubTypeMutation,
+  useUpdateWareHouseSubTypeMutation,
+  // api mutation for warehouse sub type end
+
+  //Api mutation for warehouse type start
+  useGetWarehouseTypeMasterMutation,
+  useUpdateWarehouseTypeMasterMutation,
+  useAddWarehouseTypeMasterMutation,
+  //Api mutation for warehouse type end
 
   // Api mutation for security agency starts
   useGetSecurityAgencyMasterMutation,
@@ -556,7 +645,7 @@ export const {
   useAddRegionMasterMutation,
   useUpdateRegionMasterMutation,
   //Api mutation for region master ends
-  useGetWarehouseTypeMasterMutation,
+
   useActiveDeActiveMutation,
 
   useGetCommodityMasterMutation,

@@ -107,7 +107,9 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  earthquake_zone_type_id: yup.string().required("Earthquake zone type id is required"),
+  earthquake_zone_type_id: yup
+    .string()
+    .required("Earthquake zone type id is required"),
   is_active: yup.string(),
   is_block: yup.string(),
   area_name: yup.string().required("Area Name is required"),
