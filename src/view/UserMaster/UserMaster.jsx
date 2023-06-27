@@ -118,10 +118,7 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "LAST NAME",
     }),
-    columnHelper.accessor("password", {
-      cell: (info) => info.getValue(),
-      header: " PASSWORD",
-    }),
+  
     columnHelper.accessor("last_login", {
       cell: (info) => info.getValue(),
       header: "LAST LOGIN",

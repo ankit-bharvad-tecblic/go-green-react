@@ -95,7 +95,7 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   bank_name: yup.string().required("bank name is required"),
-  region: yup.string().required("region name is required"),
+  region: yup.string().required("region name is required"), 
   state: yup.string().required("state name  is required"),
   bank_address: yup.string().required("bank address is required"),
   active: yup.string(),

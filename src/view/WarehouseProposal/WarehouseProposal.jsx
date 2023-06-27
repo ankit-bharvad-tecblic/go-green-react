@@ -93,7 +93,7 @@ const WarehouseProposal = () => {
   //         zones: response?.results.map(({ zone_name, id }) => ({
   //           label: zone_name,
   //           id: id,
-  //         })),
+  //         })), 
   //       }));
   //     }
   //   } catch (error) {
@@ -105,7 +105,7 @@ const WarehouseProposal = () => {
     getRegionMasterList();
     getStateList();
     // getZonesList();
-    getDistrictList();
+    // getDistrictList();
   }, []);
 
   return (

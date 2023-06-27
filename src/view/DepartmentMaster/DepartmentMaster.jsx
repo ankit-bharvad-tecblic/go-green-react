@@ -219,7 +219,7 @@ function DepartmentMaster() {
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
-        data={data || []}
+        data={[]}
         loading={getDepartmentMasterApiIsLoading}
       />
     </div>

@@ -11,11 +11,13 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function HiringProposalMaster() {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -81,448 +83,28 @@ function HiringProposalMaster() {
     }
   };
 
-  const filterFields = [
-    {
-      WarehouseTypeID: "bank_name",
-      isActiveFilter: false,
-
-      label: "WarehouseTypeID",
-      name: "bank_name",
-      placeholder: "WarehouseTypeID",
-      type: "text",
-    },
-    {
-      WarehouseSubTypeID: "bank_name",
-      isActiveFilter: false,
-
-      label: "WarehouseSubTypeID",
-      name: "bank_name",
-      placeholder: "WarehouseSubTypeID",
-      type: "text",
-    },
-    {
-      "Warehouse Name": "bank_name",
-      isActiveFilter: false,
-
-      label: "Warehouse Name",
-      name: "bank_name",
-      placeholder: "Warehouse Name",
-      type: "text",
-    },
-    {
-      RegionID: "bank_name",
-      isActiveFilter: false,
-
-      label: "RegionID",
-      name: "bank_name",
-      placeholder: "RegionID",
-      type: "text",
-    },
-    {
-      "StateID ": "bank_name",
-      isActiveFilter: false,
-
-      label: "StateID ",
-      name: "bank_name",
-      placeholder: "StateID ",
-      type: "text",
-    },
-    {
-      "ZoneID ": "bank_name",
-      isActiveFilter: false,
-
-      label: "ZoneID ",
-      name: "bank_name",
-      placeholder: "ZoneID ",
-      type: "text",
-    },
-    {
-      "DistrictID ": "bank_name",
-      isActiveFilter: false,
-
-      label: "DistrictID ",
-      name: "bank_name",
-      placeholder: "DistrictID ",
-      type: "text",
-    },
-    {
-      "AreaID ": "bank_name",
-      isActiveFilter: false,
-
-      label: "AreaID ",
-      name: "bank_name",
-      placeholder: "AreaID ",
-      type: "text",
-    },
-    {
-      "WarehouseAddress ": "bank_name",
-      isActiveFilter: false,
-
-      label: "WarehouseAddress ",
-      name: "bank_name",
-      placeholder: "WarehouseAddress ",
-      type: "text",
-    },
-    {
-      "WarehousePincode NAME": "bank_name",
-      isActiveFilter: false,
-
-      label: "WarehousePincode ",
-      name: "bank_name",
-      placeholder: "WarehousePincode ",
-      type: "text",
-    },
-    {
-      "NoOfChambers ": "bank_name",
-      isActiveFilter: false,
-
-      label: "NoOfChambers ",
-      name: "bank_name",
-      placeholder: "NoOfChambers ",
-      type: "text",
-    },
-    {
-      "IsFactoryPremise ": "bank_name",
-      isActiveFilter: false,
-
-      label: "IsFactoryPremise ",
-      name: "bank_name",
-      placeholder: "IsFactoryPremise ",
-      type: "text",
-    },
-    {
-      "StandardCapacity ": "bank_name",
-      isActiveFilter: false,
-
-      label: "StandardCapacity ",
-      name: "bank_name",
-      placeholder: "StandardCapacity",
-      type: "text",
-    },
-    {
-      "CurrentCapacity ": "bank_name",
-      isActiveFilter: false,
-
-      label: "CurrentCapacity ",
-      name: "bank_name",
-      placeholder: "CurrentCapacity ",
-      type: "text",
-    },
-    {
-      "CurrentUtilisedCapacity ": "bank_name",
-      isActiveFilter: false,
-
-      label: "CurrentUtilisedCapacity ",
-      name: "bank_name",
-      placeholder: "CurrentUtilisedCapacity ",
-      type: "text",
-    },
-    {
-      "NoOfWarehouseInArea ": "bank_name",
-      isActiveFilter: false,
-
-      label: "NoOfWarehouseInArea",
-      name: "bank_name",
-      placeholder: "NoOfWarehouseInArea",
-      type: "text",
-    },
-    {
-      "LockinPeriod ": "bank_name",
-      isActiveFilter: false,
-
-      label: "LockinPeriod ",
-      name: "bank_name",
-      placeholder: "LockinPeriod",
-      type: "text",
-    },
-    {
-      "CoveredArea ": "bank_name",
-      isActiveFilter: false,
-
-      label: "CoveredArea",
-      name: "bank_name",
-      placeholder: "CoveredArea",
-      type: "text",
-    },
-    {
-      "SupervisorIDDayShift ": "bank_name",
-      isActiveFilter: false,
-
-      label: "SupervisorIDDayShift ",
-      name: "bank_name",
-      placeholder: "SupervisorIDDayShift ",
-      type: "text",
-    },
-    {
-      "SupervisorIDNightShift ": "bank_name",
-      isActiveFilter: false,
-
-      label: "SupervisorIDNightShift ",
-      name: "bank_name",
-      placeholder: "SupervisorIDNightShift ",
-      type: "text",
-    },
-    {
-      "SecurityGuardIDDayShift ": "bank_name",
-      isActiveFilter: false,
-
-      label: "SecurityGuardIDDayShift ",
-      name: "bank_name",
-      placeholder: "SecurityGuardIDDayShift ",
-      type: "text",
-    },
-    {
-      "SecurityGuardIDNightShift ": "bank_name",
-      isActiveFilter: false,
-
-      label: "SecurityGuardIDNightShift ",
-      name: "bank_name",
-      placeholder: "SecurityGuardIDNightShift",
-      type: "text",
-    },
-    {
-      "Expected Commodity ": "bank_name",
-      isActiveFilter: false,
-
-      label: "Expected Commodity ",
-      name: "bank_name",
-      placeholder: "Expected Commodity ",
-      type: "text",
-    },
-    {
-      CommodityInwardType: "bank_name",
-      isActiveFilter: false,
-
-      label: "CommodityInwardType",
-      name: "bank_name",
-      placeholder: "CommodityInwardType",
-      type: "text",
-    },
-    {
-      PreStackCommodityID: "bank_name",
-      isActiveFilter: false,
-
-      label: "PreStackCommodityID",
-      name: "bank_name",
-      placeholder: "PreStackCommodityID",
-      type: "text",
-    },
-    {
-      CCBankerID: "bank_name",
-      isActiveFilter: false,
-
-      label: "CCBankerID",
-      name: "bank_name",
-      placeholder: "CCBankerID",
-      type: "text",
-    },
-    {
-      FundingRequired: "bank_name",
-      isActiveFilter: false,
-
-      label: "FundingRequired",
-      name: "bank_name",
-      placeholder: "FundingRequired",
-      type: "text",
-    },
-    {
-      "Rent ": "bank_name",
-      isActiveFilter: false,
-
-      label: "Rent ",
-      name: "bank_name",
-      placeholder: "Rent ",
-      type: "text",
-    },
-    {
-      GGRevenueSharingRatio: "bank_name",
-      isActiveFilter: false,
-
-      label: "GGRevenueSharingRatio",
-      name: "bank_name",
-      placeholder: "GGRevenueSharingRatio",
-      type: "text",
-    },
-    {
-      SecurityDepositeMonth: "bank_name",
-      isActiveFilter: false,
-
-      label: "SecurityDepositeMonth",
-      name: "bank_name",
-      placeholder: "SecurityDepositeMonth",
-      type: "text",
-    },
-    {
-      AdvanceRent: "bank_name",
-      isActiveFilter: false,
-
-      label: "AdvanceRent",
-      name: "bank_name",
-      placeholder: "AdvanceRent",
-      type: "text",
-    },
-    {
-      AdvanceRentMonth: "bank_name",
-      isActiveFilter: false,
-
-      label: "AdvanceRentMonth",
-      name: "bank_name",
-      placeholder: "AdvanceRentMonth",
-      type: "text",
-    },
-    {
-      "GST ": "bank_name",
-      isActiveFilter: false,
-
-      label: "GST ",
-      name: "bank_name",
-      placeholder: "GST ",
-      type: "text",
-    },
-    {
-      CommencementDate: "bank_name",
-      isActiveFilter: false,
-
-      label: "CommencementDate",
-      name: "bank_name",
-      placeholder: "CommencementDate",
-      type: "text",
-    },
-    {
-      "AgreementPeriodMonth ": "bank_name",
-      isActiveFilter: false,
-
-      label: "AgreementPeriodMonth",
-      name: "bank_name",
-      placeholder: "AgreementPeriodMonth",
-      type: "text",
-    },
-
-    {
-      "NoticePeriodMonth ": "bank_name",
-      isActiveFilter: false,
-
-      label: "NoticePeriodMonth ",
-      name: "bank_name",
-      placeholder: "NoticePeriodMonth ",
-      type: "text",
-    },
-    {
-      "ProjectionPlanFilePath ": "bank_name",
-      isActiveFilter: false,
-
-      label: "ProjectionPlanFilePath",
-      name: "bank_name",
-      placeholder: "ProjectionPlanFilePath",
-      type: "text",
-    },
-    {
-      OwnerIntentionLetterFilePath: "bank_name",
-      isActiveFilter: false,
-
-      label: "OwnerIntentionLetterFilePath",
-      name: "bank_name",
-      placeholder: "OwnerIntentionLetterFilePath",
-      type: "text",
-    },
-    {
-      Remarks: "bank_name",
-      isActiveFilter: false,
-
-      label: "Remarks",
-      name: "bank_name",
-      placeholder: "Remarks",
-      type: "text",
-    },
-    {
-      CMProposalBusinessFormFilePath: "bank_name",
-      isActiveFilter: false,
-
-      label: "CMProposalBusinessFormFilePath",
-      name: "bank_name",
-      placeholder: "CMProposalBusinessFormFilePath",
-      type: "text",
-    },
-    {
-      L1UserID: "bank_name",
-      isActiveFilter: false,
-
-      label: "L1UserID",
-      name: "bank_name",
-      placeholder: "L1UserID",
-      type: "text",
-    },
-    {
-      L2UserID: "bank_name",
-      isActiveFilter: false,
-
-      label: "L2UserID",
-      name: "bank_name",
-      placeholder: "L2UserID",
-      type: "text",
-    },
-    {
-      "DocumentID ": "bank_name",
-      isActiveFilter: false,
-
-      label: "DocumentID ",
-      name: "bank_name",
-      placeholder: "DocumentID ",
-      type: "text",
-    },
-    {
-      "InspectionAssignedTo ": "bank_name",
-      isActiveFilter: false,
-
-      label: "InspectionAssignedTo ",
-      name: "bank_name",
-      placeholder: "InspectionAssignedTo ",
-      type: "text",
-    },
-
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("warehouse_type", {
       cell: (info) => info.getValue(),
       header: "WarehouseTypeID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("warehouse_subtype", {
       cell: (info) => info.getValue(),
       header: "WarehouseSubTypeID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("warehouse_name", {
       cell: (info) => info.getValue(),
       header: "Warehouse Name",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("region", {
       cell: (info) => info.getValue(),
       header: "RegionID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("state", {
       cell: (info) => info.getValue(),
       header: "StateID",
     }),
@@ -530,91 +112,91 @@ function HiringProposalMaster() {
       cell: (info) => info.getValue(),
       header: "ZoneID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("district", {
       cell: (info) => info.getValue(),
       header: "DistrictID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("area", {
       cell: (info) => info.getValue(),
       header: "AreaID",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("warehouse_address", {
       cell: (info) => info.getValue(),
       header: "WarehouseAddress ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("warehouse_pincode", {
       cell: (info) => info.getValue(),
       header: "WarehousePincode",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("no_of_chambers", {
       cell: (info) => info.getValue(),
       header: "NoOfChambers",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("is_factory_permise", {
       cell: (info) => info.getValue(),
       header: "IsFactoryPremise",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("standard_capacity", {
       cell: (info) => info.getValue(),
       header: "StandardCapacity",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("currrent_capacity", {
       cell: (info) => info.getValue(),
       header: "CurrentCapacity",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("currrent_utilised_capacity", {
       cell: (info) => info.getValue(),
       header: "CurrentUtilisedCapacity",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("no_of_warehouse_in_area", {
       cell: (info) => info.getValue(),
       header: "NoOfWarehouseInArea",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("lock_in_period", {
       cell: (info) => info.getValue(),
       header: "LockinPeriod",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("lock_in_period_month", {
       cell: (info) => info.getValue(),
       header: "LockinPeriodMonth",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("covered_area", {
       cell: (info) => info.getValue(),
       header: "CoveredArea",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("supervisor_day_shift", {
       cell: (info) => info.getValue(),
-      header: "SupervisorIDDayShift",
+      header: "SupervisorDayShift",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("supervisor_night_shift", {
       cell: (info) => info.getValue(),
-      header: "SupervisorIDNightShift ",
+      header: "SupervisorNightShift ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("security_guard_day_shift", {
       cell: (info) => info.getValue(),
-      header: "SecurityGuardIDDayShift ",
+      header: "SecurityGuardDayShift ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("security_guard_night_shift", {
       cell: (info) => info.getValue(),
-      header: "SecurityGuardIDNightShift ",
+      header: "SecurityGuardNightShift ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("expected_commodity", {
       cell: (info) => info.getValue(),
       header: "Expected Commodity ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("commodity_inward_type", {
       cell: (info) => info.getValue(),
       header: "CommodityInwardType",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("prestack_commodity", {
       cell: (info) => info.getValue(),
       header: "PreStackCommodityID ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("prestack_commodity_qty", {
       cell: (info) => info.getValue(),
       header: "PreStackCommodityQty",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("banker_id", {
       cell: (info) => info.getValue(),
       header: "CCBankerID ",
     }),
@@ -622,23 +204,23 @@ function HiringProposalMaster() {
       cell: (info) => info.getValue(),
       header: "FundingRequired ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("rent", {
       cell: (info) => info.getValue(),
       header: "Rent",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("gg_revenue_ratio", {
       cell: (info) => info.getValue(),
       header: "GGRevenueSharingRatio",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("security_deposit_month", {
       cell: (info) => info.getValue(),
       header: "SecurityDepositeMonth",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("advance_rent", {
       cell: (info) => info.getValue(),
       header: "AdvanceRent",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("advance_rent_month", {
       cell: (info) => info.getValue(),
       header: "AdvanceRentMonth ",
     }),
@@ -654,34 +236,39 @@ function HiringProposalMaster() {
       cell: (info) => info.getValue(),
       header: "AgreementPeriodMonth ",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("notice_period_month", {
       cell: (info) => info.getValue(),
       header: "NoticePeriodMonth",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("projection_plan_file_path", {
       cell: (info) => info.getValue(),
       header: "ProjectionPlanFilePath",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("owner_intention_letter_file_path", {
       cell: (info) => info.getValue(),
       header: "OwnerIntentionLetterFilePath",
     }),
 
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("remarks", {
       cell: (info) => info.getValue(),
       header: "Remarks ",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("cm_proposal_business_form_file_path", {
       cell: (info) => info.getValue(),
       header: "CMProposalBusinessFormFilePath ",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("l1_user", {
       cell: (info) => info.getValue(),
       header: "L1UserID",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("l2_user", {
       cell: (info) => info.getValue(),
       header: "L2UserID",
+    }),
+
+    columnHelper.accessor("is_funding_required", {
+      cell: (info) => info.getValue(),
+      header: "Is Funding Required ",
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
@@ -691,11 +278,11 @@ function HiringProposalMaster() {
       cell: (info) => info.getValue(),
       header: "InspectionAssignedTo",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "CreationDate",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("updated_at", {
       cell: (info) => info.getValue(),
       header: "LastUpdateDate",
     }),
@@ -731,7 +318,7 @@ function HiringProposalMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            // onClick={() => editForm(info)}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -746,6 +333,19 @@ function HiringProposalMaster() {
   const [data, setData] = useState([]);
 
   let paramString = "";
+
+  const addForm = () => {
+    navigate(`/add/hiring-proposal-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/edit/hiring-proposal-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getHiringProposal = async () => {
     //params filter
@@ -793,6 +393,7 @@ function HiringProposalMaster() {
         columns={columns}
         data={data || []}
         loading={getHiringProposalMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

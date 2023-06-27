@@ -58,6 +58,7 @@ import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
 import HsnMaster from "../view/HsnMaster/HsnMaster";
 import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
 import { Box } from "@chakra-ui/react";
+import AddEditFormHiringProposalMaster from "../view/HiringProposalMaster/AddEditFormHiringProposalMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -571,7 +572,7 @@ const routes = [
         </Suspense>
       </ProtectedRoutes>
     ),
-  }, 
+  },
   {
     path: "/hiring-proposal-master",
     element: (
@@ -579,6 +580,31 @@ const routes = [
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Hiring Proposal Master"}>
             <HiringProposalMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+
+  {
+    path: "add/hiring-proposal-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Hiring Proposal Master"}>
+            <AddEditFormHiringProposalMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/hiring-proposal-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Hiring Proposal  Master"}>
+            <AddEditFormHiringProposalMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

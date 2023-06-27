@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetZoneMasterMutation,
-} from "../../features/master-api-slice";
+} from "../../features/master-api-slice"; 
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
@@ -15,7 +15,7 @@ import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
 import { BreadcrumbLinks } from "./fields";
 
 const ZoneMaster = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
