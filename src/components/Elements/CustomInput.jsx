@@ -29,7 +29,9 @@ function CustomInput({ name, placeholder, type, label, style }) {
               {...field}
               type={type}
               // width={{ base: "90%" }}
-              backgroundColor={"gray.200"}
+              border="1px"
+              borderColor="gray.10"
+              backgroundColor={"white"}
               borderRadius={"lg"}
               _placeholder={{ color: "gray.300" }}
               _hover={{

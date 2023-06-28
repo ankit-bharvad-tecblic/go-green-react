@@ -13,6 +13,7 @@ export const globalStyles = {
       200: "#F8F8F8", // Input box color
       100: "#f3f3f3",
       50: "#f4f5fa",
+      10: "#c3c3c3",
     },
 
     primary: {
@@ -27,6 +28,49 @@ export const globalStyles = {
 
     border_light: {
       100: "#E2E8F0",
+    },
+    CheckBoxPrimary: {
+      500: "#A6CE39",
+    },
+    radioBoxPrimary: {
+      500: "#A6CE39", // Replace with your custom color value
+    },
+    switchColor: {
+      500: "#A6CE39", // Color for the switch component
+    },
+  },
+  components: {
+    Checkbox: {
+      baseStyle: {
+        control: {
+          _checked: {
+            color: "CheckBoxPrimary.500", // Apply the custom color to the checked state
+          },
+        },
+      },
+    },
+  },
+
+  //These is for the Radio button
+
+  Radio: {
+    baseStyle: {
+      control: {
+        _checked: {
+          color: "radioBoxPrimary.500", // Apply the custom color to the checked state
+        },
+      },
+    },
+  },
+
+  //These is for the Switch button
+  Switch: {
+    baseStyle: {
+      control: {
+        _checked: {
+          color: "switchColor.500", // Apply the custom color to the checked state
+        },
+      },
     },
   },
   fonts: {

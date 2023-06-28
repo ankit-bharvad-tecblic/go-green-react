@@ -85,7 +85,7 @@ const WarehouseProposal = () => {
             </Box>
           </Box>
 
-          <Box mt="10">
+          <Box mt="2">
             <Pwh />
           </Box>
 
