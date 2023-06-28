@@ -96,23 +96,23 @@ function BankMaster() {
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
-      header: "SR. NO",
+      header: "Sr. No",
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "Bank Name",
     }),
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: "Region ",
     }),
     columnHelper.accessor("state.state_name", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "State",
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "Bank Address",
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",

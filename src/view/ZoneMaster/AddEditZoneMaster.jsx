@@ -54,7 +54,7 @@ const AddEditZoneMaster = () => {
   const addData = async (data) => {
     try {
       const response = await addZoneMaster(data).unwrap();
-      console.log("add commodity master res", response);
+      console.log("add commodity master res", response); 
       if (response.status === 201) {
         toasterAlert(response);
         navigate("/manage-location/zone-master");

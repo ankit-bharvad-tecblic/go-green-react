@@ -2,40 +2,40 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "BANK NAME": "bank_name",
+    "Bank Name": "bank_name",
     isActiveFilter: false,
 
-    label: "BANK NAME",
+    label: "Bank `Name`",
     name: "bank_name",
-    placeholder: "BANK NAME",
+    placeholder: "Bank Name",
     type: "text",
   },
   {
-    "REGION NAME": "region__region_name",
+    "Region ": "region__region_name",
     isActiveFilter: false,
 
-    label: "REGION NAME",
+    label: "Region ",
     name: "region__region_name",
-    placeholder: "REGION NAME",
+    placeholder: "Region",
     type: "select",
   },
   {
-    "STATE NAME": "state__state_name",
+    State: "state__state_name",
     isActiveFilter: false,
 
-    label: "STATE NAME",
+    label: "State",
     name: "state__state_name",
-    placeholder: "STATE NAME",
+    placeholder: "State ",
     type: "select",
   },
 
   {
-    "BANK ADDRESS": "bank_address",
+    " Bank Address": "bank_address",
     isActiveFilter: false,
 
-    label: "BANK ADDRESS",
+    label: " Bank Address",
     name: "bank_address",
-    placeholder: "BANK ADDRESS",
+    placeholder: " Bank Address",
     type: "text",
   },
 
@@ -64,39 +64,39 @@ const filterFields = [
 const addEditFormFields = [
   {
     name: "bank_name",
-    label: "BANK NAME",
-    placeholder: "BANK NAME",
+    label: "Bank Name",
+    placeholder: "Bank Name",
     type: "text",
   },
-  {
-    name: "region",
-    label: "REGION NAME",
-    placeholder: "REGION NAME",
-    type: "select",
-  },
-  {
-    name: "state",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
-    type: "select",
-  },
-  {
-    name: "bank_address",
-    label: "BANK ADDRESS",
-    placeholder: "BANK ADDRESS",
-    type: "text",
-  },
-  {
-    label: "ACTIVE/DeActive",
-    name: "active",
-    type: "switch",
-  },
+  // {
+  //   name: "region",
+  //   label: "Region ",
+  //   placeholder: "Region ",
+  //   type: "select",
+  // },
+  // {
+  //   name: "state",
+  //   label: "State NAME",
+  //   placeholder: "State NAME",
+  //   type: "select",
+  // },
+  // {
+  //   name: "bank_address",
+  //   label: " Bank Address",
+  //   placeholder: " Bank Address",
+  //   type: "text",
+  // },
+  // {
+  //   label: "ACTIVE/DeActive",
+  //   name: "active",
+  //   type: "switch",
+  // },
 ];
 
 const schema = yup.object().shape({
   bank_name: yup.string().required("bank name is required"),
-  region: yup.string().required("region name is required"), 
-  state: yup.string().required("state name  is required"),
+  region: yup.string().required("region is required"),
+  state: yup.string().required("state is required"),
   bank_address: yup.string().required("bank address is required"),
   active: yup.string(),
 });
