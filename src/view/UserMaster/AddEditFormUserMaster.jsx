@@ -33,13 +33,20 @@ function AddEditFormUserMaster() {
       addData(data);
     }
   };
+  // for clear data in form
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
+  };
 
   const [getUserMaster] = useGetUserMasterMutation();
   const [addUserMaster, { isLoading: addUserMasterApiIsLoading }] =
     useAddUserMasterMutation();
   const [updateUserMaster, { isLoading: updateUserMasterApiIsLoading }] =
     useUpdateUserMasterMutation();
- 
+
   const addData = async (data) => {
     try {
       const response = await addUserMaster(data).unwrap();
@@ -101,7 +108,7 @@ function AddEditFormUserMaster() {
         first_name: details.first_name,
         phone: details.phone,
         user_role: details.user_role,
-        last_login: details.last_login,
+        // last_login: details.last_login,
         active: details.active,
       };
       console.log("details", details);
@@ -114,29 +121,52 @@ function AddEditFormUserMaster() {
     }
   }, [details]);
   return (
+    // <Box bg={"white"}>
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item, i) => (
-              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  {" "}
-                  <Text textAlign="right" w="250px">
-                    {item.label}
-                  </Text>{" "}
-                  {generateFormField({
-                    ...item,
-                    label: "",
-                    // options: item.type === "select" && commodityTypeMaster,
-                    isChecked: details?.active,
-                    style: { mb: 2, mt: 2 },
-                  })}
-                </Box>
-              </MotionSlideUp>
-            ))}
-
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+            {addEditFormFieldsList &&
+              addEditFormFieldsList.map((item, i) => (
+                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                    {" "}
+                    <Text textAlign="right" w="200px">
+                      {item.label}
+                    </Text>{" "}
+                    {generateFormField({
+                      ...item,
+                      label: "",
+                      // options: item.type === "select" && commodityTypeMaster,
+                      isChecked: details?.active,
+                      style: { mb: 1, mt: 1 },
+                    })}
+                  </Box>
+                </MotionSlideUp>
+              ))}
+          </Box>
+          <Box
+            display="flex"
+            gap={2}
+            justifyContent="flex-end"
+            mt="10"
+            mr="6"
+            px="0"
+          >
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
+            </Button>
             <Button
               type="submit"
               //w="full"
@@ -156,6 +186,7 @@ function AddEditFormUserMaster() {
         </form>
       </FormProvider>
     </Box>
+    // </Box>
   );
 }
 

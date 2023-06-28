@@ -5,50 +5,50 @@ const filterFields = [
     "WAREHOUSE SUB TYPE": "warehouse_subtype",
     isActiveFilter: false,
 
-    label: "WAREHOUSE SUB TYPE",
+    label: "Warehouse Sub Type",
     name: "warehouse_subtype",
-    placeholder: "WAREHOUSE SUB TYPE",
+    placeholder: "Warehouse Sub Type",
     type: "text",
   },
   {
     DESCRIPTION: "description",
     isActiveFilter: false,
 
-    label: "DESCRIPTION",
+    label: "Description",
     name: "description",
-    placeholder: "DESCRIPTION",
+    placeholder: "Description",
     type: "text",
   },
   {
     "CREATION DATE": "creation_date",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "creation_date",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
 
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
-    name: "active",
-    placeholder: "Active/DeActive",
+    label: "Active",
+    name: "is_active",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -87,7 +87,7 @@ const addEditFormFields = [
 
   {
     label: "ACTIVE/DeActive",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -95,7 +95,7 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   warehouse_subtype: yup.string().required("warehouse sub type is required"),
   description: yup.string().required("description is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

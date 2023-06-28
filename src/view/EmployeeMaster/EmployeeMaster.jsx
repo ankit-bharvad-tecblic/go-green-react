@@ -224,19 +224,19 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "Contact Number",
     }),
-    columnHelper.accessor("region_id", {
+    columnHelper.accessor("region_id.id", {
       cell: (info) => info.getValue(),
       header: "Region ID",
     }),
-    columnHelper.accessor("state_id", {
+    columnHelper.accessor("state_id.id", {
       cell: (info) => info.getValue(),
       header: "State ID",
     }),
-    columnHelper.accessor("zone_id", {
+    columnHelper.accessor("zone_id.id", {
       cell: (info) => info.getValue(),
       header: "Zone ID",
     }),
-    columnHelper.accessor("district_id", {
+    columnHelper.accessor("district_id.id", {
       cell: (info) => info.getValue(),
       header: "District ID",
     }),
@@ -280,7 +280,7 @@ function EmployeeMaster() {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
+            // onChange={(e) => handleActiveDeActive(e, info)}
             isChecked={info.row.original.active}
             // id="active_row"
             // isReadOnly
@@ -340,7 +340,7 @@ function EmployeeMaster() {
     try {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
       const response = await getEmployeeMaster(query).unwrap();
-      console.log("Success:", response);
+      console.log("Success:", response.results);
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -362,7 +362,7 @@ function EmployeeMaster() {
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
-        data={data || []}
+        data={data}
         loading={getEmployeeMasterApiIsLoading}
       />
     </div>

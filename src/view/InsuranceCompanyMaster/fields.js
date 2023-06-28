@@ -5,32 +5,32 @@ const filterFields = [
     "company name": "insurance_company_name",
     isActiveFilter: false,
 
-    label: "company name",
+    label: "Company Name",
     name: "insurance_company_name",
-    placeholder: "company name",
+    placeholder: "Company Name",
     type: "text",
   },
   {
     ADDRESS: "insurance_company_address",
     isActiveFilter: false,
 
-    label: "ADDRESS",
+    label: "Address",
     name: "insurance_company_address",
-    placeholder: "ADDRESS",
+    placeholder: "Address",
     type: "text",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -44,14 +44,14 @@ const filterFields = [
 const addEditFormFields = [
   {
     name: "insurance_company_name",
-    label: "company name",
-    placeholder: "company name",
+    label: "Company Name",
+    placeholder: "Company Name",
     type: "text",
   },
   {
     name: "insurance_company_address",
-    label: "company address",
-    placeholder: "company address",
+    label: "Address",
+    placeholder: "Address",
     type: "text",
   },
   //   {
@@ -67,7 +67,7 @@ const addEditFormFields = [
   //     type: "number",
   //   },
   {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
     type: "switch",
   },

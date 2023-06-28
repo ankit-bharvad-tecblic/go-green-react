@@ -6,47 +6,47 @@ const filterFields = [
     "USER NAME": "email",
     isActiveFilter: false,
 
-    label: "USER NAME",
-    name: "email",
-    placeholder: "USER NAME",
+    label: "Email",
+    name: "mail",
+    placeholder: "Email",
     type: "text",
   },
   {
     "FULL NAME": "first_name",
     isActiveFilter: false,
 
-    label: "FULL NAME",
+    label: "Full Name",
     name: "first_name",
-    placeholder: "FULL NAME",
+    placeholder: "Full Name",
     type: "text",
   },
   {
     "CONTACT NO": "phone",
     isActiveFilter: false,
 
-    label: "CONTACT NO",
+    label: "Contact No",
     name: "phone",
-    placeholder: "CONTACT NO",
-    type: "number",
+    placeholder: "Contact No",
+    type: "text",
   },
   {
     ROLE: "user_role",
     isActiveFilter: false,
 
-    label: "ROLE",
+    label: "Role",
     name: "user_role",
-    placeholder: "ROLE",
-    type: "number",
-  },
-  {
-    "LAST NAME": "last_name",
-    isActiveFilter: false,
-
-    label: "LAST NAME",
-    name: "last_name",
-    placeholder: "LAST NAME",
+    placeholder: "Role",
     type: "text",
   },
+  // {
+  //   "LAST NAME": "last_name",
+  //   isActiveFilter: false,
+
+  //   label: "LAST NAME",
+  //   name: "last_name",
+  //   placeholder: "LAST NAME",
+  //   type: "text",
+  // },
   {
     PASSWORD: "password",
     isActiveFilter: false,
@@ -57,40 +57,40 @@ const filterFields = [
     type: "password",
   },
 
-  {
-    "LAST LOGIN": "last_login",
-    isActiveFilter: false,
+  // {
+  //   "LAST LOGIN": "last_login",
+  //   isActiveFilter: false,
 
-    label: "LAST LOGIN",
-    name: "last_login",
-    placeholder: "LAST LOGIN",
-    type: "date",
-  },
+  //   label: "LAST LOGIN",
+  //   name: "last_login",
+  //   placeholder: "LAST LOGIN",
+  //   type: "date",
+  // },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "updated_at",
     isActiveFilter: false,
 
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "updated_at",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
@@ -109,44 +109,44 @@ const filterFields = [
 const addEditFormFields = [
   {
     name: "email",
-    label: "USER EMAIL",
-    placeholder: "USER EMAIL",
+    label: " Email",
+    placeholder: "Email",
     type: "email",
   },
   {
     name: "first_name",
-    label: "FULL NAME ",
-    placeholder: "FULL NAME ",
+    label: "Full Name ",
+    placeholder: "Full Name",
     type: "text",
   },
   {
     name: "phone",
-    label: "CONTACT NO",
-    placeholder: "CONTACT NO",
+    label: "Contact Number",
+    placeholder: "Contact Number",
     type: "text",
   },
   {
     name: "user_role",
-    label: "ROLE",
-    placeholder: "ROLE",
-    type: "number",
-  },
-  {
-    name: "last_name",
-    label: "LAST NAME",
-    placeholder: "LAST NAME",
+    label: "Role",
+    placeholder: "Role",
     type: "text",
   },
+  // {
+  //   name: "last_name",
+  //   label: "LAST NAME",
+  //   placeholder: "LAST NAME",
+  //   type: "text",
+  // },
+
+  // {
+  //   name: "last_login",
+  //   label: "LAST LOGIN",
+  //   placeholder: "LAST LOGIN",
+  //   type: "date",
+  // },
 
   {
-    name: "last_login",
-    label: "LAST LOGIN",
-    placeholder: "LAST LOGIN",
-    type: "date",
-  },
-
-  {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
     type: "switch",
   },
@@ -160,9 +160,9 @@ const schema = yup.object().shape({
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
   user_role: yup.string().required("role is required"),
-  last_name: yup.string().required("last name is required"),
+  // last_name: yup.string().required("last name is required"),
   password: yup.string().required("password is required"),
-  last_login: yup.date().required("last login is required"),
+  // last_login: yup.date().required("last login is required"),
   active: yup.string(),
 });
 

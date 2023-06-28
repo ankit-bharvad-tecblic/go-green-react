@@ -6,104 +6,104 @@ const filterFields = [
     NAME: "security_guard_name",
     isActiveFilter: false,
 
-    label: "NAME",
+    label: "Name",
     name: "security_guard_name",
-    placeholder: "NAME",
+    placeholder: "Name",
     type: "text",
   },
   {
     "REGION NAME": "region__region_name",
     isActiveFilter: false,
 
-    label: "REGION NAME",
+    label: "Region",
     name: "region__region_name",
-    placeholder: "REGION NAME",
+    placeholder: "Region",
     type: "text",
   },
   {
     "STATE NAME": "state__state_name",
     isActiveFilter: false,
 
-    label: "STATE NAME",
+    label: "State",
     name: "state__state_name",
-    placeholder: "STATE NAME",
+    placeholder: "State",
     type: "text",
   },
   {
     "DISTRICT NAME": "district__district_name",
     isActiveFilter: false,
 
-    label: "DISTRICT NAME",
+    label: "District",
     name: "district__district_name",
-    placeholder: "DISTRICT NAME",
+    placeholder: "District",
     type: "text",
   },
   {
     ADDRESS: "address_of_security_guard",
     isActiveFilter: false,
 
-    label: "ADDRESS",
+    label: "Address",
     name: "security_agency_id__security_agency_name",
-    placeholder: "ADDRESS",
+    placeholder: "Address",
     type: "text",
   },
   {
     AADHAR: "aadhar_of_security_guard",
     isActiveFilter: false,
 
-    label: "AADHAR",
+    label: "Aadhar",
     name: "aadhar_of_security_guard",
-    placeholder: "AADHAR",
+    placeholder: "Aadhar",
     type: "text",
   },
   {
     "BIRTH DATE": "dob_of_security_guard",
     isActiveFilter: false,
 
-    label: "BIRTH DATE",
+    label: "Birth Date",
     name: "dob_of_security_guard",
-    placeholder: "BIRTH DATE",
+    placeholder: "Birth Date",
     type: "text",
   },
   {
     "CONTACT NUMBER": "contact_number",
     isActiveFilter: false,
 
-    label: "CONTACT NUMBER",
+    label: "Contact Number",
     name: "contact_number",
-    placeholder: "CONTACT NUMBER",
+    placeholder: "Contact Number",
     type: "number",
   },
   {
     "ALTERNATE CONTACT NUMBER": "alternate_contact_number",
     isActiveFilter: false,
 
-    label: "ALTERNATE CONTACT NUMBER",
+    label: "Alternative Contact Number",
     name: "alternate_contact_number",
-    placeholder: "ALTERNATE CONTACT NUMBER",
+    placeholder: "Alternative Contact Number",
     type: "number",
   },
   {
     "EXPERIENCE AS SECURITY GUARD": "experience_as_security_guard",
     isActiveFilter: false,
 
-    label: "EXPERIENCE AS SECURITY GUARD",
+    label: "Experience As Security Guard",
     name: "experience_as_security_guard",
-    placeholder: "EXPERIENCE AS SECURITY GUARD",
+    placeholder: "Experience As Security Guard",
     type: "number",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
-    name: "active",
-    placeholder: "Active/DeActive",
+    label: "Active",
+    name: "is_active",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -127,32 +127,32 @@ const addEditFormFields = [
   //   },
   {
     name: "security_guard_name",
-    label: "NAME",
-    placeholder: "NAME",
+    label: "Name",
+    placeholder: "Name",
     type: "text",
   },
   {
     name: "region__region_name",
-    label: "REGION NAME",
-    placeholder: "REGION NAME",
+    label: "Region",
+    placeholder: "Region",
     type: "text",
   },
   {
     name: "state__state_name",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
+    label: "State",
+    placeholder: "State",
     type: "text",
   },
   {
     name: "district__district_name",
-    label: "DISTRICT NAME",
-    placeholder: "DISTRICT NAME",
+    label: "District",
+    placeholder: "District",
     type: "text",
   },
   {
     name: "address_of_security_guard",
-    label: "ADDRESS",
-    placeholder: "ADDRESS",
+    label: "Address",
+    placeholder: "Address",
     type: "text",
   },
   //   {
@@ -163,31 +163,31 @@ const addEditFormFields = [
   //   },
   {
     name: "dob_of_security_guard",
-    label: "BIRTH DATE",
-    placeholder: "BIRTH DATE",
+    label: "Birth Date",
+    placeholder: "Birth Date",
     type: "date",
   },
   {
     name: "contact_number",
-    label: "CONTACT NUMBER",
-    placeholder: "CONTACT NUMBER",
+    label: "Contact Number",
+    placeholder: "Contact Number",
     type: "text",
   },
   {
     name: "alternate_contact_number",
-    label: "ALTERNATE CONTACT NUMBER",
-    placeholder: "ALTERNATE CONTACT NUMBER",
+    label: "Alternate Contact",
+    placeholder: "Alternate Contact",
     type: "text",
   },
   {
     name: "experience_as_security_guard",
-    label: "EXPERIENCE AS SECURITY GUARD",
-    placeholder: "EXPERIENCE AS SECURITY GUARD",
+    label: "Experience As Security Guard",
+    placeholder: "Experience As Security Guard",
     type: "number",
   },
   {
-    label: "ACTIVE/DeActive",
-    name: "active",
+    label: "Active",
+    name: "is_active",
     type: "switch",
   },
   // {
@@ -221,7 +221,7 @@ const schema = yup.object().shape({
     .string()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-  active: yup.string(),
+  is_active: yup.string(),
   commodity_type: yup.string().required("Commodity type is required"),
 });
 

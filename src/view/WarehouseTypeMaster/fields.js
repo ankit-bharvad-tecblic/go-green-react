@@ -5,45 +5,45 @@ const filterFields = [
     "WAREHOUSE TYPE NAME": "warehouse_type_name",
     isActiveFilter: false,
 
-    label: "WAREHOUSE TYPE NAME",
+    label: "Warehouse Type",
     name: "warehouse_type_name",
-    placeholder: "WAREHOUSE TYPE NAME",
+    placeholder: "Warehouse Type",
     type: "text",
   },
   {
     DESCRIPTION: "description",
     isActiveFilter: false,
 
-    label: "DESCRIPTION",
+    label: "Description",
     name: "description",
-    placeholder: "DESCRIPTION",
+    placeholder: "Description",
     type: "text",
   },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
 
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
-    name: "active",
-    placeholder: "Active/DeActive",
+    label: "Active",
+    name: "is_active",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
@@ -80,14 +80,14 @@ const addEditFormFields = [
   },
   {
     name: "description",
-    label: "description",
-    placeholder: "description",
+    label: "Description",
+    placeholder: "Description",
     type: "text",
   },
 
   {
-    label: "ACTIVE/DeActive",
-    name: "active",
+    label: "Active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -95,7 +95,7 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   warehouse_type_name: yup.string().required("WareHouse type name is required"),
   description: yup.string().required("description is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };
