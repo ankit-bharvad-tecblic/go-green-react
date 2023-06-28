@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 function BankBranchMaster() {
   const dispatch = useDispatch();
@@ -88,31 +88,31 @@ function BankBranchMaster() {
     }),
     columnHelper.accessor("branch_name", {
       cell: (info) => info.getValue(),
-      header: "BRANCH NAME",
+      header: "Branch Name",
     }),
     columnHelper.accessor("bank.bank_name", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "Bank",
     }),
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: "Region ",
     }),
     columnHelper.accessor("state.state_name", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "State ",
     }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
-      header: "DISTRICT NAME",
+      header: "Discrict ",
     }),
     columnHelper.accessor("branch_address", {
       cell: (info) => info.getValue(),
-      header: "ADDRESS",
+      header: "Address",
     }),
     columnHelper.accessor("pincode", {
       cell: (info) => info.getValue(),
-      header: "PINCODE",
+      header: "Pincode",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",

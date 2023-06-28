@@ -83,7 +83,7 @@ function BankMaster() {
   };
 
   const addForm = () => {
-    navigate(`/bank-master/add/bank-master/`); 
+    navigate(`/bank-master/add/bank-master/`);
   };
 
   const editForm = (info) => {
@@ -96,23 +96,23 @@ function BankMaster() {
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
-      header: "SR. NO",
+      header: "Sr. No",
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "Bank Name",
     }),
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: "Region ",
     }),
     columnHelper.accessor("state.state_name", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "State",
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "Bank Address",
     }),
     columnHelper.accessor("active", {
       // header: "ACTIVE",
@@ -161,7 +161,7 @@ function BankMaster() {
 
   let paramString = "";
 
-  const getData = async () => { 
+  const getData = async () => {
     //params filter
     //filter.filter.length || filter.search
     // if (filterQuery) {
@@ -183,7 +183,7 @@ function BankMaster() {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
       const response = await getBankMaster(query).unwrap();
       console.log("Success:", response);
-      setData(response?.results || []); 
+      setData(response?.results || []);
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),

@@ -186,7 +186,7 @@ const AddEditFormArea = () => {
                   }}
                 />
               </Box>
-            </MotionSlideUp>{" "}
+            </MotionSlideUp>
             {/* <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
               <Box gap="10" display={{ base: "flex" }} alignItems="center">
                 <Text textAlign="right" w="250px">
