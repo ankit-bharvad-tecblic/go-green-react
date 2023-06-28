@@ -5,50 +5,50 @@ const filterFields = [
     "PAGE NAME": "page_name",
     isActiveFilter: false,
 
-    label: "PAGE NAME",
+    label: "Page Name",
     name: "page_name",
-    placeholder: "PAGE NAME",
+    placeholder: "Page Name",
     type: "text",
   },
   {
     DESCRIPTION: "description",
     isActiveFilter: false,
 
-    label: "DESCRIPTION",
+    label: "Description",
     name: "description",
-    placeholder: "DESCRIPTION",
+    placeholder: "Description",
     type: "text",
   },
   {
     "CREATION DATE": "creation_date",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "creation_date",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
 
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -68,19 +68,19 @@ const addEditFormFields = [
   //   },
   {
     name: "page_name",
-    label: "PAGE NAME",
-    placeholder: "PAGE NAME",
+    label: "Page Name",
+    placeholder: "Page Name",
     type: "text",
   },
   {
     name: "description",
-    label: "description",
-    placeholder: "description",
+    label: "Description",
+    placeholder: "Description",
     type: "text",
   },
 
   {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
     type: "switch",
   },
@@ -91,6 +91,5 @@ const schema = yup.object().shape({
   description: yup.string().required("description  is required"),
 
   active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
 });
 export { filterFields, addEditFormFields, schema };

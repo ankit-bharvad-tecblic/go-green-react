@@ -145,7 +145,7 @@ const DistrictMaster = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
+            // onChange={(e) => handleActiveDeActive(e, info)}
             isChecked={info.row.original.active}
             // id="active_row"
             // isReadOnly

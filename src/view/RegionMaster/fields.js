@@ -4,38 +4,38 @@ const filterFields = [
   {
     "REGION NAME": "region_name",
     isActiveFilter: false,
-    label: "REGION NAME",
+    label: "Region",
     name: "region_name",
-    placeholder: "REGION NAME",
+    placeholder: "Region",
     type: "text",
   },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -48,20 +48,20 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    label: "REGION NAME",
+    label: "Region Name",
     name: "region_name",
-    placeholder: "REGION NAME",
+    placeholder: "Region Name",
     type: "text",
   },
   {
-    label: "ACTIVE/DeActive",
-    name: "active",
+    label: "Active",
+    name: "is_active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
-  active: yup.string(),
+  is_active: yup.string(),
   region_name: yup.string().required("Region name is required"),
 });
 

@@ -2,80 +2,80 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "BRANCH NAME": "branch_name",
+    "Branch Name": "branch_name",
     isActiveFilter: false,
 
-    label: "BRANCH NAME",
+    label: "Branch Name",
     name: "branch_name",
-    placeholder: "BRANCH NAME",
+    placeholder: "Branch Name",
     type: "text",
   },
   {
-    "BANK NAME": "bank.bank_name",
+    "Bank ": "bank.bank_name",
     isActiveFilter: false,
 
-    label: "BANK NAME",
+    label: "Bank",
     name: "bank__bank_name",
-    placeholder: "BANK NAME",
+    placeholder: "Bank ",
     type: "text",
   },
   {
-    "REGION NAME": "region.region_name",
+    Region: "region.region_name",
     isActiveFilter: false,
 
-    label: "REGION NAME",
+    label: "Region ",
     name: "region.region_name",
-    placeholder: "REGION NAME",
+    placeholder: "Region ",
     type: "text",
   },
   {
-    "STATE NAME": "state.state_name",
+    " State": "state.state_name",
     isActiveFilter: false,
 
-    label: "STATE NAME",
+    label: "State ",
     name: "state__state_name",
-    placeholder: "STATE NAME",
+    placeholder: "State ",
     type: "text",
   },
   {
-    "DISTRICT NAME": "district.district_name",
+    "Discrict ": "district.district_name",
     isActiveFilter: false,
 
-    label: "DISTRICT NAME",
+    label: "Discrict ",
     name: "district.district_name",
-    placeholder: "DISTRICT NAME",
+    placeholder: "Discrict ",
     type: "text",
   },
   {
-    ADDRESS: "branch_address",
+    Address: "branch_address",
     isActiveFilter: false,
 
-    label: "ADDRESS",
+    label: "Address",
     name: "branch_address",
-    placeholder: "ADDRESS",
+    placeholder: "Address",
     type: "text",
   },
   {
-    PINCODE: "pincode",
+    Pincode: "pincode",
     isActiveFilter: false,
 
-    label: "PINCODE ",
+    label: "Pincode ",
     name: "pincode",
-    placeholder: "PINCODE ",
+    placeholder: "Pincode ",
     type: "number",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -89,56 +89,56 @@ const filterFields = [
 const addEditFormFields = [
   {
     name: "branch_name",
-    label: "BRANCH NAME",
-    placeholder: "BRANCH NAME",
+    label: "Branch Name",
+    placeholder: "Branch Name",
     type: "text",
   },
-  {
-    name: "bank",
-    label: "BANK NAME",
-    placeholder: "BANK NAME",
-    type: "text",
-  },
-  {
-    name: "region",
-    label: "REGION NAME",
-    placeholder: "REGION NAME",
-    type: "text",
-  },
-  {
-    name: "state",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
-    type: "text",
-  },
-  {
-    name: "district",
-    label: "DISTRICT NAME",
-    placeholder: "DISTRICT NAME",
-    type: "text",
-  },
-  {
-    name: "branch_address",
-    label: "BRANCH ADDRESS",
-    placeholder: "BRANCH ADDRESS",
-    type: "text",
-  },
-  {
-    name: "pincode",
-    label: "PINCODE",
-    placeholder: "PINCODE",
-    type: "number",
-  },
-  {
-    label: "ACTIVE/DeActive",
-    name: "active",
-    type: "switch",
-  },
+  // {
+  //   name: "bank",
+  //   label: "Bank ",
+  //   placeholder: "Bank ",
+  //   type: "text",
+  // },
+  // {
+  //   name: "region",
+  //   label: "Region ",
+  //   placeholder: " Region",
+  //   type: "text",
+  // },
+  // {
+  //   name: "state",
+  //   label: "State ",
+  //   placeholder: " State",
+  //   type: "text",
+  // },
+  // {
+  //   name: "district",
+  //   label: "District",
+  //   placeholder: "District",
+  //   type: "text",
+  // },
+  // {
+  //   name: "branch_address",
+  //   label: "Address",
+  //   placeholder: "Address",
+  //   type: "text",
+  // },
+  // {
+  //   name: "pincode",
+  //   label: "Pincode",
+  //   placeholder: "Pincode",
+  //   type: "number",
+  // },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
 ];
 
 const schema = yup.object().shape({
   branch_name: yup.string().required("Branch name is required"),
-  bank: yup.string().required("Bank name is required"),
+  bank: yup.string().required("Bank  is required"),
   region: yup.string().required("Region name size is required"),
   state: yup.string().required("State name is required"),
   district: yup.string().required("District name is required"),

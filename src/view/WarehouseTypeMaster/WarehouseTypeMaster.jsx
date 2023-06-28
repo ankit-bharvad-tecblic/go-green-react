@@ -117,7 +117,7 @@ const WarehouseTypeMaster = () => {
       header: "Last Updated Date ",
     }),
 
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -125,8 +125,8 @@ const WarehouseTypeMaster = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            // onChange={(e) => handleActiveDeActive(e, info)}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(

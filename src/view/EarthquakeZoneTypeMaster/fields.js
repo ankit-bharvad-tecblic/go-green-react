@@ -5,41 +5,41 @@ const filterFields = [
     "EARTH QUACK ZONE TYPE": "earthquake_zone_type",
     isActiveFilter: false,
 
-    label: "EARTH QUACK ZONE TYPE",
+    label: "Earthquake Zone Type",
     name: "earthquake_zone_type",
-    placeholder: "EARTH QUACK ZONE TYPE",
+    placeholder: "Earthquake Zone Type",
     type: "text",
   },
   {
     "CREATION DATE": "creation_date",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "creation_date",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
 
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -59,13 +59,13 @@ const addEditFormFields = [
   //   },
   {
     name: "earthquake_zone_type",
-    label: "EARTH QUACK ZONE TYPE",
-    placeholder: "EARTH QUACK ZONE TYPE",
+    label: "Earthquake Zone Type",
+    placeholder: "Earthquake Zone Type",
     type: "text",
   },
 
   {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
     type: "switch",
   },

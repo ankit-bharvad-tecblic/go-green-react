@@ -17,6 +17,7 @@ import {
   useUpdateCommodityMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { MotionSlideUp } from "../../utils/animation";
 
 const AddEditFormCommodityMaster = () => {
   const navigate = useNavigate();
@@ -37,6 +38,12 @@ const AddEditFormCommodityMaster = () => {
     } else {
       addCommodityMasterData(data);
     }
+  };
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
   };
 
   const [
@@ -131,31 +138,56 @@ const AddEditFormCommodityMaster = () => {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item) => (
-              <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                {" "}
-                <Text textAlign="right" w="250px">
-                  {item.label}
-                </Text>{" "}
-                {generateFormField({
-                  ...item,
-                  label: "",
-                  selectedValue:
-                    item.type === "select" &&
-                    item?.options?.find(
-                      (opt) =>
-                        opt.label === details?.commodity_type?.commodity_type
-                    ),
-                  selectType: "value",
-                  isChecked: details?.active,
-                  isClearable: false,
-                  style: { mb: 2, mt: 2 },
-                })}
-              </Box>
-            ))}
-
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+            {addEditFormFieldsList &&
+              addEditFormFieldsList.map((item, i) => (
+                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                    {" "}
+                    <Text textAlign="right" w="200px">
+                      {item.label}
+                    </Text>{" "}
+                    {generateFormField({
+                      ...item,
+                      label: "",
+                      selectedValue:
+                        item.type === "select" &&
+                        item?.options?.find(
+                          (opt) =>
+                            opt.label ===
+                            details?.commodity_type?.commodity_type
+                        ),
+                      selectType: "value",
+                      isChecked: details?.active,
+                      isClearable: false,
+                      style: { mb: 1, mt: 1 },
+                    })}
+                  </Box>
+                </MotionSlideUp>
+              ))}
+          </Box>
+          <Box
+            display="flex"
+            gap={2}
+            justifyContent="flex-end"
+            mt="10"
+            mr={6}
+            px="0"
+          >
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
+            </Button>
             <Button
               type="submit"
               //w="full"
