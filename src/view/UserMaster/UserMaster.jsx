@@ -114,11 +114,11 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "ROLE",
     }),
-    columnHelper.accessor("last_name", {
-      cell: (info) => info.getValue(),
-      header: "LAST NAME",
-    }),
-  
+    // columnHelper.accessor("last_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "LAST NAME",
+    // }),
+
     columnHelper.accessor("last_login", {
       cell: (info) => info.getValue(),
       header: "LAST LOGIN",
@@ -131,7 +131,7 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "LAST UPDATED DATE",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -139,8 +139,8 @@ const UserMaster = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            // onChange={(e) => handleActiveDeActive(e, info)}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(

@@ -41,6 +41,12 @@ const AddEditFormCommodityGrade = () => {
       addData(data);
     }
   };
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
+  };
 
   const [getCommodityGrade, { isLoading: getCommodityGradeApiIsLoading }] =
     useGetCommodityGradeMutation();
@@ -129,42 +135,56 @@ const AddEditFormCommodityGrade = () => {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item, i) => (
-              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                <Box
-                  w="full"
-                  gap="10"
-                  display={{ base: "flex" }}
-                  alignItems="center"
-                >
-                  {" "}
-                  <Text textAlign="right" w="210px">
-                    {item.label}
-                  </Text>{" "}
-                  {generateFormField({
-                    ...item,
-                    label: "",
-                    isChecked: details?.active,
-                    style: {
-                      mb: 2,
-                      mt: 2,
-                      w: 300,
-                    },
+          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+            {addEditFormFieldsList &&
+              addEditFormFieldsList.map((item, i) => (
+                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                  <Box
+                    w="full"
+                    gap="10"
+                    display={{ base: "flex" }}
+                    alignItems="center"
+                  >
+                    {" "}
+                    <Text textAlign="right" w="200px">
+                      {item.label}
+                    </Text>{" "}
+                    {generateFormField({
+                      ...item,
+                      label: "",
+                      isChecked: details?.active,
+                      style: {
+                        mb: 1,
+                        mt: 1,
+                      },
 
-                    selectedValue:
-                      item.type === "select" &&
-                      item?.options?.find(
-                        (opt) => opt.label === details?.state.state_name
-                      ),
-                    selectType: "value",
-                    isClearable: false,
-                  })}
-                </Box>
-              </MotionSlideUp>
-            ))}
-
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+                      selectedValue:
+                        item.type === "select" &&
+                        item?.options?.find(
+                          (opt) => opt.label === details?.state.state_name
+                        ),
+                      selectType: "value",
+                      isClearable: false,
+                    })}
+                  </Box>
+                </MotionSlideUp>
+              ))}
+          </Box>
+          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
+            </Button>
             <Button
               type="submit"
               //w="full"

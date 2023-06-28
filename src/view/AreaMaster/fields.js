@@ -4,25 +4,25 @@ const filterFields = [
   {
     "AREA NAME": "area_name",
     isActiveFilter: false,
-    label: "AREA NAME",
+    label: "Area",
     name: "area_name",
-    placeholder: "AREA NAME",
+    placeholder: "Area",
     type: "text",
   },
   {
     "DISTRICT NAME": "district__district_name",
     isActiveFilter: false,
-    label: "DISTRICT NAME",
+    label: "District",
     name: "district__district_name",
-    placeholder: "DISTRICT NAME",
+    placeholder: "District",
     type: "text",
   },
   {
     "EARTHQUAKE ZONE TYPE ID": "earthquake_zone_type_id",
     isActiveFilter: false,
-    label: "EARTHQUAKE ZONE TYPE ID",
+    label: "Earthquake Zone Type Id",
     name: "earthquake_zone_type_id",
-    placeholder: "EARTHQUAKE ZONE TYPE ID",
+    placeholder: "Earthquake Zone Type Id",
     type: "number",
   },
   {
@@ -47,25 +47,25 @@ const filterFields = [
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
@@ -83,16 +83,16 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    label: "AREA NAME",
+    label: "Area",
     name: "area_name",
-    placeholder: "AREA NAME",
+    placeholder: "Area name",
     type: "text",
   },
 
   {
-    label: "EARTHQUAKE ZONE TYPE ID",
+    label: "Earthquake Zone Type Id",
     name: "earthquake_zone_type_id",
-    placeholder: "EARTHQUAKE ZONE TYPE ID",
+    placeholder: "Earthquake Zone Type Id",
     type: "number",
   },
   // {
@@ -102,12 +102,12 @@ const addEditFormFields = [
   //   type: "select",
   // },
   {
-    label: "IS BLOCK",
+    label: "Is Block",
     name: "is_block",
     type: "switch",
   },
   {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "is_active",
     type: "switch",
   },

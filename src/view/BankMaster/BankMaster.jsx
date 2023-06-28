@@ -83,7 +83,7 @@ function BankMaster() {
   };
 
   const addForm = () => {
-    navigate(`/bank-master/add/bank-master/`); 
+    navigate(`/bank-master/add/bank-master/`);
   };
 
   const editForm = (info) => {
@@ -114,7 +114,7 @@ function BankMaster() {
       cell: (info) => info.getValue(),
       header: "BANK ADDRESS",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -122,13 +122,12 @@ function BankMaster() {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            // onChange={(e) => handleActiveDeActive(e, info)}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
             //   cell.column.columnDef.cell,
-            //   cell.getContext()
             // )}
           />
         </Box>
@@ -161,7 +160,7 @@ function BankMaster() {
 
   let paramString = "";
 
-  const getData = async () => { 
+  const getData = async () => {
     //params filter
     //filter.filter.length || filter.search
     // if (filterQuery) {
@@ -183,7 +182,7 @@ function BankMaster() {
       const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
       const response = await getBankMaster(query).unwrap();
       console.log("Success:", response);
-      setData(response?.results || []); 
+      setData(response?.results || []);
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
