@@ -26,7 +26,7 @@ const PageMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25,
+    limit: 25, totalFilter:0 , total:0
   });
   const navigate = useNavigate();
   const [
@@ -189,6 +189,8 @@ const PageMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
+total: response?.total_data,
+totalFilter: response?.total
       }));
     } catch (error) {
       console.error("Error:", error);
