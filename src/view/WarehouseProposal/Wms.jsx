@@ -54,7 +54,7 @@ const commonStyle = {
 };
 
 const formFieldsName = {
-  pwh_warehouse_details: {
+  wms_warehouse_details: {
     warehouse_name: "warehouse_name",
     region_name: "region_name",
     state_name: "state_name",
@@ -66,8 +66,8 @@ const formFieldsName = {
     no_of_chamber: "no_of_chamber",
     warehouse_in_factory_premises: "warehouse_in_factory_premises",
     standard_capacity: "standard_capacity",
-    standard_warehouse_capacity: "standard_warehouse_capacity",
-    standard_utilizes_capacity: "standard_utilizes_capacity",
+    current_warehouse_capacity: "current_warehouse_capacity",
+    current_utilizes_capacity: "current_utilizes_capacity",
     lock_in_period: "lock_in_period",
     lock_in_period_month: "lock_in_period_month",
     covered_area: "covered_area",
@@ -76,21 +76,19 @@ const formFieldsName = {
     security_guard_for_day_shift: "security_guard_for_day_shift",
     security_guard_for_night_shift: "security_guard_for_night_shift",
   },
-  pwh_commodity_details: {
+  wms_commodity_details: {
     expected_commodity_name: "expected_commodity_name",
     commodity_inward_type: "commodity_inward_type",
     pre_stack_commodity: "pre_stack_commodity",
     pre_stack_commodity_quantity: "pre_stack_commodity_quantity",
     funding_required: "funding_required",
   },
-  pwh_commercial_details: {
+  wms_commercial_details: {
     minimum_rent: "minimum_rent",
     maximum_rent: "maximum_rent",
     avg_rent: "avg_rent",
     rent: "rent",
     total_rent_payable_months: "total_rent_payable_month",
-
-    go_green_revenue_sharing_ratio: "go_green_revenue_sharing_ratio",
     security_deposit_amount: "security_deposit_amount",
     advance_rent: "advance_rent",
     advance_rent_month: "advance_rent_month",
@@ -99,11 +97,10 @@ const formFieldsName = {
     agreement_period: "agreement_period",
     expiry_date: "expiry_date",
     notice_period: "notice_period",
-    storage_charges_according_to_commodity:
-      "storage_charges_according_to_commodity",
+    wms_charges_according_to_commodity: "wms_charges_according_to_commodity",
     your_project: "your_project",
   },
-  pwh_clients_details: {
+  wms_clients_details: {
     intention_letter: "intention_letter",
     remarks: "remarks",
   },
@@ -123,12 +120,12 @@ const schema = yup.object().shape({
     .string()
     .required("Warehouse in factory premises is required"),
   standard_capacity: yup.string().required("Standard capacity is required"),
-  standard_warehouse_capacity: yup
+  current_warehouse_capacity: yup
     .string()
-    .required("Standard warehouse capacity is required"),
-  standard_utilizes_capacity: yup
+    .required("Current warehouse capacity is required"),
+  current_utilizes_capacity: yup
     .string()
-    .required("Standard utilized capacity is required"),
+    .required("Current utilized capacity is required"),
   lock_in_period: yup.string().required("Lock in period is required"),
   lock_in_period_month: yup
     .string()
@@ -164,9 +161,6 @@ const schema = yup.object().shape({
   total_rent_payable_month: yup
     .string()
     .required("Total rent payable month is required"),
-  go_green_revenue_sharing_ratio: yup
-    .string()
-    .required("Go green revenue sharing ratio is required"),
   security_deposit_amount: yup
     .string()
     .required("Security deposit amount is required"),
@@ -177,15 +171,15 @@ const schema = yup.object().shape({
   agreement_period: yup.string().required("Agreement period is required"),
   expiry_date: yup.string().required("Expiry date is required"),
   notice_period: yup.string().required("Notice period is required"),
-  storage_charges_according_to_commodity: yup
+  wms_charges_according_to_commodity: yup
     .string()
-    .required("storage charges according to commodity is required"),
+    .required("WMS Charges according to commodity is required"),
   your_project: yup.string().required("Your project is required"),
   intention_letter: yup.string().required("Intention letter is required"),
   remarks: yup.string().required("remarks is required"),
 });
 
-const Pwh = () => {
+const Wms = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
   });
@@ -313,14 +307,14 @@ const Pwh = () => {
   return (
     <Box bg="gray.50" p="0">
       {/* <Box p="2">
-        <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
-      </Box> */}
+          <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
+        </Box> */}
 
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box mt="10">
             <Accordion allowMultiple>
-              {/* ================ PWH WAREHOUSE DETAILS ================= */}
+              {/* ================ WMS WAREHOUSE DETAILS ================= */}
               <MotionSlideUp duration={0.2 * 0.5} delay={0.1 * 0.5}>
                 <AccordionItem>
                   {({ isExpanded }) => (
@@ -333,7 +327,7 @@ const Pwh = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            PWH WAREHOUSE DETAILS
+                            WMS WAREHOUSE DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -375,7 +369,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .warehouse_name
                                     }
                                     placeholder="Warehouse Name"
@@ -402,7 +396,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .region_name
                                     }
                                     label=""
@@ -438,7 +432,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .state_name
                                     }
                                     label=""
@@ -474,7 +468,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .zone_name
                                     }
                                     label=""
@@ -510,7 +504,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .district_name
                                     }
                                     label=""
@@ -547,7 +541,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .area_name
                                     }
                                     label=""
@@ -586,7 +580,7 @@ const Pwh = () => {
                                   {" "}
                                   <CustomTextArea
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .warehouse_address
                                     }
                                     placeholder="Warehouse Address"
@@ -613,7 +607,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .pin_code
                                     }
                                     placeholder="Pin Code"
@@ -643,7 +637,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .no_of_chamber
                                     }
                                     label=""
@@ -720,7 +714,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .standard_capacity
                                     }
                                     placeholder=" Standard Capacity (in MT)"
@@ -731,7 +725,7 @@ const Pwh = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* --------------  standard_warehouse_capacity (in MT)-------------- */}
+                            {/* --------------  current_warehouse_capacity (in MT)-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -743,17 +737,17 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <Text textAlign="right">
-                                    Standard Warehouse Capacity (in MT)
+                                    Current Warehouse Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
-                                        .standard_warehouse_capacity
+                                      formFieldsName.wms_warehouse_details
+                                        .current_warehouse_capacity
                                     }
-                                    placeholder=" Standard Warehouse Capacity (in MT)"
+                                    placeholder="Current Warehouse Capacity (in MT)"
                                     type="text"
                                     label=""
                                     style={{ w: commonStyle.w }}
@@ -761,7 +755,7 @@ const Pwh = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* --------------  standard_Utilizes_capacity (in MT)-------------- */}
+                            {/* --------------  current_Utilizes_capacity (in MT)-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -773,17 +767,17 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <Text textAlign="right">
-                                    Standard Utilizes Capacity (in MT)
+                                    Current Utilizes Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
-                                        .standard_utilizes_capacity
+                                      formFieldsName.wms_warehouse_details
+                                        .current_utilizes_capacity
                                     }
-                                    placeholder="Standard Utilizes Capacity (in MT)"
+                                    placeholder="Current Utilizes Capacity (in MT)"
                                     type="text"
                                     label=""
                                     style={{ w: commonStyle.w }}
@@ -842,7 +836,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .lock_in_period_month
                                     }
                                     placeholder=" Lock In Period Month"
@@ -872,7 +866,7 @@ const Pwh = () => {
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_warehouse_details
+                                      formFieldsName.wms_warehouse_details
                                         .covered_area
                                     }
                                     placeholder="Covered Area (In Sq.Ft)"
@@ -905,7 +899,7 @@ const Pwh = () => {
                                   >
                                     <ReactCustomSelect
                                       name={
-                                        formFieldsName.pwh_warehouse_details
+                                        formFieldsName.wms_warehouse_details
                                           .supervisor_for_day_shift
                                       }
                                       label=""
@@ -963,7 +957,7 @@ const Pwh = () => {
                                   >
                                     <ReactCustomSelect
                                       name={
-                                        formFieldsName.pwh_warehouse_details
+                                        formFieldsName.wms_warehouse_details
                                           .supervisor_for_night_shift
                                       }
                                       label=""
@@ -1021,7 +1015,7 @@ const Pwh = () => {
                                   >
                                     <ReactCustomSelect
                                       name={
-                                        formFieldsName.pwh_warehouse_details
+                                        formFieldsName.wms_warehouse_details
                                           .security_guard_for_day_shift
                                       }
                                       label=""
@@ -1079,7 +1073,7 @@ const Pwh = () => {
                                   >
                                     <ReactCustomSelect
                                       name={
-                                        formFieldsName.pwh_warehouse_details
+                                        formFieldsName.wms_warehouse_details
                                           .security_guard_for_night_shift
                                       }
                                       label=""
@@ -1143,7 +1137,7 @@ const Pwh = () => {
                 </AccordionItem>
               </MotionSlideUp>
 
-              {/* ================ PWH COMMODITY DETAILS ================= */}
+              {/* ================ WMS COMMODITY DETAILS ================= */}
               <MotionSlideUp duration={0.2 * 0.7} delay={0.1 * 0.7}>
                 <AccordionItem mt="4">
                   {({ isExpanded }) => (
@@ -1156,7 +1150,7 @@ const Pwh = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            PWH COMMODITY DETAILS
+                            WMS COMMODITY DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -1182,7 +1176,7 @@ const Pwh = () => {
                               <GridItem colSpan={2}>
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .expected_commodity_name
                                   }
                                   label=""
@@ -1223,7 +1217,7 @@ const Pwh = () => {
                               <GridItem colSpan={2}>
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .commodity_inward_type
                                   }
                                   label=""
@@ -1272,7 +1266,7 @@ const Pwh = () => {
                               <GridItem colSpan={2}>
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -1321,7 +1315,7 @@ const Pwh = () => {
                               <GridItem colSpan={2}>
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="Pre-Stack Commodity Quantity(MT)"
@@ -1375,7 +1369,7 @@ const Pwh = () => {
                                 <Text textAlign="left"> Sr No </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="Sr No"
@@ -1388,7 +1382,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Bank Name</Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -1423,7 +1417,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Branch Name </Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -1496,7 +1490,7 @@ const Pwh = () => {
                 </AccordionItem>
               </MotionSlideUp>
 
-              {/* ================ PWH COMMERCIAL DETAILS ================= */}
+              {/* ================ WMS COMMERCIAL DETAILS ================= */}
               <MotionSlideUp duration={0.2 * 0.9} delay={0.1 * 0.9}>
                 <AccordionItem mt="4">
                   {({ isExpanded }) => (
@@ -1509,7 +1503,7 @@ const Pwh = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            PWH COMMERCIAL DETAILS
+                            WMS COMMERCIAL DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -1529,6 +1523,137 @@ const Pwh = () => {
                               xl: "60%",
                             }}
                           >
+                            {/* {/ ================ Bank Details ================= /} */}
+                            <Box mt={commonStyle.mt}>
+                              <Flex
+                                bgColor={"#DBFFF5"}
+                                padding="20px"
+                                borderRadius="10px"
+                                gap="3"
+                                alignItems="center"
+                              >
+                                {/* =============== SR No============= */}
+                                <Box w="50px">
+                                  <Text
+                                    mb="2"
+                                    fontWeight="bold"
+                                    textAlign="left"
+                                  >
+                                    {" "}
+                                    Sr No{" "}
+                                  </Text>{" "}
+                                  <Box
+                                    textAlign="center"
+                                    border="1px"
+                                    p="2"
+                                    borderColor="gray.10"
+                                    borderRadius="6"
+                                  >
+                                    1
+                                  </Box>
+                                </Box>
+
+                                {/* =============== Owner Name ============= */}
+                                <Box w="170px">
+                                  <Text fontWeight="bold" textAlign="left">
+                                    Owner Name
+                                  </Text>{" "}
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .warehouse_name
+                                    }
+                                    placeholder="Warehouse Name"
+                                    type="text"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </Box>
+
+                                {/* =============== Mobile No ============= */}
+                                <Box w="180px">
+                                  <Text fontWeight="bold" textAlign="left">
+                                    Mobile No
+                                  </Text>{" "}
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .warehouse_name
+                                    }
+                                    placeholder="Mobile No"
+                                    type="text"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </Box>
+
+                                {/* =============== Address ============= */}
+                                <Box w="270px">
+                                  <Text fontWeight="bold" textAlign="left">
+                                    Address
+                                  </Text>{" "}
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .warehouse_name
+                                    }
+                                    placeholder="Address"
+                                    type="text"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </Box>
+
+                                {/* =============== Rent ============= */}
+
+                                <Box w="160px">
+                                  <Text fontWeight="bold" textAlign="left">
+                                    Rent
+                                  </Text>{" "}
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .warehouse_name
+                                    }
+                                    placeholder="Rent"
+                                    type="text"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </Box>
+
+                                {/* =============== Add / Delete ============= */}
+                                <Box w="180px">
+                                  <Box
+                                    mt="7"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="flex-end"
+                                    gap="2"
+                                  >
+                                    <Button
+                                      borderColor="gray.10"
+                                      borderRadius="6"
+                                      bg="primary.700"
+                                      color="white"
+                                      fontWeight="bold"
+                                    >
+                                      +
+                                    </Button>
+
+                                    <Button
+                                      borderColor="gray.10"
+                                      borderRadius="6"
+                                      bg="red"
+                                      color="white"
+                                      fontWeight="bold"
+                                    >
+                                      -
+                                    </Button>
+                                  </Box>
+                                </Box>
+                              </Flex>
+                            </Box>
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
                             <Box w="full">
                               <Grid
@@ -1547,7 +1672,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .minimum_rent
                                     }
                                     placeholder="minimum Rent(per/sq ft/month)"
@@ -1577,7 +1702,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .maximum_rent
                                     }
                                     placeholder="Warehouse Name"
@@ -1608,7 +1733,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .avg_rent
                                     }
                                     placeholder="Warehouse Name"
@@ -1639,7 +1764,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details.rent
+                                      formFieldsName.wms_commercial_details.rent
                                     }
                                     placeholder="Warehouse Name"
                                     type="text"
@@ -1669,7 +1794,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .total_rent_payable_months
                                     }
                                     placeholder="Total rent payable (per month)"
@@ -1684,134 +1809,6 @@ const Pwh = () => {
                             </Box>
                           </Box>
 
-                          {/* {/ ================ Bank Details ================= /} */}
-                          <Box mt={commonStyle.mt}>
-                            <Flex
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                              gap="3"
-                              alignItems="center"
-                            >
-                              {/* =============== SR No============= */}
-                              <Box w="50px">
-                                <Text mb="2" fontWeight="bold" textAlign="left">
-                                  {" "}
-                                  Sr No{" "}
-                                </Text>{" "}
-                                <Box
-                                  textAlign="center"
-                                  border="1px"
-                                  p="2"
-                                  borderColor="gray.10"
-                                  borderRadius="6"
-                                >
-                                  1
-                                </Box>
-                              </Box>
-
-                              {/* =============== Owner Name ============= */}
-                              <Box w="170px">
-                                <Text fontWeight="bold" textAlign="left">
-                                  Owner Name
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_warehouse_details
-                                      .warehouse_name
-                                  }
-                                  placeholder="Warehouse Name"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </Box>
-
-                              {/* =============== Mobile No ============= */}
-                              <Box w="180px">
-                                <Text fontWeight="bold" textAlign="left">
-                                  Mobile No
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_warehouse_details
-                                      .warehouse_name
-                                  }
-                                  placeholder="Mobile No"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </Box>
-
-                              {/* =============== Address ============= */}
-                              <Box w="270px">
-                                <Text fontWeight="bold" textAlign="left">
-                                  Address
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_warehouse_details
-                                      .warehouse_name
-                                  }
-                                  placeholder="Address"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </Box>
-
-                              {/* =============== Rent ============= */}
-
-                              <Box w="160px">
-                                <Text fontWeight="bold" textAlign="left">
-                                  Rent
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_warehouse_details
-                                      .warehouse_name
-                                  }
-                                  placeholder="Rent"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </Box>
-
-                              {/* =============== Add / Delete ============= */}
-                              <Box w="180px">
-                                <Box
-                                  mt="7"
-                                  display="flex"
-                                  alignItems="center"
-                                  justifyContent="flex-end"
-                                  gap="2"
-                                >
-                                  <Button
-                                    borderColor="gray.10"
-                                    borderRadius="6"
-                                    bg="primary.700"
-                                    color="white"
-                                    fontWeight="bold"
-                                  >
-                                    +
-                                  </Button>
-
-                                  <Button
-                                    borderColor="gray.10"
-                                    borderRadius="6"
-                                    bg="red"
-                                    color="white"
-                                    fontWeight="bold"
-                                  >
-                                    -
-                                  </Button>
-                                </Box>
-                              </Box>
-                            </Flex>
-                          </Box>
-
                           <Box
                             //border="1px"
                             w={{
@@ -1822,38 +1819,6 @@ const Pwh = () => {
                               xl: "60%",
                             }}
                           >
-                            {/* -------------- Go Green revenue sharing ratio-------------- */}
-                            <Box w="full">
-                              <Grid
-                                // textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                justifyContent="flex-start"
-                                gap={4}
-                              >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Go Green revenue sharing ratio
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.pwh_commercial_details
-                                        .go_green_revenue_sharing_ratio
-                                    }
-                                    placeholder="Go Green revenue sharing ratio"
-                                    type="text"
-                                    label=""
-                                    style={{
-                                      w: commonStyle.comm_details_style.w,
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
-
                             {/* -------------- Security deposit amount -------------- */}
                             <Box w="full">
                               <Grid
@@ -1872,7 +1837,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .security_deposit_amount
                                     }
                                     placeholder="Security deposit amount"
@@ -1940,7 +1905,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .advance_rent_month
                                     }
                                     placeholder="Advance rent(month)"
@@ -1971,7 +1936,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_commercial_details.gst
+                                      formFieldsName.wms_commercial_details.gst
                                     }
                                     label=""
                                     options={[
@@ -2015,7 +1980,7 @@ const Pwh = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .commencement_date
                                     }
                                     label=""
@@ -2060,7 +2025,7 @@ const Pwh = () => {
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .agreement_period
                                     }
                                     placeholder=" Agreement period (Month)"
@@ -2093,7 +2058,7 @@ const Pwh = () => {
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .expiry_date
                                     }
                                     placeholder="Expiry Date"
@@ -2126,7 +2091,7 @@ const Pwh = () => {
                                   {" "}
                                   <CustomInput
                                     name={
-                                      formFieldsName.pwh_commercial_details
+                                      formFieldsName.wms_commercial_details
                                         .notice_period
                                     }
                                     placeholder="Notice period (Month)"
@@ -2140,7 +2105,7 @@ const Pwh = () => {
                               </Grid>
                             </Box>
 
-                            {/* -------------- storage Charges according to commodity -------------- */}
+                            {/* -------------- WMS Charges according to commodity -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -2152,15 +2117,15 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <Text textAlign="right">
-                                    storage Charges according to commodity
+                                    WMS Charges according to commodity
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.pwh_commercial_details
-                                        .storage_charges_according_to_commodity
+                                      formFieldsName.wms_commercial_details
+                                        .wms_charges_according_to_commodity
                                     }
                                     label=""
                                     options={[
@@ -2202,13 +2167,14 @@ const Pwh = () => {
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
-                                  <CustomInput
+                                  <CustomFileInput
                                     name={
-                                      formFieldsName.pwh_commercial_details.rent
+                                      formFieldsName.wms_commercial_details.rent
                                     }
                                     // placeholder="Warehouse Name"
                                     type="text"
                                     label=""
+                                    placeholder="Excel upload"
                                     style={{
                                       w: commonStyle.comm_details_style.w,
                                     }}
@@ -2245,7 +2211,7 @@ const Pwh = () => {
                 </AccordionItem>
               </MotionSlideUp>
 
-              {/* ================ PWH CLIENTS DETAILS ================= */}
+              {/* ================ WMS CLIENTS DETAILS ================= */}
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <AccordionItem mt="4">
                   {({ isExpanded }) => (
@@ -2258,7 +2224,7 @@ const Pwh = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            PWH CLIENTS DETAILS
+                            WMS CLIENTS DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -2286,7 +2252,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Client Type</Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2321,7 +2287,7 @@ const Pwh = () => {
                                 <Text textAlign="left"> Client Name </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="client name"
@@ -2334,7 +2300,7 @@ const Pwh = () => {
                                 <Text textAlign="left"> Mobile Number </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="mobile number"
@@ -2347,7 +2313,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Region</Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2382,7 +2348,7 @@ const Pwh = () => {
                                 <Text textAlign="left">State </Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2417,7 +2383,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Zone </Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2452,7 +2418,7 @@ const Pwh = () => {
                                 <Text textAlign="left">District </Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2487,7 +2453,7 @@ const Pwh = () => {
                                 <Text textAlign="left">Area </Text>{" "}
                                 <ReactCustomSelect
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity
                                   }
                                   label=""
@@ -2522,7 +2488,7 @@ const Pwh = () => {
                                 <Text textAlign="left"> Address </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="address"
@@ -2531,19 +2497,55 @@ const Pwh = () => {
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Storage Charges </Text>{" "}
+                              <GridItem colSpan={2}>
+                                <Text textAlign="left"> WMS Charges </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
-                                  placeholder="storage charges"
+                                  placeholder="WMS charges"
                                   type="text"
                                   label=""
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
+                              <GridItem colSpan={2}>
+                                <Text textAlign="left">Billing cycle </Text>{" "}
+                                <ReactCustomSelect
+                                  name={
+                                    formFieldsName.wms_commodity_details
+                                      .pre_stack_commodity
+                                  }
+                                  label=""
+                                  options={[
+                                    {
+                                      label: "Fresh Stock",
+                                      value: 1,
+                                    },
+                                    {
+                                      label: "Pre-stock",
+                                      value: 2,
+                                    },
+                                    {
+                                      label: "Take over",
+                                      value: 3,
+                                    },
+                                  ]}
+                                  selectedValue={{}}
+                                  isClearable={false}
+                                  selectType="label"
+                                  isLoading={false}
+                                  style={{ w: "100%" }}
+                                  handleOnChange={(val) =>
+                                    console.log(
+                                      "selectedOption @@@@@@@@@@@------> ",
+                                      val
+                                    )
+                                  }
+                                />
+                              </GridItem>
+                              <GridItem colSpan={5}></GridItem>
                               <GridItem colSpan={2}>
                                 <Text textAlign="left">
                                   {" "}
@@ -2551,43 +2553,11 @@ const Pwh = () => {
                                 </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="Reservation Qty (Bales, MT)"
                                   type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">
-                                  {" "}
-                                  Reservation Start Date{" "}
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation Start Date"
-                                  type="date"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">
-                                  {" "}
-                                  Reservation End Date{" "}
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation End Date"
-                                  type="date"
                                   label=""
                                   style={{ w: "100%" }}
                                 />
@@ -2598,7 +2568,7 @@ const Pwh = () => {
                                 </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
                                   placeholder="Reservation Period(Month)"
@@ -2609,94 +2579,37 @@ const Pwh = () => {
                               </GridItem>
                               <GridItem colSpan={2}>
                                 <Text textAlign="left">
-                                  Reservation billing cycle{" "}
-                                </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Post Reservation billing cycle{" "}
-                                </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Post Reservation Storage charges
+                                  {" "}
+                                  Reservation Start Date{" "}
                                 </Text>{" "}
                                 <CustomInput
                                   name={
-                                    formFieldsName.pwh_commodity_details
+                                    formFieldsName.wms_commodity_details
                                       .pre_stack_commodity_quantity
                                   }
-                                  placeholder="Post Reservation Storage charges"
-                                  type="number"
+                                  placeholder="Reservation Start Date"
+                                  type="date"
                                   label=""
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
-                              <GridItem colSpan={5}>
+                              <GridItem colSpan={2}>
+                                <Text textAlign="left">
+                                  {" "}
+                                  Reservation End Date{" "}
+                                </Text>{" "}
+                                <CustomInput
+                                  name={
+                                    formFieldsName.wms_commodity_details
+                                      .pre_stack_commodity_quantity
+                                  }
+                                  placeholder="Reservation End Date"
+                                  type="date"
+                                  label=""
+                                  style={{ w: "100%" }}
+                                />
+                              </GridItem>
+                              <GridItem colSpan={1}>
                                 <Flex
                                   gap="10px"
                                   justifyContent="end"
@@ -2725,7 +2638,7 @@ const Pwh = () => {
                               <GridItem colSpan={2}>
                                 <CustomFileInput
                                   name={
-                                    formFieldsName.pwh_clients_details
+                                    formFieldsName.wms_clients_details
                                       .intention_letter
                                   }
                                   placeholder="Excel upload"
@@ -2751,7 +2664,7 @@ const Pwh = () => {
                                 <Textarea
                                   width={commonStyle.w}
                                   name={
-                                    formFieldsName.pwh_clients_details.remarks
+                                    formFieldsName.wms_clients_details.remarks
                                   }
                                   placeholder="Remarks"
                                   label=""
@@ -2809,4 +2722,4 @@ const Pwh = () => {
   );
 };
 
-export default Pwh;
+export default Wms;

@@ -1,10 +1,13 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
 import { MotionSlideUp } from "../../utils/animation";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 
 import Pwh from "./Pwh.jsx";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Wms from "./Wms";
 
 const commonStyle = {
   mt: 2,
@@ -42,7 +45,7 @@ const WarehouseProposal = () => {
       </Box>
 
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        {/* <form onSubmit={methods.handleSubmit(onSubmit)}> */}
           <Box
             bg="white"
             p="5"
@@ -86,25 +89,10 @@ const WarehouseProposal = () => {
           </Box>
 
           <Box mt="2">
-            <Pwh />
+            <Wms />
           </Box>
 
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={false}
-              my={"4"}
-              px={"10"}
-            >
-              Submit
-            </Button>
-          </Box>
-        </form>
+        {/* </form> */}
       </FormProvider>
     </Box>
   );
