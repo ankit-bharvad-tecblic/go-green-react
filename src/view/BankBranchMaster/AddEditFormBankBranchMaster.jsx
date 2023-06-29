@@ -216,7 +216,7 @@ function AddEditFormBankBranchMaster() {
     getAllStateMaster();
     getRegionMasterList();
     getAllDistrict();
-    getBankBranch();
+    getBankBranch();  
     getBankMasterList();
     if (details?.id) {
       let obj = {

@@ -59,6 +59,7 @@ import HsnMaster from "../view/HsnMaster/HsnMaster";
 import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
 import { Box } from "@chakra-ui/react";
 import AddEditFormHiringProposalMaster from "../view/HiringProposalMaster/AddEditFormHiringProposalMaster";
+import AddEditFormEmployeeMaster from "../view/EmployeeMaster/AddEditFormEmployeeMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -562,12 +563,62 @@ const routes = [
     ),
   },
   {
+    path: "add/employee-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Employee Master"}>
+            <AddEditFormEmployeeMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/employee-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Employee master"}>
+            <AddEditFormEmployeeMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
     path: "/department-master",
     element: (
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Department Master"}>
             <DepartmentMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "add/department-master",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Department Master"}>
+            {/* <AddEditFormDepartmentMaster /> */}
+            <AddEditFormEmployeeMaster />
+          </Layout>
+        </Suspense>
+      </ProtectedRoutes>
+    ),
+  },
+  {
+    path: "edit/department-master/:id",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Layout variant={headerType} title={"Department Master"}>
+            {/* <AddEditFormDepartmentMaster /> */}
+            <AddEditFormEmployeeMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

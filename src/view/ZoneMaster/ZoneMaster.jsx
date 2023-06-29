@@ -29,7 +29,7 @@ const ZoneMaster = () => {
     totalPage: 1,
     limit: 25,
   });
-
+ 
   const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =
     useGetZoneMasterMutation();
 

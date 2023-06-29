@@ -175,8 +175,7 @@ function BankBranchMaster() {
 
   const getData = async () => {
     //params filter
-    //filter.filter.length || filter.search
-    // if (filterQuery) {
+    //if (filterQuery) {
     paramString = Object.entries(filter)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
@@ -187,18 +186,17 @@ function BankBranchMaster() {
         return `${key}=${encodeURIComponent(value)}`;
       })
       .join("&");
-    // }
-
-    console.log("paramString ---> ", paramString);
+    //}
 
     try {
-      const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
       const response = await getBankBranchMaster(query).unwrap();
+
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
-        totalPage: Math.ceil(response?.total / old.limit),
+        totalPage: Math.ceil(response?.total / old?.limit),
       }));
     } catch (error) {
       console.error("Error:", error);

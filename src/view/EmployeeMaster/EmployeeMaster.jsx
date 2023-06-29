@@ -11,11 +11,13 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function EmployeeMaster() {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -79,138 +81,18 @@ function EmployeeMaster() {
     }
   };
 
-  const filterFields = [
-    {
-      "Employee Full Name": "employee_full_name",
-      isActiveFilter: false,
+  const addForm = () => {
+    navigate(`/add/employee-master`);
+  };
 
-      label: "Employee Full Name",
-      name: "employee_full_name",
-      placeholder: "Employee Full Name",
-      type: "text",
-    },
-    {
-      "Contact Number": "contact_number",
-      isActiveFilter: false,
+  const editForm = (info) => {
+    console.log("bank info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/edit/employee-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
-      label: "Contact Number",
-      name: "contact_number",
-      placeholder: "Contact Number",
-      type: "number",
-    },
-    {
-      "REGION ID": "region_id",
-      isActiveFilter: false,
-
-      label: "REGION ID",
-      name: "region_id",
-      placeholder: "REGION ID",
-      type: "number",
-    },
-    {
-      "STATE ID": "state_id",
-      isActiveFilter: false,
-
-      label: "STATE ID",
-      name: "state_id",
-      placeholder: "STATE ID",
-      type: "number",
-    },
-    {
-      "Zone ID": "zone_id",
-      isActiveFilter: false,
-
-      label: "Zone ID",
-      name: "zone_id",
-      placeholder: "Zone ID",
-      type: "number",
-    },
-    {
-      "District ID": "district_id",
-      isActiveFilter: false,
-
-      label: "District ID",
-      name: "district_id",
-      placeholder: "District ID",
-      type: "number",
-    },
-    {
-      ADDRESS: "address",
-      isActiveFilter: false,
-
-      label: "ADDRESS",
-      name: "address",
-      placeholder: "ADDRESS",
-      type: "text",
-    },
-
-    {
-      "Pin Code": "pin_code",
-      isActiveFilter: false,
-
-      label: "Pin Code",
-      name: "pin_code",
-      placeholder: "Pin Code",
-      type: "number",
-    },
-    {
-      "Email ID": "email_id",
-      isActiveFilter: false,
-
-      label: "Email ID",
-      name: "email_id",
-      placeholder: "Email ID",
-      type: "text",
-    },
-    {
-      "Department ID": "email_id",
-      isActiveFilter: false,
-
-      label: "Department ID",
-      name: "email_id",
-      placeholder: "Department ID",
-      type: "text",
-    },
-    {
-      "Job Title": "job_title",
-      isActiveFilter: false,
-
-      label: "Job Title",
-      name: "job_title",
-      placeholder: "Job Title",
-      type: "text",
-    },
-    {
-      "Reporting Manager ID": "reporting_manager_id",
-      isActiveFilter: false,
-
-      label: "Reporting Manager ID",
-      name: "reporting_manager_id",
-      placeholder: "Reporting Manager ID",
-      type: "number",
-    },
-
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -218,31 +100,39 @@ function EmployeeMaster() {
     }),
     columnHelper.accessor("employee_full_name", {
       cell: (info) => info.getValue(),
-      header: "Employee Full Name",
+      header: "Full Name",
     }),
     columnHelper.accessor("contact_number", {
       cell: (info) => info.getValue(),
-      header: "Contact Number",
+      header: "Mobile Number",
     }),
-    columnHelper.accessor("region_id.id", {
+    columnHelper.accessor("region_id.region_name", {
       cell: (info) => info.getValue(),
-      header: "Region ID",
+      header: "Region",
     }),
-    columnHelper.accessor("state_id.id", {
+    columnHelper.accessor("state_id.state_name", {
       cell: (info) => info.getValue(),
-      header: "State ID",
+      header: "State ",
     }),
-    columnHelper.accessor("zone_id.id", {
+    columnHelper.accessor("zone_id.zone_name", {
       cell: (info) => info.getValue(),
-      header: "Zone ID",
+      header: "Zone ",
     }),
-    columnHelper.accessor("district_id.id", {
+    columnHelper.accessor("district_id.district_name", {
       cell: (info) => info.getValue(),
-      header: "District ID",
+      header: "District ",
+    }),
+    columnHelper.accessor("role.role_name", {
+      cell: (info) => info.getValue(),
+      header: "Role ",
+    }),
+    columnHelper.accessor("department.department_name", {
+      cell: (info) => info.getValue(),
+      header: "Department ",
     }),
     columnHelper.accessor("address", {
       cell: (info) => info.getValue(),
-      header: "ADDRESS",
+      header: "Address",
     }),
     columnHelper.accessor("pin_code", {
       cell: (info) => info.getValue(),
@@ -250,19 +140,16 @@ function EmployeeMaster() {
     }),
     columnHelper.accessor("email_id", {
       cell: (info) => info.getValue(),
-      header: "Email ID",
+      header: "Email",
     }),
-    columnHelper.accessor("email_id", {
-      cell: (info) => info.getValue(),
-      header: "Department ID",
-    }),
+
     columnHelper.accessor("job_title", {
       cell: (info) => info.getValue(),
       header: "Job Title",
     }),
-    columnHelper.accessor("reporting_manager_id", {
+    columnHelper.accessor("reporting_manager_id.email", {
       cell: (info) => info.getValue(),
-      header: "Reporting Manager ID",
+      header: "Reporting Manager",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
@@ -303,7 +190,7 @@ function EmployeeMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            // onClick={() => editForm(info)}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -364,6 +251,7 @@ function EmployeeMaster() {
         columns={columns}
         data={data}
         loading={getEmployeeMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );
