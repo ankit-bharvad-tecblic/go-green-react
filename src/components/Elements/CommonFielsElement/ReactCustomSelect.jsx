@@ -67,7 +67,7 @@ const ReactCustomSelect = ({
                   backgroundColor: "#fff",
                   borderRadius: "6px",
                   borderColor: error ? "red" : "#c3c3c3",
-                  padding: "3px",
+                  padding: "1px",
 
                   "&:hover": {
                     //borderColor: error ? "red" : "#A6CE39",
