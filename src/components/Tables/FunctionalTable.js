@@ -268,9 +268,9 @@ function FunctionalTable({
           </InputGroup> */}
         </Flex>
       </Flex>
-      <Box position="relative" overflowX="auto">
+      <Box position="relative" overflowX="auto" h="calc( 100vh - 343px )" overflowY="auto">
         <Table mt="15px">
-          <Thead>
+          <Thead position="sticky" top='0px' background="white" zIndex="10">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
