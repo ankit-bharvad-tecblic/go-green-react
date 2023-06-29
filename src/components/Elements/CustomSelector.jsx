@@ -28,20 +28,33 @@ const CustomSelector = ({
     watch,
   } = useFormContext();
   const [selectedVal, setSelectedVal] = useState(selectedValue);
-  console.log(selectedValue);
+  console.log("selectedValue ----> ", selectedValue);
   const error = errors[name];
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) =>
+      console.log("wahtch", value, name, type)
+    );
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   console.log("selectedValue value: ", selectedValue);
   const handleSelectChange = (selectedOption) => {
     console.log("handleSelectChange", selectedOption);
+    console.log("selected type ", name, selectedOption?.[selectType]);
     setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
     // handleOnChange(selectedOption);
   };
 
   useEffect(() => {
-    setValue(name, selectedValue?.[selectType] || "");
-    setSelectedVal(selectedValue);
+    if (selectedValue?.[selectType]) {
+      console.log("selected type ", name, selectedValue?.[selectType]);
+      setValue(name, selectedValue?.[selectType] || "");
+      setSelectedVal(selectedValue);
+    }
+
+    console.log("errors -------> ", error);
   }, [selectedValue]);
 
   return (

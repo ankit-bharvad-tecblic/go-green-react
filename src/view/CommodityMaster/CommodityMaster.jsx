@@ -13,7 +13,7 @@ import { API } from "../../constants/api.constants";
 import { useNavigate } from "react-router-dom";
 import { filterFields } from "./fields";
 
-const CommodityMaster = () => { 
+const CommodityMaster = () => {
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
@@ -148,7 +148,7 @@ const CommodityMaster = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
-            onChange={(e) => handleActiveDeActive(e, info)}
+            // onChange={(e) => handleActiveDeActive(e, info)}
             isChecked={info.row.original.active}
 
             // id="active_row"

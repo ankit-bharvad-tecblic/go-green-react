@@ -13,7 +13,10 @@ import {
 import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
-import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+
+import CustomSelector from "../../components/Elements/CustomSelector";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
+import CustomTextArea from "../../components/Elements/CustomTextArea";
 
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
@@ -23,10 +26,11 @@ function AddEditFormBankMaster() {
   });
   const [getStateMaster] = useGetStateMasterMutation();
   // const [getBankMaster] = useGetBankMasterMutation();
-  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
-    useGetRegionMasterMutation();
+  const [getRegionMaster] = useGetRegionMasterMutation();
+
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
+    states: [],
   });
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
@@ -45,6 +49,13 @@ function AddEditFormBankMaster() {
     } else {
       addData(data);
     }
+  };
+  // for clear data in form
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
   };
 
   const addData = async (data) => {
@@ -84,6 +95,10 @@ function AddEditFormBankMaster() {
           }
         })
       );
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: arr,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -93,15 +108,18 @@ function AddEditFormBankMaster() {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          regions: response?.results.map(({ region_name, id }) => ({
-            label: region_name,
-            id: id,
-          })),
-        }));
-      }
+
+      let arr = response?.results.map((item) => ({
+        label: item.region_name,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: arr,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -149,15 +167,12 @@ function AddEditFormBankMaster() {
   };
 
   useEffect(() => {
-    getAllStateMaster();
-    getRegionMasterList();
-    // getBank();
     if (details?.id) {
       let obj = {
-        bank_name: details.bank_name,
-        region: details?.region,
-        state: details?.state,
-        bank_address: details.bank_address,
+        bank_name: details?.bank_name,
+        region: details?.region.region_name,
+        state: details?.state.state_name,
+        bank_address: details?.bank_address,
         active: details.active,
       };
       console.log("details", details);
@@ -168,59 +183,138 @@ function AddEditFormBankMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    getAllStateMaster();
+    getRegionMasterList();
+    // getBank();
   }, [details]);
+
   return (
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {addEditFormFieldsList &&
-            addEditFormFieldsList.map((item, i) => (
-              <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  {" "}
-                  <Text textAlign="right" w="250px">
-                    {item.label}
-                  </Text>{" "}
-                  {generateFormField({
-                    ...item,
-                    label: "",
-                    // options: item.type === "select" && commodityTypeMaster,
-                    isChecked: details?.active,
-                    style: { mb: 2, mt: 2 },
+          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+            {addEditFormFieldsList &&
+              addEditFormFieldsList.map((item, i) => (
+                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                    {" "}
+                    <Text textAlign="right" w="250px">
+                      {item.label}
+                    </Text>{" "}
+                    {generateFormField({
+                      ...item,
+                      label: "",
+                      // options: item.type === "select" && commodityTypeMaster,
+                      isChecked: details?.active,
+                      style: { mb: 1, mt: 1 },
+                    })}
+                  </Box>
+                </MotionSlideUp>
+              ))}
 
-                    selectedValue:
-                      item.type === "select" &&
-                      item?.options?.find(
-                        (opt) => opt.label === details?.state
-                      ),
-                    selectType: "value",
-                    isClearable: false,
-                  })}
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="250px">
+                    Region
+                  </Text>
+                  <CustomSelector
+                    name="region"
+                    label=""
+                    options={selectBoxOptions.regions}
+                    selectedValue={selectBoxOptions.regions.find(
+                      (opt) => opt.label === details?.region.region_name
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
                 </Box>
               </MotionSlideUp>
-            ))}
+            </Box>
 
-          <Box w="full" gap="10" display={{ base: "flex" }} alignItems="center">
-            {" "}
-            <Text textAlign="right" w="210px">
-              Region
-            </Text>{" "}
-            <ReactCustomSelect
-              name="Select-warehouse-Type"
-              label=""
-              isLoading={getRegionMasterApiIsLoading}
-              options={selectBoxOptions?.regions || []}
-              selectedValue={{}}
-              isClearable={false}
-              selectType="label"
-              style={{ w: "full" }}
-              handleOnChange={(val) =>
-                console.log("selectedOption @@@@@@@@@@@------> ", val)
-              }
-            />
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="250px">
+                    State
+                  </Text>
+                  <CustomSelector
+                    name="state"
+                    label=""
+                    options={selectBoxOptions.states}
+                    selectedValue={selectBoxOptions.states.find(
+                      (opt) => opt?.label === details?.state?.state_name
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
+
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="250px">
+                    Bank Address
+                  </Text>
+                  <CustomTextArea
+                    name="bank_address"
+                    placeholder="bank address"
+                    type="text"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
+
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="250px">
+                    Active
+                  </Text>
+                  <CustomSwitch
+                    name="is_active"
+                    // type="switch"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    // isChecked="regions?.active"
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
           </Box>
-
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
+            </Button>
             <Button
               type="submit"
               //w="full"

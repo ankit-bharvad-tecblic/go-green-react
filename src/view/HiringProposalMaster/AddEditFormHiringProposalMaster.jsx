@@ -34,6 +34,13 @@ function AddEditFormHiringProposalMaster() {
       addData(data);
     }
   };
+  // for clear data in form
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
+  };
 
   const [getStateMaster] = useGetStateMasterMutation();
 
@@ -202,7 +209,21 @@ function AddEditFormHiringProposalMaster() {
               </MotionSlideUp>
             ))}
 
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
+            </Button>
             <Button
               type="submit"
               //w="full"

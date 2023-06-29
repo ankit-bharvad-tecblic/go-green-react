@@ -4,40 +4,40 @@ const filterFields = [
   {
     "COMMODITY NAME": "commodity_name",
     isActiveFilter: false,
-    label: "COMMODITY NAME",
+    label: "Commodity Name",
     name: "commodity_name",
-    placeholder: "COMMODITY NAME",
+    placeholder: "Commodity Name",
     type: "text",
   },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
 
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "last_updated_date",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
-    name: "active",
-    placeholder: "Active / DeActive",
+    label: "Active",
+    name: "is_active",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -51,19 +51,19 @@ const filterFields = [
 const addEditFormFields = [
   {
     name: "zone_name",
-    label: "ZONE NAME",
-    placeholder: "ZONE NAME",
+    label: "Zone Name",
+    placeholder: "Zone Name",
     type: "text",
   },
   {
     name: "state",
-    label: "STATE NAME",
-    placeholder: "STATE NAME",
+    label: "State Name",
+    placeholder: "State Name",
     type: "select",
   },
   {
-    label: "ACTIVE/DeActive",
-    name: "active",
+    label: "Active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -71,7 +71,7 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   zone_name: yup.string().required("Zone name is required"),
   state: yup.string().required("State name is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 const BreadcrumbLinks = [
