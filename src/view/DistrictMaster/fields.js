@@ -37,7 +37,7 @@ const filterFields = [
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
@@ -61,22 +61,24 @@ const addEditFormFields = [
     placeholder: "District",
     type: "text",
   },
-  {
-    label: "Zone",
-    name: "zone",
-    placeholder: "Zone",
-    type: "select",
-  },
-  {
-    label: "Active",
-    name: "active",
-    type: "switch",
-  },
+  // {
+  //   label: "Zone",
+  //   name: "zone",
+  //   placeholder: "Zone",
+  //   type: "select",
+  // },
+  // {
+  //   label: "Active",
+  //   name: "active",
+  //   type: "switch",
+  // },
 ];
 
 const schema = yup.object().shape({
   district_name: yup.string().required("District  is required"),
-  active: yup.string(),
+  region: yup.string().required("Region name is required"),
+  state: yup.string().required("State name is required"),
+  is_active: yup.string(),
   zone: yup.string().required("Zone name  is required"),
 });
 

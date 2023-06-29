@@ -81,7 +81,7 @@ const Index = () => {
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             {fields &&
               fields.map((item) =>
-                generateFormField({ ...item, style: { mb: 4 } })
+                generateFormField({ ...item, style: { mb: 2 } })
               )}
 
             <Button

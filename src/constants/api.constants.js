@@ -55,5 +55,6 @@ export const API = {
     BANK_CM_LOCATION_MASTER: "",
     COMMODITY_BAG_MASTER: "",
     HSN_MASTER: "",
+    EXCEL_DOWNLOAD_MASTER: "/excel_download",
   },
 };

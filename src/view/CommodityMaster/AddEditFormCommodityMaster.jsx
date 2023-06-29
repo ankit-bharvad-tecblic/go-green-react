@@ -18,6 +18,7 @@ import {
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
 
 const AddEditFormCommodityMaster = () => {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ const AddEditFormCommodityMaster = () => {
         maximum_bag_size: details.maximum_bag_size,
         minimum_bag_size: details.minimum_bag_size,
         rent_on_bag: details.rent_on_bag,
-        active: details.active,
+        is_active: details.is_active,
       };
 
       // setHandleSelectBoxVal
@@ -165,6 +166,25 @@ const AddEditFormCommodityMaster = () => {
                   </Box>
                 </MotionSlideUp>
               ))}
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Active
+                  </Text>
+                  <CustomSwitch
+                    name="is_active"
+                    // type="switch"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    // isChecked="regions?.active"
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
           </Box>
           <Box
             display="flex"
