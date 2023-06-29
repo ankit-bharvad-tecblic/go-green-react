@@ -20,6 +20,11 @@ const commonStyle = {
 };
 
 const WarehouseProposal = () => {
+  const [hiringProposal, setHiringProposal] = useState({
+    type: { label: "PWH ", value: "pwh" },
+    subType: { label: "Leased", value: "leased" },
+  });
+
   const methods = useForm({
     // resolver: yupResolver(schema),
   });
@@ -68,9 +73,10 @@ const WarehouseProposal = () => {
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
-                handleOnChange={(val) =>
-                  console.log("selectedOption @@@@@@@@@@@------> ", val)
-                }
+                handleOnChange={(val) => {
+                  console.log("selectedOption @@@@@@@@@@@------> ", val);
+                  setHiringProposal((old) => ({ ...old, type: val }));
+                }}
               />
             </MotionSlideUp>
           </Box>
@@ -90,16 +96,23 @@ const WarehouseProposal = () => {
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
-                handleOnChange={(val) =>
-                  console.log("selectedOption @@@@@@@@@@@------> ", val)
-                }
+                handleOnChange={(val) => {
+                  console.log("selectedOption @@@@@@@@@@@------> ", val);
+                  setHiringProposal((old) => ({ ...old, subType: val }));
+                }}
               />
             </MotionSlideUp>
           </Box>
         </Box>
 
         <Box mt="2">
-          <Wms />
+          {hiringProposal.type.value === "pwh" ? (
+            <Pwh />
+          ) : hiringProposal.type.value === "wms" ? (
+            <Wms />
+          ) : (
+            <></>
+          )}
         </Box>
 
         {/* </form> */}
