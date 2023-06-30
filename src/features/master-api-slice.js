@@ -607,7 +607,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     //Download Excel File API
     getDownLoadExcel: builder.mutation({
       query: (params) => ({
-        url: `${API.DASHBOARD.EXCEL_DOWNLOAD_MASTER}?model_name=${model_name}`,
+        url: `${API.DASHBOARD.EXCEL_DOWNLOAD_MASTER}?model_name=`,
         method: "GET",
         params: params,
       }),
