@@ -1463,18 +1463,25 @@ const ThirdParty = () => {
                           <Box>
                             <Grid
                               textAlign="right"
-                              templateColumns="repeat(9, 1fr)"
+                              templateColumns={{
+                                base: "1fr",
+                                sm: "repeat(2, 1fr)",
+                                md: "repeat(3, 1fr)",
+                                lg: "repeat(4, 1fr)",
+                              }}
                               alignItems="center"
                               gap={4}
                               bgColor={"#DBFFF5"}
                               padding="20px"
                               borderRadius="10px"
                             >
-                              <GridItem colSpan={9}>
+                              <GridItem
+                                colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                              >
                                 <Text textAlign="left">Client List</Text>{" "}
                               </GridItem>
                               {/* ================ Client Type ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Client Type</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1510,7 +1517,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Client Name ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left"> Client Name </Text>{" "}
                                 <CustomInput
                                   name={
@@ -1524,7 +1531,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Mobile Number ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left"> Mobile Number </Text>{" "}
                                 <CustomInput
                                   name={
@@ -1538,7 +1545,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Region ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Region</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1574,7 +1581,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ State ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">State </Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1610,7 +1617,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Zone ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Zone </Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1646,7 +1653,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ District ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">District </Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1682,7 +1689,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Area ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Area </Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1718,7 +1725,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Address ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left"> Address </Text>{" "}
                                 <CustomInput
                                   name={
@@ -1732,7 +1739,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Client known to GGWPL official ================= */}
-                              <GridItem colSpan={2}>
+                              <GridItem>
                                 <Text textAlign="left">
                                   Client known to GGWPL official
                                 </Text>{" "}
@@ -1770,7 +1777,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Client Sourced by ================= */}
-                              <GridItem colSpan={2}>
+                              <GridItem>
                                 <Text textAlign="left">Client Sourced by</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1806,7 +1813,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Bank Name ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Bank Name</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1842,7 +1849,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Branch Name ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Branch Name</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1878,7 +1885,7 @@ const ThirdParty = () => {
                                 />
                               </GridItem>
                               {/* ================ Employee Name ================= */}
-                              <GridItem colSpan={1}>
+                              <GridItem>
                                 <Text textAlign="left">Employee Name</Text>{" "}
                                 <ReactCustomSelect
                                   name={
@@ -1913,7 +1920,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={{ base: 1, sm: 2, md: 1, lg: 2 }}>
                                 <Flex
                                   gap="10px"
                                   justifyContent="end"
