@@ -363,6 +363,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       },
     }),
 
+    addEmployeeMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.EMPLOYEE_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateEmployeeMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.EMPLOYEE_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+
     getDepartmentMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.DEPARTMENT_MASTER,
@@ -373,6 +388,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         console.log("API Error:", error);
         // Dispatch actions, show notification, etc.
       },
+    }),
+
+    addDepartmentMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.DEPARTMENT_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateDepartmentMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.DEPARTMENT_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
     }),
 
     getHiringProposalMaster: builder.mutation({
@@ -695,7 +725,11 @@ export const {
   useUpdateCommodityMasterMutation,
   useGetBankCMLocationMasterMutation,
   useGetEmployeeMasterMutation,
+  useAddEmployeeMasterMutation,
+  useUpdateEmployeeMasterMutation,
   useGetDepartmentMasterMutation,
+  useAddDepartmentMasterMutation,
+  useUpdateDepartmentMasterMutation,
   useGetHiringProposalMasterMutation,
   useAddHiringProposalMasterMutation,
   useUpdateHiringProposalMasterMutation,

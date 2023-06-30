@@ -15,7 +15,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Bank",
-    name: "bank__bank_name",
+    name: "bank.bank_name",
     placeholder: "Bank ",
     type: "text",
   },
@@ -33,7 +33,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "State ",
-    name: "state__state_name",
+    name: "state.state_name",
     placeholder: "State ",
     type: "text",
   },

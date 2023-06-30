@@ -30,7 +30,7 @@ const ZoneMaster = () => {
     limit: 25,
      totalFilter:0 , total:0
   });
-
+ 
   const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =
     useGetZoneMasterMutation();
 
