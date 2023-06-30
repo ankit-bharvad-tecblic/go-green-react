@@ -43,14 +43,14 @@ const ReactCustomSelect = ({
   const handleSelectChange = (selectedOption) => {
     console.log("name --> ", name, selectedOption);
     console.log("handleSelectChange", selectedOption);
-    setValue(name, selectedOption?.[selectType] || "");
+    // setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
     handleOnChange(selectedOption);
   };
 
   useEffect(() => {
     console.log("tesing select cmp ");
-    setValue(name, selectedValue?.[selectType] || "");
+    //  setValue(name, selectedValue?.[selectType] || "");
   }, [selectedValue]);
 
   return (

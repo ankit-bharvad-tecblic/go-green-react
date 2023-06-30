@@ -21,7 +21,6 @@ import {
   Textarea,
   list,
 } from "@chakra-ui/react";
-import * as yup from "yup";
 import React, { useEffect, useState } from "react";
 import { BreadcrumbLinks } from "./BreadcrumbLinks";
 import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
@@ -44,6 +43,7 @@ import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import * as Yup from "yup";
 import ReactSelect from "react-select";
+import { gstNumberValidation } from "../../services/validation.service";
 
 const reactSelectStyle = {
   menu: (base) => ({
@@ -59,6 +59,28 @@ const reactSelectStyle = {
       color: "black",
     },
   }),
+};
+
+const client_details_obj = {
+  client_type: "",
+  client_name: "",
+  mobile_number: "",
+  region: "",
+  state: "",
+  zone: "",
+  district: "",
+  area: "",
+  address: "",
+
+  storage_charges: "",
+  reservation_qty: "",
+  reservation_start_date: "",
+  reservation_end_date: "",
+  reservation_period_month: "",
+  reservation_billing_cycle: "",
+
+  post_reservation_billing_cycle: "",
+  post_reservation_billing_cycle_charges: "",
 };
 
 const commonStyle = {
@@ -136,109 +158,185 @@ const formFieldsName = {
     your_project: "your_project",
   },
   pwh_clients_details: {
+    pwh_client_list: {
+      client_type: "client_type",
+      client_name: "client_name",
+      mobile_number: "mobile_number",
+      region: "region",
+      state: "state",
+      zone: "zone",
+      district: "district",
+      area: "area",
+      address: "address",
+
+      storage_charges: "storage_charges",
+      reservation_qty: "reservation_qty",
+      reservation_start_date: "reservation_start_date",
+      reservation_end_date: "reservation_end_date",
+      reservation_period_month: "reservation_period_month",
+      reservation_billing_cycle: "reservation_billing_cycle",
+
+      post_reservation_billing_cycle: "post_reservation_billing_cycle",
+      post_reservation_billing_cycle_charges:
+        "post_reservation_billing_cycle_charges",
+    },
     intention_letter: "intention_letter",
     remarks: "remarks",
   },
 };
 
-const schema = yup.object().shape({
-  warehouse_name: yup.string().required("Warehouse name is required"),
-  region_name: yup.string().required("Region name is required"),
-  state_name: yup.string().required("State name is required"),
-  zone_name: yup.string().required("Zone name is required"),
-  district_name: yup.string().required("District name is required"),
-  area_name: yup.string().required("Area name is required"),
-  warehouse_address: yup.string().required("Warehouse address is required"),
-  pin_code: yup.string().required("Pin code is required"),
-  no_of_chamber: yup.string().required("No of chamber is required"),
-  warehouse_in_factory_premises: yup
-    .string()
-    .required("Warehouse in factory premises is required"),
-  standard_capacity: yup.string().required("Standard capacity is required"),
-  standard_warehouse_capacity: yup
-    .string()
-    .required("Standard warehouse capacity is required"),
-  standard_utilizes_capacity: yup
-    .string()
-    .required("Standard utilized capacity is required"),
-  lock_in_period: yup.string().required("Lock in period is required"),
-  lock_in_period_month: yup
-    .string()
-    .required("Lock in period month is required"),
-  covered_area: yup.string().required("Covered area is required"),
-  supervisor_for_day_shift: yup
-    .string()
-    .required("Supervisor for day shift is required"),
-  supervisor_for_night_shift: yup
-    .string()
-    .required("Supervisor for night shift is required"),
-  security_guard_for_day_shift: yup
-    .string()
-    .required("Security guard for day shift is required"),
-  security_guard_for_night_shift: yup
-    .string()
-    .required("Security guard for night shift is required"),
+const schema = Yup.object().shape({
+  warehouse_name: Yup.string().trim().required("Warehouse name is required"),
+  region_name: Yup.string().trim().required("Region name is required"),
+  state_name: Yup.string().trim().required("State name is required"),
+  zone_name: Yup.string().trim().required("Zone name is required"),
+  district_name: Yup.string().trim().required("District name is required"),
+  area_name: Yup.string().trim().required("Area name is required"),
+  warehouse_address: Yup.string()
+    .trim()
+    .required("Warehouse address is required"),
+  pin_code: Yup.string().trim().required("Pin code is required"),
+  no_of_chamber: Yup.string(),
+  warehouse_in_factory_premises: Yup.string().required(
+    "Warehouse in factory premises is required"
+  ),
+  standard_capacity: Yup.string()
+    .trim()
+    .required("Standard capacity is required"),
+  standard_warehouse_capacity: Yup.string().required(
+    "Standard warehouse capacity is required"
+  ),
+  standard_utilizes_capacity: Yup.string().required(
+    "Standard utilized capacity is required"
+  ),
+  lock_in_period: Yup.string().required("Lock in period is required"),
+  lock_in_period_month: Yup.string().required(
+    "Lock in period month is required"
+  ),
+  covered_area: Yup.string().trim().required("Covered area is required"),
+  supervisor_for_day_shift: Yup.string().required(
+    "Supervisor for day shift is required"
+  ),
+  supervisor_for_night_shift: Yup.string().required(
+    "Supervisor for night shift is required"
+  ),
+  security_guard_for_day_shift: Yup.string().required(
+    "Security guard for day shift is required"
+  ),
+  security_guard_for_night_shift: Yup.string().required(
+    "Security guard for night shift is required"
+  ),
   // commodity details schema start
-  expected_commodity_name: yup
-    .string()
-    .required("Expected commodity name is required"),
-  commodity_inward_type: yup
-    .string()
-    .required("Commodity inward type is required"),
-  pre_stack_commodity: yup.string().required("Pre stack commodity is required"),
-  pre_stack_commodity_quantity: yup
-    .string()
-    .required("Pre stack commodity quantity is required"),
-  funding_required: yup.string().required("Funding required is required"),
+  expected_commodity_name: Yup.string().required(
+    "Expected commodity name is required"
+  ),
+  commodity_inward_type: Yup.string().required(
+    "Commodity inward type is required"
+  ),
+  pre_stack_commodity: Yup.string()
+    .trim()
+    .required("Pre stack commodity is required"),
+  pre_stack_commodity_quantity: Yup.string().required(
+    "Pre stack commodity quantity is required"
+  ),
+  funding_required: Yup.string().required("Funding required is required"),
   // bank details dynamic field
   pwh_commodity_bank_details: Yup.array().of(
     Yup.object().shape({
-      bank_name: Yup.string().required("Bank name is required"),
-      branch_name: Yup.string().required("Branch name is required"),
+      bank_name: Yup.string().trim().required("Bank name is required"),
+      branch_name: Yup.string().trim().required("Branch name is required"),
     })
   ),
 
   // PWH COMMERCIAL DETAILS details schema start
-  minimum_rent: yup.string().required("Minimum rent is required"),
-  maximum_rent: yup.string().required("Maximum rent is required"),
-  avg_rent: yup.string().required("Avg rent is required"),
-  rent: yup.string().required("rent is required"),
-  total_rent_payable_month: yup
-    .string()
-    .required("Total rent payable month is required"),
+  minimum_rent: Yup.string().trim().required("Minimum rent is required"),
+  maximum_rent: Yup.string().trim().required("Maximum rent is required"),
+  avg_rent: Yup.string().trim().required("Avg rent is required"),
+  rent: Yup.string().trim().required("rent is required"),
+  total_rent_payable_month: Yup.string().required(
+    "Total rent payable month is required"
+  ),
 
   // PWH COMMERCIAL DETAILS dynamic fields schema start
 
   pwh_commercial_multipal_details: Yup.array().of(
     Yup.object().shape({
-      owner_name: Yup.string().required("Owner name is required"),
-      mobile_no: Yup.string().required("Mobile no is required"),
-      address: Yup.string().required("Address is required"),
-      rent: Yup.number().required("Rent is required"),
+      owner_name: Yup.string().trim().required("Owner name is required"),
+      mobile_no: Yup.string().trim().required("Mobile no is required"),
+      address: Yup.string().trim().required("Address is required"),
+      rent: Yup.number()
+        .typeError("Rent is required")
+        .required("Rent is required"),
     })
   ),
 
-  go_green_revenue_sharing_ratio: yup
-    .string()
-    .required("Go green revenue sharing ratio is required"),
-  security_deposit_amount: yup
-    .string()
-    .required("Security deposit amount is required"),
-  advance_rent: yup.string().required("Advance rent is required"),
-  advance_rent_month: yup.string().required("Advance rent month is required"),
-  gst: yup.string().required("gst is required"),
-  commencement_date: yup.string().required("Commencement date is required"),
-  agreement_period: yup.string().required("Agreement period is required"),
-  expiry_date: yup.string().required("Expiry date is required"),
-  notice_period: yup.string().required("Notice period is required"),
-  storage_charges_according_to_commodity: yup
-    .string()
-    .required("storage charges according to commodity is required"),
-  your_project: yup.string().required("Your project is required"),
+  go_green_revenue_sharing_ratio: Yup.string().required(
+    "Go green revenue sharing ratio is required"
+  ),
+  security_deposit_amount: Yup.string().required(
+    "Security deposit amount is required"
+  ),
+  advance_rent: Yup.string().required("Advance rent is required"),
+  advance_rent_month: Yup.string().required("Advance rent month is required"),
+  gst: Yup.string()
+    .matches(gstNumberValidation(), "Invalid GST number")
+    .required("GST number is required"),
+  commencement_date: Yup.string()
+    .trim()
+    .required("Commencement date is required"),
+  agreement_period: Yup.string()
+    .trim()
+    .required("Agreement period is required"),
+  expiry_date: Yup.string().trim().required("Expiry date is required"),
+  notice_period: Yup.string().trim().required("Notice period is required"),
+  storage_charges_according_to_commodity: Yup.string().required(
+    "storage charges according to commodity is required"
+  ),
+  your_project: Yup.string(),
 
   // PWH CLIENTS DETAILS schema start here
-  intention_letter: yup.string().required("Intention letter is required"),
-  remarks: yup.string().required("remarks is required"),
+  pwh_client_list: Yup.array().of(
+    Yup.object().shape({
+      client_type: Yup.string().required("client type name is required"),
+      client_name: Yup.string().trim().required("Client name  is required"),
+      mobile_number: Yup.string().trim().required("Mobile number is required"),
+      region: Yup.string().trim().required("Region is required"),
+      state: Yup.string().trim().required("State is required"),
+      zone: Yup.string().trim().required("Zone is required"),
+      district: Yup.string().trim().required("District is required"),
+      area: Yup.string().trim().required("Area is required"),
+      address: Yup.string().trim().required("Address is required"),
+
+      storage_charges: Yup.number()
+        .typeError("Storage charges is required")
+        .required("Storage charges is required"),
+      reservation_qty: Yup.number()
+        .typeError("Reservation qty is required")
+        .required("Reservation qty is required"),
+      reservation_start_date: Yup.string().required(
+        "Reservation start date is required"
+      ),
+      reservation_end_date: Yup.string().required(
+        "Reservation end date is required"
+      ),
+      reservation_period_month: Yup.string().required(
+        "Reservation period month is required"
+      ),
+      reservation_billing_cycle: Yup.string().required(
+        "Reservation billing cycle is required"
+      ),
+      post_reservation_billing_cycle: Yup.string().required(
+        "Post reservation billing cycle is required"
+      ),
+      post_reservation_billing_cycle_charges: Yup.string().required(
+        "Post reservation billing cycle charges is required"
+      ),
+    })
+  ),
+  intention_letter: Yup.string()
+    .trim()
+    .required("Intention letter is required"),
+  remarks: Yup.string().trim().required("remarks is required"),
 });
 
 const Pwh = () => {
@@ -260,6 +358,7 @@ const Pwh = () => {
           rent: "",
         },
       ],
+      pwh_client_list: [client_details_obj],
     },
   });
 
@@ -289,6 +388,15 @@ const Pwh = () => {
     name: "pwh_commercial_multipal_details",
   });
 
+  const {
+    fields: pwh_client_list_fields,
+    append: append_new_client_detail,
+    remove: pwh_client_list_remove,
+  } = useFieldArray({
+    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "pwh_client_list",
+  });
+
   const onSubmit = (data) => {
     console.log("data==>", data);
   };
@@ -307,6 +415,10 @@ const Pwh = () => {
       address: "",
       rent: "",
     });
+  };
+
+  const append_new_pwh_client_detail = () => {
+    append_new_client_detail(client_details_obj);
   };
 
   useEffect(() => {
@@ -337,7 +449,7 @@ const Pwh = () => {
           ...prev,
           regions: response?.results.map(({ region_name, id }) => ({
             label: region_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -355,7 +467,7 @@ const Pwh = () => {
           ...prev,
           states: response?.results.map(({ state_name, id }) => ({
             label: state_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -373,7 +485,7 @@ const Pwh = () => {
           ...prev,
           zones: response?.results.map(({ zone_name, id }) => ({
             label: zone_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -391,7 +503,7 @@ const Pwh = () => {
           ...prev,
           districts: response?.results.map(({ district_name, id }) => ({
             label: district_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -409,7 +521,7 @@ const Pwh = () => {
           ...prev,
           areas: response?.results.map(({ area_name, id }) => ({
             label: area_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -528,12 +640,15 @@ const Pwh = () => {
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      console.log(val);
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .region_name,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -564,12 +679,14 @@ const Pwh = () => {
                                     selectType="label"
                                     style={{ w: commonStyle.w }}
                                     isLoading={getStateApiIsLoading}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .state_name,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -600,12 +717,14 @@ const Pwh = () => {
                                     selectType="label"
                                     isLoading={getZoneApiIsLoading}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .zone_name,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -636,12 +755,14 @@ const Pwh = () => {
                                     selectType="label"
                                     isLoading={getDistrictApiIsLoading}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .district_name,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -673,12 +794,14 @@ const Pwh = () => {
                                     selectType="label"
                                     isLoading={getAreaMasterApiIsLoading}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .area_name,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -774,12 +897,14 @@ const Pwh = () => {
                                     selectType="label"
                                     isLoading={false}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .no_of_chamber,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -799,7 +924,18 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue="no"
+                                    name={
+                                      formFieldsName.pwh_warehouse_details
+                                        .warehouse_in_factory_premises
+                                    }
+                                    {...methods.register(
+                                      formFieldsName.pwh_warehouse_details
+                                        .warehouse_in_factory_premises
+                                    )}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
@@ -923,7 +1059,21 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                  <RadioGroup
+                                    p="0"
+                                    name={
+                                      formFieldsName.pwh_warehouse_details
+                                        .lock_in_period
+                                    }
+                                    {...methods.register(
+                                      formFieldsName.pwh_warehouse_details
+                                        .lock_in_period
+                                    )}
+                                    defaultValue="no"
+                                    onChange={(val) => {
+                                      console.log(val);
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
@@ -1036,12 +1186,14 @@ const Pwh = () => {
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
-                                      handleOnChange={(val) =>
-                                        console.log(
-                                          "selectedOption @@@@@@@@@@@------> ",
-                                          val
-                                        )
-                                      }
+                                      handleOnChange={(val) => {
+                                        setValue(
+                                          formFieldsName.pwh_warehouse_details
+                                            .supervisor_for_day_shift,
+                                          val.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
                                     />
                                     <Text
                                       color="primary.700"
@@ -1094,12 +1246,14 @@ const Pwh = () => {
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
-                                      handleOnChange={(val) =>
-                                        console.log(
-                                          "selectedOption @@@@@@@@@@@------> ",
-                                          val
-                                        )
-                                      }
+                                      handleOnChange={(val) => {
+                                        setValue(
+                                          formFieldsName.pwh_warehouse_details
+                                            .supervisor_for_night_shift,
+                                          val.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
                                     />
                                     <Text
                                       color="primary.700"
@@ -1152,12 +1306,14 @@ const Pwh = () => {
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
-                                      handleOnChange={(val) =>
-                                        console.log(
-                                          "selectedOption @@@@@@@@@@@------> ",
-                                          val
-                                        )
-                                      }
+                                      handleOnChange={(val) => {
+                                        setValue(
+                                          formFieldsName.pwh_warehouse_details
+                                            .security_guard_for_day_shift,
+                                          val.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
                                     />
                                     <Text
                                       color="primary.700"
@@ -1210,12 +1366,14 @@ const Pwh = () => {
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
-                                      handleOnChange={(val) =>
-                                        console.log(
-                                          "selectedOption @@@@@@@@@@@------> ",
-                                          val
-                                        )
-                                      }
+                                      handleOnChange={(val) => {
+                                        setValue(
+                                          formFieldsName.pwh_warehouse_details
+                                            .security_guard_for_night_shift,
+                                          val.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
                                     />
                                     <Text
                                       color="primary.700"
@@ -1313,12 +1471,14 @@ const Pwh = () => {
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
+                                  handleOnChange={(val) => {
+                                    setValue(
+                                      formFieldsName.pwh_commodity_details
+                                        .expected_commodity_name,
+                                      val.value,
+                                      { shouldValidate: true }
+                                    );
+                                  }}
                                 />
                               </GridItem>
                             </Grid>
@@ -1362,12 +1522,14 @@ const Pwh = () => {
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
+                                  handleOnChange={(val) => {
+                                    setValue(
+                                      formFieldsName.pwh_commodity_details
+                                        .commodity_inward_type,
+                                      val.value,
+                                      { shouldValidate: true }
+                                    );
+                                  }}
                                 />
                               </GridItem>
                             </Grid>
@@ -1411,12 +1573,14 @@ const Pwh = () => {
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
+                                  handleOnChange={(val) => {
+                                    setValue(
+                                      formFieldsName.pwh_commodity_details
+                                        .pre_stack_commodity,
+                                      val.value,
+                                      { shouldValidate: true }
+                                    );
+                                  }}
                                 />
                               </GridItem>
                             </Grid>
@@ -1460,12 +1624,31 @@ const Pwh = () => {
                                 <Text textAlign="right">Funding Required </Text>{" "}
                               </GridItem>
                               <GridItem colSpan={2}>
-                                <RadioGroup p="0" defaultValue="2">
+                                <RadioGroup
+                                  p="0"
+                                  {...methods.register(
+                                    `${formFieldsName.pwh_commodity_details.funding_required}`
+                                  )}
+                                  name={
+                                    formFieldsName.pwh_commodity_details
+                                      .funding_required
+                                  }
+                                  onChange={(val) => {
+                                    console.log("e -----> ", val);
+                                  }}
+                                  defaultValue="no"
+                                >
                                   <Stack spacing={5} direction="row">
-                                    <Radio colorScheme="red" value="1">
+                                    <Radio
+                                      colorScheme="radioBoxPrimary"
+                                      value="yes"
+                                    >
                                       Yes
                                     </Radio>
-                                    <Radio colorScheme="green" value="2">
+                                    <Radio
+                                      colorScheme="radioBoxPrimary"
+                                      value="no"
+                                    >
                                       No
                                     </Radio>
                                   </Stack>
@@ -1473,118 +1656,195 @@ const Pwh = () => {
                               </GridItem>
                             </Grid>
                           </Box>
+
                           {/* ================ Bank Details ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(12, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                            >
-                              <GridItem colSpan={12}>
-                                <Text textAlign="left">Bank Details</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Sr No </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Sr No"
-                                  type="number"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={3}>
-                                <Text textAlign="left">Bank Name</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">Branch Name </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={6}>
+
+                          {/* <input {...register(`test.${index}.firstName`)} /> */}
+
+                          {bank_details_fields &&
+                            bank_details_fields.map((item, index) => (
+                              <Box
+                                bgColor={"#DBFFF5"}
+                                key={item.id}
+                                mt={commonStyle.mt}
+                                p="4"
+                              >
+                                <Heading as="h5" mb="2" fontSize="lg">
+                                  Bank Details
+                                </Heading>
                                 <Flex
-                                  gap="10px"
-                                  justifyContent="end"
+                                  //padding="20px"
+                                  borderRadius="10px"
+                                  gap="3"
                                   alignItems="center"
+                                  justifyContent="space-between"
                                 >
-                                  <MdAddBox color="#A6CE39" fontSize="45px" />
-                                  <MdIndeterminateCheckBox
-                                    color="#FF4444"
-                                    fontSize="45px"
-                                  />
+                                  <Box
+                                    display="flex"
+                                    gap="4"
+                                    alignItems="center"
+                                  >
+                                    {/* =============== SR No============= */}
+                                    <Box w="50px">
+                                      <Text
+                                        mb="0"
+                                        fontWeight="bold"
+                                        textAlign="left"
+                                      >
+                                        {" "}
+                                        Sr No{" "}
+                                      </Text>{" "}
+                                      <Box
+                                        textAlign="center"
+                                        border="1px"
+                                        p="2"
+                                        borderColor="gray.10"
+                                        borderRadius="6"
+                                      >
+                                        {index + 1}
+                                      </Box>
+                                    </Box>
+
+                                    {/* =============== Bank Name ============= */}
+                                    <Box w="210px">
+                                      <Text fontWeight="bold" textAlign="left">
+                                        Bank Name
+                                      </Text>{" "}
+                                      <Box>
+                                        <ReactSelect
+                                          options={[
+                                            { label: "ankit", value: "ankit" },
+                                          ]}
+                                          name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`}
+                                          onChange={(val) => {
+                                            console.log("val: " + val);
+                                            setValue(
+                                              `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`,
+                                              val.value,
+                                              { shouldValidate: true }
+                                            );
+                                            return val;
+                                          }}
+                                          styles={{
+                                            control: (base, state) => ({
+                                              ...base,
+                                              backgroundColor: "#fff",
+                                              borderRadius: "6px",
+                                              borderColor: errors
+                                                ?.pwh_commodity_bank_details?.[
+                                                index
+                                              ]?.bank_name?.message
+                                                ? "red"
+                                                : "#c3c3c3",
+
+                                              padding: "1px",
+                                            }),
+                                            ...reactSelectStyle,
+                                          }}
+                                        />
+                                        <Text color="red">
+                                          {errors &&
+                                            errors
+                                              ?.pwh_commodity_bank_details?.[
+                                              index
+                                            ]?.bank_name?.message}
+                                        </Text>
+                                      </Box>
+                                    </Box>
+
+                                    {/* =============== Branch Name ============= */}
+                                    <Box w="210px">
+                                      <Text fontWeight="bold" textAlign="left">
+                                        Branch Name
+                                      </Text>{" "}
+                                      <Box>
+                                        <ReactSelect
+                                          options={[
+                                            { label: "ankit", value: "ankit" },
+                                          ]}
+                                          name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`}
+                                          onChange={(val) => {
+                                            console.log("val: " + val);
+                                            setValue(
+                                              `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`,
+                                              val.value,
+                                              { shouldValidate: true }
+                                            );
+                                            return val;
+                                          }}
+                                          styles={{
+                                            control: (base, state) => ({
+                                              ...base,
+                                              backgroundColor: "#fff",
+                                              borderRadius: "6px",
+                                              borderColor: errors
+                                                ?.pwh_commodity_bank_details?.[
+                                                index
+                                              ]?.branch_name?.message
+                                                ? "red"
+                                                : "#c3c3c3",
+
+                                              padding: "1px",
+                                            }),
+                                            ...reactSelectStyle,
+                                          }}
+                                        />
+                                        <Text color="red">
+                                          {errors &&
+                                            errors
+                                              ?.pwh_commodity_bank_details?.[
+                                              index
+                                            ]?.branch_name?.message}
+                                        </Text>
+                                      </Box>
+                                    </Box>
+                                  </Box>
+
+                                  {/* =============== Add / Delete ============= */}
+                                  <Box w="180px">
+                                    <Box
+                                      mt="7"
+                                      display="flex"
+                                      alignItems="center"
+                                      justifyContent="flex-end"
+                                      gap="2"
+                                    >
+                                      <Button
+                                        borderColor="gray.10"
+                                        borderRadius="6"
+                                        bg="primary.700"
+                                        color="white"
+                                        fontWeight="bold"
+                                        _hover={{}}
+                                        onClick={() => {
+                                          append_new_bank_details();
+                                        }}
+                                      >
+                                        +
+                                      </Button>
+
+                                      <Button
+                                        borderColor="gray.10"
+                                        borderRadius="6"
+                                        bg="red"
+                                        color="white"
+                                        fontWeight="bold"
+                                        _hover={{}}
+                                        isDisabled={
+                                          bank_details_fields?.length === 1
+                                        }
+                                        onClick={() =>
+                                          remove_bank_detail(index)
+                                        }
+                                      >
+                                        -
+                                      </Button>
+                                    </Box>
+                                  </Box>
                                 </Flex>
-                              </GridItem>
-                            </Grid>
-                          </Box>
+                              </Box>
+                            ))}
+
                           <Box
                             display="flex"
                             justifyContent="flex-end"
@@ -1666,7 +1926,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details
                                         .minimum_rent
                                     }
-                                    placeholder="minimum Rent(per/sq ft/month)"
+                                    placeholder="Minimum Rent(per/sq ft/month)"
                                     type="text"
                                     label=""
                                     style={{
@@ -1696,7 +1956,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details
                                         .maximum_rent
                                     }
-                                    placeholder="Warehouse Name"
+                                    placeholder="Maximum Rent(per/sq ft/month)"
                                     type="text"
                                     label=""
                                     style={{
@@ -1727,7 +1987,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details
                                         .avg_rent
                                     }
-                                    placeholder="Warehouse Name"
+                                    placeholder="Avg Rent(per/sq ft/month)"
                                     type="text"
                                     label=""
                                     style={{
@@ -1757,7 +2017,7 @@ const Pwh = () => {
                                     name={
                                       formFieldsName.pwh_commercial_details.rent
                                     }
-                                    placeholder="Warehouse Name"
+                                    placeholder="Rent (per/sq ft/month)"
                                     type="text"
                                     label=""
                                     style={{
@@ -1852,6 +2112,9 @@ const Pwh = () => {
                                           <Input
                                             type="text"
                                             name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`}
+                                            {...methods.register(
+                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`
+                                            )}
                                             border="1px"
                                             borderColor="gray.10"
                                             backgroundColor={"white"}
@@ -1902,6 +2165,9 @@ const Pwh = () => {
                                           <Input
                                             type="text"
                                             name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`}
+                                            {...methods.register(
+                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`
+                                            )}
                                             border="1px"
                                             borderColor="gray.10"
                                             backgroundColor={"white"}
@@ -1952,6 +2218,9 @@ const Pwh = () => {
                                           <Input
                                             type="text"
                                             name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`}
+                                            {...methods.register(
+                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`
+                                            )}
                                             border="1px"
                                             borderColor="gray.10"
                                             backgroundColor={"white"}
@@ -2001,8 +2270,11 @@ const Pwh = () => {
                                         {/* <FormLabel>{label}</FormLabel> */}
                                         <Box>
                                           <Input
-                                            type="text"
+                                            type="number"
                                             name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`}
+                                            {...methods.register(
+                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`
+                                            )}
                                             border="1px"
                                             borderColor="gray.10"
                                             backgroundColor={"white"}
@@ -2172,7 +2444,21 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue="no"
+                                    {...methods.register(
+                                      formFieldsName.pwh_commercial_details
+                                        .avg_rent
+                                    )}
+                                    name={
+                                      formFieldsName.pwh_commercial_details
+                                        .avg_rent
+                                    }
+                                    onChange={(val) => {
+                                      console.log(val);
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
@@ -2239,28 +2525,16 @@ const Pwh = () => {
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
-                                  <ReactCustomSelect
+                                  <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details.gst
                                     }
+                                    placeholder="Warehouse Name"
+                                    type="text"
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
-                                    isClearable={false}
-                                    selectType="label"
-                                    isLoading={false}
-                                    style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    style={{
+                                      w: commonStyle.comm_details_style.w,
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -2299,13 +2573,17 @@ const Pwh = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) =>
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      )
-                                    }
+                                    style={{
+                                      w: commonStyle.comm_details_style.w,
+                                    }}
+                                    handleOnChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_commercial_details
+                                          .commencement_date,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -2400,7 +2678,7 @@ const Pwh = () => {
                                         .notice_period
                                     }
                                     placeholder="Notice period (Month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2443,7 +2721,9 @@ const Pwh = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{
+                                      w: commonStyle.comm_details_style.w,
+                                    }}
                                     handleOnChange={(val) => {
                                       setValue(
                                         formFieldsName.pwh_commercial_details
@@ -2457,7 +2737,7 @@ const Pwh = () => {
                               </Grid>
                             </Box>
 
-                            {/* -------------- Your projected                 -------------- */}
+                            {/* -------------- Your projected -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -2541,447 +2821,561 @@ const Pwh = () => {
 
                         <AccordionPanel bg="white" mt="5" pb={4}>
                           {/* ================ Client List ================= */}
-                          <Box>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(9, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                            >
-                              <GridItem colSpan={9}>
-                                <Text textAlign="left">Client List</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">Client Type</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Client Name </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="client name"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Mobile Number </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="mobile number"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">Region</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">State </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">Zone </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">District </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">Area </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Address </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="address"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Storage Charges </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="storage charges"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  {" "}
-                                  Reservation Qty (Bales, MT){" "}
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation Qty (Bales, MT)"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">
-                                  {" "}
-                                  Reservation Start Date{" "}
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation Start Date"
-                                  type="date"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left">
-                                  {" "}
-                                  Reservation End Date{" "}
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation End Date"
-                                  type="date"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Reservation Period(Month)
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Reservation Period(Month)"
-                                  type="date"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Reservation billing cycle{" "}
-                                </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Post Reservation billing cycle{" "}
-                                </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">
-                                  Post Reservation Storage charges
-                                </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Post Reservation Storage charges"
-                                  type="number"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={5}>
-                                <Flex
-                                  gap="10px"
-                                  justifyContent="end"
-                                  alignItems="center"
-                                >
-                                  <MdAddBox color="#A6CE39" fontSize="45px" />
-                                  <MdIndeterminateCheckBox
-                                    color="#FF4444"
-                                    fontSize="45px"
-                                  />
-                                </Flex>
-                              </GridItem>
-                            </Grid>
+                          <Box bgColor={"#DBFFF5"}>
+                            <Box p="4">
+                              <Text fontWeight="bold" textAlign="left">
+                                Client List
+                              </Text>{" "}
+                            </Box>
+
+                            {pwh_client_list_fields &&
+                              pwh_client_list_fields.map((item, index) => (
+                                <Box key={item.id}>
+                                  <Grid
+                                    textAlign="right"
+                                    mt="4"
+                                    // templateColumns="repeat(9, 1fr)"
+                                    templateColumns={{
+                                      base: "1fr",
+                                      sm: "repeat(2, 1fr)",
+                                      md: "repeat(2, 1fr)",
+                                      lg: "repeat(3, 1fr)",
+                                      xl: "repeat(4, 1fr)",
+                                    }}
+                                    alignItems="center"
+                                    gap={4}
+                                    bgColor={"#DBFFF5"}
+                                    padding="20px"
+                                    borderRadius="10px"
+                                  >
+                                    {/* ======== Client Type ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">Client Type</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_clients_details
+                                            .pwh_client_list.client_type
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          // setValue("kj", "dfd", {
+                                          //   shouldValidate: true,
+                                          // });
+                                        }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Client Name ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Client Name{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="client name"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Mobile Number ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Mobile Number{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="mobile number"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Region ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">Region</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          setValue(
+                                            formFieldsName.pwh_warehouse_details
+                                              .supervisor_for_day_shift,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== State ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">State </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Zone ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">Zone </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== District ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">District </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Area ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">Area </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Address ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left"> Address </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="address"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                  </Grid>
+
+                                  <Grid
+                                    textAlign="right"
+                                    // templateColumns="repeat(9, 1fr)"
+                                    templateColumns={{
+                                      base: "1fr",
+                                      sm: "repeat(2, 1fr)",
+                                      md: "repeat(2, 1fr)",
+                                      lg: "repeat(3, 1fr)",
+                                      xl: "repeat(4, 1fr)",
+                                    }}
+                                    alignItems="center"
+                                    gap={4}
+                                    bgColor={"#DBFFF5"}
+                                    padding="20px"
+                                    borderRadius="10px"
+                                  >
+                                    {/* ======== Storage Charges ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Storage Charges{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="storage charges"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Reservation Qty (Bales, MT) ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Reservation Qty (Bales, MT){" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="Reservation Qty (Bales, MT)"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Reservation Start Date ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Reservation Start Date{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="Reservation Start Date"
+                                        type="date"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Reservation End Date ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Reservation End Date{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="Reservation End Date"
+                                        type="date"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== reservation Period(Month) ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Reservation Period(Month)
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="Reservation Period(Month)"
+                                        type="date"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+
+                                    {/* ======== Reservation billing cycle ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Reservation billing cycle{" "}
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+
+                                    {/* ========  Post Reservation billing cycle ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Post Reservation billing cycle{" "}
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity
+                                        }
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) =>
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          )
+                                        }
+                                      />
+                                    </GridItem>
+                                    {/* ========  Reservation Storage charges ============== */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Post Reservation Storage charges
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity_quantity
+                                        }
+                                        placeholder="Post Reservation Storage charges"
+                                        type="number"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    {/* ========  Add /Edi btn ============== */}
+                                  </Grid>
+
+                                  <Box p="2" px="6">
+                                    <Flex
+                                      gap="10px"
+                                      justifyContent="end"
+                                      alignItems="center"
+                                    >
+                                      {/* =============== Add / Delete ============= */}
+                                      <Box>
+                                        <Box
+                                          mt="7"
+                                          display="flex"
+                                          alignItems="center"
+                                          justifyContent="flex-end"
+                                          gap="2"
+                                        >
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="primary.700"
+                                            color="white"
+                                            fontWeight="bold"
+                                            _hover={{}}
+                                            onClick={() =>
+                                              append_new_client_detail()
+                                            }
+                                          >
+                                            +
+                                          </Button>
+
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="red"
+                                            color="white"
+                                            fontWeight="bold"
+                                            _hover={{}}
+                                            isDisabled={
+                                              pwh_client_list_fields?.length ===
+                                              1
+                                            }
+                                            onClick={() =>
+                                              pwh_client_list_remove(index)
+                                            }
+                                          >
+                                            -
+                                          </Button>
+                                        </Box>
+                                      </Box>
+                                    </Flex>
+                                  </Box>
+                                </Box>
+                              ))}
                           </Box>
                           {/* ================ Intention Letter ================= */}
                           <Box mt={commonStyle.mt}>
@@ -3083,49 +3477,4 @@ const Pwh = () => {
 
 export default Pwh;
 
-// // ====================================================================================
-
-// import React from 'react';
-// import { useForm, useFieldArray } from 'react-hook-form';
-
-// const MyComponent = () => {
-//   const { register, control, handleSubmit } = useForm();
-//   const { fields, append, remove } = useFieldArray({
-//     control,
-//     name: 'fieldArrayName',
-//   });
-
-//   const defaultFieldValues = [
-//     { bank_name: 'Bank 1', branch_name: 'Branch 1' },
-//     { bank_name: 'Bank 2', branch_name: 'Branch 2' },
-//   ];
-
-//   // Append default field values on component mount
-//   React.useEffect(() => {
-//     defaultFieldValues.forEach((defaultValue) => append(defaultValue));
-//   }, [append]);
-
-//   const onSubmit = (data) => {
-//     console.log(data);
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit(onSubmit)}>
-//       {fields.map((field, index) => (
-//         <div key={field.id}>
-//           <input {...register(`fieldArrayName.${index}.bank_name`)} defaultValue={field.bank_name} />
-//           <input {...register(`fieldArrayName.${index}.branch_name`)} defaultValue={field.branch_name} />
-//           <button type="button" onClick={() => remove(index)}>
-//             Remove
-//           </button>
-//         </div>
-//       ))}
-//       <button type="button" onClick={() => append({ bank_name: '', branch_name: '' })}>
-//         Add Field
-//       </button>
-//       <button type="submit">Submit</button>
-//     </form>
-//   );
-// };
-
-// export default MyComponent;
+// ==========================================

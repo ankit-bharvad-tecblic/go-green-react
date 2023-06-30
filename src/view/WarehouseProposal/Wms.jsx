@@ -82,6 +82,10 @@ const formFieldsName = {
     pre_stack_commodity: "pre_stack_commodity",
     pre_stack_commodity_quantity: "pre_stack_commodity_quantity",
     funding_required: "funding_required",
+    bank_details: {
+      bank_name: "bank_name",
+      branch_name: "branch_name",
+    },
   },
   wms_commercial_details: {
     minimum_rent: "minimum_rent",
@@ -1367,16 +1371,7 @@ const Wms = () => {
                               </GridItem>
                               <GridItem colSpan={1}>
                                 <Text textAlign="left"> Sr No </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.wms_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Sr No"
-                                  type="number"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
+                                <Button>1</Button>
                               </GridItem>
                               <GridItem colSpan={3}>
                                 <Text textAlign="left">Bank Name</Text>{" "}
