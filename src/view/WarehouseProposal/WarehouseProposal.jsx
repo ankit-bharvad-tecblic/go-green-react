@@ -8,6 +8,7 @@ import ReactCustomSelect from "../../components/Elements/CommonFielsElement/Reac
 import Pwh from "./Pwh.jsx";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Wms from "./Wms";
+import ThirdParty from "./ThirdParty";
 
 const commonStyle = {
   mt: 2,
@@ -110,6 +111,8 @@ const WarehouseProposal = () => {
             <Pwh />
           ) : hiringProposal.type.value === "wms" ? (
             <Wms />
+          ) : hiringProposal.type.value === "third" ? (
+            <ThirdParty />
           ) : (
             <></>
           )}
