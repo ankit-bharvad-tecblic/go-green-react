@@ -935,6 +935,9 @@ const Pwh = () => {
                                       formFieldsName.pwh_warehouse_details
                                         .warehouse_in_factory_premises
                                     )}
+                                    onChange={(val) => {
+                                      console.log(val);
+                                    }}
                                   >
                                     <Stack spacing={5} direction="row">
                                       <Radio
@@ -1661,189 +1664,204 @@ const Pwh = () => {
 
                           {/* <input {...register(`test.${index}.firstName`)} /> */}
 
-                          {bank_details_fields &&
-                            bank_details_fields.map((item, index) => (
-                              <Box
-                                bgColor={"#DBFFF5"}
-                                key={item.id}
-                                mt={commonStyle.mt}
-                                p="4"
-                              >
-                                <Heading as="h5" mb="2" fontSize="lg">
-                                  Bank Details
-                                </Heading>
-                                <Flex
-                                  //padding="20px"
-                                  borderRadius="10px"
-                                  gap="3"
-                                  alignItems="center"
-                                  justifyContent="space-between"
+                          <Box mt="4" bgColor={"#DBFFF5"} p="4">
+                            <Heading as="h5" fontSize="lg">
+                              Bank Details
+                            </Heading>
+
+                            {bank_details_fields &&
+                              bank_details_fields.map((item, index) => (
+                                <Box
+                                  bgColor={"#DBFFF5"}
+                                  key={item.id}
+                                  mt={commonStyle.mt}
+                                  p="4"
                                 >
-                                  <Box
-                                    display="flex"
-                                    gap="4"
+                                  <Flex
+                                    //padding="20px"
+                                    borderRadius="10px"
+                                    gap="3"
                                     alignItems="center"
+                                    justifyContent="space-between"
                                   >
-                                    {/* =============== SR No============= */}
-                                    <Box w="50px">
-                                      <Text
-                                        mb="0"
-                                        fontWeight="bold"
-                                        textAlign="left"
-                                      >
-                                        {" "}
-                                        Sr No{" "}
-                                      </Text>{" "}
-                                      <Box
-                                        textAlign="center"
-                                        border="1px"
-                                        p="2"
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                      >
-                                        {index + 1}
-                                      </Box>
-                                    </Box>
-
-                                    {/* =============== Bank Name ============= */}
-                                    <Box w="210px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Bank Name
-                                      </Text>{" "}
-                                      <Box>
-                                        <ReactSelect
-                                          options={[
-                                            { label: "ankit", value: "ankit" },
-                                          ]}
-                                          name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`}
-                                          onChange={(val) => {
-                                            console.log("val: " + val);
-                                            setValue(
-                                              `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`,
-                                              val.value,
-                                              { shouldValidate: true }
-                                            );
-                                            return val;
-                                          }}
-                                          styles={{
-                                            control: (base, state) => ({
-                                              ...base,
-                                              backgroundColor: "#fff",
-                                              borderRadius: "6px",
-                                              borderColor: errors
-                                                ?.pwh_commodity_bank_details?.[
-                                                index
-                                              ]?.bank_name?.message
-                                                ? "red"
-                                                : "#c3c3c3",
-
-                                              padding: "1px",
-                                            }),
-                                            ...reactSelectStyle,
-                                          }}
-                                        />
-                                        <Text color="red">
-                                          {errors &&
-                                            errors
-                                              ?.pwh_commodity_bank_details?.[
-                                              index
-                                            ]?.bank_name?.message}
-                                        </Text>
-                                      </Box>
-                                    </Box>
-
-                                    {/* =============== Branch Name ============= */}
-                                    <Box w="210px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Branch Name
-                                      </Text>{" "}
-                                      <Box>
-                                        <ReactSelect
-                                          options={[
-                                            { label: "ankit", value: "ankit" },
-                                          ]}
-                                          name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`}
-                                          onChange={(val) => {
-                                            console.log("val: " + val);
-                                            setValue(
-                                              `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`,
-                                              val.value,
-                                              { shouldValidate: true }
-                                            );
-                                            return val;
-                                          }}
-                                          styles={{
-                                            control: (base, state) => ({
-                                              ...base,
-                                              backgroundColor: "#fff",
-                                              borderRadius: "6px",
-                                              borderColor: errors
-                                                ?.pwh_commodity_bank_details?.[
-                                                index
-                                              ]?.branch_name?.message
-                                                ? "red"
-                                                : "#c3c3c3",
-
-                                              padding: "1px",
-                                            }),
-                                            ...reactSelectStyle,
-                                          }}
-                                        />
-                                        <Text color="red">
-                                          {errors &&
-                                            errors
-                                              ?.pwh_commodity_bank_details?.[
-                                              index
-                                            ]?.branch_name?.message}
-                                        </Text>
-                                      </Box>
-                                    </Box>
-                                  </Box>
-
-                                  {/* =============== Add / Delete ============= */}
-                                  <Box w="180px">
                                     <Box
-                                      mt="7"
                                       display="flex"
+                                      gap="4"
                                       alignItems="center"
-                                      justifyContent="flex-end"
-                                      gap="2"
                                     >
-                                      <Button
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                        bg="primary.700"
-                                        color="white"
-                                        fontWeight="bold"
-                                        _hover={{}}
-                                        onClick={() => {
-                                          append_new_bank_details();
-                                        }}
-                                      >
-                                        +
-                                      </Button>
+                                      {/* =============== SR No============= */}
+                                      <Box w="50px">
+                                        <Text
+                                          mb="0"
+                                          fontWeight="bold"
+                                          textAlign="left"
+                                        >
+                                          {" "}
+                                          Sr No{" "}
+                                        </Text>{" "}
+                                        <Box
+                                          textAlign="center"
+                                          border="1px"
+                                          p="2"
+                                          borderColor="gray.10"
+                                          borderRadius="6"
+                                        >
+                                          {index + 1}
+                                        </Box>
+                                      </Box>
 
-                                      <Button
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                        bg="red"
-                                        color="white"
-                                        fontWeight="bold"
-                                        _hover={{}}
-                                        isDisabled={
-                                          bank_details_fields?.length === 1
-                                        }
-                                        onClick={() =>
-                                          remove_bank_detail(index)
-                                        }
-                                      >
-                                        -
-                                      </Button>
+                                      {/* =============== Bank Name ============= */}
+                                      <Box w="210px">
+                                        <Text
+                                          fontWeight="bold"
+                                          textAlign="left"
+                                        >
+                                          Bank Name
+                                        </Text>{" "}
+                                        <Box>
+                                          <ReactSelect
+                                            options={[
+                                              {
+                                                label: "ankit",
+                                                value: "ankit",
+                                              },
+                                            ]}
+                                            name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`}
+                                            onChange={(val) => {
+                                              console.log("val: " + val);
+                                              setValue(
+                                                `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`,
+                                                val.value,
+                                                { shouldValidate: true }
+                                              );
+                                              return val;
+                                            }}
+                                            styles={{
+                                              control: (base, state) => ({
+                                                ...base,
+                                                backgroundColor: "#fff",
+                                                borderRadius: "6px",
+                                                borderColor: errors
+                                                  ?.pwh_commodity_bank_details?.[
+                                                  index
+                                                ]?.bank_name?.message
+                                                  ? "red"
+                                                  : "#c3c3c3",
+
+                                                padding: "1px",
+                                              }),
+                                              ...reactSelectStyle,
+                                            }}
+                                          />
+                                          <Text color="red">
+                                            {errors &&
+                                              errors
+                                                ?.pwh_commodity_bank_details?.[
+                                                index
+                                              ]?.bank_name?.message}
+                                          </Text>
+                                        </Box>
+                                      </Box>
+
+                                      {/* =============== Branch Name ============= */}
+                                      <Box w="210px">
+                                        <Text
+                                          fontWeight="bold"
+                                          textAlign="left"
+                                        >
+                                          Branch Name
+                                        </Text>{" "}
+                                        <Box>
+                                          <ReactSelect
+                                            options={[
+                                              {
+                                                label: "ankit",
+                                                value: "ankit",
+                                              },
+                                            ]}
+                                            name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`}
+                                            onChange={(val) => {
+                                              console.log("val: " + val);
+                                              setValue(
+                                                `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`,
+                                                val.value,
+                                                { shouldValidate: true }
+                                              );
+                                              return val;
+                                            }}
+                                            styles={{
+                                              control: (base, state) => ({
+                                                ...base,
+                                                backgroundColor: "#fff",
+                                                borderRadius: "6px",
+                                                borderColor: errors
+                                                  ?.pwh_commodity_bank_details?.[
+                                                  index
+                                                ]?.branch_name?.message
+                                                  ? "red"
+                                                  : "#c3c3c3",
+
+                                                padding: "1px",
+                                              }),
+                                              ...reactSelectStyle,
+                                            }}
+                                          />
+                                          <Text color="red">
+                                            {errors &&
+                                              errors
+                                                ?.pwh_commodity_bank_details?.[
+                                                index
+                                              ]?.branch_name?.message}
+                                          </Text>
+                                        </Box>
+                                      </Box>
                                     </Box>
-                                  </Box>
-                                </Flex>
-                              </Box>
-                            ))}
+
+                                    {/* =============== Add / Delete ============= */}
+                                    <Box w="180px">
+                                      <Box
+                                        mt="7"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="flex-end"
+                                        gap="2"
+                                      >
+                                        <Button
+                                          borderColor="gray.10"
+                                          borderRadius="6"
+                                          bg="primary.700"
+                                          color="white"
+                                          fontWeight="bold"
+                                          _hover={{}}
+                                          onClick={() => {
+                                            append_new_bank_details();
+                                          }}
+                                        >
+                                          +
+                                        </Button>
+
+                                        <Button
+                                          borderColor="gray.10"
+                                          borderRadius="6"
+                                          bg="red"
+                                          color="white"
+                                          fontWeight="bold"
+                                          _hover={{}}
+                                          isDisabled={
+                                            bank_details_fields?.length === 1
+                                          }
+                                          onClick={() =>
+                                            remove_bank_detail(index)
+                                          }
+                                        >
+                                          -
+                                        </Button>
+                                      </Box>
+                                    </Box>
+                                  </Flex>
+                                </Box>
+                              ))}
+                          </Box>
 
                           <Box
                             display="flex"
@@ -3305,6 +3323,7 @@ const Pwh = () => {
                                         }
                                       />
                                     </GridItem>
+
                                     {/* ========  Reservation Storage charges ============== */}
                                     <GridItem>
                                       <Text textAlign="left">
@@ -3321,9 +3340,9 @@ const Pwh = () => {
                                         style={{ w: "100%" }}
                                       />
                                     </GridItem>
-                                    {/* ========  Add /Edi btn ============== */}
                                   </Grid>
 
+                                  {/* ========  Add /Edi btn ============== */}
                                   <Box p="2" px="6">
                                     <Flex
                                       gap="10px"
@@ -3347,7 +3366,7 @@ const Pwh = () => {
                                             fontWeight="bold"
                                             _hover={{}}
                                             onClick={() =>
-                                              append_new_client_detail()
+                                              append_new_pwh_client_detail()
                                             }
                                           >
                                             +
