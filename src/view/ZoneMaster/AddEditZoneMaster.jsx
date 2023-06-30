@@ -10,10 +10,13 @@ import {
   useAddZoneMasterMutation,
   useUpdateZoneMasterMutation,
   useGetStateMasterMutation,
+  useGetRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 import { MotionSlideUp } from "../../utils/animation";
+import CustomSelector from "../../components/Elements/CustomSelector";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
 
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
@@ -44,6 +47,7 @@ const AddEditZoneMaster = () => {
   };
 
   const [getStateMaster] = useGetStateMasterMutation();
+  const [getRegionMaster] = useGetRegionMasterMutation();
 
   const [addZoneMaster, { isLoading: addZoneMasterApiIsLoading }] =
     useAddZoneMasterMutation();
@@ -51,10 +55,14 @@ const AddEditZoneMaster = () => {
   const [updateZoneMaster, { isLoading: updateZoneMasterApiIsLoading }] =
     useUpdateZoneMasterMutation();
 
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    regions: [],
+  });
+
   const addData = async (data) => {
     try {
       const response = await addZoneMaster(data).unwrap();
-      console.log("add commodity master res", response); 
+      console.log("add commodity master res", response);
       if (response.status === 201) {
         toasterAlert(response);
         navigate("/manage-location/zone-master");
@@ -65,6 +73,7 @@ const AddEditZoneMaster = () => {
     }
   };
 
+  //All state Api call
   const getAllStateMaster = async () => {
     try {
       const response = await getStateMaster().unwrap();
@@ -93,6 +102,28 @@ const AddEditZoneMaster = () => {
     }
   };
 
+  //All region master API call
+  const getRegionMasterList = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("Success:", response);
+
+      let arr = response?.results.map((item) => ({
+        label: item.region_name,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const updateData = async (data) => {
     try {
       const response = await updateZoneMaster(data).unwrap();
@@ -112,6 +143,7 @@ const AddEditZoneMaster = () => {
       let obj = {
         zone_name: details.zone_name,
         state: details.state.state_name,
+        region: details.region?.region_name,
         active: details.active,
       };
 
@@ -124,6 +156,7 @@ const AddEditZoneMaster = () => {
   }, [details]);
 
   useEffect(() => {
+    getRegionMasterList();
     getAllStateMaster();
     // setAddEditFormFieldsList(addEditFormFields);
   }, []);
@@ -166,6 +199,48 @@ const AddEditZoneMaster = () => {
                   </Box>
                 </MotionSlideUp>
               ))}
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Region
+                  </Text>
+                  <CustomSelector
+                    name="region"
+                    label=""
+                    options={selectBoxOptions.regions}
+                    selectedValue={selectBoxOptions.regions.find(
+                      (opt) => opt.label === details?.region.region_name
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Active
+                  </Text>
+                  <CustomSwitch
+                    name="is_active"
+                    // type="switch"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    // isChecked="regions?.active"
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
           </Box>
 
           <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">

@@ -69,7 +69,7 @@ const SidebarContent = ({ logoText, routes }) => {
                       sm: "0px",
                       xl: "0px",
                     }}
-                    py="12px"
+                    py="6px"
                     cursor="pointer"
                   >
                     {typeof prop.icon === "string" ? (
@@ -96,7 +96,7 @@ const SidebarContent = ({ logoText, routes }) => {
         );
       }
       return (
-        <Box ml={prop.secondaryNavbar ? "20px " : "0px"}>
+        <Box ml={prop.secondaryNavbar ? "0px " : "0px"}>
           <NavLink to={prop.path} key={prop.name}>
             {activeRoute(prop.path) === "active" ? (
               <Button
@@ -104,15 +104,16 @@ const SidebarContent = ({ logoText, routes }) => {
                 justifyContent="flex-start"
                 alignItems="center"
                 bg={"primary.700"}
-                mb={{
-                  xl: "12px",
-                }}
+                h={"40px"}
+                // mb={{
+                //   xl: "5px",
+                // }}
                 // ml={prop.secondaryNavbar ? "30px " : "0px"}
                 // maxWidth={prop.secondaryNavbar ? "190px" : "100%"}
                 // mx={{
                 //   xl: "auto",
                 // }}
-                p="12px"
+                // p="8px"
                 brorderRadius="15px"
                 _hover="none"
                 w="100%"
@@ -157,15 +158,17 @@ const SidebarContent = ({ logoText, routes }) => {
                 justifyContent="flex-start"
                 alignItems="center"
                 bg="transparent"
-                mb={{
-                  xl: "12px",
-                }}
+                h={"40px"}
+                // mb={{
+                //   xl: "12px",
+                // }}
                 // ml={prop.secondaryNavbar ? "30px " : "0px"}
                 // maxWidth={prop.secondaryNavbar ? "190px" : "100%"}
                 // mx={{
                 //   xl: "auto",
                 // }}
-                p="12px"
+                px="12px"
+                py="8px"
                 borderRadius="15px"
                 _hover="none"
                 w="100%"

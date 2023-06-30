@@ -101,16 +101,16 @@ const addEditFormFields = [
   //   placeholder: "DISTRICT NAME",
   //   type: "select",
   // },
-  {
-    label: "Is Block",
-    name: "is_block",
-    type: "switch",
-  },
-  {
-    label: "Active",
-    name: "is_active",
-    type: "switch",
-  },
+  // {
+  //   label: "Is Block",
+  //   name: "is_block",
+  //   type: "switch",
+  // },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
 ];
 
 const schema = yup.object().shape({
@@ -120,8 +120,10 @@ const schema = yup.object().shape({
   is_active: yup.string(),
   district: yup.string().required("District name is"),
   is_block: yup.string(),
-
+  region: yup.string().required("Region name is required"),
+  state: yup.string().required("State name is required"),
   area_name: yup.string().required("Area Name is required"),
+  zone: yup.string().required("Zone name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

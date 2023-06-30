@@ -13,6 +13,7 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
   useAddCommodityVarietyMutation,
+  useGetCommodityTypeMasterMutation,
   useGetCommodityVarietyMutation,
   useUpdateCommodityVarietyMutation,
 } from "../../features/master-api-slice";
@@ -46,6 +47,10 @@ const AddEditFormCommodityVariety = () => {
       methods.setValue(key, "");
     });
   };
+  const [
+    getCommodityTypeMaster,
+    { isLoading: getCommodityTypeMasterApiIsLoading },
+  ] = useGetCommodityTypeMasterMutation();
   const [getCommodityVariety, { isLoading: getCommodityVarietyApiIsLoading }] =
     useGetCommodityVarietyMutation();
 
@@ -72,12 +77,12 @@ const AddEditFormCommodityVariety = () => {
 
   const getCommodityType = async () => {
     try {
-      const response = await getCommodityVariety().unwrap();
+      const response = await getCommodityTypeMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_name,
+        label: type.commodity_type,
         value: type.id,
       }));
       console.log(arr);
@@ -115,6 +120,7 @@ const AddEditFormCommodityVariety = () => {
   useEffect(() => {
     getCommodityType();
     if (details?.id) {
+      console.log(details);
       let obj = {
         commodity_variety: details.commodity_variety,
         description: details.description,
@@ -165,9 +171,11 @@ const AddEditFormCommodityVariety = () => {
 
                       selectedValue:
                         item.type === "select" &&
-                        item?.options?.find(
-                          (opt) => opt.label === details?.state.state_name
-                        ),
+                        item?.options?.find((opt) => {
+                          console.log("opt", opt);
+                          console.log("details", details);
+                          return opt.label === details?.commodity_id;
+                        }),
                       selectType: "value",
                       isClearable: false,
                     })}

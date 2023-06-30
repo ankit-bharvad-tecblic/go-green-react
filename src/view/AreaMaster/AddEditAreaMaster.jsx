@@ -22,10 +22,14 @@ import {
   useGetAreaMasterMutation,
   useGetDistrictMasterMutation,
   useGetEarthQuakeZoneTypeMasterMutation,
+  useGetZoneMasterMutation,
+  useGetStateMasterMutation,
+  useGetRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import CustomSelector from "../../components/Elements/CustomSelector";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
 
 const AddEditFormArea = () => {
   const navigate = useNavigate();
@@ -33,12 +37,18 @@ const AddEditFormArea = () => {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
+  const [getZoneMaster] = useGetZoneMasterMutation();
+  const [getStateMaster] = useGetStateMasterMutation();
+  const [getRegionMaster] = useGetRegionMasterMutation();
   const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
   const [addEditFormFieldsList, setAddEditFormFieldsList] =
     useState(addEditFormFields);
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     district: [],
     earthQuack: [],
+    regions: [],
+    zones: [],
+    district: [],
   });
 
   const details = location.state?.details;
@@ -98,7 +108,94 @@ const AddEditFormArea = () => {
       console.error("Error:", error);
     }
   };
+  //API of all zone data
+  const getAllZone = async () => {
+    try {
+      const response = await getZoneMaster().unwrap();
 
+      console.log("Success:", response);
+      console.log(details);
+      // setCommodityTypeMaster();
+      let arr = response?.results.map((item) => ({
+        label: item.zone_name,
+        value: item.id,
+      }));
+      console.log(arr);
+
+      setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+              options: arr,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+      console.log(arr);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        zones: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  // All state Call
+  const getAllStateMaster = async () => {
+    try {
+      const response = await getStateMaster().unwrap();
+      console.log("response ", response);
+      let arr = response?.results.map((item) => ({
+        label: item.state_name,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+              options: arr,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  // All region call
+  const getRegionMasterList = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("Success:", response);
+
+      let arr = response?.results.map((item) => ({
+        label: item.region_name,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const updateData = async (data) => {
     try {
       const response = await updateAreaMaster(data).unwrap();
@@ -118,6 +215,9 @@ const AddEditFormArea = () => {
       let obj = {
         earthquake_zone_type_id: details.earthquake_zone_type_id,
         district_name: details.district.district_name,
+        zone: details.zone.zone_name,
+        region: details.region.region_name,
+        state: details.state.state_name,
         is_active: details.is_active,
         is_block: details.is_block,
         area_name: details.area_name,
@@ -132,6 +232,9 @@ const AddEditFormArea = () => {
   }, [details]);
   useEffect(() => {
     getAllDistrict();
+    getAllStateMaster();
+    getRegionMasterList();
+    getAllZone();
 
     // setAddEditFormFieldsList(addEditFormFields);
   }, []);
@@ -175,19 +278,19 @@ const AddEditFormArea = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
+              <Box></Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="10" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="200px">
-                      District
-                    </Text>{" "}
+                      Region
+                    </Text>
                     <CustomSelector
-                      name="district"
+                      name="region"
                       label=""
-                      isChecked="details?.active"
-                      options={selectBoxOptions.district}
-                      selectedValue={selectBoxOptions.district.find(
-                        (opt) => opt.label === details?.district.district_name
+                      options={selectBoxOptions.regions}
+                      selectedValue={selectBoxOptions.regions.find(
+                        (opt) => opt.label === details?.region.region_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -197,8 +300,110 @@ const AddEditFormArea = () => {
                       }}
                     />
                   </Box>
-                </MotionSlideUp>{" "}
+                </MotionSlideUp>
               </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="200px">
+                      State
+                    </Text>
+                    <CustomSelector
+                      name="state"
+                      label=""
+                      options={selectBoxOptions.states}
+                      selectedValue={selectBoxOptions.states?.find(
+                        (opt) => opt?.label === details?.state?.state_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="200px">
+                      Zone
+                    </Text>
+                    <CustomSelector
+                      name="zone"
+                      label=""
+                      options={selectBoxOptions.zones}
+                      selectedValue={selectBoxOptions.zones.find(
+                        (opt) => opt.label === details?.zone?.zone_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    District
+                  </Text>{" "}
+                  <CustomSelector
+                    name="district"
+                    label=""
+                    isChecked="details?.active"
+                    options={selectBoxOptions.district}
+                    selectedValue={selectBoxOptions.district.find(
+                      (opt) => opt.label === details?.district.district_name
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>{" "}
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Active
+                  </Text>
+                  <CustomSwitch
+                    name="is_active"
+                    // type="switch"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    // isChecked="regions?.active"
+                  />
+                </Box>
+              </MotionSlideUp>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Is Block
+                  </Text>
+                  <CustomSwitch
+                    name="is_block"
+                    // type="switch"
+                    label=""
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    // isChecked="regions?.active"
+                  />
+                </Box>
+              </MotionSlideUp>
             </Box>
             <Box
               display="flex"

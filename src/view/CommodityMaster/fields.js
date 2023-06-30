@@ -74,11 +74,11 @@ const addEditFormFields = [
     placeholder: "Rent On Bag",
     type: "number",
   },
-  {
-    label: "Active",
-    name: "active",
-    type: "switch",
-  },
+  // {
+  //   label: "Active",
+  //   name: "active",
+  //   type: "switch",
+  // },
   {
     label: "Commodity Type",
     name: "commodity_type",
@@ -94,7 +94,7 @@ const schema = yup.object().shape({
   minimum_bag_size: yup.number().required("Minimum bag size is required"),
   maximum_bag_size: yup.string().required("Maximum bag size is required"),
   rent_on_bag: yup.string().required("Rent on bag is required"),
-  active: yup.string(),
+  is_active: yup.string(),
   commodity_type: yup.string().required("Commodity type is required"),
 });
 

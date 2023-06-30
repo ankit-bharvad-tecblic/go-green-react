@@ -61,16 +61,17 @@ const addEditFormFields = [
     placeholder: "State Name",
     type: "select",
   },
-  {
-    label: "Active",
-    name: "is_active",
-    type: "switch",
-  },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
 ];
 
 const schema = yup.object().shape({
   zone_name: yup.string().required("Zone name is required"),
   state: yup.string().required("State name is required"),
+  region: yup.string().required("Region name  is required"),
   is_active: yup.string(),
 });
 

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function CustomInput({ name, placeholder, type, label, style }) {
+function CustomInput({ name, placeholder, type, label, style, size }) {
   const {
     control,
     formState: { errors },

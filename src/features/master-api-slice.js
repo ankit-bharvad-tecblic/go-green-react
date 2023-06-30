@@ -574,6 +574,18 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    //Download Excel File API
+    getDownLoadExcel: builder.mutation({
+      query: (params) => ({
+        url: `${API.DASHBOARD.EXCEL_DOWNLOAD_MASTER}?model_name=${model_name}`,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 

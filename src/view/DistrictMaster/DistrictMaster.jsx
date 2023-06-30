@@ -137,7 +137,7 @@ const DistrictMaster = () => {
     //   cell: (info) => info.getValue(),
     //   header: "OFFICE ADDRESS",
     // }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -146,7 +146,7 @@ const DistrictMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.isArray}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(

@@ -15,8 +15,8 @@ import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
 import { BreadcrumbLinks } from "./fields";
 
 const ZoneMaster = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
