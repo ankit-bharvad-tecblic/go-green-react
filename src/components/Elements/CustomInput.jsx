@@ -14,7 +14,6 @@ function CustomInput({ name, placeholder, type, label, style }) {
     formState: { errors },
   } = useFormContext();
 
-  console.log("errors", errors);
   const error = errors[name];
 
   return (
@@ -51,7 +50,7 @@ function CustomInput({ name, placeholder, type, label, style }) {
           )}
         />
       </Box>
-      <FormErrorMessage>{error && error.message}</FormErrorMessage>
+      <FormErrorMessage>{error && error?.message}</FormErrorMessage>
     </FormControl>
   );
 }

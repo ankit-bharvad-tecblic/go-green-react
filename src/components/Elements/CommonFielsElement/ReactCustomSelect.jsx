@@ -32,8 +32,16 @@ const ReactCustomSelect = ({
 
   const error = errors[name];
 
+  // React.useEffect(() => {
+  //   const subscription = watch((value, { name, type }) =>
+  //     console.log("watch", value, name, type)
+  //   );
+  //   return () => subscription.unsubscribe();
+  // }, [watch]);
+
   console.log("selectedValue value: ", selectedValue);
   const handleSelectChange = (selectedOption) => {
+    console.log("name --> ", name, selectedOption);
     console.log("handleSelectChange", selectedOption);
     setValue(name, selectedOption?.[selectType] || "");
     setSelectedVal(selectedOption);
@@ -41,6 +49,7 @@ const ReactCustomSelect = ({
   };
 
   useEffect(() => {
+    console.log("tesing select cmp ");
     setValue(name, selectedValue?.[selectType] || "");
   }, [selectedValue]);
 

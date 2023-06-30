@@ -42,54 +42,54 @@ const WarehouseProposal = () => {
       </Box>
 
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box
-            bg="white"
-            p="5"
-            borderRadius={10}
-            mt="4"
-            display={{ base: "column", md: "flex" }}
-          >
-            <Box w="full" p="3">
-              <MotionSlideUp duration={0.2 * 0.5} delay={0.1 * 0.5}>
-                <ReactCustomSelect
-                  name="Select-warehouse-Type"
-                  label="Select warehouse Type"
-                  options={[{ label: "testing ", value: "dslfj" }]}
-                  selectedValue={{ label: "test", value: "test" }}
-                  isClearable={false}
-                  selectType="label"
-                  style={{ w: commonStyle.w }}
-                  handleOnChange={(val) =>
-                    console.log("selectedOption @@@@@@@@@@@------> ", val)
-                  }
-                />
-              </MotionSlideUp>
-            </Box>
-
-            <Box w="full" p="3">
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <ReactCustomSelect
-                  name="Select-warehouse-Type"
-                  label="Select warehouse Type"
-                  options={[{ label: "testing ", value: "dslfj" }]}
-                  selectedValue={{ label: "test", value: "test" }}
-                  isClearable={false}
-                  selectType="label"
-                  style={{ w: commonStyle.w }}
-                  handleOnChange={(val) =>
-                    console.log("selectedOption @@@@@@@@@@@------> ", val)
-                  }
-                />
-              </MotionSlideUp>
-            </Box>
+        {/* <form onSubmit={methods.handleSubmit(onSubmit)}> */}
+        <Box
+          bg="white"
+          p="5"
+          borderRadius={10}
+          mt="4"
+          display={{ base: "column", md: "flex" }}
+        >
+          <Box w="full" p="3">
+            <MotionSlideUp duration={0.2 * 0.5} delay={0.1 * 0.5}>
+              <ReactCustomSelect
+                name="Select-warehouse-Type"
+                label="Select warehouse Type"
+                options={[{ label: "testing ", value: "dslfj" }]}
+                selectedValue={{ label: "test", value: "test" }}
+                isClearable={false}
+                selectType="label"
+                style={{ w: commonStyle.w }}
+                handleOnChange={(val) =>
+                  console.log("selectedOption @@@@@@@@@@@------> ", val)
+                }
+              />
+            </MotionSlideUp>
           </Box>
 
-          <Box mt="2">
-            <Pwh />
+          <Box w="full" p="3">
+            <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <ReactCustomSelect
+                name="Select-warehouse-Type"
+                label="Select warehouse Type"
+                options={[{ label: "testing ", value: "dslfj" }]}
+                selectedValue={{ label: "test", value: "test" }}
+                isClearable={false}
+                selectType="label"
+                style={{ w: commonStyle.w }}
+                handleOnChange={(val) =>
+                  console.log("selectedOption @@@@@@@@@@@------> ", val)
+                }
+              />
+            </MotionSlideUp>
           </Box>
+        </Box>
 
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
+        <Box mt="2">
+          <Pwh />
+        </Box>
+
+        {/* <Box display="flex" justifyContent="flex-end" mt="10" px="0">
             <Button
               type="submit"
               //w="full"
@@ -103,8 +103,8 @@ const WarehouseProposal = () => {
             >
               Submit
             </Button>
-          </Box>
-        </form>
+          </Box> */}
+        {/* </form> */}
       </FormProvider>
     </Box>
   );
