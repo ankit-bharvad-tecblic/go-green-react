@@ -1473,6 +1473,7 @@ const ThirdParty = () => {
                               <GridItem colSpan={9}>
                                 <Text textAlign="left">Client List</Text>{" "}
                               </GridItem>
+                              {/* ================ Client Type ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Client Type</Text>{" "}
                                 <ReactCustomSelect
@@ -1508,6 +1509,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Client Name ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left"> Client Name </Text>{" "}
                                 <CustomInput
@@ -1521,6 +1523,7 @@ const ThirdParty = () => {
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
+                              {/* ================ Mobile Number ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left"> Mobile Number </Text>{" "}
                                 <CustomInput
@@ -1534,6 +1537,7 @@ const ThirdParty = () => {
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
+                              {/* ================ Region ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Region</Text>{" "}
                                 <ReactCustomSelect
@@ -1569,6 +1573,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ State ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">State </Text>{" "}
                                 <ReactCustomSelect
@@ -1604,6 +1609,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Zone ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Zone </Text>{" "}
                                 <ReactCustomSelect
@@ -1639,6 +1645,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ District ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">District </Text>{" "}
                                 <ReactCustomSelect
@@ -1674,6 +1681,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Area ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Area </Text>{" "}
                                 <ReactCustomSelect
@@ -1709,6 +1717,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Address ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left"> Address </Text>{" "}
                                 <CustomInput
@@ -1722,6 +1731,7 @@ const ThirdParty = () => {
                                   style={{ w: "100%" }}
                                 />
                               </GridItem>
+                              {/* ================ Client known to GGWPL official ================= */}
                               <GridItem colSpan={2}>
                                 <Text textAlign="left">
                                   Client known to GGWPL official
@@ -1759,6 +1769,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Client Sourced by ================= */}
                               <GridItem colSpan={2}>
                                 <Text textAlign="left">Client Sourced by</Text>{" "}
                                 <ReactCustomSelect
@@ -1794,6 +1805,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Bank Name ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Bank Name</Text>{" "}
                                 <ReactCustomSelect
@@ -1829,6 +1841,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Branch Name ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Branch Name</Text>{" "}
                                 <ReactCustomSelect
@@ -1864,6 +1877,7 @@ const ThirdParty = () => {
                                   }
                                 />
                               </GridItem>
+                              {/* ================ Employee Name ================= */}
                               <GridItem colSpan={1}>
                                 <Text textAlign="left">Employee Name</Text>{" "}
                                 <ReactCustomSelect
