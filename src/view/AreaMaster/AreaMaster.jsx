@@ -27,7 +27,7 @@ const AreaMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25,
+    limit: 25, totalFilter:0 , total:0
   });
 
   const [
@@ -212,6 +212,8 @@ const AreaMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
+total: response?.total_data,
+totalFilter: response?.total
       }));
 
       console.log(Math.ceil(response?.total / filter.limit), "length");

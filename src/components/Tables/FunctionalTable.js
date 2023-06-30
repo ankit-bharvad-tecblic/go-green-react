@@ -268,9 +268,14 @@ function FunctionalTable({
           </InputGroup> */}
         </Flex>
       </Flex>
-      <Box position="relative" overflowX="auto">
+      <Box
+        position="relative"
+        overflowX="auto"
+        h="calc( 100vh - 343px )"
+        overflowY="auto"
+      >
         <Table mt="15px">
-          <Thead>
+          <Thead position="sticky" top="0px" background="white" zIndex="10">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -454,11 +459,14 @@ function FunctionalTable({
       <Flex justifyContent="space-between" alignItems="center" mt="30px">
         <Box>
           {isShow ? (
-            <Text> Total Record According to filter : 20 </Text>
+            <Text>
+              {" "}
+              Total Record According to filter : {filter?.totalFilter || 0}{" "}
+            </Text>
           ) : (
             <></>
           )}
-          <Text>Total Record In Database : 20 </Text>
+          <Text>Total Record In Database : {filter?.total} </Text>
         </Box>
         <Flex justifyContent="end" alignItems="center" gap="3px">
           <Button

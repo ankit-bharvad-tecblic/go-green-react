@@ -1,10 +1,13 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
 import { MotionSlideUp } from "../../utils/animation";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 
 import Pwh from "./Pwh.jsx";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Wms from "./Wms";
 
 const commonStyle = {
   mt: 2,
@@ -17,6 +20,11 @@ const commonStyle = {
 };
 
 const WarehouseProposal = () => {
+  const [hiringProposal, setHiringProposal] = useState({
+    type: { label: "PWH ", value: "pwh" },
+    subType: { label: "Leased", value: "leased" },
+  });
+
   const methods = useForm({
     // resolver: yupResolver(schema),
   });
@@ -55,14 +63,20 @@ const WarehouseProposal = () => {
               <ReactCustomSelect
                 name="Select-warehouse-Type"
                 label="Select warehouse Type"
-                options={[{ label: "testing ", value: "dslfj" }]}
-                selectedValue={{ label: "test", value: "test" }}
+                options={[
+                  { label: "PWH ", value: "pwh" },
+                  { label: "WMS", value: "wms" },
+                  { label: "THIRD PARTY", value: "third" },
+                  { label: "WMS + RENT", value: "rent" },
+                ]}
+                selectedValue={{ label: "PWH ", value: "pwh" }}
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
-                handleOnChange={(val) =>
-                  console.log("selectedOption @@@@@@@@@@@------> ", val)
-                }
+                handleOnChange={(val) => {
+                  console.log("selectedOption @@@@@@@@@@@------> ", val);
+                  setHiringProposal((old) => ({ ...old, type: val }));
+                }}
               />
             </MotionSlideUp>
           </Box>
@@ -70,40 +84,37 @@ const WarehouseProposal = () => {
           <Box w="full" p="3">
             <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
               <ReactCustomSelect
-                name="Select-warehouse-Type"
-                label="Select warehouse Type"
-                options={[{ label: "testing ", value: "dslfj" }]}
-                selectedValue={{ label: "test", value: "test" }}
+                name="Select-warehouse-sub-Type"
+                label="Select warehouse Sub Type"
+                options={[
+                  { label: "Leased ", value: "leased" },
+                  { label: "Sub Leased ", value: "sub-leased" },
+                  { label: "Tri Party ", value: "tri-party" },
+                  { label: "Revenue Sharing ", value: "revenue" },
+                ]}
+                selectedValue={{ label: "Leased", value: "leased" }}
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
-                handleOnChange={(val) =>
-                  console.log("selectedOption @@@@@@@@@@@------> ", val)
-                }
+                handleOnChange={(val) => {
+                  console.log("selectedOption @@@@@@@@@@@------> ", val);
+                  setHiringProposal((old) => ({ ...old, subType: val }));
+                }}
               />
             </MotionSlideUp>
           </Box>
         </Box>
 
         <Box mt="2">
-          <Pwh />
+          {hiringProposal.type.value === "pwh" ? (
+            <Pwh />
+          ) : hiringProposal.type.value === "wms" ? (
+            <Wms />
+          ) : (
+            <></>
+          )}
         </Box>
 
-        {/* <Box display="flex" justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={false}
-              my={"4"}
-              px={"10"}
-            >
-              Submit
-            </Button>
-          </Box> */}
         {/* </form> */}
       </FormProvider>
     </Box>

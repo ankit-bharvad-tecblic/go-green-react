@@ -31,11 +31,19 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { BiEditAlt } from "react-icons/bi";
-import { BsArrowDown, BsArrowUp, BsPlusCircle, BsSearch } from "react-icons/bs";
+import { BiEditAlt, BiFilterAlt } from "react-icons/bi";
+import {
+  BsArrowDown,
+  BsArrowUp,
+  BsCloudDownload,
+  BsPlusCircle,
+  BsSearch,
+} from "react-icons/bs";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 function FunctionalTable({
   filter,
@@ -44,52 +52,64 @@ function FunctionalTable({
   columns,
   data,
   loading,
+  addForm,
 }) {
-  const [sorting, setSorting] = React.useState([]);
+  const dispatch = useDispatch();
+  // const [sorting, setSorting] = React.useState([]);
+  const { isShow } = useSelector(
+    (state) => state.dataTableFiltersReducer?.filtersFields
+  );
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // onSortingChange: setSorting,
+    // getSortedRowModel: getSortedRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
+    //  pageCount: filter?.limit || 25,
     state: {
-      sorting,
-      columnPinning: true,
+      // sorting,
+      pagination: {
+        pageSize: filter?.limit || 25,
+      },
     },
   });
 
-  const handleFilterChange = (e, index) => {
-    let isChecked = e.target.checked;
-    const updatedFilterFields = [...filterFields];
-    updatedFilterFields[index].isActiveFilter = isChecked;
+  // const handleFilterChange = (e, index) => {
+  //   let isChecked = e.target.checked;
+  //   const updatedFilterFields = [...filterFields];
+  //   updatedFilterFields[index].isActiveFilter = isChecked;
 
-    const activeFilterValues = updatedFilterFields
-      .filter((field) => field.isActiveFilter) // Filter the objects where isActiveFilter is true
-      .map((field) => Object.values(field)[0]); // Get the values of the filtered objects
+  //   const activeFilterValues = updatedFilterFields
+  //     .filter((field) => field.isActiveFilter) // Filter the objects where isActiveFilter is true
+  //     .map((field) => Object.values(field)[0]); // Get the values of the filtered objects
 
-    setFilter((prev) => ({
-      ...prev,
-      filter: activeFilterValues,
-    }));
-  };
+  //   setFilter((prev) => ({
+  //     ...prev,
+  //     filter: activeFilterValues,
+  //   }));
+  // };
 
-  const debounced = useDebouncedCallback((value) => {
-    console.log("value ===> ", value);
-    //  setPagination((prev) => ({ ...prev, search: value }));
-    setFilter((prev) => ({
-      ...prev,
-      search: value,
-    }));
-  }, 500);
+  // const debounced = useDebouncedCallback((value) => {
+  //   console.log("value ===> ", value);
+  //   //  setPagination((prev) => ({ ...prev, search: value }));
+  //   setFilter((prev) => ({
+  //     ...prev,
+  //     search: value,
+  //   }));
+  // }, 500);
 
-  const onSearch = (e) => {
-    debounced(e.target.value);
-    // setFilter((prev) => ({
-    //   ...prev,
-    //   search: e.target.value,
-    // }));
+  // const onSearch = (e) => {
+  //   debounced(e.target.value);
+  //   // setFilter((prev) => ({
+  //   //   ...prev,
+  //   //   search: e.target.value,
+  //   // }));
+  // };
+
+  const openFilter = () => {
+    dispatch(setUpFilterFields({ isShow: true }));
   };
 
   return (
@@ -121,7 +141,7 @@ function FunctionalTable({
             color="#8B8D97"
             fontWeight="semibold"
           >
-            {[10, 20].map((pageSize) => (
+            {[25, 50, 75, 100].map((pageSize) => (
               <option key={`page_size${pageSize}`} value={pageSize}>
                 {pageSize}
               </option>
@@ -132,7 +152,7 @@ function FunctionalTable({
           </Text>
         </Flex>
         <Flex
-          gap="20px"
+          gap="10px"
           // direction={{
           //   base: "column",
           //   sm: "row",
@@ -150,10 +170,34 @@ function FunctionalTable({
             height="43px"
             borderRadius="15px"
             color="gray.600"
+            onClick={() => addForm()}
           >
             Add Details
           </Button>
-          <Popover autoFocus={false}>
+
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+            bg={isShow ? "gray.100" : ""}
+            // bg="primary.100"
+            onClick={() => openFilter()}
+          >
+            <BiFilterAlt size="20px" color="#A0AEC0" />
+          </Button>
+
+          <Button
+            variant="outline"
+            p="0px 10px"
+            height="43px"
+            borderRadius="15px"
+            color="gray.600"
+          >
+            <BsCloudDownload size="20px" color="#A0AEC0" />
+          </Button>
+          {/* <Popover autoFocus={false}>
             <PopoverTrigger>
               <Flex
                 border="1px"
@@ -221,12 +265,12 @@ function FunctionalTable({
               color="#A0AEC0"
               borderRadius="15px"
             />
-          </InputGroup>
+          </InputGroup> */}
         </Flex>
       </Flex>
-      <Box position="relative" overflowX="auto">
+      <Box position="relative" overflowX="auto" h="calc( 100vh - 343px )" overflowY="auto">
         <Table mt="15px">
-          <Thead>
+          <Thead position="sticky" top='0px' background="white" zIndex="10">
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -245,18 +289,20 @@ function FunctionalTable({
                       cursor="pointer"
                       minW={"150px"}
                     >
-                      <Flex
+                      {/* <Flex
                         gap="7px"
                         justifyContent="center"
                         alignContent="center"
+                        // width="100px"
+                        // maxW="500px"
                       >
-                        <Text flex="none">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </Text>
-                        {/* {header.id !== "UPDATE" ? (
+                        <Text flex="none"> */}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {/* </Text> */}
+                      {/* {header.id !== "UPDATE" ? (
                           header.column.getIsSorted() ? (
                             header.column.getIsSorted() === "desc" ? (
                               <Flex>
@@ -285,7 +331,7 @@ function FunctionalTable({
                         ) : (
                           <></>
                         )} */}
-                      </Flex>
+                      {/* </Flex> */}
 
                       {/* <chakra.span pl="4">
                       <BsArrowDownUp />
@@ -336,7 +382,7 @@ function FunctionalTable({
                       <Td
                         key={`table_${cell.id}`}
                         isNumeric={meta?.isNumeric}
-                        p="20px 0px"
+                        p="7px 0px"
                         textAlign="center"
                         fontSize="14px"
                         color="#718096"
@@ -369,7 +415,27 @@ function FunctionalTable({
                           </Text>
                         ) : cell.column.id === "created_at" ? (
                           <Text>
-                            {moment(cell.row.original.created_at).format("LL")}
+                            {cell.row.original.created_at
+                              ? moment(cell.row.original.created_at).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "last_login" ? (
+                          <Text>
+                            {cell.row.original.last_login
+                              ? moment(cell.row.original.last_login).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "updated_at" ? (
+                          <Text>
+                            {cell.row.original.updated_at
+                              ? moment(cell.row.original.updated_at).format(
+                                  "LL"
+                                )
+                              : " - "}
                           </Text>
                         ) : (
                           flexRender(
@@ -385,84 +451,81 @@ function FunctionalTable({
           </Tbody>
         </Table>
       </Box>
-      <Flex justifyContent="end" alignItems="center" mt="45px" gap="3px">
-        <Button
-          variant="ghost"
-          p="5px"
-          onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
-          isDisabled={filter.page === 1 || loading}
-        >
-          {"<<"}
-        </Button>
-        <Button
-          variant="ghost"
-          p="5px"
-          onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
-          isDisabled={filter.page === 1 || loading}
-        >
-          {"<"}
-        </Button>
-        <Text fontSize="18px"> Page </Text>
-        <Button
-          p="5px"
-          color="secondary.500"
-          bg="secondary.100"
-          borderRadius="4px"
-        >
-          {filter.page}
-        </Button>
-        <Text fontSize="18px"> of {filter.totalPage} </Text>
-        <Button
-          variant="ghost"
-          onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
-          isDisabled={filter.page === filter.totalPage || loading}
-        >
-          {">"}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => setFilter((old) => ({ ...old, page: old.totalPage }))}
-          isDisabled={filter.page === filter.totalPage || loading}
-        >
-          {">>"}
-        </Button>
-        <Text fontSize="18px" borderLeft="1px" pl="10px">
-          {" "}
-          Go to page{" "}
-        </Text>
-        {/* <Input
-          type="number"
-          value={filter.page}
-          onChange={(e) => {
-            if (
-              Number(e.target.value) <= filter.totalPage &&
-              Number(e.target.value) > 0
-            ) {
-              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+      <Flex justifyContent="space-between" alignItems="center" mt="30px">
+        <Box>
+          {isShow ? (
+            <Text> Total Record According to filter : 20 </Text>
+          ) : (
+            <></>
+          )}
+          <Text>Total Record In Database : 20 </Text>
+        </Box>
+        <Flex justifyContent="end" alignItems="center" gap="3px">
+          <Button
+            variant="ghost"
+            p="5px"
+            onClick={() => setFilter((old) => ({ ...old, page: 1 }))}
+            isDisabled={filter.page === 1 || loading}
+          >
+            {"<<"}
+          </Button>
+          <Button
+            variant="ghost"
+            p="5px"
+            onClick={() => setFilter((old) => ({ ...old, page: old.page - 1 }))}
+            isDisabled={filter.page === 1 || loading}
+          >
+            {"<"}
+          </Button>
+          <Text fontSize="18px"> Page </Text>
+          <Button
+            p="5px"
+            color="secondary.500"
+            bg="secondary.100"
+            borderRadius="4px"
+          >
+            {filter.page}
+          </Button>
+          <Text fontSize="18px"> of {filter.totalPage} </Text>
+          <Button
+            variant="ghost"
+            onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
+            isDisabled={filter.page === filter.totalPage || loading}
+          >
+            {">"}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() =>
+              setFilter((old) => ({ ...old, page: old.totalPage }))
             }
-          }}
-          disabled={loading}
-          width="70px"
-          ml="10px"
-        /> */}
-        <Select
-          disabled={loading}
-          width="70px"
-          ml="10px"
-          value={filter?.page}
-          onChange={(e) => {
-            if (
-              Number(e.target.value) <= filter?.totalPage &&
-              Number(e.target.value) > 0
-            ) {
-              setFilter((old) => ({ ...old, page: Number(e.target.value) }));
-            }
-          }}
-        >
-          {Array.from(Array(filter?.totalPage))?.map((item, index) => (
-            <option value={index + 1}> {index + 1} </option>
-          ))}
-        </Select>
+            isDisabled={filter.page === filter.totalPage || loading}
+          >
+            {">>"}
+          </Button>
+          <Text fontSize="18px" borderLeft="1px" pl="10px">
+            {" "}
+            Go to page{" "}
+          </Text>
+          <Select
+            disabled={loading}
+            width="70px"
+            ml="10px"
+            value={filter?.page}
+            onChange={(e) => {
+              if (
+                Number(e.target.value) <= filter?.totalPage &&
+                Number(e.target.value) > 0
+              ) {
+                setFilter((old) => ({ ...old, page: Number(e.target.value) }));
+              }
+            }}
+          >
+            {Array.from(Array(filter?.totalPage))?.map((item, index) => (
+              <option value={index + 1}> {index + 1} </option>
+            ))}
+          </Select>
+        </Flex>
       </Flex>
     </Box>
   );

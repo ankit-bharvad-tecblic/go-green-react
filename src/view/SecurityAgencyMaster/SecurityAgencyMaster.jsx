@@ -26,7 +26,7 @@ const SecurityAgencyMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25,
+    limit: 25, totalFilter:0 , total:0
   });
 
   const [
