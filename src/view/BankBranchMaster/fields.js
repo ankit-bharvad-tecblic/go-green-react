@@ -11,40 +11,40 @@ const filterFields = [
     type: "text",
   },
   {
-    "Bank ": "bank.bank_name",
+    "Bank ": "bank__bank_name",
     isActiveFilter: false,
 
     label: "Bank",
-    name: "bank.bank_name",
+    name: "bank__bank_name",
     placeholder: "Bank ",
-    type: "text",
+    type: "select",
   },
   {
-    Region: "region.region_name",
+    Region: "region__region_name",
     isActiveFilter: false,
 
     label: "Region ",
-    name: "region.region_name",
+    name: "region__region_name",
     placeholder: "Region ",
-    type: "text",
+    type: "select",
   },
   {
-    " State": "state.state_name",
+    " State": "state__state_name",
     isActiveFilter: false,
 
     label: "State ",
-    name: "state.state_name",
+    name: "state__state_name",
     placeholder: "State ",
-    type: "text",
+    type: "select",
   },
   {
-    "Discrict ": "district.district_name",
+    "Discrict ": "district__district_name",
     isActiveFilter: false,
 
     label: "Discrict ",
-    name: "district.district_name",
+    name: "district__district_name",
     placeholder: "Discrict ",
-    type: "text",
+    type: "select",
   },
   {
     Address: "branch_address",

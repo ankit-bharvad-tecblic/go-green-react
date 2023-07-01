@@ -20,56 +20,80 @@ const filterFields = [
     type: "number",
   },
   {
-    Region: "region_id.region_name",
+    " User": "user__email",
+    isActiveFilter: false,
+    label: "User ",
+    name: "user__email",
+    placeholder: " User",
+    type: "select",
+  },
+  {
+    Region: "region_id__region_name",
     isActiveFilter: false,
 
     label: "Region ",
-    name: "region_id.region_name",
+    name: "region_id__region_name",
     placeholder: "Region ",
-    type: "text",
+    type: "select",
+    multi: false,
+    options: [
+      {
+        label: "Region",
+        value: "True",
+      },
+    ],
   },
   {
-    "State ": "state_id.state_name",
+    "State ": "state_id__state_name",
     isActiveFilter: false,
 
     label: "State ",
-    name: "state_id.state_name",
+    name: "state_id__state_name",
     placeholder: "State ",
-    type: "text",
+    type: "select",
   },
   {
-    "Zone ": "zone_id.zone_name",
+    "Zone ": "zone_id__zone_name",
     isActiveFilter: false,
 
     label: "Zone ",
-    name: "zone_id.zone_name",
+    name: "zone_id__zone_name",
     placeholder: "Zone ",
-    type: "text",
+    type: "select",
   },
   {
-    "District ": "district_id.district_name",
+    "District ": "district_id__district_name",
     isActiveFilter: false,
 
     label: "District ",
-    name: "district_id.district_name",
+    name: "district_id__district_name",
     placeholder: "District ",
-    type: "text",
+    type: "select",
   },
   {
-    "Role ": "role.role_name",
+    "Role ": "role__role_name",
     isActiveFilter: false,
 
     label: "Role ",
-    name: "role.role_name",
+    name: "role__role_name",
     placeholder: "Role ",
-    type: "text",
+    type: "select",
   },
   {
-    "Department ": "department.department_name",
+    "Area ": "area__area_name",
+    isActiveFilter: false,
+
+    label: "Area ",
+    name: "area__area_name",
+    placeholder: "Area ",
+    type: "select",
+  },
+  {
+    "Department ": "department__department_name",
     isActiveFilter: false,
 
     label: "Department ",
-    name: "department.department_name",
+    name: "department__department_name",
     placeholder: "Department ",
     type: "text",
   },
@@ -113,11 +137,11 @@ const filterFields = [
     type: "text",
   },
   {
-    "Reporting Manager": "reporting_manager_id.email",
+    "Reporting Manager": "reporting_manager_id__email",
     isActiveFilter: false,
 
     label: "Reporting Manager ",
-    name: "reporting_manager_id.email",
+    name: "reporting_manager_id__email",
     placeholder: "Reporting Manager ",
     type: "text",
   },
@@ -145,6 +169,12 @@ const filterFields = [
 ];
 
 const addEditFormFields = [
+  // {
+  //   label: "User ",
+  //   name: "user.email",
+  //   placeholder: " User",
+  //   type: "email",
+  // },
   // {
   //   label: " Full Name",
   //   name: "employee_full_name",
@@ -185,6 +215,12 @@ const addEditFormFields = [
   //   label: "Role ",
   //   name: "role.role_name",
   //   placeholder: "Role ",
+  //   type: "text",
+  // },
+  // {
+  //   label: "Area ",
+  //   name: "area.area_name",
+  //   placeholder: "Area ",
   //   type: "text",
   // },
   //
@@ -232,23 +268,22 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
+  user: yup.string().required(" user is required"),
   employee_full_name: yup.string().required("employee full name is required"),
   contact_number: yup.string().required("contact number is required"),
   region_id: yup.string().required("region is required"),
   state_id: yup.string().required("state is required"),
   zone_id: yup.string().required("zone is required"),
   district_id: yup.string().required("district is required"),
-  role__role_name: yup.string().required("role is required"),
+  role: yup.string().required("role is required"),
+  area_id: yup.string().required("area is required"),
   // department__department_name: yup.string().required("department is required"),
   address: yup.string().required("address is required"),
   pin_code: yup.number().required("pin code  is required"),
   email_id: yup.string().trim().email().required("email is required"),
   job_title: yup.string().required("job title is required"),
-  reporting_manager_id__email: yup
-    .string()
-    .trim()
-    .email()
-    .required("reporting manager is required"),
+  reporting_manager_id: yup.string().required("reporting manager is required"),
+
   is_active: yup.string(),
 });
 

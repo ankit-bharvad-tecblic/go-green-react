@@ -6,10 +6,12 @@ import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import {
   useAddEmployeeMasterMutation,
+  useGetAreaMasterMutation,
   useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
   useGetRoleMasterMutation,
   useGetStateMasterMutation,
+  useGetUserMasterMutation,
   useGetZoneMasterMutation,
   useUpdateEmployeeMasterMutation,
 } from "../../features/master-api-slice";
@@ -35,12 +37,17 @@ const AddEditFormEmployeeMaster = () => {
   const [getDistrictMaster] = useGetDistrictMasterMutation();
   const [getZoneMaster] = useGetZoneMasterMutation();
   const [getRoleMaster] = useGetRoleMasterMutation();
+  const [getUserMaster] = useGetUserMasterMutation();
+  const [getAreaMaster] = useGetAreaMasterMutation();
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     states: [],
     district: [],
     zones: [],
     roles: [],
+    areas: [],
+    reporting_managers: [],
+    users: [],
   });
 
   const [addEmployeeMaster, { isLoading: addEmployeeMasterApiIsLoading }] =
@@ -208,6 +215,56 @@ const AddEditFormEmployeeMaster = () => {
     }
   };
 
+  const getAllArea = async () => {
+    try {
+      const response = await getAreaMaster().unwrap();
+
+      console.log("Success:", response);
+
+      let arr = response?.results.map((item) => ({
+        label: item.area_name,
+        value: item.id,
+      }));
+
+      setSelectBoxOptions((prev) => ({ ...prev, areas: arr }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAllReportingManager = async () => {
+    try {
+      const response = await getUserMaster().unwrap();
+
+      console.log("Success:", response);
+
+      let arr = response?.results.map((item) => ({
+        label: item.email,
+        value: item.id,
+      }));
+
+      setSelectBoxOptions((prev) => ({ ...prev, reporting_managers: arr }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getAllUsers = async () => {
+    try {
+      const response = await getUserMaster().unwrap();
+
+      console.log("Success:", response);
+
+      let arr = response?.results.map((item) => ({
+        label: item.email,
+        value: item.id,
+      }));
+
+      setSelectBoxOptions((prev) => ({ ...prev, users: arr }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const updateData = async (data) => {
     try {
       const response = await updateEmployeeMaster(data).unwrap();
@@ -224,19 +281,21 @@ const AddEditFormEmployeeMaster = () => {
   useEffect(() => {
     if (details?.id) {
       let obj = {
+        user: details?.user.email,
         employee_full_name: details?.employee_full_name,
         contact_number: details?.contact_number,
-        region_id__region_name: details?.region_id.region_name,
-        state_id__state_name: details?.state_id.state_name,
-        zone_id__zone_name: details?.zone_id.zone_name,
-        district_id__district_name: details?.district_id?.district_name,
-        role__role_name: details?.role.role_name,
+        region_id: details?.region_id.region_name,
+        state_id: details?.state_id.state_name,
+        zone_id: details?.zone_id.zone_name,
+        district_id: details?.district_id?.district_name,
+        role: details?.role?.role_name,
+        area_id: details?.area.area_name,
         department__department_name: details?.department.department_name,
         address: details?.address,
         pin_code: details?.pin_code,
         email_id: details?.email_id,
         job_title: details?.job_title,
-        reporting_manager_id__email: details?.reporting_manager_id.email,
+        reporting_manager_id: details?.reporting_manager_id.email,
         is_Tactive: details.active,
       };
       console.log("details", details);
@@ -252,6 +311,9 @@ const AddEditFormEmployeeMaster = () => {
     getAllDistrict();
     getAllZone();
     getAllRole();
+    getAllArea();
+    getAllReportingManager();
+    getAllUsers();
     // getBank();
   }, [details]);
 
@@ -343,10 +405,33 @@ const AddEditFormEmployeeMaster = () => {
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="10" display={{ base: "flex" }} alignItems="center">
                   <Text textAlign="right" w="200px">
+                    User
+                  </Text>
+                  <CustomSelector
+                    name="user"
+                    label=""
+                    options={selectBoxOptions.users}
+                    selectedValue={selectBoxOptions.users.find(
+                      (opt) => opt.label === details?.user.email
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
                     Region
                   </Text>
                   <CustomSelector
-                    name="region"
+                    name="region_id"
                     label=""
                     options={selectBoxOptions.regions}
                     selectedValue={selectBoxOptions.regions.find(
@@ -370,7 +455,7 @@ const AddEditFormEmployeeMaster = () => {
                     State
                   </Text>
                   <CustomSelector
-                    name="state"
+                    name="state_id"
                     label=""
                     options={selectBoxOptions.states}
                     selectedValue={selectBoxOptions.states.find(
@@ -393,7 +478,7 @@ const AddEditFormEmployeeMaster = () => {
                     District
                   </Text>
                   <CustomSelector
-                    name="district"
+                    name="district_id"
                     label=""
                     isChecked="details?.active"
                     options={selectBoxOptions.district}
@@ -418,7 +503,7 @@ const AddEditFormEmployeeMaster = () => {
                     Zone
                   </Text>
                   <CustomSelector
-                    name="zone"
+                    name="zone_id"
                     label=""
                     options={selectBoxOptions.zones}
                     selectedValue={selectBoxOptions.zones.find(
@@ -434,6 +519,7 @@ const AddEditFormEmployeeMaster = () => {
                 </Box>
               </MotionSlideUp>
             </Box>
+
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="10" display={{ base: "flex" }} alignItems="center">
@@ -457,6 +543,30 @@ const AddEditFormEmployeeMaster = () => {
                 </Box>
               </MotionSlideUp>
             </Box>
+
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    Area
+                  </Text>
+                  <CustomSelector
+                    name="area_id"
+                    label=""
+                    options={selectBoxOptions.areas}
+                    selectedValue={selectBoxOptions.areas.find(
+                      (opt) => opt.label === details?.area.area_name
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="10" display={{ base: "flex" }} alignItems="center">
@@ -464,7 +574,7 @@ const AddEditFormEmployeeMaster = () => {
                     Department
                   </Text>
                   <CustomSelector
-                    name="zone"
+                    name="zone_id"
                     label=""
                     options={selectBoxOptions.zones}
                     selectedValue={selectBoxOptions.zones.find(
@@ -545,15 +655,40 @@ const AddEditFormEmployeeMaster = () => {
                   <Text textAlign="right" w="200px">
                     Reporting Manager
                   </Text>
+                  <CustomSelector
+                    name="reporting_manager_id"
+                    label=""
+                    options={selectBoxOptions.reporting_managers}
+                    selectedValue={selectBoxOptions.reporting_managers.find(
+                      (opt) => opt.label === details?.reporting_manager_id.email
+                    )}
+                    isClearable={false}
+                    selectType={"value"}
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
+            </Box>
+
+            <Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="10" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="200px">
+                    EMPLOYEE START DATE
+                  </Text>
                   <CustomInput
-                    name="reporting_manager_id__email"
-                    placeholder="Reporting Manager"
-                    type="email"
+                    name="employee_start_date"
+                    placeholder="Employee start date"
+                    type="date"
                     label=""
                     style={{
                       mb: 1,
                       mt: 1,
                     }}
+                    // formatDate=""
                   />
                 </Box>
               </MotionSlideUp>

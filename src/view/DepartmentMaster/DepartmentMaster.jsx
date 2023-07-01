@@ -11,11 +11,13 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 function DepartmentMaster() {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
@@ -25,7 +27,9 @@ function DepartmentMaster() {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
   const [data, setData] = useState([]);
 
@@ -79,57 +83,37 @@ function DepartmentMaster() {
     }
   };
 
-  const filterFields = [
-    {
-      "Department Name": "bank_name",
-      isActiveFilter: false,
+  const addForm = () => {
+    navigate(`/add/bank-master/`);
+  };
 
-      label: "Department Name",
-      name: "bank_name",
-      placeholder: "Department Name",
-      type: "text",
-    },
+  const editForm = (info) => {
+    console.log("bank info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/edit/bank-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("employee_full_name", {
+    columnHelper.accessor("department_name", {
       cell: (info) => info.getValue(),
       header: "Department Name",
     }),
 
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "Creation Date",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("last_updated_date", {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -160,7 +144,7 @@ function DepartmentMaster() {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            // onClick={() => editForm(info)}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -201,8 +185,8 @@ function DepartmentMaster() {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -221,8 +205,9 @@ totalFilter: response?.total
         filterFields={filterFields}
         setFilter={setFilter}
         columns={columns}
-        data={[]}
+        data={data}
         loading={getDepartmentMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );
