@@ -84,13 +84,13 @@ function DepartmentMaster() {
   };
 
   const addForm = () => {
-    navigate(`/add/bank-master/`);
+    navigate(`/add/department-master/`);
   };
 
   const editForm = (info) => {
-    console.log("bank info --->", info);
+    console.log("department info --->", info);
     const editedFormId = info.row.original.id;
-    navigate(`/edit/bank-master/${editedFormId}`, {
+    navigate(`/edit/department-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };

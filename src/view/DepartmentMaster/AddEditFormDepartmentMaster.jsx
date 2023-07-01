@@ -4,8 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
-import {} from "../../features/master-api-slice";
-import { addEditFormFields, schema } from "./fields";
+import {
+  useAddDepartmentMasterMutation,
+  useUpdateDepartmentMasterMutation,
+} from "../../features/master-api-slice";
+import { schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
@@ -16,12 +19,15 @@ function AddEditFormDepartmentMaster() {
     resolver: yupResolver(schema),
   });
 
+
+
+  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
   const [addDepartmentMaster, { isLoading: addDepartmentMasterApiIsLoading }] =
     useAddDepartmentMasterMutation();
   const [
     updateDepartmentMaster,
     { isLoading: updateDepartmentMasterApiIsLoading },
-  ] = useUpdateBankMasterMutation();
+  ] = useUpdateDepartmentMasterMutation();
 
   const details = location.state?.details;
   console.log("details ---> ", details);
@@ -42,13 +48,15 @@ function AddEditFormDepartmentMaster() {
     });
   };
 
+ 
+
   const addData = async (data) => {
     try {
       const response = await addDepartmentMaster(data).unwrap();
-      console.log("add bank master res", response);
+      console.log("add Department master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/bank-master/bank-master");
+        navigate("/department-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -60,9 +68,9 @@ function AddEditFormDepartmentMaster() {
     try {
       const response = await updateDepartmentMaster(data).unwrap();
       if (response.status === 200) {
-        console.log("update bank master res", response);
+        console.log("update department master res", response);
         toasterAlert(response);
-        navigate("/bank-master/bank-master");
+        navigate("/department-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -87,8 +95,7 @@ function AddEditFormDepartmentMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
-    getAllStateMaster();
-    getRegionMasterList();
+
     // getBank();
   }, [details]);
   return (
