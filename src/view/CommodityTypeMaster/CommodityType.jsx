@@ -26,7 +26,10 @@ const CommodityType = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
+    excelDownload: "CommodityType",
   });
 
   const [

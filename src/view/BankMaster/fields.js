@@ -43,14 +43,14 @@ const filterFields = [
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
-    name: "active",
-    placeholder: "Active/DeActive",
+    label: "ACtive",
+    name: "is_active",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -98,7 +98,7 @@ const schema = yup.object().shape({
   region: yup.string().required("region is required"),
   state: yup.string().required("state is required"),
   bank_address: yup.string().required("bank address is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

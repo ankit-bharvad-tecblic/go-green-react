@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function CustomInput({ name, placeholder, type, label, style, size }) {
+function CustomInput({ name, placeholder, type, label, style, height }) {
   const {
     control,
     formState: { errors },
@@ -27,6 +27,7 @@ function CustomInput({ name, placeholder, type, label, style, size }) {
             <Input
               {...field}
               type={type}
+              height={height}
               // width={{ base: "90%" }}
               border="1px"
               borderColor="gray.10"

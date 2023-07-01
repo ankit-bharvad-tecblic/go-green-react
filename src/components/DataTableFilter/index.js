@@ -42,6 +42,7 @@ const Index = () => {
   const closeFilter = () => {
     dispatch(setUpFilterFields({ isShow: false }));
     // dispatch(setUpFilterQuery(""));
+
     let filters = [];
 
     let filterString = filters.join("&");
@@ -64,6 +65,13 @@ const Index = () => {
 
     console.log("filterString", filterString);
   };
+  // for clear data in form
+  const clearForm = () => {
+    const defaultValues = methods.getValues();
+    Object.keys(defaultValues).forEach((key) => {
+      methods.setValue(key, "");
+    });
+  };
 
   return (
     <Box>
@@ -81,20 +89,39 @@ const Index = () => {
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             {fields &&
               fields.map((item) =>
-                generateFormField({ ...item, style: { mb: 2 } })
+                generateFormField({
+                  ...item,
+                  style: { mb: 1, mx: 1, width: "90%", height: "70px" },
+                  height: "20px",
+                })
               )}
 
             <Button
               type="submit"
-              w="full"
+              w="90%"
               backgroundColor={"primary.700"}
               _hover={{ backgroundColor: "primary.700" }}
               color={"white"}
               borderRadius={"full"}
-              my={"4"}
+              my={"2"}
               px={"10"}
             >
               Filter
+            </Button>
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              w="90%"
+              borderColor={"#F82F2F"}
+              _hover={""}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"1"}
+              px={"10"}
+              onClick={clearForm}
+            >
+              Clear
             </Button>
           </form>
         </FormProvider>

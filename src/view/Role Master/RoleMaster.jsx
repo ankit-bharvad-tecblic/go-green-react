@@ -2,27 +2,101 @@ import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  useActiveDeActiveMutation,
   useGetRoleMasterMutation,
   useGetStateMasterMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text } from "@chakra-ui/react";
+import { filterFields } from "./fields";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+
+import { useNavigate } from "react-router-dom";
+import { setUpFilterFields } from "../../features/filter.slice";
 
 const RoleMaster = () => {
+  const dispatch = useDispatch();
+  const filterQuery = useSelector(
+    (state) => state.dataTableFiltersReducer.filterQuery
+  );
+  console.log("RoleMaster", filterQuery);
+  const navigate = useNavigate();
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     filter: [],
     search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
+    excelDownload: "Role",
   });
 
   const [
-    getStateMaster,
+    getRoleMaster,
     { error: getRoleMasterApiErr, isLoading: getRoleMasterApiIsLoading },
   ] = useGetRoleMasterMutation();
+  const [
+    activeDeActive,
+    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
+  ] = useActiveDeActiveMutation();
 
+  const toast = useToast();
+
+  const handleActiveDeActive = async (e, info) => {
+    console.log("event --> ", e.target.checked, info);
+    let obj = {
+      id: info.row.original.id,
+      active: e.target.checked,
+      endPoint: API.DASHBOARD.ROLE_MASTER,
+    };
+
+    try {
+      const response = await activeDeActive(obj).unwrap();
+
+      if (response.status === 201) {
+        toast({
+          title: `${response.message}`,
+          status: "success",
+          position: "top-right",
+          isClosable: true,
+          duration: 2000,
+        });
+        let table_data = data;
+        console.log("table_data", data);
+
+        const updatedData = table_data.map((item) => {
+          if (item.id === obj.id) {
+            return {
+              ...item,
+              active: obj.active,
+            };
+          } else {
+            return item;
+          }
+        });
+
+        console.log("updatedData", updatedData);
+
+        setData(updatedData);
+        // getData();
+      }
+
+      console.log("response --> ", response);
+    } catch (error) {
+      console.error("Error:", error);
+
+      toast({
+        title: "Error occurred",
+        description: error?.message || "Something went wrong", // Display the error message
+        status: "error",
+        position: "top-right",
+        isClosable: true,
+        duration: 2000,
+      });
+    }
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -32,7 +106,7 @@ const RoleMaster = () => {
       cell: (info) => info.getValue(),
       header: "ROLE NAME",
     }),
-    columnHelper.accessor("desdription", {
+    columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
       header: "DESCRIPTION",
     }),
@@ -44,7 +118,7 @@ const RoleMaster = () => {
       cell: (info) => info.getValue(),
       header: " Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -52,6 +126,7 @@ const RoleMaster = () => {
           <Switch
             size="md"
             colorScheme="whatsapp"
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -73,6 +148,7 @@ const RoleMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -80,17 +156,24 @@ const RoleMaster = () => {
       accessorFn: (row) => row.update_col,
     }),
   ];
-
-  const filterFields = [
-    {
-      "ZONE TYPE": "zone__zone_type",
-      isActiveFilter: false,
-    },
-  ];
+  const tableFilterSet = () => {
+    dispatch(setUpFilterFields({ fields: filterFields }));
+  };
 
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/manage-users/add/role-master/`);
+  };
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/manage-users/edit/role-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getData = async () => {
     //params filter
@@ -108,14 +191,14 @@ const RoleMaster = () => {
     }
 
     try {
-      const response = await getStateMaster(paramString).unwrap();
+      const response = await getRoleMaster(paramString).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -123,14 +206,15 @@ totalFilter: response?.total
   };
 
   useEffect(() => {
+    tableFilterSet();
     getData();
   }, [filter.limit, filter.page]);
 
-  useMemo(() => {
-    if (filter.search !== null) {
-      getData();
-    }
-  }, [filter.search]);
+  // useMemo(() => {
+  //   if (filter.search !== null) {
+  //     getData();
+  //   }
+  // }, [filter.search]);
 
   return (
     <div>
@@ -141,6 +225,7 @@ totalFilter: response?.total
         columns={columns}
         data={data}
         loading={getRoleMasterApiErr}
+        addForm={() => addForm()}
       />
     </div>
   );

@@ -1,4 +1,15 @@
-import { CommunityIcon, HomeIcon } from "../components/Icons/Icons";
+import {
+  BoxIcon,
+  CommandIcon,
+  CommunityIcon,
+  HomeIcon,
+  HouseIcon,
+  MapIcon,
+  PeopleIcon,
+  TradingUpIcon,
+  TrelloIcon,
+  TwoPeopleIcon,
+} from "../components/Icons/Icons";
 import AreaMaster from "../view/AreaMaster/AreaMaster";
 
 import BankBranchMaster from "../view/BankBranchMaster/BankBranchMaster";
@@ -41,7 +52,7 @@ const SidebarList = [
     path: "/",
     name: "Dashboard",
     secondaryNavbar: false,
-    icon: <HomeIcon color="inherit" />,
+    icon: <HouseIcon color="inherit" />,
     component: Dashboard,
   },
 
@@ -57,13 +68,13 @@ const SidebarList = [
     name: "All Masters",
     category: "masters",
     state: "pageCollapse",
-    icon: <HomeIcon color="inherit" />,
+    icon: <CommandIcon color="inherit" />,
     views: [
       {
         name: "Manage Locations",
         category: "location",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <MapIcon color="inherit" />,
         views: [
           {
             path: "/manage-location/region-master",
@@ -101,7 +112,7 @@ const SidebarList = [
         name: "Manage Users",
         category: "role",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <PeopleIcon color="inherit" />,
         views: [
           {
             path: "/manage-users/user-master",
@@ -163,7 +174,7 @@ const SidebarList = [
         name: "Manage Insurance",
         category: "insurance",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <TradingUpIcon color="inherit" />,
         views: [
           {
             path: "/manage-insurance/insurance-company-master",
@@ -185,7 +196,7 @@ const SidebarList = [
         name: "Manage Commodity",
         category: "commodity",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <TrelloIcon color="inherit" />,
         views: [
           {
             path: "/commodity-master/commodity-type",
@@ -231,7 +242,7 @@ const SidebarList = [
         name: "Manage Warehouse",
         category: "warehouse",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <BoxIcon color="inherit" />,
         views: [
           {
             path: "/warehouse-master/warehouse-type-master",
@@ -258,7 +269,7 @@ const SidebarList = [
         name: "Manage Employee",
         category: "employee",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <TwoPeopleIcon color="inherit" />,
         views: [
           {
             path: "/employee-master",
@@ -286,7 +297,7 @@ const SidebarList = [
         name: "Manage Vendors",
         category: "vendors",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <TwoPeopleIcon color="inherit" />,
         views: [
           {
             path: "/security-agency-master",
@@ -301,7 +312,7 @@ const SidebarList = [
         name: "Manage Security Guard",
         category: "security",
         state: "pageCollapse",
-        icon: <CommunityIcon color="inherit" />,
+        icon: <PeopleIcon color="inherit" />,
         views: [
           {
             path: "/security-guard-master",

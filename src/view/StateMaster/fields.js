@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { gstNumber, tinNumber } from "../../services/validation.service";
 
 const filterFields = [
   {
@@ -31,7 +32,7 @@ const filterFields = [
     label: "Tin No",
     name: "tin_no",
     placeholder: "Tin No",
-    type: "number",
+    type: "text",
   },
   {
     GSTN: "gstn",
@@ -39,7 +40,7 @@ const filterFields = [
     label: "GSTN",
     name: "gstn",
     placeholder: "GSTN",
-    type: "number",
+    type: "text",
   },
   {
     "NAV CODE": "nav_code",
@@ -117,13 +118,13 @@ const addEditFormFields = [
     name: "tin_no",
     label: "Tin No",
     placeholder: "Tin No",
-    type: "number",
+    type: "text",
   },
   {
     name: "gstn",
     label: "GSTN",
     placeholder: "GSTN",
-    type: "number",
+    type: "text",
   },
   {
     name: "nav_code",
@@ -160,8 +161,15 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   state_name: yup.string().required("State name is required"),
   state_code: yup.string().required("State code is required"),
-  tin_no: yup.string().required("Tin no is required"),
-  gstn: yup.string().required("Gstn no is required"),
+  tin_no: yup
+    .string()
+    .test("tinNumber", "Invalid TIN number", (value) => tinNumber(value))
+    .required("TIN number is required"),
+  gstn: yup
+    .string()
+    .test("gst", "Invalid GST Number", (value) => gstNumber(value))
+    .required("Invalid GSTN number"),
+
   nav_code: yup.string().required("Nav code is required"),
   state_india_office_addr: yup.string().required("Office address is required"),
   is_active: yup.string(),

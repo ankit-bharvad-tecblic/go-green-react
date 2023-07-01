@@ -11,21 +11,27 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { filterFields } from "./fields";
+import { useNavigate } from "react-router-dom";
 
 const BankCMLocationMaster = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const columnHelper = createColumnHelper();
 
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
-  console.log("Employee Master", filterQuery);
+  console.log("Bank Location Master", filterQuery);
   const [filter, setFilter] = useState({
     // filter: [],
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
+    excelDownload: "BankCmLocation",
   });
 
   const [
@@ -42,7 +48,7 @@ const BankCMLocationMaster = () => {
     let obj = {
       id: info.row.original.id,
       active: e.target.checked,
-      endPoint: API.DASHBOARD.EMPLOYEE_MASTER_ACTIVE,
+      endPoint: API.DASHBOARD.BANK_CM_LOCATION_MASTER,
     };
     try {
       const response = await activeDeActive(obj).unwrap();
@@ -81,82 +87,6 @@ const BankCMLocationMaster = () => {
     }
   };
 
-  const filterFields = [
-    {
-      "BRANCH NAME": "branch_name",
-      isActiveFilter: false,
-
-      label: "BRANCH NAME",
-      name: "branch_name",
-      placeholder: "BRANCH NAME",
-      type: "text",
-    },
-    {
-      "Bank CM Location Name": "region__region_name",
-      isActiveFilter: false,
-
-      label: "Bank CM Location Name",
-      name: "region__region_name",
-      placeholder: "Bank CM Location Name",
-      type: "text",
-    },
-    {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-
-    {
-      "BANK ADDRESS": "bank_address",
-      isActiveFilter: false,
-
-      label: "BANK ADDRESS",
-      name: "bank_address",
-      placeholder: "BANK ADDRESS",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -170,13 +100,17 @@ const BankCMLocationMaster = () => {
       cell: (info) => info.getValue(),
       header: "Bank CM Location Name",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("CM Charges", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "CM Charges",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("Fix Charges", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "Fix Charges",
+    }),
+    columnHelper.accessor("Minimum Commitment", {
+      cell: (info) => info.getValue(),
+      header: "Minimum Commitment",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
@@ -186,7 +120,7 @@ const BankCMLocationMaster = () => {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -195,7 +129,7 @@ const BankCMLocationMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -217,7 +151,7 @@ const BankCMLocationMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            // onClick={() => editForm(info)}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -232,6 +166,18 @@ const BankCMLocationMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/bank-master/add/bank-cm-location-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/bank-master/edit/bank-cm-location-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
 
   const getBankCMLocation = async () => {
     //params filter
@@ -259,8 +205,8 @@ const BankCMLocationMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -280,6 +226,7 @@ totalFilter: response?.total
         columns={columns}
         data={data || []}
         loading={getBankCMLocationMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

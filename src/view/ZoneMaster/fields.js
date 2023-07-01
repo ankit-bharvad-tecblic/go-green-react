@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "COMMODITY NAME": "commodity_name",
+    "Commodity Name": "commodity_name",
     isActiveFilter: false,
     label: "Commodity Name",
     name: "commodity_name",

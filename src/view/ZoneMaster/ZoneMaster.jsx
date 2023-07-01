@@ -28,9 +28,11 @@ const ZoneMaster = () => {
     page: 1,
     totalPage: 1,
     limit: 25,
-     totalFilter:0 , total:0
+    totalFilter: 0,
+    total: 0,
+    excelDownload: "Zone",
   });
- 
+
   const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =
     useGetZoneMasterMutation();
 
@@ -104,7 +106,7 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -149,9 +151,9 @@ const ZoneMaster = () => {
     {
       "ZONE NAME": "zone_name",
       isActiveFilter: false,
-      label: "ZONE NAME",
+      label: "Zone Name",
       name: "zone_name",
-      placeholder: "ZONE NAME",
+      placeholder: "Zone Name",
       type: "text",
     },
     // {
@@ -165,30 +167,30 @@ const ZoneMaster = () => {
     {
       "CREATION DATE": "created_at",
       isActiveFilter: false,
-      label: "CREATION DATE",
+      label: "Creation Date",
       name: "created_at",
-      placeholder: "CREATION DATE",
+      placeholder: "Creation Date",
       type: "date",
     },
     {
       "LAST UPDATED DATE": "last_updated_date",
       isActiveFilter: false,
-      label: "LAST UPDATED DATE",
+      label: "Last Updated Date",
       name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
+      placeholder: "Last Updated Date",
       type: "date",
     },
     {
       "LAST UPDATED ACTIVE": "ACTIVE",
       isActiveFilter: false,
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
+      label: "Active",
+      name: "is_active",
+      placeholder: "Active",
       type: "select",
       multi: false,
       options: [
         {
-          label: "ACTIVE",
+          label: "Active",
           value: "True",
         },
         {
@@ -249,8 +251,8 @@ const ZoneMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);

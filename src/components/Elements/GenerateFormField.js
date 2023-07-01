@@ -10,6 +10,8 @@ function generateFormField(obj) {
     placeholder,
     type,
     label,
+    size,
+    height,
     isClearable,
     selectedValue,
     selectType,
@@ -27,6 +29,8 @@ function generateFormField(obj) {
           name={name}
           placeholder={placeholder}
           type={type}
+          height={height}
+          size={size}
           label={label}
           style={style}
         />
@@ -36,6 +40,8 @@ function generateFormField(obj) {
         <CustomInput
           name={name}
           placeholder={placeholder}
+          size={size}
+          height={height}
           type={type}
           label={label}
           style={style}
@@ -46,6 +52,8 @@ function generateFormField(obj) {
         <CustomInput
           name={name}
           placeholder={placeholder}
+          size={size}
+          height={height}
           type={type}
           label={label}
           style={style}
@@ -57,7 +65,9 @@ function generateFormField(obj) {
         <CustomInput
           name={name}
           placeholder={placeholder}
+          size={size}
           type={type}
+          height={height}
           label={label}
           style={style}
         />
@@ -67,6 +77,8 @@ function generateFormField(obj) {
         <CustomInput
           name={name}
           placeholder={placeholder}
+          size={size}
+          height={height}
           type={type}
           label={label}
         />
@@ -77,6 +89,8 @@ function generateFormField(obj) {
           name={name}
           placeholder={placeholder}
           type={type}
+          height={height}
+          size={size}
           label={label}
           style={style}
         />
@@ -86,6 +100,7 @@ function generateFormField(obj) {
         <CustomSwitch
           name={name}
           type={type}
+          height={height}
           label={label}
           style={style}
           isChecked={isChecked}
