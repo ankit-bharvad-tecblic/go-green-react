@@ -173,7 +173,7 @@ const ThirdParty = () => {
           ...prev,
           regions: response?.results.map(({ region_name, id }) => ({
             label: region_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -191,7 +191,7 @@ const ThirdParty = () => {
           ...prev,
           states: response?.results.map(({ state_name, id }) => ({
             label: state_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -209,7 +209,7 @@ const ThirdParty = () => {
           ...prev,
           zones: response?.results.map(({ zone_name, id }) => ({
             label: zone_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -227,7 +227,7 @@ const ThirdParty = () => {
           ...prev,
           districts: response?.results.map(({ district_name, id }) => ({
             label: district_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -245,7 +245,7 @@ const ThirdParty = () => {
           ...prev,
           areas: response?.results.map(({ area_name, id }) => ({
             label: area_name,
-            id: id,
+            value: id,
           })),
         }));
       }

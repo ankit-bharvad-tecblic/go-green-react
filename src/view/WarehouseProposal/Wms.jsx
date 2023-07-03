@@ -353,7 +353,7 @@ const Wms = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "90%",
+                              xl: "70%",
                             }}
                           >
                             {/* --------------  Warehouse Name -------------- */}
@@ -1105,6 +1105,7 @@ const Wms = () => {
                                       textAlign="right"
                                       textDecoration="underline"
                                       cursor="pointer"
+                                      sx={{textWrap:"nowrap"}}
                                     >
                                       Hire new security guard
                                     </Text>{" "}
@@ -1164,196 +1165,209 @@ const Wms = () => {
                         </AccordionButton>
 
                         <AccordionPanel bg="white" mt="5" pb={4}>
-                          {/* ================ Expected Commodity Name ================= */}
-                          <Box>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Expected Commodity Name
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.wms_commodity_details
-                                      .expected_commodity_name
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "1",
-                                      value: 1,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Commodity Inward Type ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Commodity Inward Type
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.wms_commodity_details
-                                      .commodity_inward_type
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Pre-Stack Commodity ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.wms_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity Quantity(MT)
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <CustomInput
-                                  name={
-                                    formFieldsName.wms_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Pre-Stack Commodity Quantity(MT)"
-                                  type="number"
-                                  label=""
-                                  style={{ w: commonStyle.w }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Funding required ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">Funding Required </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <RadioGroup p="0" defaultValue="2">
-                                  <Stack spacing={5} direction="row">
-                                    <Radio colorScheme="red" value="1">
-                                      Yes
-                                    </Radio>
-                                    <Radio colorScheme="green" value="2">
-                                      No
-                                    </Radio>
-                                  </Stack>
-                                </RadioGroup>
-                              </GridItem>
-                            </Grid>
+                          <Box
+                            //border="1px"
+                            w={{
+                              base: "100%",
+                              sm: "100%",
+                              md: "100%",
+                              lg: "100%",
+                              xl: "90%",
+                            }}
+                          >
+                            {/* ================ Expected Commodity Name ================= */}
+                            <Box>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Expected Commodity Name
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
+                                      formFieldsName.wms_commodity_details
+                                        .expected_commodity_name
+                                    }
+                                    label=""
+                                    options={[
+                                      {
+                                        label: "1",
+                                        value: 1,
+                                      },
+                                    ]}
+                                    selectedValue={{}}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: commonStyle.w }}
+                                    handleOnChange={(val) =>
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      )
+                                    }
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Commodity Inward Type ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Commodity Inward Type
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
+                                      formFieldsName.wms_commodity_details
+                                        .commodity_inward_type
+                                    }
+                                    label=""
+                                    options={[
+                                      {
+                                        label: "Fresh Stock",
+                                        value: 1,
+                                      },
+                                      {
+                                        label: "Pre-stock",
+                                        value: 2,
+                                      },
+                                      {
+                                        label: "Take over",
+                                        value: 3,
+                                      },
+                                    ]}
+                                    selectedValue={{}}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: commonStyle.w }}
+                                    handleOnChange={(val) =>
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      )
+                                    }
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Pre-Stack Commodity ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Pre-Stack Commodity
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
+                                      formFieldsName.wms_commodity_details
+                                        .pre_stack_commodity
+                                    }
+                                    label=""
+                                    options={[
+                                      {
+                                        label: "Fresh Stock",
+                                        value: 1,
+                                      },
+                                      {
+                                        label: "Pre-stock",
+                                        value: 2,
+                                      },
+                                      {
+                                        label: "Take over",
+                                        value: 3,
+                                      },
+                                    ]}
+                                    selectedValue={{}}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: commonStyle.w }}
+                                    handleOnChange={(val) =>
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      )
+                                    }
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Pre-Stack Commodity Quantity(MT)
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_commodity_details
+                                        .pre_stack_commodity_quantity
+                                    }
+                                    placeholder="Pre-Stack Commodity Quantity(MT)"
+                                    type="number"
+                                    label=""
+                                    style={{ w: commonStyle.w }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Funding required ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Funding Required{" "}
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <RadioGroup p="0" defaultValue="2">
+                                    <Stack spacing={5} direction="row">
+                                      <Radio colorScheme="red" value="1">
+                                        Yes
+                                      </Radio>
+                                      <Radio colorScheme="green" value="2">
+                                        No
+                                      </Radio>
+                                    </Stack>
+                                  </RadioGroup>
+                                </GridItem>
+                              </Grid>
+                            </Box>
                           </Box>
                           {/* ================ Bank Details ================= */}
                           <Box mt={commonStyle.mt}>
@@ -1508,6 +1522,133 @@ const Wms = () => {
                         </AccordionButton>
 
                         <AccordionPanel bg="white" mt="5" pb={4} py="4" px="8">
+                          {/* {/ ================ Bank Details ================= /} */}
+                          <Box mt={commonStyle.mt}>
+                            <Flex
+                              bgColor={"#DBFFF5"}
+                              padding="20px"
+                              borderRadius="10px"
+                              gap="3"
+                              alignItems="center"
+                            >
+                              {/* =============== SR No============= */}
+                              <Box w="50px">
+                                <Text mb="2" fontWeight="bold" textAlign="left">
+                                  {" "}
+                                  Sr No{" "}
+                                </Text>{" "}
+                                <Box
+                                  textAlign="center"
+                                  border="1px"
+                                  p="2"
+                                  borderColor="gray.10"
+                                  borderRadius="6"
+                                >
+                                  1
+                                </Box>
+                              </Box>
+
+                              {/* =============== Owner Name ============= */}
+                              <Box w="170px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Owner Name
+                                </Text>{" "}
+                                <CustomInput
+                                  name={
+                                    formFieldsName.wms_warehouse_details
+                                      .warehouse_name
+                                  }
+                                  placeholder="Warehouse Name"
+                                  type="text"
+                                  label=""
+                                  style={{ w: "100%" }}
+                                />
+                              </Box>
+
+                              {/* =============== Mobile No ============= */}
+                              <Box w="180px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Mobile No
+                                </Text>{" "}
+                                <CustomInput
+                                  name={
+                                    formFieldsName.wms_warehouse_details
+                                      .warehouse_name
+                                  }
+                                  placeholder="Mobile No"
+                                  type="text"
+                                  label=""
+                                  style={{ w: "100%" }}
+                                />
+                              </Box>
+
+                              {/* =============== Address ============= */}
+                              <Box w="270px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Address
+                                </Text>{" "}
+                                <CustomInput
+                                  name={
+                                    formFieldsName.wms_warehouse_details
+                                      .warehouse_name
+                                  }
+                                  placeholder="Address"
+                                  type="text"
+                                  label=""
+                                  style={{ w: "100%" }}
+                                />
+                              </Box>
+
+                              {/* =============== Rent ============= */}
+
+                              <Box w="160px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Rent
+                                </Text>{" "}
+                                <CustomInput
+                                  name={
+                                    formFieldsName.wms_warehouse_details
+                                      .warehouse_name
+                                  }
+                                  placeholder="Rent"
+                                  type="text"
+                                  label=""
+                                  style={{ w: "100%" }}
+                                />
+                              </Box>
+
+                              {/* =============== Add / Delete ============= */}
+                              <Box w="180px">
+                                <Box
+                                  mt="7"
+                                  display="flex"
+                                  alignItems="center"
+                                  justifyContent="flex-end"
+                                  gap="2"
+                                >
+                                  <Button
+                                    borderColor="gray.10"
+                                    borderRadius="6"
+                                    bg="primary.700"
+                                    color="white"
+                                    fontWeight="bold"
+                                  >
+                                    +
+                                  </Button>
+
+                                  <Button
+                                    borderColor="gray.10"
+                                    borderRadius="6"
+                                    bg="red"
+                                    color="white"
+                                    fontWeight="bold"
+                                  >
+                                    -
+                                  </Button>
+                                </Box>
+                              </Box>
+                            </Flex>
+                          </Box>
                           <Box
                             //border="1px"
                             w={{
@@ -1515,142 +1656,11 @@ const Wms = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "60%",
+                              xl: "90%",
                             }}
                           >
-                            {/* {/ ================ Bank Details ================= /} */}
-                            <Box mt={commonStyle.mt}>
-                              <Flex
-                                bgColor={"#DBFFF5"}
-                                padding="20px"
-                                borderRadius="10px"
-                                gap="3"
-                                alignItems="center"
-                              >
-                                {/* =============== SR No============= */}
-                                <Box w="50px">
-                                  <Text
-                                    mb="2"
-                                    fontWeight="bold"
-                                    textAlign="left"
-                                  >
-                                    {" "}
-                                    Sr No{" "}
-                                  </Text>{" "}
-                                  <Box
-                                    textAlign="center"
-                                    border="1px"
-                                    p="2"
-                                    borderColor="gray.10"
-                                    borderRadius="6"
-                                  >
-                                    1
-                                  </Box>
-                                </Box>
-
-                                {/* =============== Owner Name ============= */}
-                                <Box w="170px">
-                                  <Text fontWeight="bold" textAlign="left">
-                                    Owner Name
-                                  </Text>{" "}
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .warehouse_name
-                                    }
-                                    placeholder="Warehouse Name"
-                                    type="text"
-                                    label=""
-                                    style={{ w: "100%" }}
-                                  />
-                                </Box>
-
-                                {/* =============== Mobile No ============= */}
-                                <Box w="180px">
-                                  <Text fontWeight="bold" textAlign="left">
-                                    Mobile No
-                                  </Text>{" "}
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .warehouse_name
-                                    }
-                                    placeholder="Mobile No"
-                                    type="text"
-                                    label=""
-                                    style={{ w: "100%" }}
-                                  />
-                                </Box>
-
-                                {/* =============== Address ============= */}
-                                <Box w="270px">
-                                  <Text fontWeight="bold" textAlign="left">
-                                    Address
-                                  </Text>{" "}
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .warehouse_name
-                                    }
-                                    placeholder="Address"
-                                    type="text"
-                                    label=""
-                                    style={{ w: "100%" }}
-                                  />
-                                </Box>
-
-                                {/* =============== Rent ============= */}
-
-                                <Box w="160px">
-                                  <Text fontWeight="bold" textAlign="left">
-                                    Rent
-                                  </Text>{" "}
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .warehouse_name
-                                    }
-                                    placeholder="Rent"
-                                    type="text"
-                                    label=""
-                                    style={{ w: "100%" }}
-                                  />
-                                </Box>
-
-                                {/* =============== Add / Delete ============= */}
-                                <Box w="180px">
-                                  <Box
-                                    mt="7"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="flex-end"
-                                    gap="2"
-                                  >
-                                    <Button
-                                      borderColor="gray.10"
-                                      borderRadius="6"
-                                      bg="primary.700"
-                                      color="white"
-                                      fontWeight="bold"
-                                    >
-                                      +
-                                    </Button>
-
-                                    <Button
-                                      borderColor="gray.10"
-                                      borderRadius="6"
-                                      bg="red"
-                                      color="white"
-                                      fontWeight="bold"
-                                    >
-                                      -
-                                    </Button>
-                                  </Box>
-                                </Box>
-                              </Flex>
-                            </Box>
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
-                            <Box w="full">
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -1674,14 +1684,14 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* --------------Maximum Rent(per/sq ft/month)-------------- */}
-                            <Box>
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -1704,7 +1714,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -1712,7 +1722,7 @@ const Wms = () => {
                             </Box>
 
                             {/* --------------Avg Rent(per/sq ft/month)-------------- */}
-                            <Box>
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -1735,7 +1745,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -1743,7 +1753,7 @@ const Wms = () => {
                             </Box>
 
                             {/* -------------- Rent (per/sq ft/month)-------------- */}
-                            <Box>
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -1765,7 +1775,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -1773,7 +1783,7 @@ const Wms = () => {
                             </Box>
 
                             {/* -------------- Total rent payable (per month) -------------- */}
-                            <Box>
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -1796,26 +1806,15 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
-                          </Box>
 
-                          <Box
-                            //border="1px"
-                            w={{
-                              base: "100%",
-                              sm: "100%",
-                              md: "100%",
-                              lg: "100%",
-                              xl: "60%",
-                            }}
-                          >
                             {/* -------------- Security deposit amount -------------- */}
-                            <Box w="full">
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -1839,7 +1838,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -1847,7 +1846,7 @@ const Wms = () => {
                             </Box>
 
                             {/* -------------- Advance rent -------------- */}
-                            <Box mt="3" w="full">
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -1883,7 +1882,7 @@ const Wms = () => {
                             </Box>
 
                             {/* -------------- Advance rent(month) -------------- */}
-                            <Box mt="1" w="full">
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -1907,7 +1906,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -2027,7 +2026,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -2060,7 +2059,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -2093,7 +2092,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -2171,7 +2170,7 @@ const Wms = () => {
                                     label=""
                                     placeholder="Excel upload"
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: commonStyle.w,
                                     }}
                                   />
                                 </GridItem>
@@ -2619,53 +2618,66 @@ const Wms = () => {
                               </GridItem>
                             </Grid>
                           </Box>
-                          {/* ================ Intention Letter ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">Intention Letter</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <CustomFileInput
-                                  name={
-                                    formFieldsName.wms_clients_details
-                                      .intention_letter
-                                  }
-                                  placeholder="Excel upload"
-                                  label=""
-                                  type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                  style={{ w: commonStyle.w }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Remarks ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="start"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">Remarks</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2} textAlign={"left"}>
-                                <Textarea
-                                  width={commonStyle.w}
-                                  name={
-                                    formFieldsName.wms_clients_details.remarks
-                                  }
-                                  placeholder="Remarks"
-                                  label=""
-                                />
-                              </GridItem>
-                            </Grid>
+                          <Box
+                            //border="1px"
+                            w={{
+                              base: "100%",
+                              sm: "100%",
+                              md: "100%",
+                              lg: "100%",
+                              xl: "90%",
+                            }}
+                          >
+                            {/* ================ Intention Letter ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">
+                                    Intention Letter
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <CustomFileInput
+                                    name={
+                                      formFieldsName.wms_clients_details
+                                        .intention_letter
+                                    }
+                                    placeholder="Excel upload"
+                                    label=""
+                                    type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    style={{ w: commonStyle.w }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Remarks ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="start"
+                                gap={4}
+                              >
+                                <GridItem colSpan={2}>
+                                  <Text textAlign="right">Remarks</Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2} textAlign={"left"}>
+                                  <Textarea
+                                    width={commonStyle.w}
+                                    name={
+                                      formFieldsName.wms_clients_details.remarks
+                                    }
+                                    placeholder="Remarks"
+                                    label=""
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
                           </Box>
                           <Box
                             display="flex"
