@@ -11,15 +11,16 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { useNavigate } from "react-router-dom";
 
 const HsnMaster = () => {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
-
+  const navigate = useNavigate();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
-  console.log("Employee Master", filterQuery);
+  console.log("Hsn Master", filterQuery);
   const [filter, setFilter] = useState({
     // filter: [],
     // search: null,
@@ -79,82 +80,7 @@ const HsnMaster = () => {
     }
   };
 
-  const filterFields = [
-    {
-      "BANK NAME": "bank_name",
-      isActiveFilter: false,
-
-      label: "BANK NAME",
-      name: "bank_name",
-      placeholder: "BANK NAME",
-      type: "text",
-    },
-    {
-      "REGION NAME": "region__region_name",
-      isActiveFilter: false,
-
-      label: "REGION NAME",
-      name: "region__region_name",
-      placeholder: "REGION NAME",
-      type: "text",
-    },
-    {
-      "STATE NAME": "state__state_name",
-      isActiveFilter: false,
-
-      label: "STATE NAME",
-      name: "state__state_name",
-      placeholder: "STATE NAME",
-      type: "text",
-    },
-
-    {
-      "BANK ADDRESS": "bank_address",
-      isActiveFilter: false,
-
-      label: "BANK ADDRESS",
-      name: "bank_address",
-      placeholder: "BANK ADDRESS",
-      type: "text",
-    },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "CREATION DATE",
-      name: "created_at",
-      placeholder: "CREATION DATE",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "LAST UPDATED DATE",
-      name: "last_updated_date",
-      placeholder: "LAST UPDATED DATE",
-      type: "date",
-    },
-
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-
-      label: "ACTIVE/DeActive",
-      name: "active",
-      placeholder: "Active/DeActive",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "ACTIVE",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
+ 
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),

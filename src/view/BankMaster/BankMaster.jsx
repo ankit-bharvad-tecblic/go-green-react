@@ -19,7 +19,7 @@ function BankMaster() {
   const columnHelper = createColumnHelper();
   const navigate = useNavigate();
   const filterQuery = useSelector(
-    (state) => state.dataTableFiltersReducer.filterQuery
+    (state) => state.dataTableFiltersReducer.filterQuery 
   );
   console.log("Bank Master", filterQuery);
   const [filter, setFilter] = useState({

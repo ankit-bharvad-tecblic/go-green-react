@@ -60,6 +60,7 @@ import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
 import { Box } from "@chakra-ui/react";
 import AddEditFormHiringProposalMaster from "../view/HiringProposalMaster/AddEditFormHiringProposalMaster";
 import AddEditFormEmployeeMaster from "../view/EmployeeMaster/AddEditFormEmployeeMaster";
+import AddEditFormDepartmentMaster from "../view/DepartmentMaster/AddEditFormDepartmentMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -604,8 +605,7 @@ const routes = [
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Department Master"}>
-            {/* <AddEditFormDepartmentMaster /> */}
-            <AddEditFormEmployeeMaster />
+            <AddEditFormDepartmentMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>
@@ -617,8 +617,7 @@ const routes = [
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Department Master"}>
-            {/* <AddEditFormDepartmentMaster /> */}
-            <AddEditFormEmployeeMaster />
+            <AddEditFormDepartmentMaster />
           </Layout>
         </Suspense>
       </ProtectedRoutes>

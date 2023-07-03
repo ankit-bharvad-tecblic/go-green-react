@@ -27,7 +27,9 @@ function EmployeeMaster() {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
 
   const [getEmployeeMaster, { isLoading: getEmployeeMasterApiIsLoading }] =
@@ -82,11 +84,11 @@ function EmployeeMaster() {
   };
 
   const addForm = () => {
-    navigate(`/add/employee-master`);
+    navigate(`/add/employee-master/`);
   };
 
   const editForm = (info) => {
-    console.log("bank info --->", info);
+    console.log("Employee info --->", info);
     const editedFormId = info.row.original.id;
     navigate(`/edit/employee-master/${editedFormId}`, {
       state: { details: info.row.original },
@@ -97,6 +99,10 @@ function EmployeeMaster() {
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
+    }),
+    columnHelper.accessor("user.email", {
+      cell: (info) => info.getValue(),
+      header: "User",
     }),
     columnHelper.accessor("employee_full_name", {
       cell: (info) => info.getValue(),
@@ -126,6 +132,10 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "Role ",
     }),
+    columnHelper.accessor("area.area_name", {
+      cell: (info) => info.getValue(),
+      header: "Area ",
+    }),
     columnHelper.accessor("department.department_name", {
       cell: (info) => info.getValue(),
       header: "Department ",
@@ -150,6 +160,10 @@ function EmployeeMaster() {
     columnHelper.accessor("reporting_manager_id.email", {
       cell: (info) => info.getValue(),
       header: "Reporting Manager",
+    }),
+    columnHelper.accessor("employee_start_date", {
+      cell: (info) => info.getValue(),
+      header: "Employee start date",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
@@ -232,8 +246,8 @@ function EmployeeMaster() {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);

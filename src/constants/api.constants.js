@@ -21,7 +21,7 @@ export const API = {
     PAGE_MASTER: "/page/",
     EMPLOYEE_MASTER: "/employeeapi/",
     EMPLOYEE_MASTER_ACTIVE: "",
-    DEPARTMENT_MASTER: "",
+    DEPARTMENT_MASTER: "/departmentapi/",
     DEPARTMENT_MASTER_ACTIVE: "",
     HIRING_PROPOSAL_MASTER: "/warehouse/warehousehiring_proposal/",
     HIRING_PROPOSAL_MASTER_ACTIVE: "",
