@@ -138,72 +138,80 @@ const AddEditFormCommodityType = () => {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
-            {addEditFormFieldsList &&
-              addEditFormFieldsList.map((item, i) => (
-                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                  <Box
-                    w="full"
-                    gap="10"
-                    display={{ base: "flex" }}
-                    alignItems="center"
-                  >
-                    <Text textAlign="right" w="200px">
-                      {item.label}
-                    </Text>{" "}
-                    {generateFormField({
-                      ...item,
-                      label: "",
-                      isChecked: details?.active,
-                      style: {
-                        mb: 1,
-                        mt: 1,
-                      },
+          <Box maxHeight="370px" overflowY="auto">
+            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {addEditFormFieldsList &&
+                addEditFormFieldsList.map((item, i) => (
+                  <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                    <Box
+                      w="full"
+                      gap="4"
+                      display={{ base: "flex" }}
+                      alignItems="center"
+                    >
+                      <Text textAlign="right" w="550px">
+                        {item.label}
+                      </Text>{" "}
+                      {generateFormField({
+                        ...item,
+                        label: "",
+                        isChecked: details?.active,
+                        style: {
+                          mb: 1,
+                          mt: 1,
+                        },
 
-                      selectedValue:
-                        item.type === "select" &&
-                        item?.options?.find(
-                          (opt) => opt.label === details?.state.state_name
-                        ),
-                      selectType: "value",
-                      isClearable: false,
-                    })}
-                  </Box>
-                </MotionSlideUp>
-              ))}
-          </Box>
+                        selectedValue:
+                          item.type === "select" &&
+                          item?.options?.find(
+                            (opt) => opt.label === details?.state.state_name
+                          ),
+                        selectType: "value",
+                        isClearable: false,
+                      })}
+                    </Box>
+                  </MotionSlideUp>
+                ))}
+            </Box>
 
-          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="button"
-              backgroundColor={"white"}
-              borderWidth={"1px"}
-              borderColor={"#F82F2F"}
-              _hover={{ backgroundColor: "" }}
-              color={"#F82F2F"}
-              borderRadius={"full"}
-              my={"4"}
-              px={"10"}
-              onClick={clearForm}
+            <Box
+              display="flex"
+              gap={2}
+              justifyContent="flex-end"
+              mt="10"
+              px="0"
             >
-              Clear
-            </Button>
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={
-                addCommodityTypeMasterApiIsLoading ||
-                updateCommodityTypeMasterApiIsLoading
-              }
-              my={"4"}
-              px={"10"}
-            >
-              {details?.id ? "Update" : "Add"}
-            </Button>
+              <Button
+                type="button"
+                backgroundColor={"white"}
+                borderWidth={"1px"}
+                borderColor={"#F82F2F"}
+                _hover={{ backgroundColor: "" }}
+                color={"#F82F2F"}
+                borderRadius={"full"}
+                my={"4"}
+                px={"10"}
+                onClick={clearForm}
+              >
+                Clear
+              </Button>
+              <Button
+                type="submit"
+                //w="full"
+                backgroundColor={"primary.700"}
+                _hover={{ backgroundColor: "primary.700" }}
+                color={"white"}
+                borderRadius={"full"}
+                isLoading={
+                  addCommodityTypeMasterApiIsLoading ||
+                  updateCommodityTypeMasterApiIsLoading
+                }
+                my={"4"}
+                px={"10"}
+              >
+                {details?.id ? "Update" : "Add"}
+              </Button>
+            </Box>
           </Box>
         </form>
       </FormProvider>

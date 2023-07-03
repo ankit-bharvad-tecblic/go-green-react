@@ -116,8 +116,8 @@ const addEditFormFields = [
   },
   {
     name: "tin_no",
-    label: "Tin No",
-    placeholder: "Tin No",
+    label: "TIN No",
+    placeholder: "TIN No",
     type: "text",
   },
   {
@@ -153,14 +153,14 @@ const addEditFormFields = [
   },
   {
     label: "ACTIVE",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
 
 const schema = yup.object().shape({
   state_name: yup.string().required("State name is required"),
-  state_code: yup.string().required("State code is required"),
+  state_code: yup.string().max(2).required("State code is required"),
   tin_no: yup
     .string()
     .test("tinNumber", "Invalid TIN number", (value) => tinNumber(value))
@@ -173,9 +173,9 @@ const schema = yup.object().shape({
   nav_code: yup.string().required("Nav code is required"),
   state_india_office_addr: yup.string().required("Office address is required"),
   is_active: yup.string(),
-  state_overhead: yup.number().required("state overhead is required"),
-  ho_overhead: yup.number().required("ho overhead is required"),
-  region: yup.string().required("region is required"),
+  state_overhead: yup.number().required("State overhead is required"),
+  ho_overhead: yup.number().required("HO overhead is required"),
+  region: yup.string().required("Region is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

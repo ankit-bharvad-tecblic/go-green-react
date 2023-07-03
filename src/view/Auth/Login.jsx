@@ -88,14 +88,14 @@ function Login() {
     } catch (error) {
       console.log("error --> ", error);
 
-      toast({
-        title: "Error",
-        description: error.data.message,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-        position: "top-right",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: error.data.message,
+      //   status: "error",
+      //   duration: 9000,
+      //   isClosable: true,
+      //   position: "top-right",
+      // });
 
       setErrorMsg({
         msg: error.data.message,
@@ -146,7 +146,7 @@ function Login() {
                 Email
               </Text>
               <Input
-                type="text"
+                type="email"
                 p="6"
                 borderRadius={6}
                 placeholder="Email"
@@ -179,12 +179,16 @@ function Login() {
                   {...register("password")}
                 />
 
-                <InputRightElement>
-                  {showPassword ? (
-                    <FaEyeSlash onClick={handleTogglePassword} />
-                  ) : (
-                    <FaEye onClick={handleTogglePassword} />
-                  )}
+                <InputRightElement
+                  onClick={handleTogglePassword}
+                  cursor="pointer"
+                  mt={1}
+                  pr={2}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </InputRightElement>
               </InputGroup>
 
@@ -198,9 +202,21 @@ function Login() {
               </FormErrorMessage>
             </FormControl>
 
-            <Box fontSize="sm" mb="2" textAlign="left">
-              <Text color="red">{errorMsg.msg}</Text>
-            </Box>
+            {errorMsg.msg && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#e53e3e",
+                  fontSize: "14px",
+                }}
+              >
+                <RiErrorWarningFill
+                  style={{ marginRight: "0.5rem", color: "#e53e3e" }}
+                />
+                {errorMsg.msg}
+              </div>
+            )}
 
             <Flex justifyContent="space-between">
               <Stack spacing={5} direction="row">

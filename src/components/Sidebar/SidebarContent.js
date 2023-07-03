@@ -145,7 +145,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   <Text
                     color={"white"}
                     my="auto"
-                    fontSize="14px"
+                    fontSize="12px"
                     fontWeight="700"
                   >
                     {prop.name}
@@ -167,8 +167,8 @@ const SidebarContent = ({ logoText, routes }) => {
                 // mx={{
                 //   xl: "auto",
                 // }}
-                px="12px"
-                py="8px"
+                // px="12px"
+                // py="8px"
                 borderRadius="15px"
                 _hover="none"
                 w="100%"

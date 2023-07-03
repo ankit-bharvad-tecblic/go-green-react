@@ -1,56 +1,56 @@
 import * as yup from "yup";
 const filterFields = [
   {
-    "BRANCH NAME": "branch_name",
+    "BRANCH NAME": "bank_branch",
     isActiveFilter: false,
 
     label: "Branch Name",
-    name: "branch_name",
+    name: "bank_branch",
     placeholder: "Branch Name",
     type: "text",
   },
   {
-    "Bank CM Location Name": "region__region_name",
+    "Bank CM Location Name": "bank_cm_location_name",
     isActiveFilter: false,
 
     label: "Branch Cm Location Name",
-    name: "region__region_name",
+    name: "bank_cm_location_name",
     placeholder: "Bank Cm Location Name",
     type: "text",
   },
   {
-    "CM Charges": "CM Charges",
+    "CM Charges": "cm_charges",
     isActiveFilter: false,
 
     label: "CM Charges",
-    name: "CM Charges",
+    name: "cm_charges",
     placeholder: "CM Charges",
     type: "number",
   },
 
   {
-    "Fix Charges": "Fix Charges",
+    "Fix Charges": "fix_charges",
     isActiveFilter: false,
 
     label: "Fix Charges",
-    name: "Fix Charges",
+    name: "fix_charges",
     placeholder: "Fix Charges",
     type: "number",
   },
   {
-    "Minimum Commitment": "Minimum Commitment",
+    "Minimum Commitment": "minimum_commitment",
     isActiveFilter: false,
 
     label: "Minimum Commitment",
-    name: "Minimum Commitment",
+    name: "minimum_commitment",
     placeholder: "Minimum Commitment",
-    type: "number",
+    type: "text",
   },
   {
     "Creation Date": "created_at",
     isActiveFilter: false,
     label: "Creation Date",
-    name: "created_at",
+    name: "creation_date",
     placeholder: "Creation Date",
     type: "date",
   },
@@ -92,34 +92,34 @@ const addEditFormFields = [
   //     type: "text",
   //   },
   {
-    name: "branch_name",
+    name: "bank_branch",
     label: "Branch Name",
     placeholder: "Branch Name",
     type: "text",
   },
   {
-    name: "Branch Cm Location Name",
+    name: "bank_cm_location_name",
     label: "Branch Cm Location Name",
     placeholder: "Branch Cm Location Name",
     type: "text",
   },
   {
-    name: "CM Charges",
+    name: "cm_charges",
     label: "CM Charges",
     placeholder: "CM Charges",
     type: "number",
   },
   {
-    name: "Fix Charges",
+    name: "fix_charges",
     label: "Fix Charges",
     placeholder: "Fix Charges",
     type: "number",
   },
   {
-    name: "Minimum Commitment",
+    name: "minimum_commitment",
     label: "Minimum Commitment",
     placeholder: "Minimum Commitment",
-    type: "number",
+    type: "text",
   },
 
   {
@@ -130,13 +130,17 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  branch_name: yup.string().required("Branch Name Is Required"),
-  Branch_Cm_Location_Name: yup
+  bank_branch: yup.string().trim().required("Branch Name Is Required"),
+  bank_cm_location_name: yup
     .string()
+    .trim()
     .required("Branch Location Name Is Required"),
-  CM_Charges: yup.number().required("Cm charges is required"),
-  Fix_Charges: yup.number().required("Fix charges is required"),
-  Minimum_Commitment: yup.number().required("Minimum commitment is required"),
+  cm_charges: yup.number().required("Cm charges is required"),
+  fix_charges: yup.number().required("Fix charges is required"),
+  minimum_commitment: yup
+    .string()
+    .trim()
+    .required("Minimum commitment is required"),
   active: yup.string(),
 });
 

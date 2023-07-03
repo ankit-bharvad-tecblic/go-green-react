@@ -111,6 +111,15 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
+    columnHelper.accessor("state.state_name", {
+      cell: (info) => info.getValue(),
+      header: "STATE NAME",
+    }),
+    columnHelper.accessor("region.region_name", {
+      cell: (info) => info.getValue(),
+      header: "REGION NAME",
+    }),
+
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: " Creation Date",
@@ -149,7 +158,7 @@ const DistrictMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.isArray}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(

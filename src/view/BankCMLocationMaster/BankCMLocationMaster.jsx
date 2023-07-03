@@ -92,27 +92,27 @@ const BankCMLocationMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("branch_name", {
+    columnHelper.accessor("bank_branch", {
       cell: (info) => info.getValue(),
       header: "BRANCH NAME",
     }),
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("bank_cm_location_name", {
       cell: (info) => info.getValue(),
       header: "Bank CM Location Name",
     }),
-    columnHelper.accessor("CM Charges", {
+    columnHelper.accessor("cm_charges", {
       cell: (info) => info.getValue(),
       header: "CM Charges",
     }),
-    columnHelper.accessor("Fix Charges", {
+    columnHelper.accessor("fix_charges", {
       cell: (info) => info.getValue(),
       header: "Fix Charges",
     }),
-    columnHelper.accessor("Minimum Commitment", {
+    columnHelper.accessor("minimum_commitment", {
       cell: (info) => info.getValue(),
       header: "Minimum Commitment",
     }),
-    columnHelper.accessor("created_at", {
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "Creation Date",
     }),

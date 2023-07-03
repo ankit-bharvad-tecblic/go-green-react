@@ -26,7 +26,9 @@ const StateMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
 
   const [
@@ -127,7 +129,7 @@ const StateMaster = () => {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -136,7 +138,7 @@ const StateMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -212,8 +214,8 @@ const StateMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
