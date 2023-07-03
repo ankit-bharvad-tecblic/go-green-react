@@ -57,4 +57,8 @@ export const API = {
     HSN_MASTER: "",
     EXCEL_DOWNLOAD_MASTER: "excel_download",
   },
+
+  WAREHOUSE_PROPOSAL: {
+    SAVE_AS_DRAFT: "/warehouse/save_draft_create/",
+  },
 };

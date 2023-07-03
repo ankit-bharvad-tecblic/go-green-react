@@ -44,6 +44,7 @@ import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import * as Yup from "yup";
 import ReactSelect from "react-select";
 import { gstNumberValidation } from "../../services/validation.service";
+import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
 
 const reactSelectStyle = {
   menu: (base) => ({
@@ -99,32 +100,32 @@ const commonStyle = {
 const formFieldsName = {
   pwh_warehouse_details: {
     warehouse_name: "warehouse_name",
-    region_name: "region_name",
-    state_name: "state_name",
-    zone_name: "zone_name",
-    district_name: "district_name",
-    area_name: "area_name",
+    region_name: "region",
+    state_name: "state",
+    zone_name: "zone",
+    district_name: "district",
+    area_name: "area",
     warehouse_address: "warehouse_address",
-    pin_code: "pin_code",
-    no_of_chamber: "no_of_chamber",
-    warehouse_in_factory_premises: "warehouse_in_factory_premises",
+    pin_code: "warehouse_pincode",
+    no_of_chamber: "no_of_chambers",
+    warehouse_in_factory_premises: "is_factory_permise",
     standard_capacity: "standard_capacity",
-    standard_warehouse_capacity: "standard_warehouse_capacity",
-    standard_utilizes_capacity: "standard_utilizes_capacity",
+    standard_warehouse_capacity: "standard_warehouse_capacity", // for asking
+    standard_utilizes_capacity: "currrent_utilised_capacity",
     lock_in_period: "lock_in_period",
     lock_in_period_month: "lock_in_period_month",
     covered_area: "covered_area",
-    supervisor_for_day_shift: "supervisor_for_day_shift",
-    supervisor_for_night_shift: "supervisor_for_night_shift",
-    security_guard_for_day_shift: "security_guard_for_day_shift",
-    security_guard_for_night_shift: "security_guard_for_night_shift",
+    supervisor_for_day_shift: "supervisor_day_shift",
+    supervisor_for_night_shift: "supervisor_night_shift",
+    security_guard_for_day_shift: "security_guard_day_shift",
+    security_guard_for_night_shift: "security_guard_night_shift",
   },
   pwh_commodity_details: {
-    expected_commodity_name: "expected_commodity_name",
+    expected_commodity_name: "expected_commodity",
     commodity_inward_type: "commodity_inward_type",
-    pre_stack_commodity: "pre_stack_commodity",
-    pre_stack_commodity_quantity: "pre_stack_commodity_quantity",
-    funding_required: "funding_required",
+    pre_stack_commodity: "prestack_commodity",
+    pre_stack_commodity_quantity: "prestack_commodity_qty",
+    funding_required: "is_funding_required",
     bank_details_fields: {
       bank_name: "bank_name",
       branch_name: "branch_name",
@@ -187,59 +188,57 @@ const formFieldsName = {
 
 const schema = Yup.object().shape({
   warehouse_name: Yup.string().trim().required("Warehouse name is required"),
-  region_name: Yup.string().trim().required("Region name is required"),
-  state_name: Yup.string().trim().required("State name is required"),
-  zone_name: Yup.string().trim().required("Zone name is required"),
-  district_name: Yup.string().trim().required("District name is required"),
-  area_name: Yup.string().trim().required("Area name is required"),
+  region: Yup.string().trim().required("Region name is required"),
+  state: Yup.string().trim().required("State name is required"),
+  zone: Yup.string().trim().required("Zone name is required"),
+  district: Yup.string().trim().required("District name is required"),
+  area: Yup.string().trim().required("Area name is required"),
   warehouse_address: Yup.string()
     .trim()
     .required("Warehouse address is required"),
-  pin_code: Yup.string().trim().required("Pin code is required"),
-  no_of_chamber: Yup.string(),
-  warehouse_in_factory_premises: Yup.string().required(
+  warehouse_pincode: Yup.string().trim().required("Pin code is required"),
+  no_of_chambers: Yup.string(),
+  is_factory_permise: Yup.string().required(
     "Warehouse in factory premises is required"
   ),
-  standard_capacity: Yup.string()
-    .trim()
-    .required("Standard capacity is required"),
+  standard_capacity: Yup.number().required("Standard capacity is required"),
   standard_warehouse_capacity: Yup.string().required(
     "Standard warehouse capacity is required"
   ),
-  standard_utilizes_capacity: Yup.string().required(
+  currrent_utilised_capacity: Yup.number().required(
     "Standard utilized capacity is required"
   ),
   lock_in_period: Yup.string().required("Lock in period is required"),
-  lock_in_period_month: Yup.string().required(
+  lock_in_period_month: Yup.number().required(
     "Lock in period month is required"
   ),
-  covered_area: Yup.string().trim().required("Covered area is required"),
-  supervisor_for_day_shift: Yup.string().required(
+  covered_area: Yup.number().required("Covered area is required"),
+  supervisor_day_shift: Yup.string().required(
     "Supervisor for day shift is required"
   ),
-  supervisor_for_night_shift: Yup.string().required(
+  supervisor_night_shift: Yup.string().required(
     "Supervisor for night shift is required"
   ),
-  security_guard_for_day_shift: Yup.string().required(
+  security_guard_day_shift: Yup.string().required(
     "Security guard for day shift is required"
   ),
-  security_guard_for_night_shift: Yup.string().required(
+  security_guard_night_shift: Yup.string().required(
     "Security guard for night shift is required"
   ),
   // commodity details schema start
-  expected_commodity_name: Yup.string().required(
+  expected_commodity: Yup.number().required(
     "Expected commodity name is required"
   ),
   commodity_inward_type: Yup.string().required(
     "Commodity inward type is required"
   ),
-  pre_stack_commodity: Yup.string()
+  prestack_commodity: Yup.string()
     .trim()
     .required("Pre stack commodity is required"),
-  pre_stack_commodity_quantity: Yup.string().required(
+  prestack_commodity_qty: Yup.string().required(
     "Pre stack commodity quantity is required"
   ),
-  funding_required: Yup.string().required("Funding required is required"),
+  is_funding_required: Yup.string().required("Funding required is required"),
   // bank details dynamic field
   pwh_commodity_bank_details: Yup.array().of(
     Yup.object().shape({
@@ -364,6 +363,7 @@ const Pwh = () => {
 
   const {
     setValue,
+    getValues,
     formState: { errors },
   } = methods;
 
@@ -439,6 +439,11 @@ const Pwh = () => {
 
   const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
     useGetAreaMasterMutation();
+
+  // Save as draft api
+
+  const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
+    useSaveAsDraftMutation();
 
   const getRegionMasterList = async () => {
     try {
@@ -530,6 +535,71 @@ const Pwh = () => {
     }
   };
 
+  const saveAsDraftData = async (type) => {
+    try {
+      let data = {};
+      if (type === "PWH_WAREHOUSE_DETAILS") {
+        data = {
+          warehouse_name: getValues("warehouse_name"),
+          region: getValues("region"),
+          state: getValues("state"),
+          zone: getValues("zone"),
+          district: getValues("district"),
+          area: getValues("area"),
+          warehouse_address: getValues("warehouse_address"),
+          warehouse_pincode: getValues("warehouse_pincode"),
+          no_of_chambers: getValues("no_of_chambers"),
+          is_factory_permise: getValues("is_factory_permise"),
+          standard_capacity: getValues("standard_capacity"),
+          standard_warehouse_capacity: getValues("standard_warehouse_capacity"),
+          currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
+          lock_in_period: getValues("lock_in_period"),
+          lock_in_period_month: getValues("lock_in_period_month"),
+          covered_area: getValues("covered_area"),
+          supervisor_day_shift: getValues("supervisor_day_shift"),
+          supervisor_night_shift: getValues("supervisor_night_shift"),
+          security_guard_day_shift: getValues("security_guard_day_shift"),
+          security_guard_night_shift: getValues("security_guard_night_shift"),
+        };
+
+        console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
+      }
+      if (type === "PWH_COMMODITY_DETAILS") {
+        data = {
+          warehouse_name: getValues("warehouse_name"),
+          region: getValues("region"),
+          state: getValues("state"),
+          zone: getValues("zone"),
+          district: getValues("district"),
+          area: getValues("area"),
+          warehouse_address: getValues("warehouse_address"),
+          warehouse_pincode: getValues("warehouse_pincode"),
+          no_of_chambers: getValues("no_of_chambers"),
+          is_factory_permise: getValues("is_factory_permise"),
+          standard_capacity: getValues("standard_capacity"),
+          standard_warehouse_capacity: getValues("standard_warehouse_capacity"),
+          currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
+          lock_in_period: getValues("lock_in_period"),
+          lock_in_period_month: getValues("lock_in_period_month"),
+          covered_area: getValues("covered_area"),
+          supervisor_day_shift: getValues("supervisor_day_shift"),
+          supervisor_night_shift: getValues("supervisor_night_shift"),
+          security_guard_day_shift: getValues("security_guard_day_shift"),
+          security_guard_night_shift: getValues("security_guard_night_shift"),
+        };
+
+        console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
+      }
+      const response = await saveAsDraft(data).unwrap();
+      console.log("saveAsDraftData - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     getRegionMasterList();
     getStateList();
@@ -592,7 +662,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -621,7 +691,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -659,7 +729,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -698,7 +768,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -736,7 +806,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">District</Text>{" "}
@@ -774,7 +844,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -813,7 +883,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -843,7 +913,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -870,7 +940,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -915,7 +985,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -926,7 +996,7 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <RadioGroup
                                     p="0"
-                                    defaultValue="no"
+                                    defaultValue={"false"}
                                     name={
                                       formFieldsName.pwh_warehouse_details
                                         .warehouse_in_factory_premises
@@ -937,18 +1007,24 @@ const Pwh = () => {
                                     )}
                                     onChange={(val) => {
                                       console.log(val);
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .warehouse_in_factory_premises,
+                                        val ? "true" : "false",
+                                        { shouldValidate: true }
+                                      );
                                     }}
                                   >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value={"true"}
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value={"false"}
                                       >
                                         No
                                       </Radio>
@@ -964,7 +1040,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -979,7 +1055,7 @@ const Pwh = () => {
                                         .standard_capacity
                                     }
                                     placeholder=" Standard Capacity (in MT)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{ w: commonStyle.w }}
                                   />
@@ -993,12 +1069,12 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <Text textAlign="right">
-                                    Standard Warehouse Capacity (in MT)
+                                    Current warehouse capacity (MT)
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
@@ -1008,7 +1084,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_warehouse_details
                                         .standard_warehouse_capacity
                                     }
-                                    placeholder=" Standard Warehouse Capacity (in MT)"
+                                    placeholder="Current warehouse capacity (MT)"
                                     type="text"
                                     label=""
                                     style={{ w: commonStyle.w }}
@@ -1023,7 +1099,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -1039,7 +1115,7 @@ const Pwh = () => {
                                         .standard_utilizes_capacity
                                     }
                                     placeholder="Standard Utilizes Capacity (in MT)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{ w: commonStyle.w }}
                                   />
@@ -1052,7 +1128,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -1072,21 +1148,27 @@ const Pwh = () => {
                                       formFieldsName.pwh_warehouse_details
                                         .lock_in_period
                                     )}
-                                    defaultValue="no"
+                                    defaultValue="false"
                                     onChange={(val) => {
                                       console.log(val);
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .lock_in_period,
+                                        val ? "true" : "false",
+                                        { shouldValidate: true }
+                                      );
                                     }}
                                   >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value="true"
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value="false"
                                       >
                                         No
                                       </Radio>
@@ -1101,7 +1183,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">
@@ -1115,7 +1197,7 @@ const Pwh = () => {
                                         .lock_in_period_month
                                     }
                                     placeholder=" Lock In Period Month"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{ w: commonStyle.w }}
                                   />
@@ -1129,7 +1211,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -1145,7 +1227,7 @@ const Pwh = () => {
                                         .covered_area
                                     }
                                     placeholder="Covered Area (In Sq.Ft)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{ w: commonStyle.w }}
                                   />
@@ -1159,7 +1241,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">
@@ -1218,7 +1300,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">
@@ -1278,7 +1360,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">
@@ -1338,7 +1420,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   <Text textAlign="right">
@@ -1401,14 +1483,18 @@ const Pwh = () => {
                           >
                             <Button
                               type="button"
+                              // type="submit"
                               //w="full"
                               backgroundColor={"primary.700"}
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
+                              onClick={() =>
+                                saveAsDraftData("PWH_WAREHOUSE_DETAILS")
+                              }
                             >
                               Save as Draft
                             </Button>
@@ -1449,7 +1535,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">
@@ -1492,7 +1578,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">
@@ -1529,7 +1615,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .commodity_inward_type,
-                                      val.value,
+                                      val.label,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -1543,7 +1629,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">
@@ -1594,7 +1680,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">
@@ -1621,7 +1707,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">Funding Required </Text>{" "}
@@ -1638,8 +1724,14 @@ const Pwh = () => {
                                   }
                                   onChange={(val) => {
                                     console.log("e -----> ", val);
+                                    setValue(
+                                      formFieldsName.pwh_commodity_details
+                                        .funding_required,
+                                      val ? "true" : "false",
+                                      { shouldValidate: true }
+                                    );
                                   }}
-                                  defaultValue="no"
+                                  defaultValue="false"
                                 >
                                   <Stack spacing={5} direction="row">
                                     <Radio
@@ -1879,6 +1971,9 @@ const Pwh = () => {
                               isLoading={false}
                               my={"4"}
                               px={"10"}
+                              onClick={() =>
+                                saveAsDraftData("PWH_COMMODITY_DETAILS")
+                              }
                             >
                               Save as Draft
                             </Button>
@@ -1930,7 +2025,7 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -1960,7 +2055,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 2fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -1991,7 +2086,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 2fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2022,7 +2117,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 2fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2052,7 +2147,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 2fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2389,7 +2484,7 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2421,7 +2516,7 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2453,7 +2548,7 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2474,7 +2569,12 @@ const Pwh = () => {
                                         .avg_rent
                                     }
                                     onChange={(val) => {
-                                      console.log(val);
+                                      setValue(
+                                        formFieldsName.pwh_commercial_details
+                                          .avg_rent,
+                                        val ? "true" : "false",
+                                        { shouldValidate: true }
+                                      );
                                     }}
                                   >
                                     <Stack spacing={5} direction="row">
@@ -2503,7 +2603,7 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2535,7 +2635,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2565,7 +2665,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2614,7 +2714,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2647,7 +2747,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2680,7 +2780,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2713,7 +2813,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2762,7 +2862,7 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={4}
+                                gap={8}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -2861,7 +2961,7 @@ const Pwh = () => {
                                       xl: "repeat(4, 1fr)",
                                     }}
                                     alignItems="center"
-                                    gap={4}
+                                    gap={8}
                                     bgColor={"#DBFFF5"}
                                     padding="20px"
                                     borderRadius="10px"
@@ -3152,7 +3252,7 @@ const Pwh = () => {
                                       xl: "repeat(4, 1fr)",
                                     }}
                                     alignItems="center"
-                                    gap={4}
+                                    gap={8}
                                     bgColor={"#DBFFF5"}
                                     padding="20px"
                                     borderRadius="10px"
@@ -3402,7 +3502,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="center"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">Intention Letter</Text>{" "}
@@ -3427,7 +3527,7 @@ const Pwh = () => {
                               textAlign="right"
                               templateColumns="repeat(4, 1fr)"
                               alignItems="start"
-                              gap={4}
+                              gap={8}
                             >
                               <GridItem colSpan={2}>
                                 <Text textAlign="right">Remarks</Text>{" "}
