@@ -144,7 +144,7 @@ const AddEditZoneMaster = () => {
         zone_name: details.zone_name,
         state: details.state.state_name,
         region: details.region?.region_name,
-        active: details.active,
+        is_active: details?.is_active,
       };
 
       console.log(obj);
@@ -182,7 +182,7 @@ const AddEditZoneMaster = () => {
                     {generateFormField({
                       ...item,
                       label: "",
-                      isChecked: details?.active,
+                      // isChecked: details?.is_active,
                       style: {
                         mb: 1,
                         mt: 1,
@@ -236,7 +236,7 @@ const AddEditZoneMaster = () => {
                       mb: 1,
                       mt: 1,
                     }}
-                    // isChecked="regions?.active"
+                    isChecked={details?.is_active}
                   />
                 </Box>
               </MotionSlideUp>

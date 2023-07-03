@@ -44,7 +44,10 @@ import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { setUpFilterFields } from "../../features/filter.slice";
+import {
+  setSidebarVisibility,
+  setUpFilterFields,
+} from "../../features/filter.slice";
 import { useGetDownLoadExcelMutation } from "../../features/master-api-slice";
 import { API } from "../../constants/api.constants";
 
@@ -62,6 +65,7 @@ function FunctionalTable({
   const { isShow } = useSelector(
     (state) => state.dataTableFiltersReducer?.filtersFields
   );
+
   const table = useReactTable({
     columns,
     data,
@@ -128,7 +132,9 @@ function FunctionalTable({
   // };
 
   const openFilter = () => {
-    dispatch(setUpFilterFields({ isShow: true }));
+    if (dispatch(setUpFilterFields({ isShow: true }))) {
+      dispatch(setSidebarVisibility(true));
+    }
   };
 
   return (

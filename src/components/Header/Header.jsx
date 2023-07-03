@@ -18,11 +18,16 @@ import SidebarList from "../../routes/SidebarList";
 import ProfileBtn from "./ProfileBtn";
 import NotificationBtn from "./NotificationBtn";
 import { CommunityIcon } from "../Icons/Icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setSidebarVisibility } from "../../features/filter.slice";
 
-function Header({ variant, title, sidebarVisibility, setSidebarVisibility }) {
+function Header({ variant, title }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [scrolled, setScrolled] = useState(false);
+  const dispatch = useDispatch();
+  const sidebarVisibility = useSelector(
+    (state) => state.dataTableFiltersReducer?.sidebarVisibility
+  );
+  const [scrolled, setScrolled] = useState(false); 
 
   const changeNavbar = () => {
     if (window.scrollY > 1) {
@@ -51,7 +56,8 @@ function Header({ variant, title, sidebarVisibility, setSidebarVisibility }) {
                 <VscThreeBars
                   fontSize="32px"
                   onClick={() => {
-                    setSidebarVisibility(!sidebarVisibility);
+                    dispatch(setSidebarVisibility(!sidebarVisibility));
+                   
                   }}
                 />
               </Box>
@@ -103,7 +109,8 @@ function Header({ variant, title, sidebarVisibility, setSidebarVisibility }) {
                     <VscThreeBars
                       fontSize="32px"
                       onClick={() => {
-                        setSidebarVisibility(!sidebarVisibility);
+                        dispatch(setSidebarVisibility(!sidebarVisibility));
+                        
                       }}
                     />
                   </Box>

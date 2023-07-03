@@ -3,7 +3,7 @@ import { createIcon } from "@chakra-ui/icons";
 export const AdobexdLogo = createIcon({
   displayName: "AdobexdLogo",
   viewBox: "0 0 24 24",
-  path: (
+  path: ( 
     <g clipPath="url(#clip0)">
       <path
         d="M4.042 0h12.916A3.539 3.539 0 0120.5 3.542v12.416a3.539 3.539 0 01-3.542 3.542H4.042A3.539 3.539 0 01.5 15.958V3.542A3.539 3.539 0 014.042 0z"

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
@@ -34,15 +34,10 @@ function RegionMaster() {
     excelDownload: "Region",
   });
 
-  const [
-    getRegionMaster,
-    { error: getRegionMasterApiErr, isLoading: getRegionMasterApiIsLoading },
-  ] = useGetRegionMasterMutation();
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -165,7 +160,7 @@ function RegionMaster() {
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
-    // if (filterQuery) {
+    // if (filterQuery) { 
     paramString = Object.entries(filter)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
@@ -185,6 +180,7 @@ function RegionMaster() {
 
       const response = await getRegionMaster(query).unwrap();
       console.log("Success:", response);
+      // const activeResponse =await
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,

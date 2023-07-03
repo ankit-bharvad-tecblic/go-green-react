@@ -91,6 +91,7 @@ const Index = () => {
               fields.map((item) =>
                 generateFormField({
                   ...item,
+                  selectType: "value",
                   style: { mb: 1, mx: 1, width: "90%", height: "70px" },
                   height: "20px",
                 })

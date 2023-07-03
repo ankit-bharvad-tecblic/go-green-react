@@ -17,6 +17,7 @@ function generateFormField(obj) {
     selectType,
     isChecked,
     style,
+    max
   } = obj;
   const formatDate = (value) => {
     const formattedDate = moment(value).format("YYYY-MM-DD");
@@ -58,6 +59,7 @@ function generateFormField(obj) {
           label={label}
           style={style}
           formatDate={formatDate}
+          max={max}
         />
       );
     case "number":

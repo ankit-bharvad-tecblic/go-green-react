@@ -296,7 +296,8 @@ const AddEditFormEmployeeMaster = () => {
         email_id: details?.email_id,
         job_title: details?.job_title,
         reporting_manager_id: details?.reporting_manager_id.email,
-        is_Tactive: details.active,
+        employee_start_date: details?.employee_start_date,
+        is_active: details.active,
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -677,7 +678,7 @@ const AddEditFormEmployeeMaster = () => {
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="10" display={{ base: "flex" }} alignItems="center">
                   <Text textAlign="right" w="200px">
-                    EMPLOYEE START DATE
+                    Employee Start Date
                   </Text>
                   <CustomInput
                     name="employee_start_date"

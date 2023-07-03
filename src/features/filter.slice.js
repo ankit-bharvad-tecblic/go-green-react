@@ -7,6 +7,8 @@ const dataTableFiltersSlice = createSlice({
       isShow: false,
     },
     filterQuery: "",
+    sidebarVisibility: true,
+    disabledFutureDates: "",
   },
   reducers: {
     setUpFilterFields: (state, action) => {
@@ -15,9 +17,19 @@ const dataTableFiltersSlice = createSlice({
     setUpFilterQuery: (state, action) => {
       state.filterQuery = action.payload;
     },
+    setSidebarVisibility: (state, action) => {
+      state.sidebarVisibility = action.payload;
+    },
+    setDisabledFutureDates: (state, action) => {
+      state.disabledFutureDates = action.payload;
+    },
   },
 });
 
-export const { setUpFilterFields, setUpFilterQuery } =
-  dataTableFiltersSlice.actions;
+export const {
+  setUpFilterFields,
+  setUpFilterQuery,
+  setSidebarVisibility,
+  setDisabledFutureDates,
+} = dataTableFiltersSlice.actions;
 export default dataTableFiltersSlice.reducer;

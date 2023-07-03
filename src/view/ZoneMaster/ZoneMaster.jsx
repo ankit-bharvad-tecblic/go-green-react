@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../constants/api.constants";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
-import { BreadcrumbLinks } from "./fields";
+import { BreadcrumbLinks, filterFields } from "./fields";
 
 const ZoneMaster = () => {
   const dispatch = useDispatch();
@@ -94,10 +94,14 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    // columnHelper.accessor("zone_name", {
-    //   cell: (info) => info.getValue(),
-    //   header: "STATE NAME",
-    // }),
+    columnHelper.accessor("region.region_name", {
+      cell: (info) => info.getValue(),
+      header: "Region",
+    }),
+    columnHelper.accessor("state.state_name", {
+      cell: (info) => info.getValue(),
+      header: "State",
+    }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: " Creation Date",
@@ -115,7 +119,7 @@ const ZoneMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
 
             // id="active_row"
             // isReadOnly
@@ -147,60 +151,6 @@ const ZoneMaster = () => {
     }),
   ];
 
-  const filterFields = [
-    {
-      "ZONE NAME": "zone_name",
-      isActiveFilter: false,
-      label: "Zone Name",
-      name: "zone_name",
-      placeholder: "Zone Name",
-      type: "text",
-    },
-    // {
-    //   "STATE NAME": "region_name",
-    //   isActiveFilter: false,
-    //   label: "STATE NAME",
-    //   name: "region_name",
-    //   placeholder: "STATE NAME",
-    //   type: "text",
-    // },
-    {
-      "CREATION DATE": "created_at",
-      isActiveFilter: false,
-      label: "Creation Date",
-      name: "created_at",
-      placeholder: "Creation Date",
-      type: "date",
-    },
-    {
-      "LAST UPDATED DATE": "last_updated_date",
-      isActiveFilter: false,
-      label: "Last Updated Date",
-      name: "last_updated_date",
-      placeholder: "Last Updated Date",
-      type: "date",
-    },
-    {
-      "LAST UPDATED ACTIVE": "ACTIVE",
-      isActiveFilter: false,
-      label: "Active",
-      name: "is_active",
-      placeholder: "Active",
-      type: "select",
-      multi: false,
-      options: [
-        {
-          label: "Active",
-          value: "True",
-        },
-        {
-          label: "DeActive",
-          value: "False",
-        },
-      ],
-    },
-  ];
-
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
@@ -208,19 +158,6 @@ const ZoneMaster = () => {
   const [data, setData] = useState([]);
 
   let paramString = "";
-
-  const addForm = () => {
-    navigate(`/manage-location/add/zone-master/`);
-  };
-
-  const editForm = (info) => {
-    console.log("info --> ", info);
-    let editedFormId = info.row.original.id;
-
-    navigate(`/manage-location/edit/zone-master/${editedFormId}`, {
-      state: { details: info.row.original },
-    });
-  };
 
   const getData = async () => {
     //params filter
@@ -257,6 +194,19 @@ const ZoneMaster = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const addForm = () => {
+    navigate(`/manage-location/add/zone-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("info --> ", info);
+    let editedFormId = info.row.original.id;
+
+    navigate(`/manage-location/edit/zone-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
   };
 
   useEffect(() => {

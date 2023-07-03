@@ -39,11 +39,9 @@ function NotificationBtn() {
           <PopoverContent position={"absolute"} right="0px" borderRadius="20px">
             <PopoverBody>
               <Box p="10px">
-                <Alert status="error">
+                <Alert colorScheme="gray">
                   <Box>
-                    <AlertDescription>
-                      We will review your application and respond within the next 48 hours.
-                    </AlertDescription>
+                    <AlertDescription>Notification</AlertDescription>
                   </Box>
                   <CloseButton
                     alignSelf="flex-start"

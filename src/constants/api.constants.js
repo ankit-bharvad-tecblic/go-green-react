@@ -39,7 +39,7 @@ export const API = {
     COMMODITY_VARIETY_ACTIVE: "/warehouse/commodity_variety_active/",
     STATE_ACTIVE: "/warehouse/state_active/",
     ZONE_ACTIVE: "/warehouse/zone_active/",
-    REGION_ACTIVE: "",
+    REGION_ACTIVE: "/warehouse/region_active_api/",
     DISTRICT_ACTIVE: "",
     AREA_ACTIVE: "",
     INSURANCE_ACTIVE: "/business_flow/insurance/",

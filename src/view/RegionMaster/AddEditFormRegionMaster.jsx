@@ -1,23 +1,13 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
-import * as yup from "yup";
+import { FormProvider, useForm } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-  useAddCommodityGradeMutation,
-  useAddCommodityTypeMasterMutation,
   useAddRegionMasterMutation,
-  useGetCommodityTypeMasterMutation,
-  useUpdateCommodityGradeMutation,
-  useUpdateCommodityTypeMasterMutation,
   useUpdateRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
@@ -29,7 +19,7 @@ const AddEditFormRegionMaster = () => {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
   const details = location.state?.details;
@@ -55,7 +45,7 @@ const AddEditFormRegionMaster = () => {
     } catch (error) {
       console.error("Error:", error);
       toasterAlert(error);
-    }
+    } 
   };
 
   const addData = async (data) => {
@@ -95,7 +85,7 @@ const AddEditFormRegionMaster = () => {
       console.log(details);
       let obj = {
         region_name: details.region_name,
-        active: details.active,
+        is_active: details.is_active,
       };
 
       // setHandleSelectBoxVal
@@ -122,9 +112,9 @@ const AddEditFormRegionMaster = () => {
                     {generateFormField({
                       ...item,
                       label: "",
-                      isChecked: details?.active,
+                      isChecked: details?.is_active,
                       isClearable: false,
-                      style: { mb: 1, mt: 1 },
+                      style: { mb: 1, mt: 1 }, 
                     })}
                   </Box>
                 </MotionSlideUp>

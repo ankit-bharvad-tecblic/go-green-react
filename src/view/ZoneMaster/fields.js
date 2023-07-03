@@ -27,7 +27,7 @@ const filterFields = [
     type: "date",
   },
   {
-    "LAST UPDATED ACTIVE": "ACTIVE",
+    "LAST UPDATED ACTIVE": "is_active",
     isActiveFilter: false,
 
     label: "Active",
