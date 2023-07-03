@@ -45,6 +45,7 @@ import * as Yup from "yup";
 import ReactSelect from "react-select";
 import { gstNumberValidation } from "../../services/validation.service";
 import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 const reactSelectStyle = {
   menu: (base) => ({
@@ -132,11 +133,11 @@ const formFieldsName = {
     },
   },
   pwh_commercial_details: {
-    minimum_rent: "minimum_rent",
-    maximum_rent: "maximum_rent",
+    minimum_rent: "min_rent",
+    maximum_rent: "max_rent",
     avg_rent: "avg_rent",
     rent: "rent",
-    total_rent_payable_months: "total_rent_payable_month",
+    total_rent_payable_months: "total_rent_per_month",
 
     pwh_commercial_multipal_details: {
       owner_name: "owner_name",
@@ -145,15 +146,15 @@ const formFieldsName = {
       rent: "rent",
     },
 
-    go_green_revenue_sharing_ratio: "go_green_revenue_sharing_ratio",
-    security_deposit_amount: "security_deposit_amount",
+    go_green_revenue_sharing_ratio: "gg_revenue_ratio",
+    security_deposit_amount: "security_deposit_amt",
     advance_rent: "advance_rent",
     advance_rent_month: "advance_rent_month",
     gst: "gst",
     commencement_date: "commencement_date",
-    agreement_period: "agreement_period",
+    agreement_period: "agreement_period_month",
     expiry_date: "expiry_date",
-    notice_period: "notice_period",
+    notice_period: "notice_period_month",
     storage_charges_according_to_commodity:
       "storage_charges_according_to_commodity",
     your_project: "your_project",
@@ -248,11 +249,11 @@ const schema = Yup.object().shape({
   ),
 
   // PWH COMMERCIAL DETAILS details schema start
-  minimum_rent: Yup.string().trim().required("Minimum rent is required"),
-  maximum_rent: Yup.string().trim().required("Maximum rent is required"),
-  avg_rent: Yup.string().trim().required("Avg rent is required"),
-  rent: Yup.string().trim().required("rent is required"),
-  total_rent_payable_month: Yup.string().required(
+  min_rent: Yup.number().required("Minimum rent is required"),
+  max_rent: Yup.number().required("Maximum rent is required"),
+  avg_rent: Yup.number().required("Avg rent is required"),
+  rent: Yup.number().required("rent is required"),
+  total_rent_per_month: Yup.number().required(
     "Total rent payable month is required"
   ),
 
@@ -269,28 +270,25 @@ const schema = Yup.object().shape({
     })
   ),
 
-  go_green_revenue_sharing_ratio: Yup.string().required(
+  gg_revenue_ratio: Yup.number().required(
     "Go green revenue sharing ratio is required"
   ),
-  security_deposit_amount: Yup.string().required(
+  security_deposit_amt: Yup.number().required(
     "Security deposit amount is required"
   ),
   advance_rent: Yup.string().required("Advance rent is required"),
-  advance_rent_month: Yup.string().required("Advance rent month is required"),
+  advance_rent_month: Yup.number().required("Advance rent month is required"),
   gst: Yup.string()
     .matches(gstNumberValidation(), "Invalid GST number")
     .required("GST number is required"),
-  commencement_date: Yup.string()
-    .trim()
-    .required("Commencement date is required"),
-  agreement_period: Yup.string()
-    .trim()
-    .required("Agreement period is required"),
-  expiry_date: Yup.string().trim().required("Expiry date is required"),
-  notice_period: Yup.string().trim().required("Notice period is required"),
-  storage_charges_according_to_commodity: Yup.string().required(
-    "storage charges according to commodity is required"
-  ),
+  commencement_date: Yup.string().required("Commencement date is required"),
+  agreement_period_month: Yup.number().required("Agreement period is required"),
+  expiry_date: Yup.string().required("Expiry date is required"),
+  notice_period_month: Yup.number().required("Notice period is required"),
+  storage_charges_according_to_commodity: Yup.string(),
+  // .required(
+  //   "storage charges according to commodity is required"
+  // ),
   your_project: Yup.string(),
 
   // PWH CLIENTS DETAILS schema start here
@@ -566,30 +564,40 @@ const Pwh = () => {
       }
       if (type === "PWH_COMMODITY_DETAILS") {
         data = {
-          warehouse_name: getValues("warehouse_name"),
-          region: getValues("region"),
-          state: getValues("state"),
-          zone: getValues("zone"),
-          district: getValues("district"),
-          area: getValues("area"),
-          warehouse_address: getValues("warehouse_address"),
-          warehouse_pincode: getValues("warehouse_pincode"),
-          no_of_chambers: getValues("no_of_chambers"),
-          is_factory_permise: getValues("is_factory_permise"),
-          standard_capacity: getValues("standard_capacity"),
-          standard_warehouse_capacity: getValues("standard_warehouse_capacity"),
-          currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
-          lock_in_period: getValues("lock_in_period"),
-          lock_in_period_month: getValues("lock_in_period_month"),
-          covered_area: getValues("covered_area"),
-          supervisor_day_shift: getValues("supervisor_day_shift"),
-          supervisor_night_shift: getValues("supervisor_night_shift"),
-          security_guard_day_shift: getValues("security_guard_day_shift"),
-          security_guard_night_shift: getValues("security_guard_night_shift"),
+          expected_commodity: getValues("expected_commodity"),
+          commodity_inward_type: getValues("commodity_inward_type"),
+          prestack_commodity: getValues("prestack_commodity"),
+          prestack_commodity_qty: getValues("prestack_commodity_qty"),
+          is_funding_required: getValues("is_funding_required"),
         };
 
         console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
       }
+      if (type === "PWH_COMMERCIAL_DETAILS") {
+        data = {
+          min_rent: getValues("min_rent"),
+          max_rent: getValues("max_rent"),
+          avg_rent: getValues("avg_rent"),
+          rent: getValues("rent"),
+          total_rent_per_month: getValues("total_rent_per_month"),
+          gg_revenue_ratio: getValues("gg_revenue_ratio"),
+          security_deposit_amt: getValues("security_deposit_amt"),
+          advance_rent: getValues("advance_rent"),
+          advance_rent_month: getValues("advance_rent_month"),
+          gst: getValues("gst"),
+          commencement_date: getValues("commencement_date"),
+          agreement_period_month: getValues("agreement_period_month"),
+          expiry_date: getValues("expiry_date"),
+          notice_period_month: getValues("notice_period_month"),
+          storage_charges_according_to_commodity: getValues(
+            "storage_charges_according_to_commodity"
+          ),
+          your_project: getValues("your_project"),
+        };
+
+        console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
+      }
+
       const response = await saveAsDraft(data).unwrap();
       console.log("saveAsDraftData - Success:", response);
       if (response.status === 200) {
@@ -597,7 +605,23 @@ const Pwh = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+      toasterAlert(error);
     }
+  };
+
+  const regionOnChange = (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.pwh_warehouse_details.region_name, val.value, {
+      shouldValidate: true,
+    });
+
+    // setSelectBoxOptions((prev) => ({
+    //   ...prev,
+    //   regions: response?.results.map(({ area_name, id }) => ({
+    //     label: area_name,
+    //     value: id,
+    //   })),
+    // }));
   };
 
   useEffect(() => {
@@ -711,13 +735,7 @@ const Pwh = () => {
                                     selectType="label"
                                     style={{ w: commonStyle.w }}
                                     handleOnChange={(val) => {
-                                      console.log(val);
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .region_name,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      regionOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -1968,7 +1986,7 @@ const Pwh = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
                               onClick={() =>
@@ -2040,7 +2058,7 @@ const Pwh = () => {
                                         .minimum_rent
                                     }
                                     placeholder="Minimum Rent(per/sq ft/month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2070,7 +2088,7 @@ const Pwh = () => {
                                         .maximum_rent
                                     }
                                     placeholder="Maximum Rent(per/sq ft/month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2101,7 +2119,7 @@ const Pwh = () => {
                                         .avg_rent
                                     }
                                     placeholder="Avg Rent(per/sq ft/month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2131,7 +2149,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details.rent
                                     }
                                     placeholder="Rent (per/sq ft/month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2162,7 +2180,7 @@ const Pwh = () => {
                                         .total_rent_payable_months
                                     }
                                     placeholder="Total rent payable (per month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2499,7 +2517,7 @@ const Pwh = () => {
                                         .go_green_revenue_sharing_ratio
                                     }
                                     placeholder="Go Green revenue sharing ratio"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2531,7 +2549,7 @@ const Pwh = () => {
                                         .security_deposit_amount
                                     }
                                     placeholder="Security deposit amount"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2559,19 +2577,19 @@ const Pwh = () => {
                                 <GridItem colSpan={2}>
                                   <RadioGroup
                                     p="0"
-                                    defaultValue="no"
+                                    defaultValue="false"
                                     {...methods.register(
                                       formFieldsName.pwh_commercial_details
-                                        .avg_rent
+                                        .advance_rent
                                     )}
                                     name={
                                       formFieldsName.pwh_commercial_details
-                                        .avg_rent
+                                        .advance_rent
                                     }
                                     onChange={(val) => {
                                       setValue(
                                         formFieldsName.pwh_commercial_details
-                                          .avg_rent,
+                                          .advance_rent,
                                         val ? "true" : "false",
                                         { shouldValidate: true }
                                       );
@@ -2580,13 +2598,13 @@ const Pwh = () => {
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value="true"
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value="false"
                                       >
                                         No
                                       </Radio>
@@ -2618,7 +2636,7 @@ const Pwh = () => {
                                         .advance_rent_month
                                     }
                                     placeholder="Advance rent(month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2675,32 +2693,16 @@ const Pwh = () => {
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
-                                  <ReactCustomSelect
+                                  <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
                                         .commencement_date
                                     }
+                                    placeholder="Advance rent(month)"
+                                    type="date"
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
-                                    isClearable={false}
-                                    selectType="label"
-                                    isLoading={false}
                                     style={{
                                       w: commonStyle.comm_details_style.w,
-                                    }}
-                                    handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_commercial_details
-                                          .commencement_date,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
                                     }}
                                   />
                                 </GridItem>
@@ -2730,7 +2732,7 @@ const Pwh = () => {
                                         .agreement_period
                                     }
                                     placeholder=" Agreement period (Month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2763,7 +2765,7 @@ const Pwh = () => {
                                         .expiry_date
                                     }
                                     placeholder="Expiry Date"
-                                    type="text"
+                                    type="date"
                                     label=""
                                     style={{
                                       w: commonStyle.comm_details_style.w,
@@ -2901,9 +2903,12 @@ const Pwh = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
+                              onClick={() =>
+                                saveAsDraftData("PWH_COMMERCIAL_DETAILS")
+                              }
                             >
                               Save as Draft
                             </Button>
@@ -3595,5 +3600,24 @@ const Pwh = () => {
 };
 
 export default Pwh;
+
+const toasterAlert = (obj) => {
+  let msg = obj?.message;
+  let status = obj?.status;
+  if (status === 400) {
+    const errorData = obj.data;
+    let errorMessage = "";
+
+    Object.keys(errorData).forEach((key) => {
+      const messages = errorData[key];
+      messages.forEach((message) => {
+        errorMessage += `${key} : ${message} \n`;
+      });
+    });
+    showToastByStatusCode(status, errorMessage);
+    return false;
+  }
+  showToastByStatusCode(status, msg);
+};
 
 // ==========================================
