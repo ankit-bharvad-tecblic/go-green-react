@@ -40,6 +40,7 @@ import {
 import CustomTextArea from "../../components/Elements/CustomTextArea";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
+import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
 
 const commonStyle = {
   mt: 2,
@@ -83,13 +84,15 @@ const formFieldsName = {
     prestack_commodity: "prestack_commodity",
     prestack_commodity_qty: "prestack_commodity_qty",
     is_funding_required: "is_funding_required",
-    bank_details: {//not found
+    bank_details: {
+      //not found
       bank_name: "bank_name", //not found
       branch_name: "branch_name", //not found
     },
   },
   wms_commercial_details: {
-    warehouse_owner_details: { //not found
+    warehouse_owner_details: {
+      //not found
       owner_name: "owner_name", //not found
       mobile_no: "mobile_no", //not found
       address: "address", //not found
@@ -112,7 +115,8 @@ const formFieldsName = {
     projection_plan_file_path: "projection_plan_file_path",
   },
   wms_clients_details: {
-    client_list: { //not found
+    client_list: {
+      //not found
       client_type: "client_type", //not found
       client_name: "client_name", //not found
       mobile_number: "mobile_number", //not found
@@ -171,9 +175,8 @@ const schema = yup.object().shape({
   security_guard_night_shift: yup
     .string()
     .required("Security guard for night shift is required"),
-  expected_commodity_name: yup
-    .string(),
-    // .required("Expected commodity name is required"),
+  expected_commodity_name: yup.string(),
+  // .required("Expected commodity name is required"),
   commodity_inward_type: yup
     .string()
     .required("Commodity inward type is required"),
@@ -184,16 +187,16 @@ const schema = yup.object().shape({
   is_funding_required: yup.string().required("Funding required is required"),
   bank_details: yup.array().of(
     yup.object().shape({
-      bank_name: yup.string().trim()/*.required("Bank name is required")*/,
-      branch_name: yup.string().trim()/*.required("Branch name is required")*/,
+      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
+      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
     })
   ),
   warehouse_owner_details: yup.array().of(
     yup.object().shape({
-      owner_name: yup.string().trim()/*.required("Owner name is required")*/,
-      mobile_no: yup.string().trim()/*.required("Mobile no is required")*/,
-      address: yup.string().trim()/*.required("Address is required")*/,
-      rent: yup.string().trim()/*.required("Rent is required")*/,
+      owner_name: yup.string().trim() /*.required("Owner name is required")*/,
+      mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
+      address: yup.string().trim() /*.required("Address is required")*/,
+      rent: yup.string().trim() /*.required("Rent is required")*/,
     })
   ),
   min_rent: yup.string().required("Minimum rent is required"),
@@ -213,31 +216,34 @@ const schema = yup.object().shape({
   agreement_period_month: yup.string().required("Agreement period is required"),
   expiry_date: yup.string().required("Expiry date is required"),
   notice_period_month: yup.string().required("Notice period is required"),
-  wms_charges_according_to_commodity: yup
-    .string(),
-   // .required("WMS Charges according to commodity is required"),
+  wms_charges_according_to_commodity: yup.string(),
+  // .required("WMS Charges according to commodity is required"),
   projection_plan_file_path: yup.string().required("Your project is required"),
   client_list: yup.array().of(
     yup.object().shape({
-      client_type: yup.string()/*.required("Client type is required")*/,
-      client_name: yup.string()/*.required("Client name is required")*/,
-      mobile_number: yup.string()/*.required("Mobile number is required")*/,
-      region: yup.string()/*.required("Region is required")*/,
-      state:  yup.string()/*.required("State is required")*/,
-      zone: yup.string()/*.required(" Zone is required")*/,
-      district: yup.string()/*.required("District is required")*/,
-      area: yup.string()/*.required("Area is required")*/,
-      address: yup.string()/*.required("Address is required")*/,
-      wms_charges: yup.string()/*.required("wms charges is required")*/,
-      billing_cycle: yup.string()/*.required("billing cycle is required")*/,
-      reservation_qty: yup.string()/*.required("reservation qty is required")*/,
-      reservation_period: yup.string()/*.required("reservation period is required")*/,
-      reservation_start_date: yup.string()/*.required("reservation start date is required")*/,
-      reservation_end_date: yup.string()/*.required("reservation end date is required")*/,
+      client_type: yup.string() /*.required("Client type is required")*/,
+      client_name: yup.string() /*.required("Client name is required")*/,
+      mobile_number: yup.string() /*.required("Mobile number is required")*/,
+      region: yup.string() /*.required("Region is required")*/,
+      state: yup.string() /*.required("State is required")*/,
+      zone: yup.string() /*.required(" Zone is required")*/,
+      district: yup.string() /*.required("District is required")*/,
+      area: yup.string() /*.required("Area is required")*/,
+      address: yup.string() /*.required("Address is required")*/,
+      wms_charges: yup.string() /*.required("wms charges is required")*/,
+      billing_cycle: yup.string() /*.required("billing cycle is required")*/,
+      reservation_qty:
+        yup.string() /*.required("reservation qty is required")*/,
+      reservation_period:
+        yup.string() /*.required("reservation period is required")*/,
+      reservation_start_date:
+        yup.string() /*.required("reservation start date is required")*/,
+      reservation_end_date:
+        yup.string() /*.required("reservation end date is required")*/,
     })
   ),
-  intention_letter: yup.string()/*.required("Intention letter is required")*/,
-  remarks: yup.string()/*.required("remarks is required")*/,
+  intention_letter: yup.string() /*.required("Intention letter is required")*/,
+  remarks: yup.string() /*.required("remarks is required")*/,
 });
 
 const Wms = () => {
@@ -274,7 +280,7 @@ const Wms = () => {
     },
   });
 
-  const { setValue } = methods;
+  const { setValue, getValues } = methods;
 
   const {
     fields: bank_details_fields,
@@ -460,6 +466,90 @@ const Wms = () => {
     }
   };
 
+  const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
+    useSaveAsDraftMutation();
+
+  const saveAsDraftData = async (type) => {
+    try {
+      let data = {};
+      if (type === "WMS_WAREHOUSE_DETAILS") {
+        data = {
+          warehouse_name: getValues("warehouse_name"),
+          region: getValues("region"),
+          state: getValues("state"),
+          zone: getValues("zone"),
+          district: getValues("district"),
+          area: getValues("area"),
+          warehouse_address: getValues("warehouse_address"),
+          warehouse_pincode: getValues("warehouse_pincode"),
+          no_of_chambers: getValues("no_of_chambers"),
+          is_factory_permise: getValues("is_factory_permise"),
+          standard_capacity: getValues("standard_capacity"),
+          currrent_capacity: getValues("currrent_capacity"),
+          currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
+          lock_in_period: getValues("lock_in_period"),
+          lock_in_period_month: getValues("lock_in_period_month"),
+          covered_area: getValues("covered_area"),
+          supervisor_day_shift: getValues("supervisor_day_shift"),
+          supervisor_night_shift: getValues("supervisor_night_shift"),
+          security_guard_day_shift: getValues("security_guard_day_shift"),
+          security_guard_night_shift: getValues("security_guard_night_shift"),
+        };
+
+        console.log("WMS_WAREHOUSE_DETAILS @@ --> ", data);
+      } else if (type === "WMS_COMMODITY_DETAILS") {
+        data = {
+          expected_commodity_name: getValues("expected_commodity_name"), //not found
+          commodity_inward_type: getValues("commodity_inward_type"),
+          prestack_commodity: getValues("prestack_commodity"),
+          prestack_commodity_qty: getValues("prestack_commodity_qty"),
+          is_funding_required: getValues("is_funding_required"),
+          bank_details: bank_details_fields,
+        };
+
+        console.log("WMS_COMMODITY_DETAILS @@ --> ", data);
+      } else if (type === "WMS_COMMERCIAL_DETAILS") {
+        data = {
+          warehouse_owner_details: warehouse_owner_details, //not found
+          min_rent: getValues("min_rent"),
+          max_rent: getValues("max_rent"),
+          avg_rent: getValues("avg_rent"),
+          rent: getValues("rent"),
+          total_rent_per_month: getValues("total_rent_per_month"),
+          security_deposit_amt: getValues("security_deposit_amt"),
+          advance_rent: getValues("advance_rent"),
+          advance_rent_month: getValues("advance_rent_month"),
+          gst: getValues("gst"),
+          commencement_date: getValues("commencement_date"),
+          agreement_period_month: getValues("agreement_period_month"),
+          expiry_date: getValues("expiry_date"),
+          notice_period_month: getValues("notice_period_month"),
+          wms_charges_according_to_commodity: getValues(
+            "wms_charges_according_to_commodity"
+          ), //not found
+          projection_plan_file_path: getValues("projection_plan_file_path"),
+        };
+
+        console.log("WMS_COMMERCIAL_DETAILS @@ --> ", data);
+      } else if (type === "WMS_CLIENTS_DETAILS") {
+        data = {
+          client_list: getValues("client_list"), //not found
+          intention_letter: getValues("intention_letter"), //not found
+          remarks: getValues("remarks"), //not found
+        };
+
+        console.log("WMS_CLIENTS_DETAILS @@ --> ", data);
+      }
+      const response = await saveAsDraft(data).unwrap();
+      console.log("saveAsDraftData - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     getRegionMasterList();
     getStateList();
@@ -524,11 +614,8 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Warehouse Name
-                                  </Text>{" "}
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">Warehouse Name</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   <CustomInput
@@ -602,8 +689,7 @@ const Wms = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.wms_warehouse_details
-                                        .state
+                                      formFieldsName.wms_warehouse_details.state
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
@@ -644,8 +730,7 @@ const Wms = () => {
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.wms_warehouse_details
-                                        .zone
+                                      formFieldsName.wms_warehouse_details.zone
                                     }
                                     label=""
                                     options={selectBoxOptions?.zones || []}
@@ -729,8 +814,7 @@ const Wms = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.wms_warehouse_details
-                                        .area
+                                      formFieldsName.wms_warehouse_details.area
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
@@ -1066,12 +1150,12 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For day Shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Box
                                     display="flex"
                                     gap="4"
@@ -1093,7 +1177,7 @@ const Wms = () => {
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
@@ -1107,16 +1191,18 @@ const Wms = () => {
                                         );
                                       }}
                                     />
-                                    <Text
-                                      color="primary.700"
-                                      fontWeight="bold"
-                                      textAlign="right"
-                                      textDecoration="underline"
-                                      cursor="pointer"
-                                    >
-                                      Hire new supervisor
-                                    </Text>{" "}
                                   </Box>
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Text
+                                    color="primary.700"
+                                    fontWeight="bold"
+                                    textAlign="left"
+                                    textDecoration="underline"
+                                    cursor="pointer"
+                                  >
+                                    Hire new supervisor
+                                  </Text>{" "}
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -1331,6 +1417,9 @@ const Wms = () => {
                               isLoading={false}
                               my={"4"}
                               px={"10"}
+                              onClick={() => {
+                                saveAsDraftData("WMS_WAREHOUSE_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -1757,6 +1846,9 @@ const Wms = () => {
                               isLoading={false}
                               my={"4"}
                               px={"10"}
+                              onClick={() => {
+                                saveAsDraftData("WMS_COMMODITY_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -1894,7 +1986,8 @@ const Wms = () => {
                                           fontSize="45px"
                                           cursor={"pointer"}
                                           isDisabled={
-                                            warehouse_owner_details?.length === 1
+                                            warehouse_owner_details?.length ===
+                                            1
                                           }
                                           onClick={() =>
                                             remove_warehouse_owner_detail(index)
@@ -2452,6 +2545,9 @@ const Wms = () => {
                               isLoading={false}
                               my={"4"}
                               px={"10"}
+                              onClick={() => {
+                                saveAsDraftData("WMS_COMMERCIAL_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -2513,9 +2609,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">Client Type</Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`}
                                         label=""
                                         options={[
                                           {
@@ -2555,9 +2649,7 @@ const Wms = () => {
                                         Client Name{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`}
                                         placeholder="client name"
                                         type="text"
                                         label=""
@@ -2570,9 +2662,7 @@ const Wms = () => {
                                         Mobile Number{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`}
                                         placeholder="mobile number"
                                         type="text"
                                         label=""
@@ -2582,9 +2672,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">Region</Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`}
                                         label=""
                                         options={[
                                           {
@@ -2621,9 +2709,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">State </Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`}
                                         label=""
                                         options={[
                                           {
@@ -2660,9 +2746,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">Zone </Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`}
                                         label=""
                                         options={[
                                           {
@@ -2699,9 +2783,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">District </Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`}
                                         label=""
                                         options={[
                                           {
@@ -2738,8 +2820,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left">Area </Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`}
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`}
                                         label=""
                                         options={[
                                           {
@@ -2776,9 +2857,7 @@ const Wms = () => {
                                     <GridItem>
                                       <Text textAlign="left"> Address </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`}
                                         placeholder="address"
                                         type="text"
                                         label=""
@@ -2791,9 +2870,7 @@ const Wms = () => {
                                         WMS Charges{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`}
                                         placeholder="WMS charges"
                                         type="text"
                                         label=""
@@ -2805,9 +2882,7 @@ const Wms = () => {
                                         Billing cycle{" "}
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`}
                                         label=""
                                         options={[
                                           {
@@ -2848,9 +2923,7 @@ const Wms = () => {
                                         Reservation Qty (Bales, MT){" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_qty}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_qty}`}
                                         placeholder="Reservation Qty (Bales, MT)"
                                         type="text"
                                         label=""
@@ -2862,9 +2935,7 @@ const Wms = () => {
                                         Reservation Period(Month)
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_period}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_period}`}
                                         placeholder="Reservation Period(Month)"
                                         type="date"
                                         label=""
@@ -2877,9 +2948,7 @@ const Wms = () => {
                                         Reservation Start Date{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_start_date}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_start_date}`}
                                         placeholder="Reservation Start Date"
                                         type="date"
                                         label=""
@@ -2892,9 +2961,7 @@ const Wms = () => {
                                         Reservation End Date{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_end_date}`
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_end_date}`}
                                         placeholder="Reservation End Date"
                                         type="date"
                                         label=""
@@ -2921,9 +2988,7 @@ const Wms = () => {
                                           color="#FF4444"
                                           fontSize="45px"
                                           cursor={"pointer"}
-                                          isDisabled={
-                                            client_list?.length === 1
-                                          }
+                                          isDisabled={client_list?.length === 1}
                                           onClick={() =>
                                             remove_client_list(index)
                                           }
@@ -3011,6 +3076,9 @@ const Wms = () => {
                               isLoading={false}
                               my={"4"}
                               px={"10"}
+                              onClick={() => {
+                                saveAsDraftData("WMS_CLIENTS_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
