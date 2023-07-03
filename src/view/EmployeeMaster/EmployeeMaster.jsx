@@ -30,6 +30,7 @@ function EmployeeMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "Employee",
   });
 
   const [getEmployeeMaster, { isLoading: getEmployeeMasterApiIsLoading }] =

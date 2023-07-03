@@ -61,6 +61,8 @@ import { Box } from "@chakra-ui/react";
 import AddEditFormHiringProposalMaster from "../view/HiringProposalMaster/AddEditFormHiringProposalMaster";
 import AddEditFormEmployeeMaster from "../view/EmployeeMaster/AddEditFormEmployeeMaster";
 import AddEditFormDepartmentMaster from "../view/DepartmentMaster/AddEditFormDepartmentMaster";
+import AddEditRoleMaster from "../view/Role Master/AddEditRoleMaster";
+import AddEditBankCmLocationMaster from "../view/BankCMLocationMaster/AddEditBankCmLocationMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -456,6 +458,30 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "edit/role-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Role Master"}>
+                <AddEditRoleMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/role-master/",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Role Master"}>
+                <AddEditRoleMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
 
       {
         path: "role-page-assignment-master",
@@ -736,6 +762,7 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      // bank-cm-location Routes start
       {
         path: "bank-cm-location-master",
         element: (
@@ -748,6 +775,32 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
+      {
+        path: "add/bank-cm-location-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank CM Location Master"}>
+                <AddEditBankCmLocationMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/bank-cm-location-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Bank CM Location Master"}>
+                <AddEditBankCmLocationMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+
+      //Bank cm location Routes End
     ],
   },
   {

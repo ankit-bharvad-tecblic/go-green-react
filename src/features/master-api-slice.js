@@ -303,6 +303,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
 
     // end page master get add update mutation method
+    // Start Role master get add mutation method
     getRoleMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ROLE_MASTER,
@@ -314,6 +315,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    addRoleMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.ROLE_MASTER}`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateRoleMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.ROLE_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // End  Role Master Update Add get Mutation
     getRolePageAssignmentMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.ROLE_PAGE_ASSIGNMENT_MASTER,
@@ -572,6 +588,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     }),
 
     // warehouse type master update add patch end
+    // Bank Cm Location Add Update add Start
     getBankCMLocationMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.BANK_CM_LOCATION_MASTER,
@@ -579,6 +596,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addBankCMLocationMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.BANK_CM_LOCATION_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateBankCMLocationMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.BANK_CM_LOCATION_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // Bank Cm Location Add Update Edit End
     getCommodityBagMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_BAG_MASTER,
@@ -607,7 +639,7 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     //Download Excel File API
     getDownLoadExcel: builder.mutation({
       query: (params) => ({
-        url: `${API.DASHBOARD.EXCEL_DOWNLOAD_MASTER}?model_name=${model_name}`,
+        url: `${API.DASHBOARD.EXCEL_DOWNLOAD_MASTER}?`,
         method: "GET",
         params: params,
       }),
@@ -664,7 +696,11 @@ export const {
   useAddPageMasterMutation,
   useUpdatePageMasterMutation,
   // Api mutation for page master ends
+  // Api mutation for Role master start
   useGetRoleMasterMutation,
+  useAddRoleMasterMutation,
+  useUpdateRoleMasterMutation,
+  // Api mutation for role master ends
   useGetRolePageAssignmentMasterMutation,
   useGetUserMasterMutation,
   useAddUserMasterMutation,
@@ -723,7 +759,11 @@ export const {
   useGetCommodityMasterMutation,
   useAddCommodityMasterMutation,
   useUpdateCommodityMasterMutation,
+  // Api Mutation For Bank Cm Location Start
   useGetBankCMLocationMasterMutation,
+  useAddBankCMLocationMasterMutation,
+  useUpdateBankCMLocationMasterMutation,
+  // Api Mutation For Bank Cm Location End
   useGetEmployeeMasterMutation,
   useAddEmployeeMasterMutation,
   useUpdateEmployeeMasterMutation,
@@ -735,6 +775,7 @@ export const {
   useUpdateHiringProposalMasterMutation,
   useGetCommodityBagMasterMutation,
   useGetHsnMasterMutation,
+  useGetDownLoadExcelMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

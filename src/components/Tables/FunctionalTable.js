@@ -23,6 +23,7 @@ import {
   PopoverBody,
   Checkbox,
 } from "@chakra-ui/react";
+import axios, { AxiosRequestConfig } from "axios";
 import {
   useReactTable,
   flexRender,
@@ -44,6 +45,8 @@ import Loader from "../Loader";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
+import { useGetDownLoadExcelMutation } from "../../features/master-api-slice";
+import { API } from "../../constants/api.constants";
 
 function FunctionalTable({
   filter,
@@ -75,6 +78,22 @@ function FunctionalTable({
       },
     },
   });
+
+  function downloadExcelFile(data, filename) {
+    const blob = new Blob([data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute(
+      "type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
   // const handleFilterChange = (e, index) => {
   //   let isChecked = e.target.checked;
@@ -194,6 +213,38 @@ function FunctionalTable({
             height="43px"
             borderRadius="15px"
             color="gray.600"
+            onClick={() => {
+              try {
+                async function test() {
+                  const headers = { "Content-Type": "blob" };
+                  const config = {
+                    method: "GET",
+                    url:
+                      process.env.REACT_APP_API_BASE_URL_LOCAL +
+                        API.DASHBOARD.EXCEL_DOWNLOAD_MASTER +
+                        "?model_name=" +
+                        filter?.excelDownload || "",
+                    responseType: "arraybuffer",
+                    headers,
+                  };
+
+                  // getDownLoadExcel(`model_name=${filter?.excelDownload || ""}`);
+                  const response = await axios(config);
+
+                  // console.log(response.error);
+                  downloadExcelFile(
+                    response.data,
+                    `${filter?.excelDownload || ""}.xls`
+                  );
+                }
+
+                test();
+                // window.location.href = "";
+              } catch (error) {
+                console.error("Error downloading Excel file:", error);
+              }
+              console.log(filter?.excelDownload || "");
+            }}
           >
             <BsCloudDownload size="20px" color="#A0AEC0" />
           </Button>

@@ -1,5 +1,5 @@
-import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Controller,
@@ -7,23 +7,19 @@ import {
   useForm,
   useFormContext,
 } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import generateFormField from "../../components/Elements/GenerateFormField";
+import { MotionSlideUp } from "../../utils/animation";
 import { addEditFormFields, schema } from "./fields";
 import {
-  useAddCommodityVarietyMutation,
-  useGetCommodityMasterMutation,
-  useGetCommodityTypeMasterMutation,
-  useGetCommodityVarietyMutation,
-  useUpdateCommodityVarietyMutation,
+  useAddRoleMasterMutation,
+  useGetRoleMasterMutation,
+  useUpdateRoleMasterMutation,
 } from "../../features/master-api-slice";
-import { showToastByStatusCode } from "../../services/showToastByStatusCode";
-import { MotionSlideUp } from "../../utils/animation";
-
-const AddEditFormCommodityVariety = () => {
-  const location = useLocation();
+import generateFormField from "../../components/Elements/GenerateFormField";
+import { Box, Button, Text } from "@chakra-ui/react";
+const AddEditRoleMaster = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -48,45 +44,40 @@ const AddEditFormCommodityVariety = () => {
       methods.setValue(key, "");
     });
   };
-  const [
-    getCommodityMaster,
-    { isLoading: getCommodityTypeMasterApiIsLoading },
-  ] = useGetCommodityMasterMutation();
-  const [getCommodityVariety, { isLoading: getCommodityVarietyApiIsLoading }] =
-    useGetCommodityVarietyMutation();
 
-  const [addCommodityVariety, { isLoading: addCommodityVarietyApiIsLoading }] =
-    useAddCommodityVarietyMutation();
+  const [getRoleMaster] = useGetRoleMasterMutation();
 
-  const [
-    updateCommodityVariety,
-    { isLoading: updateCommodityVarietyMasterApiIsLoading },
-  ] = useUpdateCommodityVarietyMutation();
+  const [addRoleMaster, { isLoading: addRoleMasterApiIsLoading }] =
+    useAddRoleMasterMutation();
+
+  const [updateRoleMaster, { isLoading: updateRoleMasterApiIsLoading }] =
+    useUpdateRoleMasterMutation();
+
   const addData = async (data) => {
     try {
-      const response = await addCommodityVariety(data).unwrap();
-      console.log("add commodity variety res", response);
+      const response = await addRoleMaster(data).unwrap();
+      console.log("add Role master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/commodity-master/commodity-variety");
+        navigate("/manage-users/role-master");
       }
     } catch (error) {
       console.error("Error:", error);
       toasterAlert(error);
     }
   };
-
-  const getCommodityType = async () => {
+  const getRole = async () => {
     try {
-      const response = await getCommodityMaster().unwrap();
+      // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
+      const response = await getRoleMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
-        label: item.commodity_name,
-        value: item.id,
+      let arr = response?.results.map((type) => ({
+        label: type.commodity_type,
+        value: type.id,
       }));
-      console.log(arr);
 
       setAddEditFormFieldsList(
         addEditFormFields.map((field) => {
@@ -104,13 +95,14 @@ const AddEditFormCommodityVariety = () => {
       console.error("Error:", error);
     }
   };
+
   const updateData = async (data) => {
     try {
-      const response = await updateCommodityVariety(data).unwrap();
+      const response = await updateRoleMaster(data).unwrap();
       if (response.status === 200) {
-        console.log("update commodity variety res", response);
+        console.log("update earthQuack master res", response);
         toasterAlert(response);
-        navigate("/commodity-master/commodity-variety");
+        navigate("/manage-users/role-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -119,23 +111,17 @@ const AddEditFormCommodityVariety = () => {
   };
 
   useEffect(() => {
-    getCommodityType();
+    getRole();
     if (details?.id) {
-      console.log(details);
       let obj = {
-        commodity_variety: details.commodity_variety,
-        description: details.description,
-        hsn_code: details.hsn_code,
-        commodity_id: details.commodity_id.id,
-        fumigation_required: details.fumigation_required,
-        fumigation_day: details.fumigation_day,
-        lab_testing_required: details.lab_testing_required,
-        fed: details.fed,
-        is_block: details.is_block,
+        role_name: details?.role_name,
+        description: details?.description,
         is_active: details.is_active,
       };
-      console.log(obj);
+
       // setHandleSelectBoxVal
+
+      console.log(obj);
 
       Object.keys(obj).forEach(function (key) {
         methods.setValue(key, obj[key], { shouldValidate: true });
@@ -151,12 +137,7 @@ const AddEditFormCommodityVariety = () => {
             {addEditFormFieldsList &&
               addEditFormFieldsList.map((item, i) => (
                 <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                  <Box
-                    w="full"
-                    gap="10"
-                    display={{ base: "flex" }}
-                    alignItems="center"
-                  >
+                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
                     {" "}
                     <Text textAlign="right" w="200px">
                       {item.label}
@@ -164,21 +145,18 @@ const AddEditFormCommodityVariety = () => {
                     {generateFormField({
                       ...item,
                       label: "",
-                      isChecked: details?.active,
-                      style: {
-                        mb: 1,
-                        mt: 1,
-                      },
-
+                      // options: item.type === "select" && commodityTypeMaster,
                       selectedValue:
                         item.type === "select" &&
-                        item?.options?.find((opt) => {
-                          console.log("opt", opt);
-                          console.log("details", details);
-                          return opt.value === details?.commodity_id.id;
-                        }),
-                      selectType: "value",
+                        item?.options?.find(
+                          (opt) =>
+                            opt.label ===
+                            details?.commodity_type?.commodity_type
+                        ),
+                      selectType: "label",
+                      isChecked: details?.is_active,
                       isClearable: false,
+                      style: { mb: 1, mt: 1 },
                     })}
                   </Box>
                 </MotionSlideUp>
@@ -208,8 +186,7 @@ const AddEditFormCommodityVariety = () => {
               color={"white"}
               borderRadius={"full"}
               isLoading={
-                addCommodityVarietyApiIsLoading ||
-                updateCommodityVarietyMasterApiIsLoading
+                addRoleMasterApiIsLoading || updateRoleMasterApiIsLoading
               }
               my={"4"}
               px={"10"}
@@ -223,7 +200,7 @@ const AddEditFormCommodityVariety = () => {
   );
 };
 
-export default AddEditFormCommodityVariety;
+export default AddEditRoleMaster;
 
 const toasterAlert = (obj) => {
   let msg = obj?.message;

@@ -30,6 +30,7 @@ function BankBranchMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "BankBranch",
   });
 
   const [getBankBranchMaster, { isLoading: getBankBranchMasterApiIsLoading }] =
