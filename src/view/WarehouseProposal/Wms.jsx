@@ -57,101 +57,101 @@ const commonStyle = {
 const formFieldsName = {
   wms_warehouse_details: {
     warehouse_name: "warehouse_name",
-    region_name: "region_name",
-    state_name: "state_name",
-    zone_name: "zone_name",
-    district_name: "district_name",
-    area_name: "area_name",
+    region: "region",
+    state: "state",
+    zone: "zone",
+    district: "district",
+    area: "area",
     warehouse_address: "warehouse_address",
-    pin_code: "pin_code",
-    no_of_chamber: "no_of_chamber",
-    warehouse_in_factory_premises: "warehouse_in_factory_premises",
+    warehouse_pincode: "warehouse_pincode",
+    no_of_chambers: "no_of_chambers",
+    is_factory_permise: "is_factory_permise",
     standard_capacity: "standard_capacity",
-    current_warehouse_capacity: "current_warehouse_capacity",
-    current_utilizes_capacity: "current_utilizes_capacity",
+    currrent_capacity: "currrent_capacity",
+    currrent_utilised_capacity: "currrent_utilised_capacity",
     lock_in_period: "lock_in_period",
     lock_in_period_month: "lock_in_period_month",
     covered_area: "covered_area",
-    supervisor_for_day_shift: "supervisor_for_day_shift",
-    supervisor_for_night_shift: "supervisor_for_night_shift",
-    security_guard_for_day_shift: "security_guard_for_day_shift",
-    security_guard_for_night_shift: "security_guard_for_night_shift",
+    supervisor_day_shift: "supervisor_day_shift",
+    supervisor_night_shift: "supervisor_night_shift",
+    security_guard_day_shift: "security_guard_day_shift",
+    security_guard_night_shift: "security_guard_night_shift",
   },
   wms_commodity_details: {
-    expected_commodity_name: "expected_commodity_name",
+    expected_commodity_name: "expected_commodity_name", //not found
     commodity_inward_type: "commodity_inward_type",
-    pre_stack_commodity: "pre_stack_commodity",
-    pre_stack_commodity_quantity: "pre_stack_commodity_quantity",
-    funding_required: "funding_required",
-    bank_details: {
-      bank_name: "bank_name",
-      branch_name: "branch_name",
+    prestack_commodity: "prestack_commodity",
+    prestack_commodity_qty: "prestack_commodity_qty",
+    is_funding_required: "is_funding_required",
+    bank_details: {//not found
+      bank_name: "bank_name", //not found
+      branch_name: "branch_name", //not found
     },
   },
   wms_commercial_details: {
-    warehouse_owner_details: {
-      owner_name: "owner_name",
-      mobile_no: "mobile_no",
-      address: "address",
-      rent: "rent",
+    warehouse_owner_details: { //not found
+      owner_name: "owner_name", //not found
+      mobile_no: "mobile_no", //not found
+      address: "address", //not found
+      rent: "rent", //not found
     },
-    minimum_rent: "minimum_rent",
-    maximum_rent: "maximum_rent",
+    min_rent: "min_rent",
+    max_rent: "max_rent",
     avg_rent: "avg_rent",
     rent: "rent",
-    total_rent_payable_months: "total_rent_payable_month",
-    security_deposit_amount: "security_deposit_amount",
+    total_rent_per_month: "total_rent_per_month",
+    security_deposit_amt: "security_deposit_amt",
     advance_rent: "advance_rent",
     advance_rent_month: "advance_rent_month",
     gst: "gst",
     commencement_date: "commencement_date",
-    agreement_period: "agreement_period",
+    agreement_period_month: "agreement_period_month",
     expiry_date: "expiry_date",
-    notice_period: "notice_period",
-    wms_charges_according_to_commodity: "wms_charges_according_to_commodity",
-    your_project: "your_project",
+    notice_period_month: "notice_period_month",
+    wms_charges_according_to_commodity: "wms_charges_according_to_commodity", //not found
+    projection_plan_file_path: "projection_plan_file_path",
   },
   wms_clients_details: {
-    client_list: {
-      client_type: "client_type",
-      client_name: "client_name",
-      mobile_number: "mobile_number",
-      region: "region",
-      state: "state",
-      zone: "zone",
-      district: "district",
-      area: "area",
-      address: "address",
-      wms_charges: "wms_charges",
-      billing_cycle: "billing_cycle",
-      reservation_qty: "reservation_qty",
-      reservation_period: "reservation_period",
-      reservation_start_date: "reservation_start_date",
-      reservation_end_date: "reservation_end_date",
+    client_list: { //not found
+      client_type: "client_type", //not found
+      client_name: "client_name", //not found
+      mobile_number: "mobile_number", //not found
+      region: "region", //not found
+      state: "state", //not found
+      zone: "zone", //not found
+      district: "district", //not found
+      area: "area", //not found
+      address: "address", //not found
+      wms_charges: "wms_charges", //not found
+      billing_cycle: "billing_cycle", //not found
+      reservation_qty: "reservation_qty", //not found
+      reservation_period: "reservation_period", //not found
+      reservation_start_date: "reservation_start_date", //not found
+      reservation_end_date: "reservation_end_date", //not found
     },
-    intention_letter: "intention_letter",
-    remarks: "remarks",
+    intention_letter: "intention_letter", //not found
+    remarks: "remarks", //not found
   },
 };
 
 const schema = yup.object().shape({
   warehouse_name: yup.string().required("Warehouse name is required"),
-  region_name: yup.string().required("Region name is required"),
-  state_name: yup.string().required("State name is required"),
-  zone_name: yup.string().required("Zone name is required"),
-  district_name: yup.string().required("District name is required"),
-  area_name: yup.string().required("Area name is required"),
+  region: yup.string().required("Region name is required"),
+  state: yup.string().required("State name is required"),
+  zone: yup.string().required("Zone name is required"),
+  district: yup.string().required("District name is required"),
+  area: yup.string().required("Area name is required"),
   warehouse_address: yup.string().required("Warehouse address is required"),
-  pin_code: yup.string().required("Pin code is required"),
-  no_of_chamber: yup.string().required("No of chamber is required"),
-  warehouse_in_factory_premises: yup
+  warehouse_pincode: yup.string().required("Pin code is required"),
+  no_of_chambers: yup.string().required("No of chamber is required"),
+  is_factory_permise: yup
     .string()
     .required("Warehouse in factory premises is required"),
   standard_capacity: yup.string().required("Standard capacity is required"),
-  current_warehouse_capacity: yup
+  currrent_capacity: yup
     .string()
     .required("Current warehouse capacity is required"),
-  current_utilizes_capacity: yup
+  currrent_utilised_capacity: yup
     .string()
     .required("Current utilized capacity is required"),
   lock_in_period: yup.string().required("Lock in period is required"),
@@ -159,85 +159,85 @@ const schema = yup.object().shape({
     .string()
     .required("Lock in period month is required"),
   covered_area: yup.string().required("Covered area is required"),
-  supervisor_for_day_shift: yup
+  supervisor_day_shift: yup
     .string()
     .required("Supervisor for day shift is required"),
-  supervisor_for_night_shift: yup
+  supervisor_night_shift: yup
     .string()
     .required("Supervisor for night shift is required"),
-  security_guard_for_day_shift: yup
+  security_guard_day_shift: yup
     .string()
     .required("Security guard for day shift is required"),
-  security_guard_for_night_shift: yup
+  security_guard_night_shift: yup
     .string()
     .required("Security guard for night shift is required"),
   expected_commodity_name: yup
-    .string()
-    .required("Expected commodity name is required"),
+    .string(),
+    // .required("Expected commodity name is required"),
   commodity_inward_type: yup
     .string()
     .required("Commodity inward type is required"),
-  pre_stack_commodity: yup.string().required("Pre stack commodity is required"),
-  pre_stack_commodity_quantity: yup
+  prestack_commodity: yup.string().required("Pre stack commodity is required"),
+  prestack_commodity_qty: yup
     .string()
     .required("Pre stack commodity quantity is required"),
-  funding_required: yup.string().required("Funding required is required"),
+  is_funding_required: yup.string().required("Funding required is required"),
   bank_details: yup.array().of(
     yup.object().shape({
-      bank_name: yup.string().trim().required("Bank name is required"),
-      branch_name: yup.string().trim().required("Branch name is required"),
+      bank_name: yup.string().trim()/*.required("Bank name is required")*/,
+      branch_name: yup.string().trim()/*.required("Branch name is required")*/,
     })
   ),
   warehouse_owner_details: yup.array().of(
     yup.object().shape({
-      owner_name: yup.string().trim().required("Owner name is required"),
-      mobile_no: yup.string().trim().required("Mobile no is required"),
-      address: yup.string().trim().required("Address is required"),
-      rent: yup.string().trim().required("Rent is required"),
+      owner_name: yup.string().trim()/*.required("Owner name is required")*/,
+      mobile_no: yup.string().trim()/*.required("Mobile no is required")*/,
+      address: yup.string().trim()/*.required("Address is required")*/,
+      rent: yup.string().trim()/*.required("Rent is required")*/,
     })
   ),
-  minimum_rent: yup.string().required("Minimum rent is required"),
-  maximum_rent: yup.string().required("Maximum rent is required"),
+  min_rent: yup.string().required("Minimum rent is required"),
+  max_rent: yup.string().required("Maximum rent is required"),
   avg_rent: yup.string().required("Avg rent is required"),
   rent: yup.string().required("rent is required"),
-  total_rent_payable_month: yup
+  total_rent_per_month: yup
     .string()
     .required("Total rent payable month is required"),
-  security_deposit_amount: yup
+  security_deposit_amt: yup
     .string()
     .required("Security deposit amount is required"),
   advance_rent: yup.string().required("Advance rent is required"),
   advance_rent_month: yup.string().required("Advance rent month is required"),
   gst: yup.string().required("gst is required"),
   commencement_date: yup.string().required("Commencement date is required"),
-  agreement_period: yup.string().required("Agreement period is required"),
+  agreement_period_month: yup.string().required("Agreement period is required"),
   expiry_date: yup.string().required("Expiry date is required"),
-  notice_period: yup.string().required("Notice period is required"),
+  notice_period_month: yup.string().required("Notice period is required"),
   wms_charges_according_to_commodity: yup
-    .string()
-    .required("WMS Charges according to commodity is required"),
-  your_project: yup.string().required("Your project is required"),
+    .string(),
+   // .required("WMS Charges according to commodity is required"),
+  projection_plan_file_path: yup.string().required("Your project is required"),
   client_list: yup.array().of(
     yup.object().shape({
-      client_type: yup.string().required("Client type is required"),
-      client_name: yup.string().required("Client name is required"),
-      mobile_number: yup.string().required("Mobile number is required"),
-      region: yup.string().required("Region is required"),
-      state:  yup.string().required("State is required"),
-      zone: yup.string().required(" Zone is required"),
-      district: yup.string().required("District is required"),
-      area: yup.string().required("Area is required"),
-      address: yup.string().required("Address is required"),
-      wms_charges: yup.string().required("wms charges is required"),
-      billing_cycle: yup.string().required("billing cycle is required"),
-      reservation_qty: yup.string().required("reservation qty is required"),
-      reservation_period: yup.string().required("reservation period is required"),
-      reservation_start_date: yup.string().required("reservation start date is required"),
-      reservation_end_date: yup.string().required("reservation end date is required"),
+      client_type: yup.string()/*.required("Client type is required")*/,
+      client_name: yup.string()/*.required("Client name is required")*/,
+      mobile_number: yup.string()/*.required("Mobile number is required")*/,
+      region: yup.string()/*.required("Region is required")*/,
+      state:  yup.string()/*.required("State is required")*/,
+      zone: yup.string()/*.required(" Zone is required")*/,
+      district: yup.string()/*.required("District is required")*/,
+      area: yup.string()/*.required("Area is required")*/,
+      address: yup.string()/*.required("Address is required")*/,
+      wms_charges: yup.string()/*.required("wms charges is required")*/,
+      billing_cycle: yup.string()/*.required("billing cycle is required")*/,
+      reservation_qty: yup.string()/*.required("reservation qty is required")*/,
+      reservation_period: yup.string()/*.required("reservation period is required")*/,
+      reservation_start_date: yup.string()/*.required("reservation start date is required")*/,
+      reservation_end_date: yup.string()/*.required("reservation end date is required")*/,
     })
   ),
-  intention_letter: yup.string().required("Intention letter is required"),
-  remarks: yup.string().required("remarks is required"),
+  intention_letter: yup.string()/*.required("Intention letter is required")*/,
+  remarks: yup.string()/*.required("remarks is required")*/,
 });
 
 const Wms = () => {
@@ -561,7 +561,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .region_name
+                                        .region
                                     }
                                     label=""
                                     isLoading={getRegionMasterApiIsLoading}
@@ -577,7 +577,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_warehouse_details
-                                          .region_name,
+                                          .region,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -603,7 +603,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .state_name
+                                        .state
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
@@ -619,7 +619,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_warehouse_details
-                                          .state_name,
+                                          .state,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -645,7 +645,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .zone_name
+                                        .zone
                                     }
                                     label=""
                                     options={selectBoxOptions?.zones || []}
@@ -661,7 +661,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_warehouse_details
-                                          .zone_name,
+                                          .zone,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -687,7 +687,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .district_name
+                                        .district
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
@@ -703,7 +703,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_warehouse_details
-                                          .district_name,
+                                          .district,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -730,7 +730,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .area_name
+                                        .area
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
@@ -746,7 +746,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_warehouse_details
-                                          .area_name,
+                                          .area,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -802,7 +802,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .pin_code
+                                        .warehouse_pincode
                                     }
                                     placeholder="Pin Code"
                                     type="text"
@@ -832,7 +832,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .no_of_chamber
+                                        .no_of_chambers
                                     }
                                     placeholder="No Of Chambers"
                                     type="text"
@@ -842,7 +842,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* --------------warehouse_in_factory_premises radio button -------------- */}
+                            {/* --------------is_factory_permise radio button -------------- */}
                             <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
@@ -905,7 +905,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* --------------  current_warehouse_capacity (in MT)-------------- */}
+                            {/* --------------  currrent_capacity (in MT)-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -925,7 +925,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .current_warehouse_capacity
+                                        .currrent_capacity
                                     }
                                     placeholder="Current Warehouse Capacity (in MT)"
                                     type="text"
@@ -955,7 +955,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
-                                        .current_utilizes_capacity
+                                        .currrent_utilised_capacity
                                     }
                                     placeholder="Current Utilizes Capacity (in MT)"
                                     type="text"
@@ -1057,7 +1057,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- supervisor_for_day_shift -------------- */}
+                            {/* -------------- supervisor_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -1080,7 +1080,7 @@ const Wms = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.wms_warehouse_details
-                                          .supervisor_for_day_shift
+                                          .supervisor_day_shift
                                       }
                                       label=""
                                       options={[
@@ -1101,7 +1101,7 @@ const Wms = () => {
                                         );
                                         setValue(
                                           formFieldsName.wms_warehouse_details
-                                            .supervisor_for_day_shift,
+                                            .supervisor_day_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -1120,7 +1120,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- supervisor_for_night_shift -------------- */}
+                            {/* -------------- supervisor_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -1144,7 +1144,7 @@ const Wms = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.wms_warehouse_details
-                                          .supervisor_for_night_shift
+                                          .supervisor_night_shift
                                       }
                                       label=""
                                       options={[
@@ -1165,7 +1165,7 @@ const Wms = () => {
                                         );
                                         setValue(
                                           formFieldsName.wms_warehouse_details
-                                            .supervisor_for_night_shift,
+                                            .supervisor_night_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -1184,7 +1184,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- security_guard_for_day_shift -------------- */}
+                            {/* -------------- security_guard_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -1208,7 +1208,7 @@ const Wms = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.wms_warehouse_details
-                                          .security_guard_for_day_shift
+                                          .security_guard_day_shift
                                       }
                                       label=""
                                       options={[
@@ -1229,7 +1229,7 @@ const Wms = () => {
                                         );
                                         setValue(
                                           formFieldsName.wms_warehouse_details
-                                            .security_guard_for_day_shift,
+                                            .security_guard_day_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -1248,7 +1248,7 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- security_guard_for_night_shift -------------- */}
+                            {/* -------------- security_guard_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -1272,7 +1272,7 @@ const Wms = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.wms_warehouse_details
-                                          .security_guard_for_night_shift
+                                          .security_guard_night_shift
                                       }
                                       label=""
                                       options={[
@@ -1293,7 +1293,7 @@ const Wms = () => {
                                         );
                                         setValue(
                                           formFieldsName.wms_warehouse_details
-                                            .security_guard_for_night_shift,
+                                            .security_guard_night_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -1494,7 +1494,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
-                                        .pre_stack_commodity
+                                        .prestack_commodity
                                     }
                                     label=""
                                     options={[
@@ -1523,7 +1523,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_commodity_details
-                                          .pre_stack_commodity,
+                                          .prestack_commodity,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -1549,7 +1549,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commodity_details
-                                        .pre_stack_commodity_quantity
+                                        .prestack_commodity_qty
                                     }
                                     placeholder="Pre-Stack Commodity Quantity(MT)"
                                     type="number"
@@ -1936,7 +1936,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .minimum_rent
+                                        .min_rent
                                     }
                                     placeholder="minimum Rent(per/sq ft/month)"
                                     type="text"
@@ -1966,7 +1966,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .maximum_rent
+                                        .max_rent
                                     }
                                     placeholder="Warehouse Name"
                                     type="text"
@@ -2058,7 +2058,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .total_rent_payable_months
+                                        .total_rent_per_month
                                     }
                                     placeholder="Total rent payable (per month)"
                                     type="text"
@@ -2090,7 +2090,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .security_deposit_amount
+                                        .security_deposit_amt
                                     }
                                     placeholder="Security deposit amount"
                                     type="text"
@@ -2272,7 +2272,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .agreement_period
+                                        .agreement_period_month
                                     }
                                     placeholder=" Agreement period (Month)"
                                     type="text"
@@ -2338,7 +2338,7 @@ const Wms = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .notice_period
+                                        .notice_period_month
                                     }
                                     placeholder="Notice period (Month)"
                                     type="text"
