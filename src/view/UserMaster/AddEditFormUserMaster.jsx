@@ -41,7 +41,6 @@ function AddEditFormUserMaster() {
     });
   };
 
-  const [getUserMaster] = useGetUserMasterMutation();
   const [addUserMaster, { isLoading: addUserMasterApiIsLoading }] =
     useAddUserMasterMutation();
   const [updateUserMaster, { isLoading: updateUserMasterApiIsLoading }] =
@@ -60,33 +59,7 @@ function AddEditFormUserMaster() {
       toasterAlert(error);
     }
   };
-  const getUser = async () => {
-    try {
-      const response = await getUserMaster().unwrap();
 
-      console.log("Success:", response);
-
-      let arr = response?.results.map((type) => ({
-        // label: type.commodity_type,
-        value: type.id,
-      }));
-
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
   const updateData = async (data) => {
     try {
       const response = await updateUserMaster(data).unwrap();
@@ -101,7 +74,7 @@ function AddEditFormUserMaster() {
     }
   };
   useEffect(() => {
-    getUser();
+    setAddEditFormFieldsList(addEditFormFields);
     if (details?.id) {
       let obj = {
         email: details.email,
@@ -109,7 +82,7 @@ function AddEditFormUserMaster() {
         phone: details.phone,
         user_role: details.user_role,
         // last_login: details.last_login,
-        active: details.active,
+        is_active: details.is_active,
       };
       console.log("details", details);
       console.log("obj", obj);

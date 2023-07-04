@@ -114,7 +114,7 @@ const AddEditFormRegionMaster = () => {
                         ...item,
                         label: "",
                         isChecked: details?.is_active,
-                        isClearable: false,
+                        isClearable: false, 
                         style: { mb: 1, mt: 1 },
                       })}
                     </Box>

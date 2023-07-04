@@ -33,15 +33,10 @@ const AreaMaster = () => {
     excelDownload: "Area",
   });
 
-  const [
-    getAreaMaster,
-    { error: getAreaMasterApiErr, isLoading: getAreaMasterApiIsLoading },
-  ] = useGetAreaMasterMutation();
+  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
+    useGetAreaMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -103,31 +98,40 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("earthquake_zone_type_id", {
+    columnHelper.accessor("zone.zone_name", {
       cell: (info) => info.getValue(),
-      header: "Earthquake zone Type  ID",
+      header: " Zone",
     }),
-    columnHelper.accessor("is_block", {
-      // cell: (info) => info.getValue(),
-      header: "Is Block",
-      cell: (info) => (
-        <Box id="active_row">
-          <Switch
-            size="md"
-            colorScheme="whatsapp"
-            isReadOnly
-            isChecked={info.getValue()}
-          />
-        </Box>
-      ),
+    columnHelper.accessor("state.state_name", {
+      cell: (info) => info.getValue(),
+      header: " State",
     }),
-    columnHelper.accessor("created_at", {
+    columnHelper.accessor("region.region_name", {
+      cell: (info) => info.getValue(),
+      header: " Region",
+    }),
+
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "Creation Date",
     }),
     columnHelper.accessor("last_updated_date", {
       cell: (info) => info.getValue(),
       header: "Last Updated Date",
+    }),
+    columnHelper.accessor("is_block", {
+      // cell: (info) => info.getValue(),
+      header: "Block",
+      cell: (info) => (
+        <Box id="active_row">
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            isReadOnly
+            isChecked={info.row.original.is_block}
+          />
+        </Box>
+      ),
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",

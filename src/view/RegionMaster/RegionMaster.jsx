@@ -86,6 +86,9 @@ function RegionMaster() {
     }
   };
 
+ 
+
+
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -160,7 +163,7 @@ function RegionMaster() {
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
-    // if (filterQuery) { 
+    // if (filterQuery) {
     paramString = Object.entries(filter)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
@@ -232,6 +235,7 @@ function RegionMaster() {
         loading={getRegionMasterApiIsLoading}
         addForm={() => addForm()}
       />
+     
     </div>
   );
 }
