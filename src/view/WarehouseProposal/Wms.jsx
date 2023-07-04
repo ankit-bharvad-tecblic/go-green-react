@@ -79,7 +79,7 @@ const formFieldsName = {
     security_guard_night_shift: "security_guard_night_shift",
   },
   wms_commodity_details: {
-    expected_commodity_name: "expected_commodity_name", //not found
+    expected_commodity: "expected_commodity",
     commodity_inward_type: "commodity_inward_type",
     prestack_commodity: "prestack_commodity",
     prestack_commodity_qty: "prestack_commodity_qty",
@@ -175,8 +175,9 @@ const schema = yup.object().shape({
   security_guard_night_shift: yup
     .string()
     .required("Security guard for night shift is required"),
-  expected_commodity_name: yup.string(),
-  // .required("Expected commodity name is required"),
+  expected_commodity: yup
+    .string()
+    .required("Expected commodity name is required"),
   commodity_inward_type: yup
     .string()
     .required("Commodity inward type is required"),
@@ -474,6 +475,7 @@ const Wms = () => {
       let data = {};
       if (type === "WMS_WAREHOUSE_DETAILS") {
         data = {
+          is_draft: true,
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
@@ -499,7 +501,8 @@ const Wms = () => {
         console.log("WMS_WAREHOUSE_DETAILS @@ --> ", data);
       } else if (type === "WMS_COMMODITY_DETAILS") {
         data = {
-          expected_commodity_name: getValues("expected_commodity_name"), //not found
+          is_draft: true,
+          expected_commodity: getValues("expected_commodity"),
           commodity_inward_type: getValues("commodity_inward_type"),
           prestack_commodity: getValues("prestack_commodity"),
           prestack_commodity_qty: getValues("prestack_commodity_qty"),
@@ -510,6 +513,7 @@ const Wms = () => {
         console.log("WMS_COMMODITY_DETAILS @@ --> ", data);
       } else if (type === "WMS_COMMERCIAL_DETAILS") {
         data = {
+          is_draft: true,
           warehouse_owner_details: warehouse_owner_details, //not found
           min_rent: getValues("min_rent"),
           max_rent: getValues("max_rent"),
@@ -533,6 +537,7 @@ const Wms = () => {
         console.log("WMS_COMMERCIAL_DETAILS @@ --> ", data);
       } else if (type === "WMS_CLIENTS_DETAILS") {
         data = {
+          is_draft: true,
           client_list: getValues("client_list"), //not found
           intention_letter: getValues("intention_letter"), //not found
           remarks: getValues("remarks"), //not found
@@ -1414,9 +1419,9 @@ const Wms = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
                               my={"4"}
                               px={"10"}
+                              isLoading={saveAsDraftApiIsLoading}
                               onClick={() => {
                                 saveAsDraftData("WMS_WAREHOUSE_DETAILS");
                               }}
@@ -1481,7 +1486,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
-                                        .expected_commodity_name
+                                        .expected_commodity
                                     }
                                     label=""
                                     options={[
@@ -1502,7 +1507,7 @@ const Wms = () => {
                                       );
                                       setValue(
                                         formFieldsName.wms_commodity_details
-                                          .expected_commodity_name,
+                                          .expected_commodity,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -1695,7 +1700,15 @@ const Wms = () => {
                                   <>
                                     <GridItem colSpan={1}>
                                       <Text textAlign="left"> Sr No </Text>{" "}
-                                      <Button>{index + 1}</Button>
+                                      <Box
+                                        textAlign="center"
+                                        border="1px"
+                                        p="2"
+                                        borderColor="gray.10"
+                                        borderRadius="6"
+                                      >
+                                        {index + 1}
+                                      </Box>
                                     </GridItem>
                                     {/* =============== Bank Name ============= */}
                                     <GridItem colSpan={3}>
@@ -1817,12 +1830,13 @@ const Wms = () => {
                                           color="#FF4444"
                                           fontSize="45px"
                                           cursor={"pointer"}
-                                          isDisabled={
-                                            bank_details_fields?.length === 1
-                                          }
-                                          onClick={() =>
-                                            remove_bank_detail(index)
-                                          }
+                                          onClick={() => {
+                                            if (
+                                              bank_details_fields?.length > 1
+                                            ) {
+                                              remove_bank_detail(index);
+                                            }
+                                          }}
                                         />
                                       </Flex>
                                     </GridItem>
@@ -1843,7 +1857,7 @@ const Wms = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
                               onClick={() => {
@@ -1985,13 +1999,16 @@ const Wms = () => {
                                           color="#FF4444"
                                           fontSize="45px"
                                           cursor={"pointer"}
-                                          isDisabled={
-                                            warehouse_owner_details?.length ===
-                                            1
-                                          }
-                                          onClick={() =>
-                                            remove_warehouse_owner_detail(index)
-                                          }
+                                          onClick={() => {
+                                            if (
+                                              warehouse_owner_details?.length >
+                                              1
+                                            ) {
+                                              remove_warehouse_owner_detail(
+                                                index
+                                              );
+                                            }
+                                          }}
                                         />
                                       </Flex>
                                     </GridItem>
@@ -2542,7 +2559,7 @@ const Wms = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
                               onClick={() => {
@@ -2988,10 +3005,11 @@ const Wms = () => {
                                           color="#FF4444"
                                           fontSize="45px"
                                           cursor={"pointer"}
-                                          isDisabled={client_list?.length === 1}
-                                          onClick={() =>
-                                            remove_client_list(index)
-                                          }
+                                          onClick={() => {
+                                            if (client_list?.length > 1) {
+                                              remove_client_list(index);
+                                            }
+                                          }}
                                         />
                                       </Flex>
                                     </GridItem>
@@ -3073,7 +3091,7 @@ const Wms = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
                               onClick={() => {
