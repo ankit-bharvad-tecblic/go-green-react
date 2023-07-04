@@ -61,6 +61,10 @@ export const API = {
 
   WAREHOUSE_PROPOSAL: {
     SAVE_AS_DRAFT: "/warehouse/save_draft_create/",
+    SUPERVISOR_DAY: "/warehouse/day/supervisor",
+    SUPERVISOR_NIGHT: "/warehouse/night/supervisor",
+    SECURITY_DAY: "/warehouse/day/security",
+    SECURITY_NIGHT: "/warehouse/night/security",
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",

@@ -33,6 +33,7 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
   useGetAreaMasterMutation,
+  useGetCommodityMasterMutation,
   useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
@@ -46,6 +47,10 @@ import ReactSelect from "react-select";
 import { gstNumberValidation } from "../../services/validation.service";
 import {
   useFetchLocationDrillDownMutation,
+  useGetSecurityGuardDayShiftMutation,
+  useGetSecurityGuardNightShiftMutation,
+  useGetSupervisorDayShiftMutation,
+  useGetSupervisorNightShiftMutation,
   useSaveAsDraftMutation,
 } from "../../features/warehouse-proposal.slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
@@ -201,7 +206,7 @@ const schema = Yup.object().shape({
     .trim()
     .required("Warehouse address is required"),
   warehouse_pincode: Yup.string().trim().required("Pin code is required"),
-  no_of_chambers: Yup.string(),
+  no_of_chambers: Yup.number(),
   is_factory_permise: Yup.string().required(
     "Warehouse in factory premises is required"
   ),
@@ -344,14 +349,16 @@ const Pwh = () => {
     regions: [],
   });
 
+  const [selected, setSelected] = useState({});
+
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
 
   const methods = useForm({
     //resolver: yupResolver(validationSchema),
     resolver: yupResolver(schema),
-    is_factory_permise: "false",
-    lock_in_period: "false",
     defaultValues: {
+      is_factory_permise: "false",
+      lock_in_period: "false",
       pwh_commodity_bank_details: [{ bank_name: "", branch_name: "" }],
       pwh_commercial_multipal_details: [
         {
@@ -440,6 +447,27 @@ const Pwh = () => {
   const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
     useGetAreaMasterMutation();
 
+  ///  getSupervisorDayShift
+  const [
+    getSupervisorDayShift,
+    { isLoading: getSupervisorDayShiftApiIsLoading },
+  ] = useGetSupervisorDayShiftMutation();
+
+  const [
+    getSupervisorNightShift,
+    { isLoading: getSupervisorNightShiftApiIsLoading },
+  ] = useGetSupervisorNightShiftMutation();
+
+  const [
+    getSecurityGuardDayShift,
+    { isLoading: getSecurityGuardDayShiftApiIsLoading },
+  ] = useGetSecurityGuardDayShiftMutation();
+
+  const [
+    getSecurityGuardNightShift,
+    { isLoading: getSecurityGuardNightShiftApiIsLoading },
+  ] = useGetSecurityGuardNightShiftMutation();
+
   // Save as draft api
 
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
@@ -451,10 +479,13 @@ const Pwh = () => {
     { isLoading: fetchLocationDrillDownApiIsLoading },
   ] = useFetchLocationDrillDownMutation();
 
+  const [getCommodityMaster, { isLoading: getCommodityMasterApiIsLoading }] =
+    useGetCommodityMasterMutation();
+
   const getRegionMasterList = async () => {
     try {
       const response = await getRegionMaster().unwrap();
-      console.log("Success:", response);
+      console.log("getRegionMasterList:", response);
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
@@ -469,73 +500,89 @@ const Pwh = () => {
     }
   };
 
-  const getStateList = async () => {
+  const fetchSupervisorDayShift = async () => {
     try {
-      const response = await getStateMaster().unwrap();
+      const response = await getSupervisorDayShift().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          states: response?.results.map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-        }));
-      }
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorDayShiftOpt: optionsArray,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getZonesList = async () => {
+  const fetchSupervisorNightShift = async () => {
     try {
-      const response = await getZoneMaster().unwrap();
+      const response = await getSupervisorNightShift().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          zones: response?.results.map(({ zone_name, id }) => ({
-            label: zone_name,
-            value: id,
-          })),
-        }));
-      }
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorNightShiftOpt: optionsArray,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getDistrictMasterList = async () => {
+  const fetchSecurityGuardDayShift = async () => {
     try {
-      const response = await getDistrictMaster().unwrap();
+      const response = await getSecurityGuardDayShift().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          districts: response?.results.map(({ district_name, id }) => ({
-            label: district_name,
-            value: id,
-          })),
-        }));
-      }
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardDayShiftOpt: optionsArray,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getAreaMasterList = async () => {
+  const fetchSecurityGuardNightShift = async () => {
     try {
-      const response = await getAreaMaster().unwrap();
+      const response = await getSecurityGuardNightShift().unwrap();
       console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          areas: response?.results.map(({ area_name, id }) => ({
-            label: area_name,
-            value: id,
-          })),
-        }));
-      }
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardNightShiftOpt: optionsArray,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -626,6 +673,12 @@ const Pwh = () => {
 
       const response = await saveAsDraft(data).unwrap();
       console.log("saveAsDraftData - Success:", response);
+
+      toasterAlert({
+        message: "Save As Draft Successfully",
+        status: 200,
+      });
+
       if (response.status === 200) {
         console.log("response --> ", response);
       }
@@ -635,43 +688,250 @@ const Pwh = () => {
     }
   };
 
+  // Region State  Zone District Area  onChange drill down api start //
   const regionOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue(formFieldsName.pwh_warehouse_details.region_name, val.value, {
+    setValue(formFieldsName.pwh_warehouse_details.region_name, val?.value, {
       shouldValidate: true,
+    });
+    setSelected((prev) => ({ ...prev, region: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      state: {},
+      zone: {},
+      district: {},
+      area: {},
+    }));
+    setValue(formFieldsName.pwh_warehouse_details.state_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.zone_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.district_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.area_name, null, {
+      shouldValidate: false,
     });
 
     setLocationDrillDownState((prev) => ({
       ...prev,
-      region: val.value,
+      region: val?.value,
     }));
 
     const query = {
       ...locationDrillDownState,
-      region: val.value,
+      region: val?.value,
     };
 
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
-      if (response.status === 200) {
-        console.log("test");
-      }
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state?.map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
-
-    // setSelectBoxOptions((prev) => ({
-    //   ...prev,
-    //   regions: response?.results.map(({ area_name, id }) => ({
-    //     label: area_name,
-    //     value: id,
-    //   })),
-    // }));
   };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.pwh_warehouse_details.state_name, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, state: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      zone: {},
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.pwh_warehouse_details.zone_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.district_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.area_name, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      state: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        zones: response?.zone?.map(({ zone_name, id }) => ({
+          label: zone_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.pwh_warehouse_details.zone_name, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, zone: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.pwh_warehouse_details.district_name, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.pwh_warehouse_details.area_name, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      zone: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      zone: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: response?.district?.map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.pwh_warehouse_details.district_name, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, district: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      area: {},
+    }));
+
+    setValue(formFieldsName.pwh_warehouse_details.area_name, val?.value, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      district: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: response?.area?.map(({ area_name, id }) => ({
+          label: area_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const areaOnChange = (val) => {
+    setSelected((prev) => ({ ...prev, area: val }));
+    setValue(formFieldsName.pwh_warehouse_details.area_name, val?.value, {
+      shouldValidate: true,
+    });
+  };
+
+  const fetchCommodityMaster = async () => {
+    try {
+      const response = await getCommodityMaster().unwrap();
+
+      console.log(response);
+
+      if (response?.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          commodityMasterOpt: response?.results?.map(
+            ({ commodity_name, id }) => ({
+              label: commodity_name,
+              value: id,
+            })
+          ),
+        }));
+      }
+
+      console.log("Success:", response);
+      setData(response?.results || []);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // Region State  Zone District Area  onChange drill down api end //
 
   useEffect(() => {
     getRegionMasterList();
+    fetchSupervisorDayShift();
+    fetchSupervisorNightShift();
+    fetchSecurityGuardDayShift();
+    fetchSecurityGuardNightShift();
+
+    fetchCommodityMaster();
+
     // getStateList();
     // getZonesList();
     // getDistrictMasterList();
@@ -776,7 +1036,7 @@ const Pwh = () => {
                                     label=""
                                     isLoading={getRegionMasterApiIsLoading}
                                     options={selectBoxOptions?.regions || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.region}
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: commonStyle.w }}
@@ -808,18 +1068,13 @@ const Pwh = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.state}
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: commonStyle.w }}
                                     isLoading={getStateApiIsLoading}
                                     handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .state_name,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      stateOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -846,18 +1101,13 @@ const Pwh = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.zones || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.zone}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getZoneApiIsLoading}
                                     style={{ w: commonStyle.w }}
                                     handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .zone_name,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      zoneOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -884,18 +1134,13 @@ const Pwh = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.district}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getDistrictApiIsLoading}
                                     style={{ w: commonStyle.w }}
                                     handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .district_name,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      districtOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -923,19 +1168,12 @@ const Pwh = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.area}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getAreaMasterApiIsLoading}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .area_name,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
-                                    }}
+                                    handleOnChange={(val) => areaOnChange(val)}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1014,31 +1252,15 @@ const Pwh = () => {
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
-                                  <ReactCustomSelect
+                                  <CustomInput
                                     name={
                                       formFieldsName.pwh_warehouse_details
                                         .no_of_chamber
                                     }
+                                    placeholder="Number of chambers"
+                                    type="number"
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
-                                    isClearable={false}
-                                    selectType="label"
-                                    isLoading={false}
                                     style={{ w: commonStyle.w }}
-                                    handleOnChange={(val) => {
-                                      setValue(
-                                        formFieldsName.pwh_warehouse_details
-                                          .no_of_chamber,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
-                                    }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1324,22 +1546,24 @@ const Pwh = () => {
                                           .supervisor_for_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.superVisorDay}
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.pwh_warehouse_details
                                             .supervisor_for_day_shift,
-                                          val.value,
+                                          val?.value,
                                           { shouldValidate: true }
                                         );
                                       }}
@@ -1384,22 +1608,24 @@ const Pwh = () => {
                                           .supervisor_for_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorNightShiftOpt ||
+                                        []
+                                      }
+                                      // selectedValue={{}}
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorNight: val,
+                                        }));
                                         setValue(
                                           formFieldsName.pwh_warehouse_details
                                             .supervisor_for_night_shift,
-                                          val.value,
+                                          val?.value,
                                           { shouldValidate: true }
                                         );
                                       }}
@@ -1444,22 +1670,24 @@ const Pwh = () => {
                                           .security_guard_for_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.securityGuardDay}
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.pwh_warehouse_details
                                             .security_guard_for_day_shift,
-                                          val.value,
+                                          val?.value,
                                           { shouldValidate: true }
                                         );
                                       }}
@@ -1504,22 +1732,26 @@ const Pwh = () => {
                                           .security_guard_for_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardNightShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={
+                                        selected?.securityGuardNight
+                                      }
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
                                       style={{ w: commonStyle.w }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardNight: val,
+                                        }));
                                         setValue(
                                           formFieldsName.pwh_warehouse_details
                                             .security_guard_for_night_shift,
-                                          val.value,
+                                          val?.value,
                                           { shouldValidate: true }
                                         );
                                       }}
@@ -1613,22 +1845,23 @@ const Pwh = () => {
                                       .expected_commodity_name
                                   }
                                   label=""
-                                  options={[
-                                    {
-                                      label: "1",
-                                      value: 1,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
+                                  options={
+                                    selectBoxOptions?.commodityMasterOpt || []
+                                  }
+                                  selectedValue={selected?.commodity}
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
                                   handleOnChange={(val) => {
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      commodity: val,
+                                    }));
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .expected_commodity_name,
-                                      val.value,
+                                      val?.value,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -1679,7 +1912,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .commodity_inward_type,
-                                      val.label,
+                                      val?.label,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -1730,7 +1963,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .pre_stack_commodity,
-                                      val.value,
+                                      val?.value,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -1887,7 +2120,7 @@ const Pwh = () => {
                                               console.log("val: " + val);
                                               setValue(
                                                 `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`,
-                                                val.value,
+                                                val?.value,
                                                 { shouldValidate: true }
                                               );
                                               return val;
@@ -1940,7 +2173,7 @@ const Pwh = () => {
                                               console.log("val: " + val);
                                               setValue(
                                                 `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`,
-                                                val.value,
+                                                val?.value,
                                                 { shouldValidate: true }
                                               );
                                               return val;
@@ -2894,7 +3127,7 @@ const Pwh = () => {
                                       setValue(
                                         formFieldsName.pwh_commercial_details
                                           .storage_charges_according_to_commodity,
-                                        val.value,
+                                        val?.value,
                                         { shouldValidate: true }
                                       );
                                     }}
@@ -3121,7 +3354,7 @@ const Pwh = () => {
                                           setValue(
                                             formFieldsName.pwh_warehouse_details
                                               .supervisor_for_day_shift,
-                                            val.value,
+                                            val?.value,
                                             { shouldValidate: true }
                                           );
                                         }}

@@ -49,6 +49,9 @@ const ReactCustomSelect = ({
   };
 
   useEffect(() => {
+    // setSelectedVal({});
+    setSelectedVal(selectedValue);
+    console.log("selectedValue --> ", selectedValue);
     console.log("tesing select cmp ");
     //  setValue(name, selectedValue?.[selectType] || "");
   }, [selectedValue]);
@@ -66,7 +69,7 @@ const ReactCustomSelect = ({
               options={options || []}
               placeholder={label}
               isClearable={isClearable}
-              //   value={selectedVal} r
+              // value={selectedVal} r
               isLoading={isLoading}
               value={selectedVal}
               onChange={handleSelectChange}
