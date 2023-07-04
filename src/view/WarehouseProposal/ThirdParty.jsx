@@ -23,7 +23,7 @@ import React, { useEffect, useState } from "react";
 import { BreadcrumbLinks } from "./BreadcrumbLinks";
 import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
 import CustomSelector from "../../components/Elements/CustomSelector";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MotionSlideUp } from "../../utils/animation";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
@@ -39,6 +39,7 @@ import {
 import CustomTextArea from "../../components/Elements/CustomTextArea";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
+import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
 
 const commonStyle = {
   mt: 2,
@@ -56,94 +57,212 @@ const commonStyle = {
 const formFieldsName = {
   tp_warehouse_details: {
     warehouse_name: "warehouse_name",
-    region_name: "region_name",
-    state_name: "state_name",
-    zone_name: "zone_name",
-    district_name: "district_name",
-    area_name: "area_name",
+    region: "region",
+    state: "state",
+    zone: "zone",
+    district: "district",
+    area: "area",
     warehouse_address: "warehouse_address",
-    pin_code: "pin_code",
-    no_of_chamber: "no_of_chamber",
-    warehouse_in_factory_premises: "warehouse_in_factory_premises",
-    no_of_warehouse_in_area: "no_of_warehouse_in_area",
-    supervisor_for_day_shift: "supervisor_for_day_shift",
-    supervisor_for_night_shift: "supervisor_for_night_shift",
-    security_guard_for_day_shift: "security_guard_for_day_shift",
-    security_guard_for_night_shift: "security_guard_for_night_shift",
+    warehouse_pincode: "warehouse_pincode",
+    no_of_chambers: "no_of_chambers",
+    is_factory_permise: "is_factory_permise",
+    no_of_warehouse_in_area: "no_of_warehouse_in_area", //not found
+    supervisor_day_shift: "supervisor_day_shift",
+    supervisor_night_shift: "supervisor_night_shift",
+    security_guard_day_shift: "security_guard_day_shift",
+    security_guard_night_shift: "security_guard_night_shift",
   },
   tp_commodity_details: {
-    expected_commodity_name: "expected_commodity_name",
+    expected_commodity: "expected_commodity",
     commodity_inward_type: "commodity_inward_type",
-    pre_stack_commodity: "pre_stack_commodity",
-    pre_stack_commodity_quantity: "pre_stack_commodity_quantity",
-    cc_banker: "cc_banker",
+    prestack_commodity: "prestack_commodity",
+    prestack_commodity_qty: "prestack_commodity_qty",
+    cc_banker: "cc_banker", //not found
+    bank_details: {
+      //not found
+      bank_name: "bank_name", //not found
+      branch_name: "branch_name", //not found
+    },
   },
   tp_commercial_details: {
-    cm_proposal_business_form: "cm_proposal_business_form",
+    cm_proposal_business_form: "cm_proposal_business_form", //not found
   },
   tp_clients_details: {
-    intention_letter: "intention_letter",
-    remarks: "remarks",
-    assign_inspection_to: "assign_inspection_to",
+    client_list: {
+      //not found
+      client_type: "client_type", //not found
+      client_name: "client_name", //not found
+      mobile_number: "mobile_number", //not found
+      region: "region", //not found
+      state: "state", //not found
+      zone: "zone", // not found
+      district: "district", // not found
+      area: "area", //not found
+      address: "address", //not found
+      client_known_to_ggwpl_official: "client_known_to_ggwpl_official", //not found
+      client_sourced_by: "client_sourced_by", //not found
+      bank_name: "bank_name", //not found
+      branch_name: "branch_name", //not found
+      employee_name: "employee_name", //not found
+    },
+    intention_letter: "intention_letter", //not found
+    remarks: "remarks", //not found
+    assign_inspection_to: "assign_inspection_to", //not found
   },
 };
 
 const schema = yup.object().shape({
   warehouse_name: yup.string().required("Warehouse name is required"),
-  region_name: yup.string().required("Region name is required"),
-  state_name: yup.string().required("State name is required"),
-  zone_name: yup.string().required("Zone name is required"),
-  district_name: yup.string().required("District name is required"),
-  area_name: yup.string().required("Area name is required"),
+  region: yup.string().required("Region name is required"),
+  state: yup.string().required("State name is required"),
+  zone: yup.string().required("Zone name is required"),
+  district: yup.string().required("District name is required"),
+  area: yup.string().required("Area name is required"),
   warehouse_address: yup.string().required("Warehouse address is required"),
-  pin_code: yup.string().required("Pin code is required"),
-  no_of_chamber: yup.string().required("No of chamber is required"),
-  warehouse_in_factory_premises: yup
+  warehouse_pincode: yup.string().required("Pin code is required"),
+  no_of_chambers: yup.string().required("No of chamber is required"),
+  is_factory_permise: yup
     .string()
     .required("Warehouse in factory premises is required"),
-  no_of_warehouse_in_area: yup
-    .string()
-    .required("NO of Warehouse in area is required"),
-  supervisor_for_day_shift: yup
+  no_of_warehouse_in_area: yup.string(),
+  /*.required("NO of Warehouse in area is required")*/ supervisor_day_shift: yup
     .string()
     .required("Supervisor for day shift is required"),
-  supervisor_for_night_shift: yup
+  supervisor_night_shift: yup
     .string()
     .required("Supervisor for night shift is required"),
-  security_guard_for_day_shift: yup
+  security_guard_day_shift: yup
     .string()
     .required("Security guard for day shift is required"),
-  security_guard_for_night_shift: yup
+  security_guard_night_shift: yup
     .string()
     .required("Security guard for night shift is required"),
-  expected_commodity_name: yup
+  expected_commodity: yup
     .string()
     .required("Expected commodity name is required"),
   commodity_inward_type: yup
     .string()
     .required("Commodity inward type is required"),
-  pre_stack_commodity: yup.string().required("Pre stack commodity is required"),
-  pre_stack_commodity_quantity: yup
+  prestack_commodity: yup.string().required("Pre stack commodity is required"),
+  prestack_commodity_qty: yup
     .string()
     .required("Pre stack commodity quantity is required"),
-  cc_banker: yup.string().required("CC Banker required is required"),
-  cm_proposal_business_form: yup
-    .string()
-    .required("CM proposal business form is required"),
-  intention_letter: yup.string().required("Intention letter is required"),
-  remarks: yup.string().required("remarks is required"),
-  assign_inspection_to: yup.string().required("Assign Inspection is required"),
+  cc_banker: yup.string() /*.required("CC Banker required is required")*/,
+  bank_details: yup.array().of(
+    yup.object().shape({
+      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
+      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
+    })
+  ),
+  cm_proposal_business_form: yup.string(),
+  /*.required("CM proposal business form is required")*/
+  client_list: yup.array().of(
+    yup.object().shape({
+      client_type: yup.string(),
+      client_name: yup.string(),
+      mobile_number: yup.string(),
+      region: yup.string(),
+      state: yup.string(),
+      zone: yup.string(),
+      district: yup.string(),
+      area: yup.string(),
+      address: yup.string(),
+      client_known_to_ggwpl_official: yup.string(),
+      client_sourced_by: yup.string(),
+      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
+      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
+      employee_name: yup.string(),
+    })
+  ),
+  intention_letter: yup.string() /*.required("Intention letter is required")*/,
+  remarks: yup.string() /*.required("remarks is required")*/,
+  assign_inspection_to:
+    yup.string() /*.required("Assign Inspection is required")*/,
 });
 
 const ThirdParty = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
   });
+
   const methods = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      bank_details: [{ bank_name: "", branch_name: "" }],
+      client_list: [
+        {
+          client_type: "",
+          client_name: "",
+          mobile_number: "",
+          region: "",
+          state: "",
+          zone: "",
+          district: "",
+          area: "",
+          address: "",
+          client_known_to_ggwpl_official: "",
+          client_sourced_by: "",
+          bank_name: "",
+          branch_name: "",
+          employee_name: "",
+        },
+      ],
+    },
   });
 
-  const { setValue } = methods;
+  const { setValue, getValues } = methods;
+
+  const {
+    fields: bank_details_fields,
+    append: add_new_bank_detail,
+    remove: remove_bank_detail,
+  } = useFieldArray({
+    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "bank_details",
+  });
+
+  const append_new_bank_details = () => {
+    add_new_bank_detail({
+      bank_name: "",
+      branch_name: "",
+    });
+  };
+
+  useEffect(() => {
+    console.log("bank_details_fields --> ", bank_details_fields);
+  }, [bank_details_fields]);
+
+  const {
+    fields: client_list,
+    append: add_client_list,
+    remove: remove_client_list,
+  } = useFieldArray({
+    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "client_list",
+  });
+
+  const append_client_list = () => {
+    add_client_list({
+      client_type: "",
+      client_name: "",
+      mobile_number: "",
+      region: "",
+      state: "",
+      zone: "",
+      district: "",
+      area: "",
+      address: "",
+      client_known_to_ggwpl_official: "",
+      client_sourced_by: "",
+      bank_name: "",
+      branch_name: "",
+      employee_name: "",
+    });
+  };
+
+  useEffect(() => {
+    console.log("client_list --> ", client_list);
+  }, [client_list]);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -254,6 +373,72 @@ const ThirdParty = () => {
     }
   };
 
+  const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
+    useSaveAsDraftMutation();
+
+  const saveAsDraftData = async (type) => {
+    try {
+      let data = {};
+      if (type === "TP_WAREHOUSE_DETAILS") {
+        data = {
+          is_draft: true,
+          warehouse_name: getValues("warehouse_name"),
+          region: getValues("region"),
+          state: getValues("state"),
+          zone: getValues("zone"),
+          district: getValues("district"),
+          area: getValues("area"),
+          warehouse_address: getValues("warehouse_address"),
+          warehouse_pincode: getValues("warehouse_pincode"),
+          no_of_chambers: getValues("no_of_chambers"),
+          is_factory_permise: getValues("is_factory_permise"),
+          no_of_warehouse_in_area: getValues("no_of_warehouse_in_area"), //not found
+          supervisor_day_shift: getValues("supervisor_day_shift"),
+          supervisor_night_shift: getValues("supervisor_night_shift"),
+          security_guard_day_shift: getValues("security_guard_day_shift"),
+          security_guard_night_shift: getValues("security_guard_night_shift"),
+        };
+        console.log("Tp_WAREHOUSE_DETAILS @@ --> ", data);
+      } else if (type === "TP_COMMODITY_DETAILS") {
+        data = {
+          is_draft: true,
+          expected_commodity: getValues("expected_commodity"),
+          commodity_inward_type: getValues("commodity_inward_type"),
+          prestack_commodity: getValues("prestack_commodity"),
+          prestack_commodity_qty: getValues("prestack_commodity_qty"),
+          cc_banker: getValues("cc_banker"), //not found
+          bank_details: bank_details_fields, //not found
+        };
+
+        console.log("TP_COMMODITY_DETAILS @@ --> ", data);
+      } else if (type === "TP_COMMERCIAL_DETAILS") {
+        data = {
+          is_draft: true,
+          cm_proposal_business_form: getValues("cm_proposal_business_form"), //not found
+        };
+
+        console.log("TP_COMMERCIAL_DETAILS @@ --> ", data);
+      } else if (type === "TP_CLIENTS_DETAILS") {
+        data = {
+          is_draft: true,
+          client_list: client_list, //not found
+          intention_letter: getValues("intention_letter"), //not found
+          remarks: getValues("remarks"), //not found
+          assign_inspection_to: getValues("assign_inspection_to"), //not found
+        };
+
+        console.log("TP_CLIENTS_DETAILS @@ --> ", data);
+      }
+      const response = await saveAsDraft(data).unwrap();
+      console.log("saveAsDraftData - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     getRegionMasterList();
     getStateList();
@@ -354,8 +539,7 @@ const ThirdParty = () => {
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.tp_warehouse_details
-                                        .region_name
+                                      formFieldsName.tp_warehouse_details.region
                                     }
                                     label=""
                                     isLoading={getRegionMasterApiIsLoading}
@@ -371,7 +555,7 @@ const ThirdParty = () => {
                                       );
                                       setValue(
                                         formFieldsName.tp_warehouse_details
-                                          .region_name,
+                                          .region,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -396,8 +580,7 @@ const ThirdParty = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.tp_warehouse_details
-                                        .state_name
+                                      formFieldsName.tp_warehouse_details.state
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
@@ -413,7 +596,7 @@ const ThirdParty = () => {
                                       );
                                       setValue(
                                         formFieldsName.tp_warehouse_details
-                                          .state_name,
+                                          .state,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -438,8 +621,7 @@ const ThirdParty = () => {
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.tp_warehouse_details
-                                        .zone_name
+                                      formFieldsName.tp_warehouse_details.zone
                                     }
                                     label=""
                                     options={selectBoxOptions?.zones || []}
@@ -455,7 +637,7 @@ const ThirdParty = () => {
                                       );
                                       setValue(
                                         formFieldsName.tp_warehouse_details
-                                          .zone_name,
+                                          .zone,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -481,7 +663,7 @@ const ThirdParty = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.tp_warehouse_details
-                                        .district_name
+                                        .district
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
@@ -497,7 +679,7 @@ const ThirdParty = () => {
                                       );
                                       setValue(
                                         formFieldsName.tp_warehouse_details
-                                          .district_name,
+                                          .district,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -523,8 +705,7 @@ const ThirdParty = () => {
                                   {" "}
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.tp_warehouse_details
-                                        .area_name
+                                      formFieldsName.tp_warehouse_details.area
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
@@ -540,7 +721,7 @@ const ThirdParty = () => {
                                       );
                                       setValue(
                                         formFieldsName.tp_warehouse_details
-                                          .area_name,
+                                          .area,
                                         val.value,
                                         { shouldValidate: true }
                                       );
@@ -596,7 +777,7 @@ const ThirdParty = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.tp_warehouse_details
-                                        .pin_code
+                                        .warehouse_pincode
                                     }
                                     placeholder="Pin Code"
                                     type="text"
@@ -625,7 +806,7 @@ const ThirdParty = () => {
                                   <CustomInput
                                     name={
                                       formFieldsName.tp_warehouse_details
-                                        .no_of_chamber
+                                        .no_of_chambers
                                     }
                                     placeholder="Pin Code"
                                     type="text"
@@ -635,7 +816,7 @@ const ThirdParty = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* --------------warehouse_in_factory_premises radio button -------------- */}
+                            {/* --------------is_factory_permise radio button -------------- */}
                             <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
@@ -696,7 +877,7 @@ const ThirdParty = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- supervisor_for_day_shift -------------- */}
+                            {/* -------------- supervisor_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -719,7 +900,7 @@ const ThirdParty = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.tp_warehouse_details
-                                          .supervisor_for_day_shift
+                                          .supervisor_day_shift
                                       }
                                       label=""
                                       options={[
@@ -740,7 +921,7 @@ const ThirdParty = () => {
                                         );
                                         setValue(
                                           formFieldsName.tp_warehouse_details
-                                            .supervisor_for_day_shift,
+                                            .supervisor_day_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -759,7 +940,7 @@ const ThirdParty = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- supervisor_for_night_shift -------------- */}
+                            {/* -------------- supervisor_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -783,7 +964,7 @@ const ThirdParty = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.tp_warehouse_details
-                                          .supervisor_for_night_shift
+                                          .supervisor_night_shift
                                       }
                                       label=""
                                       options={[
@@ -804,7 +985,7 @@ const ThirdParty = () => {
                                         );
                                         setValue(
                                           formFieldsName.tp_warehouse_details
-                                            .supervisor_for_night_shift,
+                                            .supervisor_night_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -823,7 +1004,7 @@ const ThirdParty = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- security_guard_for_day_shift -------------- */}
+                            {/* -------------- security_guard_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -847,7 +1028,7 @@ const ThirdParty = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.tp_warehouse_details
-                                          .security_guard_for_day_shift
+                                          .security_guard_day_shift
                                       }
                                       label=""
                                       options={[
@@ -868,7 +1049,7 @@ const ThirdParty = () => {
                                         );
                                         setValue(
                                           formFieldsName.tp_warehouse_details
-                                            .security_guard_for_day_shift,
+                                            .security_guard_day_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -887,7 +1068,7 @@ const ThirdParty = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- security_guard_for_night_shift -------------- */}
+                            {/* -------------- security_guard_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
@@ -911,7 +1092,7 @@ const ThirdParty = () => {
                                     <ReactCustomSelect
                                       name={
                                         formFieldsName.tp_warehouse_details
-                                          .security_guard_for_night_shift
+                                          .security_guard_night_shift
                                       }
                                       label=""
                                       options={[
@@ -932,7 +1113,7 @@ const ThirdParty = () => {
                                         );
                                         setValue(
                                           formFieldsName.tp_warehouse_details
-                                            .security_guard_for_night_shift,
+                                            .security_guard_night_shift,
                                           val.value,
                                           { shouldValidate: true }
                                         );
@@ -966,9 +1147,12 @@ const ThirdParty = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
                               my={"4"}
                               px={"10"}
+                              isLoading={saveAsDraftApiIsLoading}
+                              onClick={() => {
+                                saveAsDraftData("TP_WAREHOUSE_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -1020,7 +1204,7 @@ const ThirdParty = () => {
                                 <ReactCustomSelect
                                   name={
                                     formFieldsName.tp_commodity_details
-                                      .expected_commodity_name
+                                      .expected_commodity
                                   }
                                   label=""
                                   options={[
@@ -1041,7 +1225,7 @@ const ThirdParty = () => {
                                     );
                                     setValue(
                                       formFieldsName.tp_commodity_details
-                                        .expected_commodity_name,
+                                        .expected_commodity,
                                       val.value,
                                       { shouldValidate: true }
                                     );
@@ -1122,7 +1306,7 @@ const ThirdParty = () => {
                                 <ReactCustomSelect
                                   name={
                                     formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
+                                      .prestack_commodity
                                   }
                                   label=""
                                   options={[
@@ -1151,7 +1335,7 @@ const ThirdParty = () => {
                                     );
                                     setValue(
                                       formFieldsName.tp_commodity_details
-                                        .pre_stack_commodity,
+                                        .prestack_commodity,
                                       val.value,
                                       { shouldValidate: true }
                                     );
@@ -1177,7 +1361,7 @@ const ThirdParty = () => {
                                 <CustomInput
                                   name={
                                     formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity_quantity
+                                      .prestack_commodity_qty
                                   }
                                   placeholder="Pre-Stack Commodity Quantity(MT)"
                                   type="number"
@@ -1254,102 +1438,155 @@ const ThirdParty = () => {
                               <GridItem colSpan={12}>
                                 <Text textAlign="left">Bank Details</Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={1}>
-                                <Text textAlign="left"> Sr No </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Sr No"
-                                  type="number"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={3}>
-                                <Text textAlign="left">Bank Name</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text textAlign="left">Branch Name </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={6}>
-                                <Flex
-                                  gap="10px"
-                                  justifyContent="end"
-                                  alignItems="center"
-                                >
-                                  <MdAddBox color="#A6CE39" fontSize="45px" />
-                                  <MdIndeterminateCheckBox
-                                    color="#FF4444"
-                                    fontSize="45px"
-                                  />
-                                </Flex>
-                              </GridItem>
+                              {bank_details_fields &&
+                                bank_details_fields.map((item, index) => (
+                                  <>
+                                    <GridItem colSpan={1}>
+                                      <Text textAlign="left"> Sr No </Text>{" "}
+                                      <Box
+                                        textAlign="center"
+                                        border="1px"
+                                        p="2"
+                                        borderColor="gray.10"
+                                        borderRadius="6"
+                                      >
+                                        {index + 1}
+                                      </Box>
+                                    </GridItem>
+                                    {/* =============== Bank Name ============= */}
+                                    <GridItem colSpan={3}>
+                                      <Text textAlign="left">Bank Name</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.bank_name}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        // selectedValue={{value:bank_details_fields[index].bank_name}}
+                                        // selectedValue={{
+                                        //   label: "Fresh Stock",
+                                        //   value: 1,
+                                        // }}
+                                        // selectedValue={
+                                        //   [
+                                        //     {
+                                        //       label: "Fresh Stock",
+                                        //       value: 1,
+                                        //     },
+                                        //     {
+                                        //       label: "Pre-stock",
+                                        //       value: 2,
+                                        //     },
+                                        //     {
+                                        //       label: "Take over",
+                                        //       value: 3,
+                                        //     },
+                                        //   ].filter(
+                                        //     (d) =>
+                                        //       d.value === item[index].bank_name
+                                        //   )[0]
+                                        // }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.bank_name}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* =============== Branch Name ============= */}
+                                    <GridItem colSpan={2}>
+                                      <Text textAlign="left">Branch Name </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.branch_name}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={
+                                          {
+                                            // value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
+                                          }
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.branch_name}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* =============== Add / Delete ============= */}
+                                    <GridItem colSpan={6}>
+                                      <Flex
+                                        gap="10px"
+                                        justifyContent="end"
+                                        alignItems="center"
+                                      >
+                                        <MdAddBox
+                                          color="#A6CE39"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            append_new_bank_details();
+                                          }}
+                                        />
+                                        <MdIndeterminateCheckBox
+                                          color="#FF4444"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            if (
+                                              bank_details_fields?.length > 1
+                                            ) {
+                                              remove_bank_detail(index);
+                                            }
+                                          }}
+                                        />
+                                      </Flex>
+                                    </GridItem>
+                                  </>
+                                ))}
                             </Grid>
                           </Box>
                           <Box
@@ -1365,9 +1602,12 @@ const ThirdParty = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
                               my={"4"}
                               px={"10"}
+                              isLoading={saveAsDraftApiIsLoading}
+                              onClick={() => {
+                                saveAsDraftData("TP_COMMODITY_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -1429,6 +1669,29 @@ const ThirdParty = () => {
                               </GridItem>
                             </Grid>
                           </Box>
+                          <Box
+                            display="flex"
+                            justifyContent="flex-end"
+                            mt="10"
+                            px="0"
+                          >
+                            <Button
+                              type="button"
+                              //w="full"
+                              backgroundColor={"primary.700"}
+                              _hover={{ backgroundColor: "primary.700" }}
+                              color={"white"}
+                              borderRadius={"full"}
+                              my={"4"}
+                              px={"10"}
+                              isLoading={saveAsDraftApiIsLoading}
+                              onClick={() => {
+                                saveAsDraftData("TP_COMMERCIAL_DETAILS");
+                              }}
+                            >
+                              Save as Draft
+                            </Button>
+                          </Box>
                         </AccordionPanel>
                       </Box>
                     </>
@@ -1480,459 +1743,502 @@ const ThirdParty = () => {
                               >
                                 <Text textAlign="left">Client List</Text>{" "}
                               </GridItem>
-                              {/* ================ Client Type ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Client Type</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Client Name ================= */}
-                              <GridItem>
-                                <Text textAlign="left"> Client Name </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="client name"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              {/* ================ Mobile Number ================= */}
-                              <GridItem>
-                                <Text textAlign="left"> Mobile Number </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="mobile number"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              {/* ================ Region ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Region</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ State ================= */}
-                              <GridItem>
-                                <Text textAlign="left">State </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Zone ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Zone </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ District ================= */}
-                              <GridItem>
-                                <Text textAlign="left">District </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Area ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Area </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Address ================= */}
-                              <GridItem>
-                                <Text textAlign="left"> Address </Text>{" "}
-                                <CustomInput
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="address"
-                                  type="text"
-                                  label=""
-                                  style={{ w: "100%" }}
-                                />
-                              </GridItem>
-                              {/* ================ Client known to GGWPL official ================= */}
-                              <GridItem>
-                                <Text textAlign="left">
-                                  Client known to GGWPL official
-                                </Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Client Sourced by ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Client Sourced by</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Bank Name ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Bank Name</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Branch Name ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Branch Name</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              {/* ================ Employee Name ================= */}
-                              <GridItem>
-                                <Text textAlign="left">Employee Name</Text>{" "}
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: "100%" }}
-                                  handleOnChange={(val) =>
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    )
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={{ base: 1, sm: 2, md: 1, lg: 2 }}>
-                                <Flex
-                                  gap="10px"
-                                  justifyContent="end"
-                                  alignItems="center"
-                                >
-                                  <MdAddBox color="#A6CE39" fontSize="45px" />
-                                  <MdIndeterminateCheckBox
-                                    color="#FF4444"
-                                    fontSize="45px"
-                                  />
-                                </Flex>
-                              </GridItem>
+                              {client_list &&
+                                client_list.map((item, index) => (
+                                  <>
+                                    {/* ================ Client Type ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Client Type</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Client Name ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Client Name{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_name}`}
+                                        placeholder="client name"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Mobile Number ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Mobile Number{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.mobile_number}`}
+                                        placeholder="mobile number"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Region ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Region</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ State ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">State </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Zone ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Zone </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ District ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">District </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Area ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Area </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Address ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left"> Address </Text>{" "}
+                                      <CustomInput
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.address}`}
+                                        placeholder="address"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Client known to GGWPL official ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Client known to GGWPL official
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Client Sourced by ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Client Sourced by
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Bank Name ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Bank Name</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Branch Name ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">Branch Name</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    {/* ================ Employee Name ================= */}
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Employee Name
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Fresh Stock",
+                                            value: 1,
+                                          },
+                                          {
+                                            label: "Pre-stock",
+                                            value: 2,
+                                          },
+                                          {
+                                            label: "Take over",
+                                            value: 3,
+                                          },
+                                        ]}
+                                        selectedValue={{}}
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem
+                                      colSpan={{ base: 1, sm: 2, md: 1, lg: 2 }}
+                                    >
+                                      <Flex
+                                        gap="10px"
+                                        justifyContent="end"
+                                        alignItems="center"
+                                      >
+                                        <MdAddBox
+                                          color="#A6CE39"
+                                          fontSize="45px"
+                                          cursor="pointer"
+                                          onClick={() => {
+                                            append_client_list();
+                                          }}
+                                        />
+                                        <MdIndeterminateCheckBox
+                                          color="#FF4444"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            if (client_list?.length > 1) {
+                                              remove_client_list(index);
+                                            }
+                                          }}
+                                        />
+                                      </Flex>
+                                    </GridItem>
+                                  </>
+                                ))}
                             </Grid>
                           </Box>
                           {/* ================ Intention Letter ================= */}
@@ -2052,9 +2358,12 @@ const ThirdParty = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
                               my={"4"}
                               px={"10"}
+                              isLoading={saveAsDraftApiIsLoading}
+                              onClick={() => {
+                                saveAsDraftData("TP_CLIENTS_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
