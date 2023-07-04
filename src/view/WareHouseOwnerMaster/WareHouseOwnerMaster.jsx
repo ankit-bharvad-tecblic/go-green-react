@@ -1,27 +1,28 @@
-import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import FunctionalTable from "../../components/Tables/FunctionalTable";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useActiveDeActiveMutation,
-  useGetBankMasterMutation,
+  useGetWareHouseOwnerTypeMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
-import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { filterFields } from "./fields";
-import { useNavigate } from "react-router-dom";
+import FunctionalTable from "../../components/Tables/FunctionalTable";
+import { setUpFilterFields } from "../../features/filter.slice";
 
-function BankMaster() {
+const WareHouseOwnerMaster = () => {
   const dispatch = useDispatch();
-  const columnHelper = createColumnHelper();
   const navigate = useNavigate();
+
+  const columnHelper = createColumnHelper();
+
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
-  console.log("Bank Master", filterQuery);
+  console.log("Warehouse Owner Type Master", filterQuery);
   const [filter, setFilter] = useState({
     // filter: [],
     // search: null,
@@ -30,11 +31,12 @@ function BankMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    excelDownload: "Bank",
   });
 
-  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
-    useGetBankMasterMutation();
+  const [
+    getWareHouseOwnerType,
+    { isLoading: getWareHouseOwnerTypeApiIsLoading },
+  ] = useGetWareHouseOwnerTypeMutation();
 
   const [activeDeActive] = useActiveDeActiveMutation();
 
@@ -45,7 +47,7 @@ function BankMaster() {
     let obj = {
       id: info.row.original.id,
       active: e.target.checked,
-      endPoint: API.DASHBOARD.BANK_MASTER_ACTIVE,
+      endPoint: API.DASHBOARD.WAREHOUSE_OWNER_MASTER,
     };
 
     try {
@@ -85,59 +87,67 @@ function BankMaster() {
     }
   };
 
-  const addForm = () => {
-    navigate(`/bank-master/add/bank-master/`);
-  };
-
   const editForm = (info) => {
-    console.log("bank info --->", info);
+    console.log("Warehouse owner master info --->", info);
     const editedFormId = info.row.original.id;
-    navigate(`/bank-master/edit/bank-master/${editedFormId}`, {
+    navigate(`/warehouse-master/edit/warehouse-owner-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
-      header: "Sr. No",
+      header: "SR. NO",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("hiring_proposal_id.id", {
       cell: (info) => info.getValue(),
-      header: "Bank Name",
+      header: "Hiring Proposal ID",
     }),
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("warehouse_owner_name", {
       cell: (info) => info.getValue(),
-      header: "Region ",
+      header: "Owner Name",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("warehouse_owner_contact_no", {
       cell: (info) => info.getValue(),
-      header: "State",
+      header: " Owner ContactNo",
     }),
-    columnHelper.accessor("bank_address", {
+
+    columnHelper.accessor("warehouse_owner_address", {
       cell: (info) => info.getValue(),
-      header: "Bank Address",
+      header: "Owner Address",
     }),
-    columnHelper.accessor("is_active", {
-      // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
-      cell: (info) => (
-        <Box id="active_row">
-          <Switch
-            size="md"
-            colorScheme="whatsapp"
-            // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.is_active}
-            // id="active_row"
-            // isReadOnly
-            // isChecked={flexRender(
-            //   cell.column.columnDef.cell,
-            // )}
-          />
-        </Box>
-      ),
-      id: "active",
-      accessorFn: (row) => row.active,
+
+    columnHelper.accessor("rent_amount", {
+      cell: (info) => info.getValue(),
+      header: "Rent Amt ",
     }),
+
+    columnHelper.accessor("revenue_sharing_ratio", {
+      cell: (info) => info.getValue(),
+      header: "Revenue Sharing Ratio ",
+    }),
+    // columnHelper.accessor("is_active", {
+    //   // header: "ACTIVE",
+    //   header: () => <Text id="active_col">Active</Text>,
+    //   cell: (info) => (
+    //     <Box id="active_row">
+    //       <Switch
+    //         size="md"
+    //         colorScheme="whatsapp"
+    //         // onChange={(e) => handleActiveDeActive(e, info)}
+    //         isChecked={info.row.original.is_active}
+    //         // id="active_row"
+    //         // isReadOnly
+    //         // isChecked={flexRender(
+    //         //   cell.column.columnDef.cell,
+    //         //   cell.getContext()
+    //         // )}
+    //       />
+    //     </Box>
+    //   ),
+    //   id: "active",
+    //   accessorFn: (row) => row.active,
+    // }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
       header: () => <Text id="update_col">UPDATE</Text>,
@@ -162,6 +172,9 @@ function BankMaster() {
   const [data, setData] = useState([]);
 
   let paramString = "";
+  const addForm = () => {
+    navigate(`/warehouse-master/add/warehouse-owner-master`);
+  };
 
   const getData = async () => {
     //params filter
@@ -179,19 +192,30 @@ function BankMaster() {
       .join("&");
     // }
 
-    console.log("paramString ---> ", paramString);
-
     try {
-      const query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-      const response = await getBankMaster(query).unwrap();
-      console.log("Success:", response);
-      setData(response?.results || []);
-      setFilter((old) => ({
-        ...old,
-        totalPage: Math.ceil(response?.total / old.limit),
-        total: response?.total_data,
-        totalFilter: response?.total,
-      }));
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getWareHouseOwnerType(query).unwrap();
+
+      if (response.status === 200) {
+        console.log("Success:", response);
+
+        let arr = response?.results.map((item, i) => {
+          return {
+            ...item,
+            hiring_proposal_id: {
+              ...item.hiring_proposal_id,
+              id: `HP${item.hiring_proposal_id.id}`,
+            },
+          };
+        });
+        setData(arr || []);
+        setFilter((old) => ({
+          ...old,
+          totalPage: Math.ceil(response?.total / old.limit),
+          total: response?.total_data,
+          totalFilter: response?.total,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -216,18 +240,20 @@ function BankMaster() {
   // }, [filterQuery]);
 
   return (
-    <div>
-      <FunctionalTable
-        filter={filter}
-        filterFields={filterFields}
-        setFilter={setFilter}
-        columns={columns}
-        data={data}
-        loading={getBankMasterApiIsLoading}
-        addForm={() => addForm()}
-      />
-    </div>
+    <>
+      <div>
+        <FunctionalTable
+          filter={filter}
+          filterFields={filterFields}
+          setFilter={setFilter}
+          columns={columns}
+          data={data}
+          loading={getWareHouseOwnerTypeApiIsLoading}
+          addForm={() => addForm()}
+        />
+      </div>
+    </>
   );
-}
+};
 
-export default BankMaster;
+export default WareHouseOwnerMaster;

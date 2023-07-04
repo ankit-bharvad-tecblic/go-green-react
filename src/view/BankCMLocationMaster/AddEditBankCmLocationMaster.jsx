@@ -3,6 +3,7 @@ import { Box, Button, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   useAddBankCMLocationMasterMutation,
+  useGetBankBranchMasterMutation,
   useGetBankCMLocationMasterMutation,
   useUpdateBankCMLocationMasterMutation,
 } from "../../features/master-api-slice";
@@ -59,7 +60,7 @@ const AddEditBankCmLocationMaster = () => {
       methods.setValue(key, "");
     });
   };
-
+  const [getBankBranchMaster] = useGetBankBranchMasterMutation();
   const [getBankCMLocationMaster] = useGetBankCMLocationMasterMutation();
 
   const addData = async (data) => {
@@ -79,12 +80,12 @@ const AddEditBankCmLocationMaster = () => {
     try {
       // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
 
-      const response = await getBankCMLocationMaster().unwrap();
+      const response = await getBankBranchMaster().unwrap();
 
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
+        label: type.branch_name,
         value: type.id,
       }));
       console.log(arr);
@@ -123,7 +124,7 @@ const AddEditBankCmLocationMaster = () => {
   useEffect(() => {
     if (details?.id) {
       let obj = {
-        bank_branch: details.bank_branch,
+        bank_branch: details?.bank_branch.branch_name,
         bank_cm_location_name: details.bank_cm_location_name,
         cm_charges: details.cm_charges,
         fix_charges: details.fix_charges,
@@ -159,18 +160,22 @@ const AddEditBankCmLocationMaster = () => {
                       {generateFormField({
                         ...item,
                         label: "",
+                        isChecked: details?.is_active,
+                        style: {
+                          mb: 1,
+                          mt: 1,
+                        },
                         // options: item.type === "select" && commodityTypeMaster,
+
                         selectedValue:
                           item.type === "select" &&
-                          item?.options?.find(
-                            (opt) =>
-                              opt.label ===
-                              details?.commodity_type?.commodity_type
-                          ),
-                        selectType: "label",
-                        isChecked: details?.is_active,
+                          item?.options?.find((opt) => {
+                            console.log("opt", opt);
+                            console.log("details", details);
+                            return opt.value === details?.bank_branch.bank_name;
+                          }),
+                        selectType: "value",
                         isClearable: false,
-                        style: { mb: 1, mt: 1 },
                       })}
                     </Box>
                   </MotionSlideUp>

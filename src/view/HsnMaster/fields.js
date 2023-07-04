@@ -1,42 +1,50 @@
 import * as yup from "yup";
 
-
 const filterFields = [
   {
-    "BANK NAME": "bank_name",
+    "HSN CODE": "hsn_code",
     isActiveFilter: false,
 
-    label: "BANK NAME",
-    name: "bank_name",
-    placeholder: "BANK NAME",
-    type: "text",
+    label: "HSN CODE",
+    name: "hsn_code",
+    placeholder: "HSN CODE",
+    type: "number",
   },
   {
-    "REGION NAME": "region__region_name",
+    "IGST Percentage": "igst_perc",
     isActiveFilter: false,
 
-    label: "REGION NAME",
-    name: "region__region_name",
-    placeholder: "REGION NAME",
-    type: "text",
+    label: "IGST Percentage",
+    name: "igst_perc",
+    placeholder: "IGST Percentage",
+    type: "number",
   },
   {
-    "STATE NAME": "state__state_name",
+    "SGST Percentage": "sgst_perc",
     isActiveFilter: false,
 
-    label: "STATE NAME",
-    name: "state__state_name",
-    placeholder: "STATE NAME",
-    type: "text",
+    label: "SGST Percentage",
+    name: "sgst_perc",
+    placeholder: "SGST Percentage",
+    type: "number",
+  },
+  {
+    "CGST Percentage": "cgst_perc",
+    isActiveFilter: false,
+
+    label: "CGST Percentage",
+    name: "cgst_perc",
+    placeholder: "CGST Percentage",
+    type: "number",
   },
 
   {
-    "BANK ADDRESS": "bank_address",
+    Description: "description",
     isActiveFilter: false,
 
-    label: "BANK ADDRESS",
-    name: "bank_address",
-    placeholder: "BANK ADDRESS",
+    label: "Description",
+    name: "description",
+    placeholder: "Description",
     type: "text",
   },
   {
@@ -48,10 +56,10 @@ const filterFields = [
     type: "date",
   },
   {
-    "LAST UPDATED DATE": "last_updated_date",
+    "LAST UPDATED DATE": "updated_at",
     isActiveFilter: false,
     label: "LAST UPDATED DATE",
-    name: "last_updated_date",
+    name: "updated_at",
     placeholder: "LAST UPDATED DATE",
     type: "date",
   },
@@ -61,13 +69,13 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "ACTIVE/DeActive",
-    name: "active",
+    name: "is_active",
     placeholder: "Active/DeActive",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -78,14 +86,44 @@ const filterFields = [
   },
 ];
 
-
 const addEditFormFields = [
   {
-    name: "bank_name",
-    label: "Bank Name",
-    placeholder: "Bank Name",
+    name: "hsn_code",
+    label: "HSN CODE",
+    placeholder: "HSN CODE",
+    type: "number",
+  },
+  {
+    name: "igst_perc",
+    label: "IGST Percentage",
+    placeholder: "IGST Percentage",
+    type: "number",
+  },
+  {
+    name: "sgst_perc",
+    label: "SGST Percentage",
+    placeholder: "SGST Percentage",
+    type: "number",
+  },
+  {
+    name: "cgst_perc",
+    label: "CGST Percentage",
+    placeholder: "CGST Percentage",
+    type: "number",
+  },
+  {
+    name: "description",
+    label: "Description",
+    placeholder: "Description",
     type: "text",
   },
+  {
+    name: "is_active",
+    label: "Active",
+    placeholder: "Active",
+    type: "switch",
+  },
+
   // {
   //   name: "region",
   //   label: "Region ",
@@ -112,11 +150,12 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  bank_name: yup.string().required("bank name is required"),
-  region: yup.string().required("region is required"),
-  state: yup.string().required("state is required"),
-  bank_address: yup.string().required("bank address is required"),
-  active: yup.string(),
+  hsn_code: yup.number().required("HSN code is required"),
+  igst_perc: yup.number().required("IGST percentage is required"),
+  sgst_perc: yup.number().required("SGST percentage is required"),
+  cgst_perc: yup.number().required("CGSt percentage is required"),
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

@@ -1,20 +1,11 @@
-import React from "react";
+import { Box, useToast } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import FunctionalTable from "../../components/Tables/FunctionalTable";
-import { useEffect, useState } from "react";
-import {
-  useActiveDeActiveMutation,
-  useGetBankMasterMutation,
-} from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
-import { BiEditAlt } from "react-icons/bi";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUpFilterFields } from "../../features/filter.slice";
-import { API } from "../../constants/api.constants";
-import { filterFields } from "./fields";
 import { useNavigate } from "react-router-dom";
+import { useGetClientMasterMutation } from "../../features/master-api-slice";
 
-function BankMaster() {
+const ClientMaster = () => {
   const dispatch = useDispatch();
   const columnHelper = createColumnHelper();
   const navigate = useNavigate();
@@ -30,22 +21,20 @@ function BankMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    excelDownload: "Bank",
+    excelDownload: "Client",
   });
-
-  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
-    useGetBankMasterMutation();
+  const [getClientMaster, { isLoading: getClientMasterApiIsLoading }] =
+    useGetClientMasterMutation();
 
   const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
-
   const handleActiveDeActive = async (e, info) => {
     console.log("event --> ", e.target.checked, info);
     let obj = {
       id: info.row.original.id,
       active: e.target.checked,
-      endPoint: API.DASHBOARD.BANK_MASTER_ACTIVE,
+      endPoint: API.DASHBOARD.CLIENT_MASTER,
     };
 
     try {
@@ -86,13 +75,13 @@ function BankMaster() {
   };
 
   const addForm = () => {
-    navigate(`/bank-master/add/bank-master/`);
+    navigate(`/manage-client/add/client-master`);
   };
 
   const editForm = (info) => {
     console.log("bank info --->", info);
     const editedFormId = info.row.original.id;
-    navigate(`/bank-master/edit/bank-master/${editedFormId}`, {
+    navigate(`/manage-client/edit/client-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };
@@ -228,6 +217,6 @@ function BankMaster() {
       />
     </div>
   );
-}
+};
 
-export default BankMaster;
+export default ClientMaster;

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { showToastByStatusCode } from "../../services/showToastByStatusCode";
-import generateFormField from "../../components/Elements/GenerateFormField";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  useAddWareHouseOwnerTypeMutation,
+  useGetWarehouseTypeMasterMutation,
+  useUpdateWareHouseOwnerTypeMutation,
+} from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
-import {
-  useAddHsnMasterMutation,
-  useGetHsnMasterMutation,
-  useUpdateHsnMasterMutation,
-} from "../../features/master-api-slice";
-function AddEditHsnMaster() {
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { yupResolver } from "@hookform/resolvers/yup";
+import generateFormField from "../../components/Elements/GenerateFormField";
+
+const AddEditWareHouseOwnerMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
@@ -20,15 +21,21 @@ function AddEditHsnMaster() {
   });
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState();
-  const [getHsnMaster] = useGetHsnMasterMutation();
-  const [addHsnMaster, { isLoading: addHsnMasterLoading }] =
-    useAddHsnMasterMutation();
+  const [getWarehouseTypeMaster] = useGetWarehouseTypeMasterMutation();
+  const [
+    addWareHouseOwnerType,
+    { isLoading: addWareHouseOwnerTypeApiIsLoading },
+  ] = useAddWareHouseOwnerTypeMutation();
 
-  const [updateHsnMaster, { isLoading: updateHsnMasterApiIsLoading }] =
-    useUpdateHsnMasterMutation();
+  const [
+    updateWareHouseOwnerType,
+    { isLoading: updateWareHouseOwnerTypeApiIsLoading },
+  ] = useUpdateWareHouseOwnerTypeMutation();
 
   const details = location.state?.details;
   console.log("details", details);
+
+  console.log("methods errors ---> ", methods.formState.errors);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -47,11 +54,11 @@ function AddEditHsnMaster() {
   };
   const addData = async (data) => {
     try {
-      const response = await addHsnMaster(data).unwrap();
-      console.log("add warehouse type master res", response);
+      const response = await addWareHouseOwnerType(data).unwrap();
+      console.log("add warehouse owner type master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/commodity-master/hsn-master");
+        navigate("/warehouse-master/warehouse-owner-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -61,7 +68,7 @@ function AddEditHsnMaster() {
 
   const getWarehouseType = async () => {
     try {
-      const response = await getHsnMaster().unwrap();
+      const response = await getWarehouseTypeMaster().unwrap();
       console.log("success:", response);
       let arr = response?.results.map((type) => ({
         // label: type.commodity_type,
@@ -87,11 +94,11 @@ function AddEditHsnMaster() {
 
   const updateData = async (data) => {
     try {
-      const response = await updateHsnMaster(data).unwrap();
+      const response = await updateWareHouseOwnerType(data).unwrap();
       if (response.status === 200) {
-        console.log("update warehouse type master res", response);
+        console.log("update warehouse owner type master res", response);
         toasterAlert(response);
-        navigate("/commodity-master/hsn-master");
+        navigate("/warehouse-master/warehouse-owner-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -103,13 +110,13 @@ function AddEditHsnMaster() {
     getWarehouseType();
     if (details?.id) {
       let obj = {
-        hsn_code: details.hsn_code,
-        igst_perc: details.igst_perc,
-        sgst_perc: details.igst_perc,
-        cgst_perc: details.cgst_perc,
-        description: details.description,
+        // hiring_proposal_id: details.hiring_proposal_id.id,
+        warehouse_owner_name: details.warehouse_owner_name,
+        warehouse_owner_contact_no: details.warehouse_owner_contact_no,
+        warehouse_owner_address: details.warehouse_owner_address,
+        rent_amount: details.rent_amount,
 
-        is_active: details.is_active,
+        revenue_sharing_ratio: details.revenue_sharing_ratio,
       };
       console.log("details", details);
 
@@ -182,7 +189,10 @@ function AddEditHsnMaster() {
                 _hover={{ backgroundColor: "primary.700" }}
                 color={"white"}
                 borderRadius={"full"}
-                isLoading={addHsnMasterLoading || updateHsnMasterApiIsLoading}
+                isLoading={
+                  addWareHouseOwnerTypeApiIsLoading ||
+                  updateWareHouseOwnerTypeApiIsLoading
+                }
                 my={"4"}
                 px={"10"}
               >
@@ -194,9 +204,9 @@ function AddEditHsnMaster() {
       </FormProvider>
     </Box>
   );
-}
+};
 
-export default AddEditHsnMaster;
+export default AddEditWareHouseOwnerMaster;
 const toasterAlert = (obj) => {
   let msg = obj?.message;
   let status = obj?.status;
