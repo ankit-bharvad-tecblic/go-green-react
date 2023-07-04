@@ -10,7 +10,15 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    fetchLocationDrillDown: builder.mutation({
+      query: (query) => ({
+        url: API.COMMON_API_END_POINTS.LOCATION_DRILL_DOWN,
+        method: "GET",
+        params: query,
+      }),
+    }),
   }),
 });
 
-export const { useSaveAsDraftMutation } = warehouseProposalApiSlice;
+export const { useSaveAsDraftMutation, useFetchLocationDrillDownMutation } =
+  warehouseProposalApiSlice;

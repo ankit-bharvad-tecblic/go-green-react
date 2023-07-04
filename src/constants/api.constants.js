@@ -61,4 +61,7 @@ export const API = {
   WAREHOUSE_PROPOSAL: {
     SAVE_AS_DRAFT: "/warehouse/save_draft_create/",
   },
+  COMMON_API_END_POINTS: {
+    LOCATION_DRILL_DOWN: "/warehouse/location/filter",
+  },
 };

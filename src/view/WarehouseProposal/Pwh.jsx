@@ -44,7 +44,10 @@ import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import * as Yup from "yup";
 import ReactSelect from "react-select";
 import { gstNumberValidation } from "../../services/validation.service";
-import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
+import {
+  useFetchLocationDrillDownMutation,
+  useSaveAsDraftMutation,
+} from "../../features/warehouse-proposal.slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
 const reactSelectStyle = {
@@ -341,6 +344,8 @@ const Pwh = () => {
     regions: [],
   });
 
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
   const methods = useForm({
     //resolver: yupResolver(validationSchema),
     resolver: yupResolver(schema),
@@ -443,6 +448,12 @@ const Pwh = () => {
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
 
+  // location drill down api hook
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
   const getRegionMasterList = async () => {
     try {
       const response = await getRegionMaster().unwrap();
@@ -538,6 +549,7 @@ const Pwh = () => {
       let data = {};
       if (type === "PWH_WAREHOUSE_DETAILS") {
         data = {
+          is_draft: true,
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
@@ -564,6 +576,7 @@ const Pwh = () => {
       }
       if (type === "PWH_COMMODITY_DETAILS") {
         data = {
+          is_draft: true,
           expected_commodity: getValues("expected_commodity"),
           commodity_inward_type: getValues("commodity_inward_type"),
           prestack_commodity: getValues("prestack_commodity"),
@@ -575,6 +588,7 @@ const Pwh = () => {
       }
       if (type === "PWH_COMMERCIAL_DETAILS") {
         data = {
+          is_draft: true,
           min_rent: getValues("min_rent"),
           max_rent: getValues("max_rent"),
           avg_rent: getValues("avg_rent"),
@@ -609,27 +623,49 @@ const Pwh = () => {
     }
   };
 
-  const regionOnChange = (val) => {
+  const regionOnChange = async (val) => {
     console.log("value --> ", val);
     setValue(formFieldsName.pwh_warehouse_details.region_name, val.value, {
       shouldValidate: true,
     });
 
-    // setSelectBoxOptions((prev) => ({
-    //   ...prev,
-    //   regions: response?.results.map(({ area_name, id }) => ({
-    //     label: area_name,
-    //     value: id,
-    //   })),
-    // }));
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      region: val.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      region: val.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+      if (response.status === 200) {
+        console.log("test");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    setSelectBoxOptions((prev) => ({
+      ...prev,
+      regions: response?.results.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      })),
+    }));
   };
+
+  const locationDrillDown = async (query) => {};
 
   useEffect(() => {
     getRegionMasterList();
-    getStateList();
-    getZonesList();
-    getDistrictMasterList();
-    getAreaMasterList();
+    // getStateList();
+    // getZonesList();
+    // getDistrictMasterList();
+    // getAreaMasterList();
   }, []);
 
   return (
