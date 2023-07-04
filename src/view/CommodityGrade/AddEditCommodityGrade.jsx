@@ -119,8 +119,8 @@ const AddEditFormCommodityGrade = () => {
     if (details?.id) {
       let obj = {
         commodity_grade_name: details.commodity_grade_name,
-        description: details.description,
-        active: details.is_active,
+        // description: details.description,
+        is_active: details.is_active,
       };
 
       // setHandleSelectBoxVal
@@ -153,7 +153,7 @@ const AddEditFormCommodityGrade = () => {
                       {generateFormField({
                         ...item,
                         label: "",
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         style: {
                           mb: 1,
                           mt: 1,

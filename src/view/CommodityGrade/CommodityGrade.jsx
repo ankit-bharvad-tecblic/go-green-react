@@ -94,10 +94,10 @@ const CommodityGrade = () => {
       cell: (info) => info.getValue(),
       header: " COMMODITY GRADE NAME",
     }),
-    columnHelper.accessor("description", {
-      cell: (info) => info.getValue(),
-      header: "DESCRIPTION",
-    }),
+    // columnHelper.accessor("description", {
+    //   cell: (info) => info.getValue(),
+    //   header: "DESCRIPTION",
+    // }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "Creation Date",

@@ -52,7 +52,7 @@ function EarthquakeZoneTypeMaster() {
     console.log("event --> ", e.target.checked, info);
     let obj = {
       id: info.row.original.id,
-      active: e.target.checked,
+      is_active: e.target.checked,
       endPoint: API.DASHBOARD.EARTHQUAKE_ZONE_ACTIVE,
     };
 
@@ -74,7 +74,7 @@ function EarthquakeZoneTypeMaster() {
           if (item.id === obj.id) {
             return {
               ...item,
-              active: obj.active,
+              is_active: obj.is_active,
             };
           } else {
             return item;

@@ -120,7 +120,7 @@ const AddEditFormInsuranceCompanyMaster = () => {
         insurance_company_name: details.insurance_company_name,
         insurance_company_address: details.insurance_company_address,
 
-        active: details.active,
+        is_active: details.is_active,
       };
 
       // setHandleSelectBoxVal
@@ -157,7 +157,7 @@ const AddEditFormInsuranceCompanyMaster = () => {
                               details?.commodity_type?.commodity_type
                           ),
                         selectType: "label",
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         isClearable: false,
                         style: { mb: 1, mt: 1 },
                       })}

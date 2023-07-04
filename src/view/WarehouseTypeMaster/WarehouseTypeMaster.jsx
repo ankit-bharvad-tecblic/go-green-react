@@ -102,7 +102,7 @@ const WarehouseTypeMaster = () => {
     }),
     columnHelper.accessor("warehouse_type_name", {
       cell: (info) => info.getValue(),
-      header: "Warehouse Type Name",
+      header: "Warehouse Type ",
     }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),

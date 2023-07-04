@@ -135,7 +135,7 @@ function BankMaster() {
           />
         </Box>
       ),
-      id: "active",
+      id: "is_active",
       accessorFn: (row) => row.active,
     }),
     columnHelper.accessor("update", {

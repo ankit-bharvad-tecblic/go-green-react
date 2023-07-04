@@ -20,9 +20,9 @@ const filterFields = [
   {
     "HCN CODE": "hsn_code",
     isActiveFilter: false,
-    label: "Hsn Code",
+    label: "HSN Code",
     name: "hsn_code",
-    placeholder: "Hsn Code",
+    placeholder: "HSN Code",
     type: "number",
   },
   {
@@ -148,9 +148,9 @@ const addEditFormFields = [
     type: "number",
   },
   {
-    label: "Hsn Code",
+    label: "HSN Code",
     name: "hsn_code",
-    placeholder: "Hsn Code",
+    placeholder: "HSN Code",
     type: "number",
   },
   {
@@ -176,6 +176,7 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
+  commodity_variety: yup.string().required("Commodity variety is required "),
   description: yup.string().required("Description is required"),
   is_active: yup.string(),
   commodity_id: yup.string().required("Commodity is required"),

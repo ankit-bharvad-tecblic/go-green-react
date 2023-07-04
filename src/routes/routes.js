@@ -566,7 +566,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Warehouse Type Master"}>
+              <Layout variant={headerType} title={"Warehouse sub type Master"}>
                 <AddEditFormWareHouseSubTypeMaster />
               </Layout>
             </Suspense>
@@ -578,7 +578,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Warehouse Type Master"}>
+              <Layout variant={headerType} title={"Warehouse sub type Master"}>
                 <AddEditFormWareHouseSubTypeMaster />
               </Layout>
             </Suspense>

@@ -19,6 +19,7 @@ const CommodityType = () => {
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
+  console.log("CommodityTypeMaster", filterQuery);
 
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
@@ -51,7 +52,7 @@ const CommodityType = () => {
     console.log("event --> ", e.target.checked, info);
     let obj = {
       id: info.row.original.id,
-      active: e.target.checked,
+      is_active: e.target.checked,
       endPoint: API.DASHBOARD.COMMODITY_ACTIVE,
     };
 
@@ -73,7 +74,7 @@ const CommodityType = () => {
           if (item.id === obj.id) {
             return {
               ...item,
-              active: obj.active,
+              is_active: obj.is_active,
             };
           } else {
             return item;
@@ -197,6 +198,8 @@ const CommodityType = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old?.limit),
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);

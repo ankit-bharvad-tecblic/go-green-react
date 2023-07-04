@@ -228,7 +228,7 @@ function AddEditFormBankBranchMaster() {
         branch_address: details.branch_address,
         district: details.district.district_name,
         pincode: details.pincode,
-        active: details.active,
+        is_active: details.is_active,
       };
       console.log("details", details);
 
@@ -254,7 +254,7 @@ function AddEditFormBankBranchMaster() {
                       ...item,
                       label: "",
                       // options: item.type === "select" && commodityTypeMaster,
-                      isChecked: details?.active,
+                      isChecked: details?.is_active,
                       style: { mb: 1, mt: 1 },
                     })}
                   </Box>
@@ -342,7 +342,7 @@ function AddEditFormBankBranchMaster() {
                   <CustomSelector
                     name="district"
                     label=""
-                    isChecked="details?.active"
+                    isChecked="details?.is_active"
                     options={selectBoxOptions.district}
                     selectedValue={selectBoxOptions.district.find(
                       (opt) => opt.label === details?.district.district_name
@@ -412,7 +412,7 @@ function AddEditFormBankBranchMaster() {
                       mb: 1,
                       mt: 1,
                     }}
-                    // isChecked="regions?.active"
+                    isChecked={details?.is_active}
                   />
                 </Box>
               </MotionSlideUp>

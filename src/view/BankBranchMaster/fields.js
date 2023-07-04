@@ -138,12 +138,12 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   branch_name: yup.string().required("Branch name is required"),
-  bank: yup.string().required("Bank  is required"),
-  region: yup.string().required("Region name size is required"),
+  bank: yup.string().required("Bank is required"),
+  region: yup.string().required("Region name is required"),
   state: yup.string().required("State name is required"),
   district: yup.string().required("District name is required"),
   branch_address: yup.string().required("Branch address name is required"),
-  pincode: yup.number().required("pincode is required"),
+  pincode: yup.number().required("Pincode is required"),
   active: yup.string(),
   // commodity_type: yup.string().required("Commodity type is required"),
 });

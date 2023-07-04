@@ -53,7 +53,7 @@ const CommodityMaster = () => {
     console.log("event --> ", e.target.checked, info);
     let obj = {
       id: info.row.original.id,
-      active: e.target.checked,
+      is_active: e.target.checked,
       endPoint: API.DASHBOARD.COMMODITY_ACTIVE,
     };
 
@@ -115,11 +115,11 @@ const CommodityMaster = () => {
 
     columnHelper.accessor("commodity_name", {
       cell: (info) => info.getValue(),
-      header: "name",
+      header: "COMMODITY name",
     }),
     columnHelper.accessor("commodity_type.commodity_type", {
       cell: (info) => info.getValue(),
-      header: "Type",
+      header: "Commodity Type",
     }),
     // columnHelper.accessor("minimum_bag_size", {
     //   cell: (info) => info.getValue(),
@@ -143,7 +143,7 @@ const CommodityMaster = () => {
       cell: (info) => info.getValue(),
       header: "LAST UPDATED DATE",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -152,7 +152,7 @@ const CommodityMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
 
             // id="active_row"
             // isReadOnly
