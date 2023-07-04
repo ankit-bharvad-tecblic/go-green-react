@@ -6,7 +6,7 @@ const filterFields = [
     isActiveFilter: false,
     label: "Region",
     name: "region_name",
-    placeholder: "Region",
+    placeholder: "Region", 
     type: "text",
   },
   {
@@ -16,6 +16,7 @@ const filterFields = [
     name: "created_at",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
@@ -26,10 +27,10 @@ const filterFields = [
     type: "date",
   },
   {
-    "LAST UPDATED ACTIVE": "ACTIVE",
+    "LAST UPDATED ACTIVE": "is_active",
     isActiveFilter: false,
-    label: "Active",
-    name: "active",
+    label: "Active", 
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,

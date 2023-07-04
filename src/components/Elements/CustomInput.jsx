@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function CustomInput({ name, placeholder, type, label, style, height }) {
+function CustomInput({ name, placeholder, type, label, style, height, max }) {
   const {
     control,
     formState: { errors },
@@ -43,6 +43,7 @@ function CustomInput({ name, placeholder, type, label, style, height }) {
                 backgroundColor: "primary.200",
                 boxShadow: "none",
               }}
+              max={max}
               p={{ base: "4" }}
               fontWeight={{ base: "normal" }}
               fontStyle={"normal"}

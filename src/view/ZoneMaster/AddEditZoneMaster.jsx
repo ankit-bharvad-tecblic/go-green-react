@@ -144,7 +144,7 @@ const AddEditZoneMaster = () => {
         zone_name: details.zone_name,
         state: details.state.state_name,
         region: details.region?.region_name,
-        is_active: details.is_active,
+        is_active: details?.is_active,
       };
 
       console.log(obj);
@@ -237,7 +237,7 @@ const AddEditZoneMaster = () => {
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
+                      isChecked={details?.is_active}
                     />
                   </Box>
                 </MotionSlideUp>

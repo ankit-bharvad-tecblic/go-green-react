@@ -289,14 +289,15 @@ const AddEditFormEmployeeMaster = () => {
         zone_id: details?.zone_id.zone_name,
         district_id: details?.district_id?.district_name,
         role: details?.role?.role_name,
-        area_id: details?.area.area_name,
-        department__department_name: details?.department.department_name,
+        area_id: details?.area?.area_name,
+        department__department_name: details?.department?.department_name,
         address: details?.address,
         pin_code: details?.pin_code,
         email_id: details?.email_id,
         job_title: details?.job_title,
         reporting_manager_id: details?.reporting_manager_id.email,
-        is_Tactive: details.active,
+        employee_start_date: details?.employee_start_date,
+        is_active: details.active,
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -557,7 +558,7 @@ const AddEditFormEmployeeMaster = () => {
                       label=""
                       options={selectBoxOptions.areas}
                       selectedValue={selectBoxOptions.areas.find(
-                        (opt) => opt.label === details?.area.area_name
+                        (opt) => opt.label === details?.area?.area_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -716,44 +717,38 @@ const AddEditFormEmployeeMaster = () => {
                 </MotionSlideUp>
               </Box>
             </Box>
-            <Box
-              display="flex"
-              gap={2}
-              justifyContent="flex-end"
-              mt="10"
-              px="0"
+          </Box>
+          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
+            <Button
+              type="button"
+              backgroundColor={"white"}
+              borderWidth={"1px"}
+              borderColor={"#F82F2F"}
+              _hover={{ backgroundColor: "" }}
+              color={"#F82F2F"}
+              borderRadius={"full"}
+              my={"4"}
+              px={"10"}
+              onClick={clearForm}
             >
-              <Button
-                type="button"
-                backgroundColor={"white"}
-                borderWidth={"1px"}
-                borderColor={"#F82F2F"}
-                _hover={{ backgroundColor: "" }}
-                color={"#F82F2F"}
-                borderRadius={"full"}
-                my={"4"}
-                px={"10"}
-                onClick={clearForm}
-              >
-                Clear
-              </Button>
-              <Button
-                type="submit"
-                //w="full"
-                backgroundColor={"primary.700"}
-                _hover={{ backgroundColor: "primary.700" }}
-                color={"white"}
-                borderRadius={"full"}
-                isLoading={
-                  addEmployeeMasterApiIsLoading ||
-                  updateEmployeeMasterApiIsLoading
-                }
-                my={"4"}
-                px={"10"}
-              >
-                {details?.id ? "Update" : "Add"}
-              </Button>
-            </Box>
+              Clear
+            </Button>
+            <Button
+              type="submit"
+              //w="full"
+              backgroundColor={"primary.700"}
+              _hover={{ backgroundColor: "primary.700" }}
+              color={"white"}
+              borderRadius={"full"}
+              isLoading={
+                addEmployeeMasterApiIsLoading ||
+                updateEmployeeMasterApiIsLoading
+              }
+              my={"4"}
+              px={"10"}
+            >
+              {details?.id ? "Update" : "Add"}
+            </Button>
           </Box>
         </form>
       </FormProvider>

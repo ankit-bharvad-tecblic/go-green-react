@@ -3,9 +3,16 @@ import React, { useState } from "react";
 import Sidebar from "../Sidebar";
 import Header from "../Header/Header";
 import SidebarList from "../../routes/SidebarList";
+import { useDispatch, useSelector } from "react-redux";
+import { setSidebarVisibility } from "../../features/filter.slice";
 
 function Layout({ variant, title, children }) {
-  const [sidebarVisibility, setSidebarVisibility] = useState(true);
+  // const [sidebarVisibility, setSidebarVisibility] = useState(true);
+
+  // const dispatch = useDispatch();
+  const sidebarVisibility = useSelector(
+    (state) => state.dataTableFiltersReducer?.sidebarVisibility
+  );
 
   return (
     <Flex
@@ -17,7 +24,7 @@ function Layout({ variant, title, children }) {
         // width="250px"
         width={sidebarVisibility ? "300px" : 0}
         transition="width 0.5s ease-in-out"
-        opacity={sidebarVisibility ? 1 : 0}
+        opacity={sidebarVisibility ? 1 : 0} 
         display={{ base: "none", lg: "block" }}
       >
         <Box
@@ -40,7 +47,9 @@ function Layout({ variant, title, children }) {
           width={{
             base: "calc(100vw - 40px)",
             md: "calc(100vw - 40px)",
-            lg: sidebarVisibility ? "calc(100vw - 395px)" : "calc(100vw - 60px)",
+            lg: sidebarVisibility
+              ? "calc(100vw - 395px)"
+              : "calc(100vw - 60px)",
           }}
         >
           {children}
