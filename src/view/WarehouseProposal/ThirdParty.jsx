@@ -379,6 +379,7 @@ const ThirdParty = () => {
   const saveAsDraftData = async (type) => {
     try {
       let data = {};
+      
       if (type === "TP_WAREHOUSE_DETAILS") {
         data = {
           is_draft: true,
