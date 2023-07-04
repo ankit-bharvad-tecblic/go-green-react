@@ -140,7 +140,7 @@ const formFieldsName = {
 
 const schema = yup.object().shape({
   warehouse_name: yup.string().required("Warehouse name is required"),
-  region: yup.string().required("Region name is required"),
+  region: yup.number().required("Region name is required"),
   state: yup.string().required("State name is required"),
   zone: yup.string().required("Zone name is required"),
   district: yup.string().required("District name is required"),
@@ -151,7 +151,11 @@ const schema = yup.object().shape({
   is_factory_permise: yup
     .string()
     .required("Warehouse in factory premises is required"),
-  standard_capacity: yup.string().required("Standard capacity is required"),
+  standard_capacity: yup.string().when("is_factory_permise", {
+    is: (value) => value === "true",
+    then: () => yup.string().required("Standard capacity is required"),
+    otherwise: () => yup.string(),
+  }),
   currrent_capacity: yup
     .string()
     .required("Current warehouse capacity is required"),
@@ -159,9 +163,11 @@ const schema = yup.object().shape({
     .string()
     .required("Current utilized capacity is required"),
   lock_in_period: yup.string().required("Lock in period is required"),
-  lock_in_period_month: yup
-    .string()
-    .required("Lock in period month is required"),
+  lock_in_period_month: yup.string().when("lock_in_period", {
+    is: (value) => value === "true",
+    then: () => yup.string().required("Lock in period month is required"),
+    otherwise: () => yup.string(),
+  }),
   covered_area: yup.string().required("Covered area is required"),
   supervisor_day_shift: yup
     .string()
@@ -211,7 +217,11 @@ const schema = yup.object().shape({
     .string()
     .required("Security deposit amount is required"),
   advance_rent: yup.string().required("Advance rent is required"),
-  advance_rent_month: yup.string().required("Advance rent month is required"),
+  advance_rent_month: yup.string().when("advance_rent", {
+    is: (value) => value === "true",
+    then: () => yup.string().required("Advance rent month is required"),
+    otherwise: () => yup.string(),
+  }),
   gst: yup.string().required("gst is required"),
   commencement_date: yup.string().required("Commencement date is required"),
   agreement_period_month: yup.string().required("Agreement period is required"),
@@ -358,10 +368,6 @@ const Wms = () => {
     console.log("warehouse_owner_details --> ", warehouse_owner_details);
   }, [warehouse_owner_details]);
 
-  const onSubmit = (data) => {
-    console.log("data==>", data);
-  };
-
   const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
     useGetRegionMasterMutation();
 
@@ -386,7 +392,7 @@ const Wms = () => {
           ...prev,
           regions: response?.results.map(({ region_name, id }) => ({
             label: region_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -404,7 +410,7 @@ const Wms = () => {
           ...prev,
           states: response?.results.map(({ state_name, id }) => ({
             label: state_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -422,7 +428,7 @@ const Wms = () => {
           ...prev,
           zones: response?.results.map(({ zone_name, id }) => ({
             label: zone_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -440,7 +446,7 @@ const Wms = () => {
           ...prev,
           districts: response?.results.map(({ district_name, id }) => ({
             label: district_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -458,7 +464,7 @@ const Wms = () => {
           ...prev,
           areas: response?.results.map(({ area_name, id }) => ({
             label: area_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -469,6 +475,19 @@ const Wms = () => {
 
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
+
+  const onSubmit = async (data) => {
+    console.log("data==>", data);
+    try {
+      const response = await saveAsDraft(data).unwrap();
+      console.log("saveAsDraftData - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const saveAsDraftData = async (type) => {
     try {
@@ -622,7 +641,7 @@ const Wms = () => {
                                 <GridItem colSpan={1}>
                                   <Text textAlign="right">Warehouse Name</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
@@ -631,7 +650,7 @@ const Wms = () => {
                                     placeholder="Warehouse Name"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -645,11 +664,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Region</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details
@@ -661,7 +680,7 @@ const Wms = () => {
                                     selectedValue={{}}
                                     isClearable={false}
                                     selectType="label"
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -686,11 +705,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">State</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -701,7 +720,7 @@ const Wms = () => {
                                     selectedValue={{}}
                                     isClearable={false}
                                     selectType="label"
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     isLoading={getStateApiIsLoading}
                                     handleOnChange={(val) => {
                                       console.log(
@@ -728,11 +747,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Zone</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_warehouse_details.zone
@@ -743,7 +762,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getZoneApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -769,10 +788,10 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">District</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -785,7 +804,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getDistrictApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -811,11 +830,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Area</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -827,7 +846,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={getAreaMasterApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -849,17 +868,17 @@ const Wms = () => {
                               {" "}
                               <Grid
                                 textAlign="right"
-                                alignItems="center"
+                                alignItems="start"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Warehouse Address
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomTextArea
                                     name={
@@ -869,7 +888,7 @@ const Wms = () => {
                                     placeholder="Warehouse Address"
                                     type="textarea"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -883,11 +902,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Pin Code</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_warehouse_details
@@ -896,7 +915,7 @@ const Wms = () => {
                                     placeholder="Pin Code"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -910,13 +929,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     No Of Chambers
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -926,7 +945,7 @@ const Wms = () => {
                                     placeholder="No Of Chambers"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -939,24 +958,40 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Warehouse In Factory Premises
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                <GridItem colSpan={1}>
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue={"false"}
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .is_factory_permise
+                                    }
+                                    onChange={(e) => {
+                                      console.log(e, "came here");
+                                      setValue(
+                                        formFieldsName.wms_warehouse_details
+                                          .is_factory_permise,
+                                        e,
+                                        { shouldValidate: true }
+                                      );
+                                      console.log("came here2");
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value={"true"}
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value={"false"}
                                       >
                                         No
                                       </Radio>
@@ -966,34 +1001,40 @@ const Wms = () => {
                               </Grid>
                             </Box>
                             {/* --------------  standard_capacity (in MT)-------------- */}
-                            <Box mt={commonStyle.mt}>
-                              {" "}
-                              <Grid
-                                textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                gap={4}
-                              >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Standard Capacity (in MT)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .standard_capacity
-                                    }
-                                    placeholder=" Standard Capacity (in MT)"
-                                    type="text"
-                                    label=""
-                                    style={{ w: commonStyle.w }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
+                            {getValues(
+                              formFieldsName.wms_warehouse_details
+                                .is_factory_permise
+                            ) === "true" ? (
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  gap={4}
+                                >
+                                  <GridItem colSpan={1}>
+                                    {" "}
+                                    <Text textAlign="right">
+                                      Standard Capacity (in MT)
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={1}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.wms_warehouse_details
+                                          .standard_capacity
+                                      }
+                                      placeholder=" Standard Capacity (in MT)"
+                                      type="text"
+                                      label=""
+                                      style={{ w: "100%" }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            ) : (
+                              <></>
+                            )}
                             {/* --------------  currrent_capacity (in MT)-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
@@ -1003,13 +1044,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Current Warehouse Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1019,7 +1060,7 @@ const Wms = () => {
                                     placeholder="Current Warehouse Capacity (in MT)"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1033,13 +1074,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Current Utilizes Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1049,7 +1090,7 @@ const Wms = () => {
                                     placeholder="Current Utilizes Capacity (in MT)"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1062,25 +1103,42 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     {" "}
                                     Lock In Period
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                <GridItem colSpan={1}>
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue={"false"}
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .lock_in_period
+                                    }
+                                    onChange={(e) => {
+                                      console.log(e, "came here");
+                                      setValue(
+                                        formFieldsName.wms_warehouse_details
+                                          .lock_in_period,
+                                        e,
+                                        { shouldValidate: true }
+                                      );
+                                      console.log("came here2");
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value="true"
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value="false"
                                       >
                                         No
                                       </Radio>
@@ -1090,32 +1148,39 @@ const Wms = () => {
                               </Grid>
                             </Box>
                             {/* --------------  lock_in_period_month------------- */}
-                            <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                gap={4}
-                              >
-                                <GridItem colSpan={2}>
-                                  <Text textAlign="right">
-                                    Lock In Period Month
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_warehouse_details
-                                        .lock_in_period_month
-                                    }
-                                    placeholder=" Lock In Period Month"
-                                    type="text"
-                                    label=""
-                                    style={{ w: commonStyle.w }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
+                            {getValues(
+                              formFieldsName.wms_warehouse_details
+                                .lock_in_period
+                            ) === "true" ? (
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  gap={4}
+                                >
+                                  <GridItem colSpan={1}>
+                                    <Text textAlign="right">
+                                      Lock In Period Month
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={1}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.wms_warehouse_details
+                                          .lock_in_period_month
+                                      }
+                                      placeholder=" Lock In Period Month"
+                                      type="text"
+                                      label=""
+                                      style={{ w: "100%" }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            ) : (
+                              <></>
+                            )}
                             {/* --------------  covered_area------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
@@ -1125,13 +1190,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Covered Area (In Sq.Ft)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1141,7 +1206,7 @@ const Wms = () => {
                                     placeholder="Covered Area (In Sq.Ft)"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1220,12 +1285,12 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For night Shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -1248,7 +1313,7 @@ const Wms = () => {
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
@@ -1262,10 +1327,14 @@ const Wms = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
@@ -1284,12 +1353,12 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For day shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -1312,7 +1381,7 @@ const Wms = () => {
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
@@ -1326,10 +1395,14 @@ const Wms = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
@@ -1348,12 +1421,12 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For night shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -1376,7 +1449,7 @@ const Wms = () => {
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
@@ -1390,10 +1463,14 @@ const Wms = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
                                       sx={{ textWrap: "nowrap" }}
@@ -1477,12 +1554,12 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Expected Commodity Name
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
@@ -1499,7 +1576,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -1524,12 +1601,12 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Commodity Inward Type
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
@@ -1554,7 +1631,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -1579,12 +1656,12 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Pre-Stack Commodity
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
@@ -1609,7 +1686,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -1634,12 +1711,12 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Pre-Stack Commodity Quantity(MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commodity_details
@@ -1648,7 +1725,7 @@ const Wms = () => {
                                     placeholder="Pre-Stack Commodity Quantity(MT)"
                                     type="number"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -1661,18 +1738,41 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Funding Required{" "}
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="2">
+                                <GridItem colSpan={1}>
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue={"false"}
+                                    name={
+                                      formFieldsName.wms_commodity_details
+                                        .is_funding_required
+                                    }
+                                    onChange={(e) => {
+                                      console.log(e, "came here");
+                                      setValue(
+                                        formFieldsName.wms_commodity_details
+                                          .is_funding_required,
+                                        e,
+                                        { shouldValidate: true }
+                                      );
+                                      console.log("came here2");
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
-                                      <Radio colorScheme="red" value="1">
+                                      <Radio
+                                        colorScheme="radioBoxPrimary"
+                                        value="true"
+                                      >
                                         Yes
                                       </Radio>
-                                      <Radio colorScheme="green" value="2">
+                                      <Radio
+                                        colorScheme="radioBoxPrimary"
+                                        value="false"
+                                      >
                                         No
                                       </Radio>
                                     </Stack>
@@ -1682,168 +1782,177 @@ const Wms = () => {
                             </Box>
                           </Box>
                           {/* ================ Bank Details ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(12, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                            >
-                              <GridItem colSpan={12}>
-                                <Text textAlign="left">Bank Details</Text>{" "}
-                              </GridItem>
-                              {bank_details_fields &&
-                                bank_details_fields.map((item, index) => (
-                                  <>
-                                    <GridItem colSpan={1}>
-                                      <Text textAlign="left"> Sr No </Text>{" "}
-                                      <Box
-                                        textAlign="center"
-                                        border="1px"
-                                        p="2"
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                      >
-                                        {index + 1}
-                                      </Box>
-                                    </GridItem>
-                                    {/* =============== Bank Name ============= */}
-                                    <GridItem colSpan={3}>
-                                      <Text textAlign="left">Bank Name</Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`}
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        // selectedValue={{value:bank_details_fields[index].bank_name}}
-                                        // selectedValue={{
-                                        //   label: "Fresh Stock",
-                                        //   value: 1,
-                                        // }}
-                                        // selectedValue={
-                                        //   [
-                                        //     {
-                                        //       label: "Fresh Stock",
-                                        //       value: 1,
-                                        //     },
-                                        //     {
-                                        //       label: "Pre-stock",
-                                        //       value: 2,
-                                        //     },
-                                        //     {
-                                        //       label: "Take over",
-                                        //       value: 3,
-                                        //     },
-                                        //   ].filter(
-                                        //     (d) =>
-                                        //       d.value === item[index].bank_name
-                                        //   )[0]
-                                        // }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                      />
-                                    </GridItem>
-                                    {/* =============== Branch Name ============= */}
-                                    <GridItem colSpan={2}>
-                                      <Text textAlign="left">Branch Name </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`}
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{
-                                          value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
-                                        }}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                      />
-                                    </GridItem>
-                                    {/* =============== Add / Delete ============= */}
-                                    <GridItem colSpan={6}>
-                                      <Flex
-                                        gap="10px"
-                                        justifyContent="end"
-                                        alignItems="center"
-                                      >
-                                        <MdAddBox
-                                          color="#A6CE39"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            append_new_bank_details();
+                          {getValues(
+                            formFieldsName.wms_commodity_details
+                              .is_funding_required
+                          ) === "true" ? (
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(12, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                                bgColor={"#DBFFF5"}
+                                padding="20px"
+                                borderRadius="10px"
+                              >
+                                <GridItem colSpan={12}>
+                                  <Text textAlign="left">Bank Details</Text>{" "}
+                                </GridItem>
+                                {bank_details_fields &&
+                                  bank_details_fields.map((item, index) => (
+                                    <>
+                                      <GridItem colSpan={1}>
+                                        <Text textAlign="left"> Sr No </Text>{" "}
+                                        <Box
+                                          textAlign="center"
+                                          border="1px"
+                                          p="2"
+                                          borderColor="gray.10"
+                                          borderRadius="6"
+                                        >
+                                          {index + 1}
+                                        </Box>
+                                      </GridItem>
+                                      {/* =============== Bank Name ============= */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">Bank Name</Text>{" "}
+                                        <ReactCustomSelect
+                                          name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`}
+                                          label=""
+                                          options={[
+                                            {
+                                              label: "Fresh Stock",
+                                              value: 1,
+                                            },
+                                            {
+                                              label: "Pre-stock",
+                                              value: 2,
+                                            },
+                                            {
+                                              label: "Take over",
+                                              value: 3,
+                                            },
+                                          ]}
+                                          // selectedValue={{value:bank_details_fields[index].bank_name}}
+                                          // selectedValue={{
+                                          //   label: "Fresh Stock",
+                                          //   value: 1,
+                                          // }}
+                                          // selectedValue={
+                                          //   [
+                                          //     {
+                                          //       label: "Fresh Stock",
+                                          //       value: 1,
+                                          //     },
+                                          //     {
+                                          //       label: "Pre-stock",
+                                          //       value: 2,
+                                          //     },
+                                          //     {
+                                          //       label: "Take over",
+                                          //       value: 3,
+                                          //     },
+                                          //   ].filter(
+                                          //     (d) =>
+                                          //       d.value === item[index].bank_name
+                                          //   )[0]
+                                          // }
+                                          isClearable={false}
+                                          selectType="label"
+                                          isLoading={false}
+                                          style={{ w: "100%" }}
+                                          handleOnChange={(val) => {
+                                            console.log(
+                                              "selectedOption @@@@@@@@@@@------> ",
+                                              val
+                                            );
+                                            setValue(
+                                              `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`,
+                                              val.value,
+                                              { shouldValidate: true }
+                                            );
                                           }}
                                         />
-                                        <MdIndeterminateCheckBox
-                                          color="#FF4444"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            if (
-                                              bank_details_fields?.length > 1
-                                            ) {
-                                              remove_bank_detail(index);
-                                            }
+                                      </GridItem>
+                                      {/* =============== Branch Name ============= */}
+                                      <GridItem colSpan={2}>
+                                        <Text textAlign="left">
+                                          Branch Name{" "}
+                                        </Text>{" "}
+                                        <ReactCustomSelect
+                                          name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`}
+                                          label=""
+                                          options={[
+                                            {
+                                              label: "Fresh Stock",
+                                              value: 1,
+                                            },
+                                            {
+                                              label: "Pre-stock",
+                                              value: 2,
+                                            },
+                                            {
+                                              label: "Take over",
+                                              value: 3,
+                                            },
+                                          ]}
+                                          selectedValue={{
+                                            value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
+                                          }}
+                                          isClearable={false}
+                                          selectType="label"
+                                          isLoading={false}
+                                          style={{ w: "100%" }}
+                                          handleOnChange={(val) => {
+                                            console.log(
+                                              "selectedOption @@@@@@@@@@@------> ",
+                                              val
+                                            );
+                                            setValue(
+                                              `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
+                                              val.value,
+                                              { shouldValidate: true }
+                                            );
                                           }}
                                         />
-                                      </Flex>
-                                    </GridItem>
-                                  </>
-                                ))}
-                            </Grid>
-                          </Box>
+                                      </GridItem>
+                                      {/* =============== Add / Delete ============= */}
+                                      <GridItem colSpan={6}>
+                                        <Flex
+                                          gap="10px"
+                                          justifyContent="end"
+                                          alignItems="center"
+                                        >
+                                          <MdAddBox
+                                            color="#A6CE39"
+                                            fontSize="45px"
+                                            cursor={"pointer"}
+                                            onClick={() => {
+                                              append_new_bank_details();
+                                            }}
+                                          />
+                                          <MdIndeterminateCheckBox
+                                            color="#FF4444"
+                                            fontSize="45px"
+                                            cursor={"pointer"}
+                                            onClick={() => {
+                                              if (
+                                                bank_details_fields?.length > 1
+                                              ) {
+                                                remove_bank_detail(index);
+                                              }
+                                            }}
+                                          />
+                                        </Flex>
+                                      </GridItem>
+                                    </>
+                                  ))}
+                              </Grid>
+                            </Box>
+                          ) : (
+                            <></>
+                          )}
                           <Box
                             display="flex"
                             justifyContent="flex-end"
@@ -2036,13 +2145,13 @@ const Wms = () => {
                                 justifyContent="flex-start"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Minimum Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2052,7 +2161,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2066,13 +2175,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Maximum Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2082,7 +2191,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2097,13 +2206,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Avg Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2113,7 +2222,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2128,13 +2237,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Rent (per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details.rent
@@ -2143,7 +2252,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2158,13 +2267,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Total rent payable (per month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2174,7 +2283,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2190,13 +2299,13 @@ const Wms = () => {
                                 justifyContent="flex-start"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Security deposit amount
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2206,7 +2315,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2222,24 +2331,38 @@ const Wms = () => {
                                 justifyContent="flex-start"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Advance rent
-                                  </Text>{" "}
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">Advance rent</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
-                                  <RadioGroup p="0" defaultValue="no">
+                                <GridItem colSpan={1}>
+                                  <RadioGroup
+                                    p="0"
+                                    defaultValue={"false"}
+                                    name={
+                                      formFieldsName.wms_commercial_details
+                                        .advance_rent
+                                    }
+                                    onChange={(e) => {
+                                      console.log(e, "came here");
+                                      setValue(
+                                        formFieldsName.wms_commercial_details
+                                          .advance_rent,
+                                        e,
+                                        { shouldValidate: true }
+                                      );
+                                      console.log("came here2");
+                                    }}
+                                  >
                                     <Stack spacing={5} direction="row">
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="yes"
+                                        value="true"
                                       >
                                         Yes
                                       </Radio>
                                       <Radio
                                         colorScheme="radioBoxPrimary"
-                                        value="no"
+                                        value="false"
                                       >
                                         No
                                       </Radio>
@@ -2250,37 +2373,42 @@ const Wms = () => {
                             </Box>
 
                             {/* -------------- Advance rent(month) -------------- */}
-                            <Box mt={commonStyle.mt}>
-                              <Grid
-                                // textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                justifyContent="flex-start"
-                                gap={4}
-                              >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Advance rent(month)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_commercial_details
-                                        .advance_rent_month
-                                    }
-                                    placeholder="Advance rent(month)"
-                                    type="text"
-                                    label=""
-                                    style={{
-                                      w: commonStyle.w,
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
-
+                            {getValues(
+                              formFieldsName.wms_commercial_details.advance_rent
+                            ) === "true" ? (
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  // textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  justifyContent="flex-start"
+                                  gap={4}
+                                >
+                                  <GridItem colSpan={1}>
+                                    {" "}
+                                    <Text textAlign="right">
+                                      Advance rent(month)
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={1}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.wms_commercial_details
+                                          .advance_rent_month
+                                      }
+                                      placeholder="Advance rent(month)"
+                                      type="text"
+                                      label=""
+                                      style={{
+                                        w: "100%",
+                                      }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            ) : (
+                              <></>
+                            )}
                             {/* -------------- GST-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
@@ -2290,11 +2418,11 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">GST</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -2311,7 +2439,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -2338,13 +2466,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Commencement Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -2355,7 +2483,7 @@ const Wms = () => {
                                     type="date"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2371,13 +2499,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Agreement period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -2388,7 +2516,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2404,13 +2532,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Expiry Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -2421,7 +2549,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2437,13 +2565,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Notice period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -2454,7 +2582,7 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2470,13 +2598,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     WMS Charges according to commodity
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -2494,7 +2622,7 @@ const Wms = () => {
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
                                         "selectedOption @@@@@@@@@@@------> ",
@@ -2521,13 +2649,13 @@ const Wms = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Your projected
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomFileInput
                                     name={
@@ -2538,7 +2666,7 @@ const Wms = () => {
                                     label=""
                                     placeholder="Excel upload"
                                     style={{
-                                      w: commonStyle.w,
+                                      w: "100%",
                                     }}
                                   />
                                 </GridItem>
@@ -2933,7 +3061,7 @@ const Wms = () => {
                                         }}
                                       />
                                     </GridItem>
-                                    <GridItem></GridItem>
+                                    {/* <GridItem></GridItem>
                                     <GridItem>
                                       <Text textAlign="left">
                                         {" "}
@@ -2984,7 +3112,7 @@ const Wms = () => {
                                         label=""
                                         style={{ w: "100%" }}
                                       />
-                                    </GridItem>
+                                    </GridItem> */}
                                     <GridItem
                                       colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
                                     >
@@ -3018,14 +3146,7 @@ const Wms = () => {
                             </Grid>
                           </Box>
                           <Box
-                            //border="1px"
-                            w={{
-                              base: "100%",
-                              sm: "100%",
-                              md: "100%",
-                              lg: "100%",
-                              xl: "90%",
-                            }}
+                          //border="1px"
                           >
                             {/* ================ Intention Letter ================= */}
                             <Box mt={commonStyle.mt}>
@@ -3035,12 +3156,12 @@ const Wms = () => {
                                 alignItems="center"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Intention Letter
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomFileInput
                                     name={
                                       formFieldsName.wms_clients_details
@@ -3049,7 +3170,7 @@ const Wms = () => {
                                     placeholder="Excel upload"
                                     label=""
                                     type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -3062,17 +3183,18 @@ const Wms = () => {
                                 alignItems="start"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">Remarks</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2} textAlign={"left"}>
-                                  <Textarea
-                                    width={commonStyle.w}
+                                <GridItem colSpan={1} textAlign={"left"}>
+                                  <CustomTextArea
                                     name={
                                       formFieldsName.wms_clients_details.remarks
                                     }
                                     placeholder="Remarks"
+                                    type="textarea"
                                     label=""
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
