@@ -17,29 +17,22 @@ const filterFields = [
     placeholder: "District",
     type: "text",
   },
+
   {
-    "EARTHQUAKE ZONE TYPE ID": "earthquake_zone_type_id",
+    Block: "is_block",
     isActiveFilter: false,
-    label: "Earthquake Zone Type Id",
-    name: "earthquake_zone_type_id",
-    placeholder: "Earthquake Zone Type Id",
-    type: "number",
-  },
-  {
-    "IS BLOCK": "is_block",
-    isActiveFilter: false,
-    label: "IS BLOCK",
+    label: "Block",
     name: "is_block",
-    placeholder: "IS BLOCK",
+    placeholder: "Block",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
-        label: "DEACTIVE",
+        label: "DeActive",
         value: "False",
       },
     ],
@@ -48,9 +41,10 @@ const filterFields = [
     "CREATION DATE": "created_at",
     isActiveFilter: false,
     label: "Creation Date",
-    name: "created_at",
+    name: "creation_date",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
@@ -59,18 +53,19 @@ const filterFields = [
     name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
-    "LAST UPDATED ACTIVE": "ACTIVE",
+    "LAST UPDATED ACTIVE": "is_active",
     isActiveFilter: false,
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -89,12 +84,6 @@ const addEditFormFields = [
     type: "text",
   },
 
-  {
-    label: "Earthquake Zone Type Id",
-    name: "earthquake_zone_type_id",
-    placeholder: "Earthquake Zone Type Id",
-    type: "number",
-  },
   // {
   //   label: "DISTRICT NAME",
   //   name: "district_name",
@@ -114,9 +103,6 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  earthquake_zone_type_id: yup
-    .string()
-    .required("Earthquake zone type id is required"),
   is_active: yup.string(),
   district: yup.string().required("District name is"),
   is_block: yup.string(),

@@ -154,7 +154,7 @@ const AddEditZoneMaster = () => {
       });
     }
   }, [details]);
-
+ 
   useEffect(() => {
     getRegionMasterList();
     getAllStateMaster();
@@ -221,7 +221,7 @@ const AddEditZoneMaster = () => {
                       }}
                     />
                   </Box>
-                </MotionSlideUp>
+                </MotionSlideUp> 
               </Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
