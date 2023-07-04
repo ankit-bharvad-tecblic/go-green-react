@@ -45,7 +45,7 @@ export const API = {
     INSURANCE_ACTIVE: "/business_flow/insurance/",
     SECURITY_AGENCY_ACTIVE: "",
     SECURITY_GUARD_ACTIVE: "",
-
+    CLIENT_MASTER: "",
     PAGE_MASTER_ACTIVE: "",
     BANK_MASTER_ACTIVE: "",
     BANK_BRANCH_MASTER_ACTIVE: "",
@@ -54,7 +54,8 @@ export const API = {
     USER_MASTER_ACTIVE: "",
     BANK_CM_LOCATION_MASTER: "/business_flow/bank_cm_location/",
     COMMODITY_BAG_MASTER: "",
-    HSN_MASTER: "",
+    HSN_MASTER: "/warehouse/hsn/",
+    WAREHOUSE_OWNER_MASTER: "/warehouse/HiringProposalWarehouseOwnerDetails/",
     EXCEL_DOWNLOAD_MASTER: "excel_download",
   },
 

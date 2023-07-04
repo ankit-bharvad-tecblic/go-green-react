@@ -225,7 +225,6 @@ const SidebarContent = ({ logoText, routes }) => {
       <Box pt={"25px"} mb="12px" borderRadius="16px">
         <Link
           href={`${process.env.PUBLIC_URL}/`}
-          target="_blank"
           display="flex"
           lineHeight="100%"
           mb="30px"

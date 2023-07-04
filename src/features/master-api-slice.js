@@ -139,6 +139,28 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    // start client-master get add update mutation methods
+    getClientMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.CLIENT_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    addClientMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.CLIENT_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateClientMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.CLIENT_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
 
     //start Insurance-Master get add update mutation methods
     getInsuranceCompanyMaster: builder.mutation({
@@ -507,6 +529,33 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     //warehouse sub type get add update mutation end
+    //warehouse owner type get add update mutation start
+    getWareHouseOwnerType: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.WAREHOUSE_OWNER_MASTER,
+        method: "GET",
+        params: params,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
+    addWareHouseOwnerType: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.WAREHOUSE_OWNER_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateWareHouseOwnerType: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.WAREHOUSE_OWNER_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    //warehouse owner type get add update mutation end
 
     // start security agency get add update mutation methods
     getSecurityAgencyMaster: builder.mutation({
@@ -618,11 +667,26 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+
     getHsnMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.HSN_MASTER,
         method: "GET",
         params: params,
+      }),
+    }),
+    addHsnMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.HSN_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateHsnMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.HSN_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
       }),
     }),
     activeDeActive: builder.mutation({
@@ -672,6 +736,14 @@ export const {
   useUpdateAreaMasterMutation,
   useAddAreaMasterMutation,
   // Api mutation for area master ends
+  // Api mutation for warehouse owner master starts
+  useGetWareHouseOwnerTypeMutation,
+  useUpdateWareHouseOwnerTypeMutation,
+  useAddWareHouseOwnerTypeMutation,
+  // Api mutation for warehouse owner master ends
+  useGetClientMasterMutation,
+  useAddClientMasterMutation,
+  useUpdateClientMasterMutation,
 
   useGetBankMasterMutation,
   useAddBankMasterMutation,
@@ -775,6 +847,8 @@ export const {
   useUpdateHiringProposalMasterMutation,
   useGetCommodityBagMasterMutation,
   useGetHsnMasterMutation,
+  useAddHsnMasterMutation,
+  useUpdateHsnMasterMutation,
   useGetDownLoadExcelMutation,
 } = masterApiSlice;
 

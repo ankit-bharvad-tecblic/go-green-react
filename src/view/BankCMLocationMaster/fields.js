@@ -5,7 +5,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Branch Name",
-    name: "bank_branch",
+    name: "bank_branch.branch_name",
     placeholder: "Branch Name",
     type: "text",
   },
@@ -95,7 +95,7 @@ const addEditFormFields = [
     name: "bank_branch",
     label: "Branch Name",
     placeholder: "Branch Name",
-    type: "text",
+    type: "select",
   },
   {
     name: "bank_cm_location_name",
@@ -124,7 +124,7 @@ const addEditFormFields = [
 
   {
     label: "Active",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -141,7 +141,7 @@ const schema = yup.object().shape({
     .string()
     .trim()
     .required("Minimum commitment is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

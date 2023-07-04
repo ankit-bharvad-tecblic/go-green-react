@@ -12,6 +12,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { useNavigate } from "react-router-dom";
+import { filterFields } from "./fields";
 
 const HsnMaster = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,9 @@ const HsnMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
 
   const [getHsnMaster, { isLoading: getHsnMasterApiIsLoading }] =
@@ -79,38 +82,47 @@ const HsnMaster = () => {
       console.error("Error:", error);
     }
   };
-
- 
+  const editForm = (info) => {
+    console.log("hsn Master info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/commodity-master/edit/hsn-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("hsn_code", {
       cell: (info) => info.getValue(),
-      header: "BANK NAME",
+      header: "HSN CODE",
     }),
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("igst_perc", {
       cell: (info) => info.getValue(),
-      header: "REGION NAME",
+      header: " IGST Percentage",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("sgst_perc", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "SGST Percentage",
     }),
-    columnHelper.accessor("bank_address", {
+    columnHelper.accessor("cgst_perc", {
       cell: (info) => info.getValue(),
-      header: "BANK ADDRESS",
+      header: "CGST Percentage",
+    }),
+    columnHelper.accessor("description", {
+      cell: (info) => info.getValue(),
+      header: "Description",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "Creation Date",
     }),
-    columnHelper.accessor("last_updated_date", {
+    columnHelper.accessor("updated_at", {
       cell: (info) => info.getValue(),
-      header: "Last Updated Date",
+      header: " Last Updated Date",
     }),
-    columnHelper.accessor("active", {
+    columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => <Text id="active_col">Active</Text>,
       cell: (info) => (
@@ -119,7 +131,7 @@ const HsnMaster = () => {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(
@@ -129,8 +141,8 @@ const HsnMaster = () => {
           />
         </Box>
       ),
-      id: "active",
-      accessorFn: (row) => row.active,
+      id: "is_active",
+      accessorFn: (row) => row.is_active,
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
@@ -141,7 +153,7 @@ const HsnMaster = () => {
             // color="#A6CE39"
             fontSize="26px"
             cursor="pointer"
-            // onClick={() => editForm(info)}
+            onClick={() => editForm(info)}
           />
         </Flex>
       ),
@@ -157,7 +169,11 @@ const HsnMaster = () => {
 
   let paramString = "";
 
-  const getHsn = async () => {
+  const addForm = () => {
+    navigate(`/commodity-master/add/hsn-master`);
+  };
+
+  const getData = async () => {
     //params filter
     //filter.filter.length || filter.search
     // if (filterQuery) {
@@ -183,8 +199,8 @@ const HsnMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -193,7 +209,7 @@ totalFilter: response?.total
 
   useEffect(() => {
     tableFilterSet();
-    getHsn();
+    getData();
   }, [filter.limit, filter.page, filterQuery]);
   return (
     <div>
@@ -204,6 +220,7 @@ totalFilter: response?.total
         columns={columns}
         data={data || []}
         loading={getHsnMasterApiIsLoading}
+        addForm={() => addForm()}
       />
     </div>
   );

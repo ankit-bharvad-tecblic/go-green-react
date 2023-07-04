@@ -45,6 +45,8 @@ import HiringProposalMaster from "../view/HiringProposalMaster/HiringProposalMas
 import CommodityBagMaster from "../view/CommodityBagMaster/CommodityBagMaster";
 import HsnMaster from "../view/HsnMaster/HsnMaster";
 import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
+import ClientMaster from "../view/ClientMaster/ClientMaster";
+import WareHouseOwnerMaster from "../view/WareHouseOwnerMaster/WareHouseOwnerMaster";
 //
 
 const SidebarList = [
@@ -263,6 +265,12 @@ const SidebarList = [
 
             component: HiringProposalMaster,
           },
+          {
+            path: "/warehouse-master/warehouse-owner-master",
+            name: "Warehouse Owner Master",
+            secondaryNavbar: true,
+            component: WareHouseOwnerMaster,
+          },
         ],
       },
       {
@@ -282,6 +290,20 @@ const SidebarList = [
             name: "Department Master",
             secondaryNavbar: true,
             component: DepartmentMaster,
+          },
+        ],
+      },
+      {
+        name: "Manage Client",
+        category: "client",
+        state: "pageCollapse",
+        icon: <PeopleIcon color="inherit" />,
+        views: [
+          {
+            path: "manage-client/client-master",
+            name: "Client Master",
+            secondaryNavbar: true,
+            component: ClientMaster,
           },
         ],
       },
