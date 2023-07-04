@@ -246,8 +246,8 @@ function AddEditFormBankBranchMaster() {
             {addEditFormFieldsList &&
               addEditFormFieldsList.map((item, i) => (
                 <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="200px">
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
                       {item.label}
                     </Text>
                     {generateFormField({
@@ -263,8 +263,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     Bank
                   </Text>
                   <CustomSelector
@@ -287,8 +287,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     Region
                   </Text>
                   <CustomSelector
@@ -311,8 +311,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     State
                   </Text>
                   <CustomSelector
@@ -335,8 +335,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     District
                   </Text>{" "}
                   <CustomSelector
@@ -360,8 +360,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     Address
                   </Text>
                   <CustomTextArea
@@ -380,8 +380,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     Pincode
                   </Text>
                   <CustomInput
@@ -400,8 +400,8 @@ function AddEditFormBankBranchMaster() {
 
             <Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
                     Active
                   </Text>
                   <CustomSwitch

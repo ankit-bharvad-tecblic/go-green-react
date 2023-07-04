@@ -69,7 +69,7 @@ const PageMaster = () => {
           if (item.id === obj.id) {
             return {
               ...item,
-              active: obj.active,
+              is_active: obj.is_active,
             };
           } else {
             return item;

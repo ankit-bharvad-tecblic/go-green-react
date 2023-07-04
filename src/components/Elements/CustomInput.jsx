@@ -27,11 +27,11 @@ function CustomInput({ name, placeholder, type, label, style, height }) {
             <Input
               {...field}
               type={type}
-              height={height}
               // width={{ base: "90%" }}
               border="1px"
               borderColor="gray.10"
               backgroundColor={"white"}
+              height={"15px "}
               borderRadius={"lg"}
               _placeholder={{ color: "gray.300" }}
               _hover={{

@@ -36,7 +36,7 @@ const schema = yup.object().shape({
     .trim()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
-    .max(10, "password should be 10 characters")
+    // .max(10, "password should be 10 characters")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+[{\]}\\|;:'",<.>/?]).*$/,
       "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
@@ -140,12 +140,12 @@ const ChangePassword = () => {
           mb={4}
           textColor={"gray.500"}
         >
-          Change your password
+          Change Password
         </Heading>
-        <Text my="6" textColor={"gray.400"}>
+        {/* <Text my="6" textColor={"gray.400"}>
           Enter your user account's verified email address and we will send you
           a password reset link.
-        </Text>
+        </Text> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl mb={4} isInvalid={errors.newpassword}>
             <FormLabel textColor={"gray.500"}>New Password</FormLabel>
@@ -167,6 +167,7 @@ const ChangePassword = () => {
                   onClick={toggleNewPasswordVisibility}
                   variant="ghost"
                   size="sm"
+                  mt={2}
                   aria-label={
                     showNewPassword ? "Hide password" : "Show password"
                   }
@@ -198,6 +199,7 @@ const ChangePassword = () => {
                   onClick={toggleConfirmPasswordVisibility}
                   variant="ghost"
                   size="sm"
+                  mt={2}
                   aria-label={
                     showConfirmPassword ? "Hide password" : "Show password"
                   }
@@ -210,7 +212,7 @@ const ChangePassword = () => {
           </FormControl>
 
           <Box fontSize="sm" mb="2" textAlign="left" px="2">
-            <Text mt="1" color={showMsg.status === 200 ? "green" : "red"}>
+            <Text mt="1" color={showMsg.status === 200 ? "green" : "# e53e3e"}>
               {showMsg.msg}
             </Text>
           </Box>
@@ -226,7 +228,7 @@ const ChangePassword = () => {
             mb={4}
             isLoading={changePasswordApiIsLoading}
           >
-            Sign in
+            Change password
           </Button>
         </form>
         <Box>
@@ -234,9 +236,9 @@ const ChangePassword = () => {
             <ListItem>
               The password length should be at least 8 characters.
             </ListItem>
-            <ListItem>
+            {/* <ListItem>
               The password length should be Max 10 characters.
-            </ListItem>
+            </ListItem> */}
             <ListItem>
               The password should contain at least one uppercase letter.
             </ListItem>

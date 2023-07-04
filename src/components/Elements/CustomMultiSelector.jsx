@@ -49,6 +49,7 @@ const CustomMultiSelector = ({ name, label, options, rules }) => {
                 control: (base, state) => ({
                   ...base,
                   backgroundColor: "#F0F0F0",
+                  height: "15px",
                   borderColor: error ? "red" : "#A6CE39",
                   "&:hover": {
                     borderColor: error ? "red" : "#A6CE39",

@@ -42,7 +42,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
@@ -81,7 +81,7 @@ const addEditFormFields = [
 
   {
     label: "Active",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -90,6 +90,6 @@ const schema = yup.object().shape({
   page_name: yup.string().required("Page name is required"),
   description: yup.string().required("description  is required"),
 
-  active: yup.string(),
+  is_active: yup.string(),
 });
 export { filterFields, addEditFormFields, schema };

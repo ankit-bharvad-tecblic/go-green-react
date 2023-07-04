@@ -212,157 +212,165 @@ const AddEditFormDistrictMaster = () => {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
-            {addEditFormFieldsList &&
-              addEditFormFieldsList.map((item, i) => (
-                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                  <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                    {" "}
-                    <Text textAlign="right" w="200px">
-                      {item.label}
-                    </Text>{" "}
-                    {generateFormField({
-                      ...item,
-                      label: "",
-                      isChecked: details?.active,
-                      style: {
+          <Box maxHeight="370px" overflowY="auto">
+            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {addEditFormFieldsList &&
+                addEditFormFieldsList.map((item, i) => (
+                  <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                    <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                      {" "}
+                      <Text textAlign="right" w="550px">
+                        {item.label}
+                      </Text>{" "}
+                      {generateFormField({
+                        ...item,
+                        label: "",
+                        isChecked: details?.is_active,
+                        style: {
+                          mb: 1,
+                          mt: 1,
+                        },
+
+                        selectedValue:
+                          item.type === "select" &&
+                          item?.options?.find(
+                            (opt) => opt.label === details?.zone.zone_name
+                          ),
+                        selectType: "value",
+                        isClearable: false,
+                      })}
+                    </Box>
+                  </MotionSlideUp>
+                ))}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <CustomSelector
+                      name="region"
+                      label=""
+                      options={selectBoxOptions.regions}
+                      selectedValue={selectBoxOptions.regions.find(
+                        (opt) => opt.label === details?.region.region_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
                         mb: 1,
                         mt: 1,
-                      },
-
-                      selectedValue:
-                        item.type === "select" &&
-                        item?.options?.find(
-                          (opt) => opt.label === details?.zone.zone_name
-                        ),
-                      selectType: "value",
-                      isClearable: false,
-                    })}
+                      }}
+                    />
                   </Box>
                 </MotionSlideUp>
-              ))}
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
-                    Region
-                  </Text>
-                  <CustomSelector
-                    name="region"
-                    label=""
-                    options={selectBoxOptions.regions}
-                    selectedValue={selectBoxOptions.regions.find(
-                      (opt) => opt.label === details?.region.region_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
-                    State
-                  </Text>
-                  <CustomSelector
-                    name="state"
-                    label=""
-                    options={selectBoxOptions.states}
-                    selectedValue={selectBoxOptions.states?.find(
-                      (opt) => opt?.label === details?.state?.state_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      State
+                    </Text>
+                    <CustomSelector
+                      name="state"
+                      label=""
+                      options={selectBoxOptions.states}
+                      selectedValue={selectBoxOptions.states?.find(
+                        (opt) => opt?.label === details?.state?.state_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
-                    Zone
-                  </Text>
-                  <CustomSelector
-                    name="zone"
-                    label=""
-                    options={selectBoxOptions.zones}
-                    selectedValue={selectBoxOptions.zones.find(
-                      (opt) => opt.label === details?.zone?.zone_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Zone
+                    </Text>
+                    <CustomSelector
+                      name="zone"
+                      label=""
+                      options={selectBoxOptions.zones}
+                      selectedValue={selectBoxOptions.zones.find(
+                        (opt) => opt.label === details?.zone?.zone_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Active
+                    </Text>
+                    <CustomSwitch
+                      name="is_active"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      // isChecked="regions?.active"
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
             </Box>
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="10" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="200px">
-                    Active
-                  </Text>
-                  <CustomSwitch
-                    name="is_active"
-                    // type="switch"
-                    label=""
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                    // isChecked="regions?.active"
-                  />
-                </Box>
-              </MotionSlideUp>
+            <Box
+              display="flex"
+              gap={2}
+              justifyContent="flex-end"
+              mt="10"
+              px="0"
+            >
+              <Button
+                type="button"
+                backgroundColor={"white"}
+                borderWidth={"1px"}
+                borderColor={"#F82F2F"}
+                _hover={{ backgroundColor: "" }}
+                color={"#F82F2F"}
+                borderRadius={"full"}
+                my={"4"}
+                px={"10"}
+                onClick={clearForm}
+              >
+                Clear
+              </Button>
+              <Button
+                type="submit"
+                //w="full"
+                backgroundColor={"primary.700"}
+                _hover={{ backgroundColor: "primary.700" }}
+                color={"white"}
+                borderRadius={"full"}
+                isLoading={
+                  addDistrictMasterApiIsLoading ||
+                  updateDistrictMasterApiIsLoading
+                }
+                my={"4"}
+                px={"10"}
+              >
+                {details?.id ? "Update" : "Add"}
+              </Button>
             </Box>
-          </Box>
-          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="button"
-              backgroundColor={"white"}
-              borderWidth={"1px"}
-              borderColor={"#F82F2F"}
-              _hover={{ backgroundColor: "" }}
-              color={"#F82F2F"}
-              borderRadius={"full"}
-              my={"4"}
-              px={"10"}
-              onClick={clearForm}
-            >
-              Clear
-            </Button>
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={
-                addDistrictMasterApiIsLoading ||
-                updateDistrictMasterApiIsLoading
-              }
-              my={"4"}
-              px={"10"}
-            >
-              {details?.id ? "Update" : "Add"}
-            </Button>
           </Box>
         </form>
       </FormProvider>

@@ -123,7 +123,7 @@ const routes = [
       <ProtectedRoutes>
         <Suspense fallback={<div>Loading...</div>}>
           <Layout variant={headerType} title={"Dashboard"}>
-            <Dashboard />
+            {/* <Dashboard /> */}
           </Layout>
         </Suspense>
       </ProtectedRoutes>

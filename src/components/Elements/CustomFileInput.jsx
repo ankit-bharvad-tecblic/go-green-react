@@ -62,6 +62,7 @@ function CustomFileInput({ name, placeholder, type, label, style }) {
                 {...field}
                 type="file"
                 ref={fileInputRef}
+                height={"15px"}
                 display={"none"}
                 accept={type}
                 // width={{ base: "90%" }}

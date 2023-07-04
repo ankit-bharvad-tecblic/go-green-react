@@ -86,7 +86,7 @@ const addEditFormFields = [
   },
 
   {
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "is_active",
     type: "switch",
   },

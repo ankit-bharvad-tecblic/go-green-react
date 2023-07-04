@@ -77,6 +77,7 @@ const CustomSelector = ({
                 control: (base, state) => ({
                   ...base,
                   backgroundColor: "#F0F0F0",
+                  minHeight: "30px", // Set the desired minimum height here
                   borderColor: error ? "red" : "#A6CE39",
                   "&:hover": {
                     borderColor: error ? "red" : "#A6CE39",

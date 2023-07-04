@@ -52,7 +52,7 @@ export const API = {
     WAREHOUSE_TYPE_MASTER_ACTIVE: "",
     WAREHOUSE_SUB_TYPE_MASTER_ACTIVE: "",
     USER_MASTER_ACTIVE: "",
-    BANK_CM_LOCATION_MASTER: "",
+    BANK_CM_LOCATION_MASTER: "/business_flow/bank_cm_location/",
     COMMODITY_BAG_MASTER: "",
     HSN_MASTER: "",
     EXCEL_DOWNLOAD_MASTER: "excel_download",

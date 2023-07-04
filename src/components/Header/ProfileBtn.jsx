@@ -13,6 +13,7 @@ import ReactIcon from "../../assets/Images/reactIcon.svg";
 import React from "react";
 import { RiGroupLine } from "react-icons/ri";
 import { IoLogOutOutline } from "react-icons/io5";
+import logo from "../Icons/logo.svg";
 import { commonService } from "../../services/common.service";
 
 function ProfileBtn() {
@@ -31,7 +32,7 @@ function ProfileBtn() {
               cursor="pointer"
               boxShadow="md"
             >
-              <Image src={ReactIcon} alt="icon" height="30px" width="30px" />
+              <Image size="30" width={24} height={24} src={logo} />
             </Flex>
           </PopoverTrigger>
           <PopoverContent position={"absolute"} right="0px" borderRadius="20px">
@@ -53,12 +54,7 @@ function ProfileBtn() {
                     alignItems="center"
                     cursor="pointer"
                   >
-                    <Image
-                      src={ReactIcon}
-                      alt="profile image"
-                      height="30px"
-                      width="30px"
-                    />
+                    <Image size="30" width={24} height={24} src={logo} />
                   </Flex>
                   <Box>
                     <Text fontSize="16px" color="gray.800" fontWeight="600">
@@ -120,7 +116,7 @@ function ProfileBtn() {
                     alignItems="center"
                     cursor="pointer"
                   >
-                    <IoLogOutOutline color="secondary.500" />
+                    <Image size="30" width={24} height={24} src={logo} />
                   </Flex>
                   <Box zIndex={10000}>
                     <Text fontSize="16px" color="black" fontWeight="600">
