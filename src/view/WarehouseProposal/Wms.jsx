@@ -140,7 +140,7 @@ const formFieldsName = {
 
 const schema = yup.object().shape({
   warehouse_name: yup.string().required("Warehouse name is required"),
-  region: yup.string().required("Region name is required"),
+  region: yup.number().required("Region name is required"),
   state: yup.string().required("State name is required"),
   zone: yup.string().required("Zone name is required"),
   district: yup.string().required("District name is required"),
@@ -368,10 +368,6 @@ const Wms = () => {
     console.log("warehouse_owner_details --> ", warehouse_owner_details);
   }, [warehouse_owner_details]);
 
-  const onSubmit = (data) => {
-    console.log("data==>", data);
-  };
-
   const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
     useGetRegionMasterMutation();
 
@@ -396,7 +392,7 @@ const Wms = () => {
           ...prev,
           regions: response?.results.map(({ region_name, id }) => ({
             label: region_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -414,7 +410,7 @@ const Wms = () => {
           ...prev,
           states: response?.results.map(({ state_name, id }) => ({
             label: state_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -432,7 +428,7 @@ const Wms = () => {
           ...prev,
           zones: response?.results.map(({ zone_name, id }) => ({
             label: zone_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -450,7 +446,7 @@ const Wms = () => {
           ...prev,
           districts: response?.results.map(({ district_name, id }) => ({
             label: district_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -468,7 +464,7 @@ const Wms = () => {
           ...prev,
           areas: response?.results.map(({ area_name, id }) => ({
             label: area_name,
-            id: id,
+            value: id,
           })),
         }));
       }
@@ -479,6 +475,19 @@ const Wms = () => {
 
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
+
+  const onSubmit = async (data) => {
+    console.log("data==>", data);
+    try {
+      const response = await saveAsDraft(data).unwrap();
+      console.log("saveAsDraftData - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const saveAsDraftData = async (type) => {
     try {
