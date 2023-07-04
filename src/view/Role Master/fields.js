@@ -1,7 +1,7 @@
 import * as yup from "yup";
 const filterFields = [
   {
-    RoleName: "Role Name",
+    RoleName: "role_name",
     isActiveFilter: false,
 
     label: "Role Name",
@@ -26,6 +26,7 @@ const filterFields = [
     name: "creation_date",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
@@ -35,6 +36,7 @@ const filterFields = [
     name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
@@ -78,8 +80,8 @@ const addEditFormFields = [
   },
 ];
 const schema = yup.object().shape({
-  role_name: yup.string().required("Role Name Is Required"),
-  description: yup.string().required("Description"),
-  active: yup.string(),
+  role_name: yup.string().required("Role name is required"),
+  description: yup.string().required("Description is required"),
+  is_active: yup.string(),
 });
 export { filterFields, addEditFormFields, schema };

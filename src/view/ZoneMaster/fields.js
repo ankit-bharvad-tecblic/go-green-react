@@ -2,12 +2,28 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "Commodity Name": "commodity_name",
+    "Zone Name": "zone_name",
     isActiveFilter: false,
-    label: "Commodity Name",
-    name: "commodity_name",
-    placeholder: "Commodity Name",
+    label: "Zone Name",
+    name: "zone_name",
+    placeholder: "Zone Name",
     type: "text",
+  },
+  {
+    " Region": "region__region_name",
+    isActiveFilter: false,
+    label: "Region ",
+    name: "region__region_name",
+    placeholder: "Region ",
+    type: "select",
+  },
+  {
+    " State": "state__state_name",
+    isActiveFilter: false,
+    label: "State ",
+    name: "state__state_name",
+    placeholder: "State ",
+    type: "select",
   },
   {
     "CREATION DATE": "created_at",
