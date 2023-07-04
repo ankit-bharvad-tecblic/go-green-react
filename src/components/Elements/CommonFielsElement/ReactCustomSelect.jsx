@@ -18,6 +18,7 @@ const ReactCustomSelect = ({
   selectedValue,
   isClearable,
   selectType,
+  isMultipleSelect,
   style,
   handleOnChange,
   isLoading,
@@ -65,6 +66,7 @@ const ReactCustomSelect = ({
               {...field}
               options={options || []}
               placeholder={label}
+              isMulti={isMultipleSelect || false}
               isClearable={isClearable}
               //   value={selectedVal} r
               isLoading={isLoading}

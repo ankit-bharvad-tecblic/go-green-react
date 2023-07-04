@@ -32,6 +32,9 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
   useGetAreaMasterMutation,
+  useGetBankBranchMasterMutation,
+  useGetBankMasterMutation,
+  useGetCommodityMasterMutation,
   useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
@@ -98,9 +101,9 @@ const formFieldsName = {
       address: "address", //not found
       rent: "rent", //not found
     },
-    min_rent: "min_rent",
-    max_rent: "max_rent",
-    avg_rent: "avg_rent",
+    // min_rent: "min_rent",
+    // max_rent: "max_rent",
+    // avg_rent: "avg_rent",
     rent: "rent",
     total_rent_per_month: "total_rent_per_month",
     security_deposit_amt: "security_deposit_amt",
@@ -182,7 +185,7 @@ const schema = yup.object().shape({
     .string()
     .required("Security guard for night shift is required"),
   expected_commodity: yup
-    .string()
+    .array()
     .required("Expected commodity name is required"),
   commodity_inward_type: yup
     .string()
@@ -206,9 +209,9 @@ const schema = yup.object().shape({
       rent: yup.string().trim() /*.required("Rent is required")*/,
     })
   ),
-  min_rent: yup.string().required("Minimum rent is required"),
-  max_rent: yup.string().required("Maximum rent is required"),
-  avg_rent: yup.string().required("Avg rent is required"),
+  // min_rent: yup.string().required("Minimum rent is required"),
+  // max_rent: yup.string().required("Maximum rent is required"),
+  // avg_rent: yup.string().required("Avg rent is required"),
   rent: yup.string().required("rent is required"),
   total_rent_per_month: yup
     .string()
@@ -227,7 +230,7 @@ const schema = yup.object().shape({
   agreement_period_month: yup.string().required("Agreement period is required"),
   expiry_date: yup.string().required("Expiry date is required"),
   notice_period_month: yup.string().required("Notice period is required"),
-  wms_charges_according_to_commodity: yup.string(),
+  wms_charges_according_to_commodity: yup.array(),
   // .required("WMS Charges according to commodity is required"),
   projection_plan_file_path: yup.string().required("Your project is required"),
   client_list: yup.array().of(
@@ -260,6 +263,9 @@ const schema = yup.object().shape({
 const Wms = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
+    community: [],
+    banks: [],
+    branch: [],
   });
 
   const methods = useForm({
@@ -473,6 +479,73 @@ const Wms = () => {
     }
   };
 
+  // second accordian function start
+
+  const [getCommodityMaster, { isLoading: getCommodityMasterApiIsLoading }] =
+    useGetCommodityMasterMutation();
+
+  const getCommodityMasterList = async () => {
+    try {
+      const response = await getCommodityMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          community: response?.results.map(({ commodity_name, id }) => ({
+            label: commodity_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
+    useGetBankMasterMutation();
+
+  const getBankMasterList = async () => {
+    try {
+      const response = await getBankMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          banks: response?.results.map(({ bank_name, id }) => ({
+            label: bank_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const [getBankBranchMaster, { isLoading: getBankBranchMasterApiIsLoading }] =
+    useGetBankBranchMasterMutation();
+
+  const getBranchMasterList = async () => {
+    try {
+      const response = await getBankBranchMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          branch: response?.results.map(({ branch_name, id }) => ({
+            label: branch_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  //second accordian function end
+
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
 
@@ -534,9 +607,9 @@ const Wms = () => {
         data = {
           is_draft: true,
           warehouse_owner_details: warehouse_owner_details, //not found
-          min_rent: getValues("min_rent"),
-          max_rent: getValues("max_rent"),
-          avg_rent: getValues("avg_rent"),
+          // min_rent: getValues("min_rent"),
+          // max_rent: getValues("max_rent"),
+          // avg_rent: getValues("avg_rent"),
           rent: getValues("rent"),
           total_rent_per_month: getValues("total_rent_per_month"),
           security_deposit_amt: getValues("security_deposit_amt"),
@@ -580,6 +653,9 @@ const Wms = () => {
     getZonesList();
     getDistrictMasterList();
     getAreaMasterList();
+    getCommodityMasterList();
+    getBankMasterList();
+    getBranchMasterList();
   }, []);
 
   return (
@@ -1566,16 +1642,11 @@ const Wms = () => {
                                         .expected_commodity
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
+                                    options={selectBoxOptions?.community || []}
+                                    selectedValue={[]}
                                     isClearable={false}
-                                    selectType="label"
-                                    isLoading={false}
+                                    isMultipleSelect={true}
+                                    isLoading={getCommodityMasterApiIsLoading}
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
@@ -1585,7 +1656,7 @@ const Wms = () => {
                                       setValue(
                                         formFieldsName.wms_commodity_details
                                           .expected_commodity,
-                                        val.value,
+                                        val,
                                         { shouldValidate: true }
                                       );
                                     }}
@@ -1616,15 +1687,15 @@ const Wms = () => {
                                     options={[
                                       {
                                         label: "Fresh Stock",
-                                        value: 1,
+                                        value: "Fresh Stock",
                                       },
                                       {
-                                        label: "Pre-stock",
-                                        value: 2,
+                                        label: "Pre-Stacked",
+                                        value: "Pre-Stacked",
                                       },
                                       {
-                                        label: "Take over",
-                                        value: 3,
+                                        label: "Take Over",
+                                        value: "Take Over",
                                       },
                                     ]}
                                     selectedValue={{}}
@@ -1668,24 +1739,11 @@ const Wms = () => {
                                         .prestack_commodity
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "Fresh Stock",
-                                        value: 1,
-                                      },
-                                      {
-                                        label: "Pre-stock",
-                                        value: 2,
-                                      },
-                                      {
-                                        label: "Take over",
-                                        value: 3,
-                                      },
-                                    ]}
+                                    options={selectBoxOptions?.community || []}
                                     selectedValue={{}}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={false}
+                                    isLoading={getCommodityMasterApiIsLoading}
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
                                       console.log(
@@ -1820,20 +1878,9 @@ const Wms = () => {
                                         <ReactCustomSelect
                                           name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`}
                                           label=""
-                                          options={[
-                                            {
-                                              label: "Fresh Stock",
-                                              value: 1,
-                                            },
-                                            {
-                                              label: "Pre-stock",
-                                              value: 2,
-                                            },
-                                            {
-                                              label: "Take over",
-                                              value: 3,
-                                            },
-                                          ]}
+                                          options={
+                                            selectBoxOptions?.banks || []
+                                          }
                                           // selectedValue={{value:bank_details_fields[index].bank_name}}
                                           // selectedValue={{
                                           //   label: "Fresh Stock",
@@ -1860,7 +1907,7 @@ const Wms = () => {
                                           // }
                                           isClearable={false}
                                           selectType="label"
-                                          isLoading={false}
+                                          isLoading={getBankMasterApiIsLoading}
                                           style={{ w: "100%" }}
                                           handleOnChange={(val) => {
                                             console.log(
@@ -1883,26 +1930,17 @@ const Wms = () => {
                                         <ReactCustomSelect
                                           name={`bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`}
                                           label=""
-                                          options={[
-                                            {
-                                              label: "Fresh Stock",
-                                              value: 1,
-                                            },
-                                            {
-                                              label: "Pre-stock",
-                                              value: 2,
-                                            },
-                                            {
-                                              label: "Take over",
-                                              value: 3,
-                                            },
-                                          ]}
+                                          options={
+                                            selectBoxOptions?.branch || []
+                                          }
                                           selectedValue={{
                                             value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
                                           }}
                                           isClearable={false}
                                           selectType="label"
-                                          isLoading={false}
+                                          isLoading={
+                                            getBankBranchMasterApiIsLoading
+                                          }
                                           style={{ w: "100%" }}
                                           handleOnChange={(val) => {
                                             console.log(
@@ -2127,17 +2165,17 @@ const Wms = () => {
                           </Box>
 
                           <Box
-                            //border="1px"
-                            w={{
-                              base: "100%",
-                              sm: "100%",
-                              md: "100%",
-                              lg: "100%",
-                              xl: "90%",
-                            }}
+                          //border="1px"
+                          // w={{
+                          //   base: "100%",
+                          //   sm: "100%",
+                          //   md: "100%",
+                          //   lg: "100%",
+                          //   xl: "90%",
+                          // }}
                           >
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
-                            <Box mt={commonStyle.mt}>
+                            {/* <Box mt={commonStyle.mt}>
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -2166,9 +2204,9 @@ const Wms = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
                             {/* --------------Maximum Rent(per/sq ft/month)-------------- */}
-                            <Box mt={commonStyle.mt}>
+                            {/* <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -2196,10 +2234,10 @@ const Wms = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
 
                             {/* --------------Avg Rent(per/sq ft/month)-------------- */}
-                            <Box mt={commonStyle.mt}>
+                            {/* <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -2227,7 +2265,7 @@ const Wms = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
 
                             {/* -------------- Rent (per/sq ft/month)-------------- */}
                             <Box mt={commonStyle.mt}>
@@ -2255,6 +2293,13 @@ const Wms = () => {
                                       w: "100%",
                                     }}
                                   />
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Flex gap={"4"}>
+                                    <Text textAlign="right">Min: 1223</Text>
+                                    <Text textAlign="right">Avg: 1223</Text>
+                                    <Text textAlign="right">Max: 1223</Text>
+                                  </Flex>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2431,8 +2476,12 @@ const Wms = () => {
                                     label=""
                                     options={[
                                       {
-                                        label: "1",
-                                        value: 1,
+                                        label: "Applicable",
+                                        value: "Applicable",
+                                      },
+                                      {
+                                        label: "Not applicable",
+                                        value: "Not applicable",
                                       },
                                     ]}
                                     selectedValue={{}}
@@ -2612,13 +2661,10 @@ const Wms = () => {
                                         .wms_charges_according_to_commodity
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
+                                    isMultipleSelect="true"
+                                    selectedValue={getValues(
+                                      "expected_commodity"
+                                    )}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -2758,16 +2804,12 @@ const Wms = () => {
                                         label=""
                                         options={[
                                           {
-                                            label: "Fresh Stock",
-                                            value: 1,
+                                            label: "Corporate",
+                                            value: "Corporate",
                                           },
                                           {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
+                                            label: "Retail",
+                                            value: "Retail",
                                           },
                                         ]}
                                         selectedValue={{}}
@@ -3031,16 +3073,20 @@ const Wms = () => {
                                         label=""
                                         options={[
                                           {
-                                            label: "Fresh Stock",
-                                            value: 1,
+                                            label: "Daily",
+                                            value: "Daily",
                                           },
                                           {
-                                            label: "Pre-stock",
-                                            value: 2,
+                                            label: "Weekly",
+                                            value: "Weekly",
                                           },
                                           {
-                                            label: "Take over",
-                                            value: 3,
+                                            label: "Fortnighty",
+                                            value: "Fortnighty",
+                                          },
+                                          {
+                                            label: "Monthly",
+                                            value: "Monthly",
                                           },
                                         ]}
                                         selectedValue={{}}

@@ -51,8 +51,6 @@ function Header({ variant, title }) {
     }
   };
 
-  console.log("currentPath: " + currentPath);
-
   window.addEventListener("scroll", changeNavbar);
 
   useEffect(() => {
