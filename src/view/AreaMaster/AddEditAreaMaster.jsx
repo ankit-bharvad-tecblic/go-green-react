@@ -30,8 +30,11 @@ import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { useDispatch } from "react-redux";
 
 const AddEditFormArea = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
@@ -229,12 +232,33 @@ const AddEditFormArea = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
+    // set breadcrumbArray
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/area-master",
+      },
+      {
+        title: "Area Master",
+        link: "/manage-location/area-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+
   useEffect(() => {
     getAllDistrict();
     getAllStateMaster();
     getRegionMasterList();
     getAllZone();
+
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
 
     // setAddEditFormFieldsList(addEditFormFields);
   }, []);

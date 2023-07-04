@@ -349,7 +349,8 @@ const Pwh = () => {
   const methods = useForm({
     //resolver: yupResolver(validationSchema),
     resolver: yupResolver(schema),
-
+    is_factory_permise: "false",
+    lock_in_period: "false",
     defaultValues: {
       pwh_commodity_bank_details: [{ bank_name: "", branch_name: "" }],
       pwh_commercial_multipal_details: [
@@ -399,10 +400,6 @@ const Pwh = () => {
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
     name: "pwh_client_list",
   });
-
-  const onSubmit = (data) => {
-    console.log("data==>", data);
-  };
 
   const append_new_bank_details = () => {
     add_new_bank_detail({
@@ -544,6 +541,21 @@ const Pwh = () => {
     }
   };
 
+  const onSubmit = async (data) => {
+    console.log("data==>", data);
+
+    try {
+      const response = await saveAsDraft(data).unwrap();
+      console.log("submit  - Success:", response);
+      if (response.status === 200) {
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
+  };
+
   const saveAsDraftData = async (type) => {
     try {
       let data = {};
@@ -649,16 +661,14 @@ const Pwh = () => {
       console.error("Error:", error);
     }
 
-    setSelectBoxOptions((prev) => ({
-      ...prev,
-      regions: response?.results.map(({ area_name, id }) => ({
-        label: area_name,
-        value: id,
-      })),
-    }));
+    // setSelectBoxOptions((prev) => ({
+    //   ...prev,
+    //   regions: response?.results.map(({ area_name, id }) => ({
+    //     label: area_name,
+    //     value: id,
+    //   })),
+    // }));
   };
-
-  const locationDrillDown = async (query) => {};
 
   useEffect(() => {
     getRegionMasterList();
@@ -3284,6 +3294,7 @@ const Pwh = () => {
 
                                   <Grid
                                     textAlign="right"
+                                    display={"none"}
                                     // templateColumns="repeat(9, 1fr)"
                                     templateColumns={{
                                       base: "1fr",

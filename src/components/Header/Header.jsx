@@ -1,5 +1,8 @@
 import {
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -9,7 +12,7 @@ import {
   Image,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactIcon from "../../assets/Images/reactIcon.svg";
 import { FaBell } from "react-icons/fa";
 import { VscThreeBars } from "react-icons/vsc";
@@ -20,14 +23,25 @@ import NotificationBtn from "./NotificationBtn";
 import { CommunityIcon } from "../Icons/Icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setSidebarVisibility } from "../../features/filter.slice";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronRightIcon } from "@chakra-ui/icons";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 function Header({ variant, title }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const dispatch = useDispatch();
   const sidebarVisibility = useSelector(
     (state) => state.dataTableFiltersReducer?.sidebarVisibility
   );
-  const [scrolled, setScrolled] = useState(false); 
+
+  const breadcrumbArr = useSelector(
+    (state) => state.manageBreadcrumbReducer.breadCrumbList
+  );
+
+  const [scrolled, setScrolled] = useState(false);
+  const [breadCrumbList, setBreadCrumbList] = useState([]);
 
   const changeNavbar = () => {
     if (window.scrollY > 1) {
@@ -37,7 +51,13 @@ function Header({ variant, title }) {
     }
   };
 
+  console.log("currentPath: " + currentPath);
+
   window.addEventListener("scroll", changeNavbar);
+
+  useEffect(() => {
+    setBreadCrumbList(breadcrumbArr);
+  }, [breadcrumbArr]);
 
   return (
     <>
@@ -57,7 +77,6 @@ function Header({ variant, title }) {
                   fontSize="32px"
                   onClick={() => {
                     dispatch(setSidebarVisibility(!sidebarVisibility));
-                   
                   }}
                 />
               </Box>
@@ -72,7 +91,10 @@ function Header({ variant, title }) {
           </Flex>
         </Box>
       ) : (
-        <Box height={{ base: "73px", md: "70px", lg: "80px" }}>
+        <Box
+          height={{ base: "73px", md: "70px", lg: "80px" }}
+          mb={breadcrumbArr?.length ? 8 : 2}
+        >
           <Box
             position={scrolled ? "fixed" : "absolute"}
             top={{ base: "20px", md: "30px", lg: "45px" }}
@@ -110,7 +132,6 @@ function Header({ variant, title }) {
                       fontSize="32px"
                       onClick={() => {
                         dispatch(setSidebarVisibility(!sidebarVisibility));
-                        
                       }}
                     />
                   </Box>
@@ -127,6 +148,26 @@ function Header({ variant, title }) {
                   <NotificationBtn />
                 </Flex>
               </Flex>
+
+              <Breadcrumb
+                mx="10"
+                px="1"
+                mt="1"
+                spacing="7px"
+                separator={<ChevronRightIcon color="gray.500" />}
+              >
+                {breadCrumbList.map((item, index) => (
+                  <BreadcrumbItem key={index}>
+                    {item?.link ? (
+                      <BreadcrumbLink as={Link} to={item?.link}>
+                        {item.title}
+                      </BreadcrumbLink>
+                    ) : (
+                      <BreadcrumbLink>{item.title}</BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                ))}
+              </Breadcrumb>
             </Box>
           </Box>
         </Box>

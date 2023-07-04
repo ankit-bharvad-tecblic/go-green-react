@@ -12,8 +12,11 @@ import {
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 const AddEditFormRegionMaster = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const methods = useForm({
@@ -94,7 +97,29 @@ const AddEditFormRegionMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
+    // set breadcrumbArray
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: "Region Master",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
 
   return (
     <Box bg="white" borderRadius={10} p="10">

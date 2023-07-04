@@ -14,6 +14,8 @@ import React from "react";
 import { RiGroupLine } from "react-icons/ri";
 import { IoLogOutOutline } from "react-icons/io5";
 import logo from "../Icons/logo.svg";
+import profile_dumy_icon from "../Icons/profile_dumy_icon.svg";
+
 import { commonService } from "../../services/common.service";
 
 function ProfileBtn() {
@@ -32,7 +34,7 @@ function ProfileBtn() {
               cursor="pointer"
               boxShadow="md"
             >
-              <Image size="30" width={24} height={24} src={logo} />
+              <Image size="30" width={24} height={24} src={profile_dumy_icon} />
             </Flex>
           </PopoverTrigger>
           <PopoverContent position={"absolute"} right="0px" borderRadius="20px">

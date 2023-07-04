@@ -3,6 +3,7 @@ import { apiSlice } from "./api/apiSlice";
 //import { boltApiSlice } from "./api/boltApiSlice";
 import authReducer from "../features/auth/authSlice";
 import dataTableFiltersSlice from "../features/filter.slice";
+import manageBreadcrumbSlice from "../features/manage-breadcrumb.slice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     //   [boltApiSlice.reducerPath]: boltApiSlice.reducer,
     auth: authReducer,
     dataTableFiltersReducer: dataTableFiltersSlice,
+    manageBreadcrumbReducer: manageBreadcrumbSlice,
   },
   middleware: (getDefaultMiddleware) => {
     const midd = getDefaultMiddleware().concat(apiSlice?.middleware);

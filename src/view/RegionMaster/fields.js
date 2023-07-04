@@ -6,7 +6,7 @@ const filterFields = [
     isActiveFilter: false,
     label: "Region",
     name: "region_name",
-    placeholder: "Region", 
+    placeholder: "Region",
     type: "text",
   },
   {
@@ -29,7 +29,7 @@ const filterFields = [
   {
     "LAST UPDATED ACTIVE": "is_active",
     isActiveFilter: false,
-    label: "Active", 
+    label: "Active",
     name: "is_active",
     placeholder: "Active",
     type: "select",
