@@ -44,9 +44,10 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     calculatePBPM: builder.mutation({
-      query: () => ({
+      query: (data) => ({
         url: API.WAREHOUSE_PROPOSAL.PBPM,
-        method: "GET",
+        method: "POST",
+        body: data,
       }),
     }),
   }),

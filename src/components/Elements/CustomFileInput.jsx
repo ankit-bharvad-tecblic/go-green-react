@@ -49,7 +49,7 @@ function CustomFileInput({ name, placeholder, type, label, style }) {
                   backgroundColor: "primary.200",
                   boxShadow: "none",
                 }}
-                p={{ base: "4" }}
+                p={{ base: "2" }}
                 fontWeight={{ base: "normal" }}
                 fontStyle={"normal"}
                 cursor={"pointer"}

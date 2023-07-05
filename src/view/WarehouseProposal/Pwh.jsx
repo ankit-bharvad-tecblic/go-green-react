@@ -17,8 +17,17 @@ import {
   RadioGroup,
   Spacer,
   Stack,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
   Textarea,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   list,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -48,6 +57,7 @@ import * as Yup from "yup";
 import ReactSelect from "react-select";
 import { gstNumberValidation } from "../../services/validation.service";
 import {
+  useCalculatePBPMMutation,
   useFetchLocationDrillDownMutation,
   useGetSecurityGuardDayShiftMutation,
   useGetSecurityGuardNightShiftMutation,
@@ -172,7 +182,7 @@ const formFieldsName = {
     your_project: "your_project",
   },
   pwh_clients_details: {
-    pwh_client_list: {
+    client_list: {
       client_type: "client_type",
       client_name: "client_name",
       mobile_number: "mobile_number",
@@ -317,7 +327,7 @@ const schema = Yup.object().shape({
   your_project: Yup.string(),
 
   // PWH CLIENTS DETAILS schema start here
-  pwh_client_list: Yup.array().of(
+  client_list: Yup.array().of(
     Yup.object().shape({
       client_type: Yup.string().required("client type name is required"),
       client_name: Yup.string().trim().required("Client name  is required"),
@@ -366,9 +376,13 @@ const Pwh = () => {
     regions: [],
   });
 
+  const [pbpmList, setPbpmList] = useState([]);
   const [selected, setSelected] = useState({});
 
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
+  const [clientLocationDrillDownState, setClientLocationDrillDownState] =
+    useState([{ states: [], zones: [], districts: [], areas: [] }]);
 
   const methods = useForm({
     //resolver: yupResolver(validationSchema),
@@ -386,7 +400,7 @@ const Pwh = () => {
           rent: "",
         },
       ],
-      pwh_client_list: [client_details_obj],
+      client_list: [client_details_obj],
     },
   });
 
@@ -419,12 +433,12 @@ const Pwh = () => {
   });
 
   const {
-    fields: pwh_client_list_fields,
-    append: append_new_client_detail,
-    remove: pwh_client_list_remove,
+    fields: client_list,
+    append: add_client_list,
+    remove: remove_client_list,
   } = useFieldArray({
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "pwh_client_list",
+    name: "client_list",
   });
 
   const append_new_bank_details = () => {
@@ -443,8 +457,23 @@ const Pwh = () => {
     });
   };
 
-  const append_new_pwh_client_detail = () => {
-    append_new_client_detail(client_details_obj);
+  const append_client_list = () => {
+    add_client_list({
+      client_type: "",
+      client_name: "",
+      mobile_number: "",
+      region: "",
+      state: "",
+      zone: "",
+      district: "",
+      area: "",
+      address: "",
+
+      // reservation_qty: "",
+      // reservation_period: "",
+      // reservation_start_date: "",
+      // reservation_end_date: "",
+    });
   };
 
   const handleExpiryDateChange = (value) => {
@@ -652,6 +681,256 @@ const Pwh = () => {
     }
   };
 
+  // client list drill down api start
+  const regionOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`,
+      val?.value,
+      {
+        shouldValidate: true,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.states = response?.state?.map(({ state_name, id }) => ({
+        label: state_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
+      ),
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.zones = response?.zone?.map(({ zone_name, id }) => ({
+        label: zone_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
+      ),
+      zone: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.districts = response?.district?.map(({ district_name, id }) => ({
+        label: district_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
+      ),
+      zone: getValues(
+        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
+      ),
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.areas = response?.area?.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const areaOnClientChange = (val, index) => {
+    setValue(
+      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+  };
+
   const saveAsDraftData = async (type) => {
     try {
       let data = {};
@@ -721,6 +1000,15 @@ const Pwh = () => {
         };
 
         console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
+      }
+
+      if (type === "PWH_CLIENTS_DETAILS") {
+        data = {
+          is_draft: true,
+          client_list: getValues("client_list"), //not found
+          intention_letter: getValues("intention_letter"), //not found
+          remarks: getValues("remarks"), //not found
+        };
       }
 
       const response = await saveAsDraft(data).unwrap();
@@ -1012,6 +1300,9 @@ const Pwh = () => {
     }
   };
 
+  const [calculatePBPM, { isLoading: calculatePBPMApiIsLoading }] =
+    useCalculatePBPMMutation();
+
   const calcPBPM = () => {
     console.log(getValues());
 
@@ -1019,9 +1310,36 @@ const Pwh = () => {
       formFieldsName.pwh_warehouse_details.covered_area
     );
 
-    let commodity = getValues("expected_commodity");
+    let commodity = getValues("expected_commodity")?.map((item) => item.value);
+
+    let obj = {
+      commodity: commodity,
+      covered_area: coveredArea,
+    };
+    console.log(obj);
+    if (obj.commodity && obj.covered_area) {
+      fetchPBPM(obj);
+    } else {
+      //setValue( formFieldsName.pwh_clients_details )
+    }
+
+    console.log(obj);
 
     // console.log(object);
+  };
+
+  const fetchPBPM = async (obj) => {
+    try {
+      const response = await calculatePBPM(obj).unwrap();
+      console.log("submit  - Success:", response);
+      if (response.status === 200) {
+        setPbpmList(response?.data);
+        console.log("response --> ", response);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toasterAlert(error);
+    }
   };
 
   // Region State  Zone District Area  onChange drill down api end //
@@ -3287,7 +3605,7 @@ const Pwh = () => {
                                     _hover={{ backgroundColor: "primary.700" }}
                                     color={"white"}
                                     borderRadius={"full"}
-                                    isLoading={false}
+                                    isLoading={calculatePBPMApiIsLoading}
                                     my={"4"}
                                     px={"10"}
                                     onClick={() => calcPBPM()}
@@ -3298,14 +3616,54 @@ const Pwh = () => {
                               </Grid>
                             </Box>
 
-                            {/* -------------- Your projected -------------- */}
+                            {/* -------------- pbpmList -------------- */}
+
+                            {pbpmList?.length > 0 && (
+                              <Box mt={commonStyle.mt}>
+                                {" "}
+                                <Grid
+                                  textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  gap={8}
+                                >
+                                  <GridItem colSpan={3}>
+                                    <Box p="1">
+                                      <TableContainer>
+                                        <Table
+                                          bg="primary.100"
+                                          variant="simple"
+                                        >
+                                          <Thead>
+                                            <Tr>
+                                              <Th>Commodity Name</Th>
+                                              <Th>Storage rate</Th>
+                                            </Tr>
+                                          </Thead>
+                                          <Tbody>
+                                            {pbpmList?.map((item) => (
+                                              <Tr>
+                                                <Td>{item.commodity_name}</Td>
+                                                <Td>{item.storage_rate} </Td>
+                                              </Tr>
+                                            ))}
+                                          </Tbody>
+                                        </Table>
+                                      </TableContainer>
+                                    </Box>
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            )}
+
+                            {/* -------------- Your projected                 -------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
                                 <GridItem colSpan={2}>
                                   {" "}
@@ -3315,16 +3673,14 @@ const Pwh = () => {
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   {" "}
-                                  <CustomInput
+                                  <CustomFileInput
                                     name={
                                       formFieldsName.pwh_commercial_details.rent
                                     }
-                                    // placeholder="Warehouse Name"
-                                    type="text"
+                                    placeholder="Excel upload"
                                     label=""
-                                    style={{
-                                      w: commonStyle.comm_details_style.w,
-                                    }}
+                                    type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -3385,611 +3741,827 @@ const Pwh = () => {
 
                         <AccordionPanel bg="white" mt="5" pb={4}>
                           {/* ================ Client List ================= */}
-                          <Box bgColor={"#DBFFF5"}>
-                            <Box p="4">
-                              <Text fontWeight="bold" textAlign="left">
-                                Client List
-                              </Text>{" "}
-                            </Box>
+                          <Box>
+                            <Grid
+                              textAlign="right"
+                              templateColumns={{
+                                base: "1fr",
+                                sm: "repeat(2, 1fr)",
+                                md: "repeat(3, 1fr)",
+                                lg: "repeat(4, 1fr)",
+                              }}
+                              alignItems="center"
+                              gap={4}
+                              bgColor={"#DBFFF5"}
+                              padding="20px"
+                              borderRadius="10px"
+                            >
+                              <GridItem
+                                colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                              >
+                                <Text textAlign="left">Client List</Text>{" "}
+                              </GridItem>
 
-                            {pwh_client_list_fields &&
-                              pwh_client_list_fields.map((item, index) => (
-                                <Box key={item.id}>
-                                  <Grid
-                                    textAlign="right"
-                                    mt="4"
-                                    // templateColumns="repeat(9, 1fr)"
-                                    templateColumns={{
-                                      base: "1fr",
-                                      sm: "repeat(2, 1fr)",
-                                      md: "repeat(2, 1fr)",
-                                      lg: "repeat(3, 1fr)",
-                                      xl: "repeat(4, 1fr)",
-                                    }}
-                                    alignItems="center"
-                                    gap={8}
-                                    bgColor={"#DBFFF5"}
-                                    padding="20px"
-                                    borderRadius="10px"
-                                  >
-                                    {/* ======== Client Type ============== */}
+                              {client_list &&
+                                client_list.map((item, index) => (
+                                  <>
+                                    {/* Client Type */}
                                     <GridItem>
                                       <Text textAlign="left">Client Type</Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_clients_details
-                                            .pwh_client_list.client_type
+                                      <FormControl
+                                        isInvalid={
+                                          errors?.client_list?.[index]
+                                            ?.client_type?.message
                                         }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          // setValue("kj", "dfd", {
-                                          //   shouldValidate: true,
-                                          // });
-                                        }}
-                                      />
+                                      >
+                                        <ReactCustomSelect
+                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`}
+                                          label=""
+                                          options={[
+                                            {
+                                              label: "Corporate",
+                                              value: "Corporate",
+                                            },
+                                            {
+                                              label: "Retail",
+                                              value: "Retail",
+                                            },
+                                          ]}
+                                          selectedValue={
+                                            [
+                                              {
+                                                label: "Corporate",
+                                                value: "Corporate",
+                                              },
+                                              {
+                                                label: "Retail",
+                                                value: "Retail",
+                                              },
+                                            ]?.filter(
+                                              (item) =>
+                                                item.value ===
+                                                getValues(
+                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
+                                                )
+                                            )[0] || {}
+                                          }
+                                          isClearable={false}
+                                          selectType="label"
+                                          isLoading={false}
+                                          style={{ w: "100%" }}
+                                          handleOnChange={(val) => {
+                                            console.log(
+                                              "selectedOption @@@@@@@@@@@------> ",
+                                              val
+                                            );
+                                            setValue(
+                                              `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`,
+                                              val.value,
+                                              { shouldValidate: true }
+                                            );
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]
+                                            ?.client_type?.message
+                                        }
+                                      </Box>
                                     </GridItem>
 
-                                    {/* ======== Client Name ============== */}
+                                    {/* client_name */}
                                     <GridItem>
                                       <Text textAlign="left">
                                         {" "}
                                         Client Name{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`}
                                         placeholder="client name"
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                         type="text"
                                         label=""
                                         style={{ w: "100%" }}
                                       />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]
+                                            ?.client_name?.message
+                                        }
+                                      </Box>
                                     </GridItem>
 
-                                    {/* ======== Mobile Number ============== */}
+                                    {/* Mobile Number */}
                                     <GridItem>
                                       <Text textAlign="left">
                                         {" "}
                                         Mobile Number{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`}
                                         placeholder="mobile number"
                                         type="text"
                                         label=""
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                         style={{ w: "100%" }}
                                       />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]
+                                            ?.mobile_number?.message
+                                        }
+                                      </Box>
                                     </GridItem>
 
-                                    {/* ======== Region ============== */}
+                                    {/* Region */}
                                     <GridItem>
                                       <Text textAlign="left">Region</Text>{" "}
                                       <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          selectBoxOptions?.regions || []
+                                        }
+                                        selectedValue={
+                                          selectBoxOptions?.regions?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
+                                          regionOnClientChange(val, index);
+                                        }}
+                                      />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.region
+                                            ?.message
+                                        }
+                                      </Box>
+                                    </GridItem>
+
+                                    {/* State */}
+                                    <GridItem>
+                                      <Text textAlign="left">State </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.states || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.states?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          stateOnClientChange(val, index);
+                                        }}
+                                      />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.state
+                                            ?.message
+                                        }
+                                      </Box>
+                                    </GridItem>
+
+                                    {/* Zone */}
+                                    <GridItem>
+                                      <Text textAlign="left">Zone </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.zones || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.zones?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          zoneOnClientChange(val, index);
+                                        }}
+                                      />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.zone
+                                            ?.message
+                                        }
+                                      </Box>
+                                    </GridItem>
+
+                                    {/* District */}
+                                    <GridItem>
+                                      <Text textAlign="left">District </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.districts || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.districts?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          districtOnClientChange(val, index);
+                                        }}
+                                      />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.district
+                                            ?.message
+                                        }
+                                      </Box>
+                                    </GridItem>
+
+                                    {/* Area */}
+                                    <GridItem>
+                                      <Text textAlign="left">Area </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.areas || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.areas?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          areaOnClientChange(val, index);
+                                        }}
+                                      />
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.area
+                                            ?.message
+                                        }
+                                      </Box>
+                                    </GridItem>
+
+                                    {/* Address */}
+                                    <GridItem colSpan={{ base: 1, sm: 2 }}>
+                                      <Text textAlign="left"> Address </Text>{" "}
+                                      <CustomTextArea
+                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`}
+                                        placeholder="address"
+                                        type="text"
+                                        rowLength={1}
+                                        label=""
+                                        style={{ w: "100%" }}
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`
+                                        )}
+                                        onChange={(val) => {
                                           setValue(
-                                            formFieldsName.pwh_warehouse_details
-                                              .supervisor_for_day_shift,
-                                            val?.value,
+                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`,
+                                            val.target.value,
                                             { shouldValidate: true }
                                           );
                                         }}
                                       />
-                                    </GridItem>
-
-                                    {/* ======== State ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">State </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
+                                      <Box mx="1" color="red" textAlign="left">
+                                        {
+                                          errors?.client_list?.[index]?.address
+                                            ?.message
                                         }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Zone ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">Zone </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== District ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">District </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Area ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">Area </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Address ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left"> Address </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="address"
-                                        type="text"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-                                  </Grid>
-
-                                  <Grid
-                                    textAlign="right"
-                                    display={"none"}
-                                    // templateColumns="repeat(9, 1fr)"
-                                    templateColumns={{
-                                      base: "1fr",
-                                      sm: "repeat(2, 1fr)",
-                                      md: "repeat(2, 1fr)",
-                                      lg: "repeat(3, 1fr)",
-                                      xl: "repeat(4, 1fr)",
-                                    }}
-                                    alignItems="center"
-                                    gap={8}
-                                    bgColor={"#DBFFF5"}
-                                    padding="20px"
-                                    borderRadius="10px"
-                                  >
-                                    {/* ======== Storage Charges ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Storage Charges{" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="storage charges"
-                                        type="text"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Reservation Qty (Bales, MT) ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Reservation Qty (Bales, MT){" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="Reservation Qty (Bales, MT)"
-                                        type="text"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Reservation Start Date ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Reservation Start Date{" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="Reservation Start Date"
-                                        type="date"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Reservation End Date ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Reservation End Date{" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="Reservation End Date"
-                                        type="date"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== reservation Period(Month) ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        Reservation Period(Month)
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="Reservation Period(Month)"
-                                        type="date"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-
-                                    {/* ======== Reservation billing cycle ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        Reservation billing cycle{" "}
-                                      </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ========  Post Reservation billing cycle ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        Post Reservation billing cycle{" "}
-                                      </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity
-                                        }
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) =>
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          )
-                                        }
-                                      />
-                                    </GridItem>
-
-                                    {/* ========  Reservation Storage charges ============== */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        Post Reservation Storage charges
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={
-                                          formFieldsName.pwh_commodity_details
-                                            .pre_stack_commodity_quantity
-                                        }
-                                        placeholder="Post Reservation Storage charges"
-                                        type="number"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                    </GridItem>
-                                  </Grid>
-
-                                  {/* ========  Add /Edi btn ============== */}
-                                  <Box p="2" px="6">
-                                    <Flex
-                                      gap="10px"
-                                      justifyContent="end"
-                                      alignItems="center"
-                                    >
-                                      {/* =============== Add / Delete ============= */}
-                                      <Box>
-                                        <Box
-                                          mt="7"
-                                          display="flex"
-                                          alignItems="center"
-                                          justifyContent="flex-end"
-                                          gap="2"
-                                        >
-                                          <Button
-                                            borderColor="gray.10"
-                                            borderRadius="6"
-                                            bg="primary.700"
-                                            color="white"
-                                            fontWeight="bold"
-                                            _hover={{}}
-                                            onClick={() =>
-                                              append_new_pwh_client_detail()
-                                            }
-                                          >
-                                            +
-                                          </Button>
-
-                                          <Button
-                                            borderColor="gray.10"
-                                            borderRadius="6"
-                                            bg="red"
-                                            color="white"
-                                            fontWeight="bold"
-                                            _hover={{}}
-                                            isDisabled={
-                                              pwh_client_list_fields?.length ===
-                                              1
-                                            }
-                                            onClick={() =>
-                                              pwh_client_list_remove(index)
-                                            }
-                                          >
-                                            -
-                                          </Button>
-                                        </Box>
                                       </Box>
-                                    </Flex>
-                                  </Box>
-                                </Box>
-                              ))}
-                          </Box>
-                          {/* ================ Intention Letter ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={8}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">Intention Letter</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <CustomFileInput
-                                  name={
-                                    formFieldsName.pwh_clients_details
-                                      .intention_letter
-                                  }
-                                  placeholder="Excel upload"
-                                  label=""
-                                  type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                  style={{ w: commonStyle.w }}
-                                />
-                              </GridItem>
+                                    </GridItem>
+
+                                    {getValues(
+                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
+                                    ) === "Corporate" && (
+                                      <>
+                                        {/* first set daynamic fields */}
+
+                                        <GridItem
+                                          //border="1px"
+                                          gap="4"
+                                          colSpan={{
+                                            base: 1,
+                                            sm: 2,
+                                            md: 3,
+                                            lg: 4,
+                                          }}
+                                          display="flex"
+                                          overscrollBehaviorX={true}
+                                        >
+                                          {/* Storage charges */}
+
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Storage charges
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.storage_charges}`}
+                                              placeholder="Storage charges"
+                                              type="number"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.storage_charges?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Reservation qty (Bales, MT) */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Reservation qty (Bales, MT)
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_qty}`}
+                                              placeholder="Reservation Qty (Bales, MT)"
+                                              type="number"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.reservation_qty?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Reservation Start Date */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              Reservation Start Date
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_start_date}`}
+                                              placeholder="Reservation Start Date"
+                                              type="date"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.reservation_start_date
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Reservation End Date */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Reservation End Date{" "}
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_end_date}`}
+                                              placeholder="Reservation End Date"
+                                              type="date"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.reservation_end_date
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+                                        </GridItem>
+
+                                        {/* second set daynamic fields */}
+
+                                        <GridItem
+                                          //border="1px"
+                                          gap="4"
+                                          colSpan={{
+                                            base: 1,
+                                            sm: 2,
+                                            md: 3,
+                                            lg: 4,
+                                          }}
+                                          display="flex"
+                                          overscrollBehaviorX={true}
+                                        >
+                                          {/* Reservation Period(Month) */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Reservation Period(Month)
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_period_month}`}
+                                              placeholder="Reservation Period(Month)"
+                                              type="number"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.reservation_period_month
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Reservation billing cycle */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Reservation billing cycle
+                                            </Text>{" "}
+                                            <ReactCustomSelect
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`}
+                                              label=""
+                                              options={[
+                                                {
+                                                  label: "Daily",
+                                                  value: "Daily",
+                                                },
+                                                {
+                                                  label: "Weekly",
+                                                  value: "Weekly",
+                                                },
+                                                {
+                                                  label: "Fortnighty",
+                                                  value: "Fortnighty",
+                                                },
+                                                {
+                                                  label: "Monthly",
+                                                  value: "Monthly",
+                                                },
+                                              ]}
+                                              selectedValue={
+                                                [
+                                                  {
+                                                    label: "Daily",
+                                                    value: "Daily",
+                                                  },
+                                                  {
+                                                    label: "Weekly",
+                                                    value: "Weekly",
+                                                  },
+                                                  {
+                                                    label: "Fortnighty",
+                                                    value: "Fortnighty",
+                                                  },
+                                                  {
+                                                    label: "Monthly",
+                                                    value: "Monthly",
+                                                  },
+                                                ]?.filter(
+                                                  (item) =>
+                                                    item.value ===
+                                                    getValues(
+                                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`
+                                                    )
+                                                )[0] || {}
+                                              }
+                                              isClearable={false}
+                                              selectType="label"
+                                              isLoading={false}
+                                              style={{ w: "100%" }}
+                                              handleOnChange={(val) => {
+                                                console.log(
+                                                  "selectedOption @@@@@@@@@@@------> ",
+                                                  val
+                                                );
+                                                setValue(
+                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`,
+                                                  val.value,
+                                                  { shouldValidate: true }
+                                                );
+                                              }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.reservation_billing_cycle
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Post Reservation billing cycle */}
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Post Reservation billing cycle
+                                            </Text>{" "}
+                                            <ReactCustomSelect
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`}
+                                              label=""
+                                              options={[
+                                                {
+                                                  label: "Daily",
+                                                  value: "Daily",
+                                                },
+                                                {
+                                                  label: "Weekly",
+                                                  value: "Weekly",
+                                                },
+                                                {
+                                                  label: "Fortnighty",
+                                                  value: "Fortnighty",
+                                                },
+                                                {
+                                                  label: "Monthly",
+                                                  value: "Monthly",
+                                                },
+                                              ]}
+                                              selectedValue={
+                                                [
+                                                  {
+                                                    label: "Daily",
+                                                    value: "Daily",
+                                                  },
+                                                  {
+                                                    label: "Weekly",
+                                                    value: "Weekly",
+                                                  },
+                                                  {
+                                                    label: "Fortnighty",
+                                                    value: "Fortnighty",
+                                                  },
+                                                  {
+                                                    label: "Monthly",
+                                                    value: "Monthly",
+                                                  },
+                                                ]?.filter(
+                                                  (item) =>
+                                                    item.value ===
+                                                    getValues(
+                                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`
+                                                    )
+                                                )[0] || {}
+                                              }
+                                              isClearable={false}
+                                              selectType="label"
+                                              isLoading={false}
+                                              style={{ w: "100%" }}
+                                              handleOnChange={(val) => {
+                                                console.log(
+                                                  "selectedOption @@@@@@@@@@@------> ",
+                                                  val
+                                                );
+                                                setValue(
+                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`,
+                                                  val.value,
+                                                  { shouldValidate: true }
+                                                );
+                                              }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.post_reservation_billing_cycle_charges
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+
+                                          {/* Post Reservation Storage charges */}
+
+                                          <GridItem colSpan={2}>
+                                            <Text textAlign="left">
+                                              {" "}
+                                              Post Reservation Storage charges
+                                            </Text>{" "}
+                                            <CustomInput
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle_charges}`}
+                                              placeholder="Post Reservation Storage charges"
+                                              type="number"
+                                              label=""
+                                              style={{ w: "100%" }}
+                                            />
+                                            <Box
+                                              mx="1"
+                                              color="red"
+                                              textAlign="left"
+                                            >
+                                              {
+                                                errors?.client_list?.[index]
+                                                  ?.post_reservation_billing_cycle_charges
+                                                  ?.message
+                                              }
+                                            </Box>
+                                          </GridItem>
+                                        </GridItem>
+                                      </>
+                                    )}
+
+                                    {/* ----------------- Add Remove button -----------  */}
+                                    <GridItem
+                                      colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                                    >
+                                      <Flex
+                                        gap="10px"
+                                        justifyContent="end"
+                                        alignItems="center"
+                                      >
+                                        <MdAddBox
+                                          color="#A6CE39"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            append_client_list();
+                                            setClientLocationDrillDownState(
+                                              (item) => [
+                                                ...item,
+                                                {
+                                                  states: [],
+                                                  zones: [],
+                                                  districts: [],
+                                                  areas: [],
+                                                },
+                                              ]
+                                            );
+                                          }}
+                                        />
+                                        <MdIndeterminateCheckBox
+                                          color="#FF4444"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            if (client_list?.length > 1) {
+                                              remove_client_list(index);
+                                              setClientLocationDrillDownState(
+                                                (item) => [
+                                                  ...item.slice(0, index),
+                                                  ...item.slice(index + 1),
+                                                ]
+                                              );
+                                            }
+                                          }}
+                                        />
+                                      </Flex>
+                                    </GridItem>
+                                  </>
+                                ))}
                             </Grid>
                           </Box>
-                          {/* ================ Remarks ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="start"
-                              gap={8}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">Remarks</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2} textAlign={"left"}>
-                                <Textarea
-                                  width={commonStyle.w}
-                                  name={
-                                    formFieldsName.pwh_clients_details.remarks
-                                  }
-                                  placeholder="Remarks"
-                                  label=""
-                                />
-                              </GridItem>
-                            </Grid>
+                          <Box
+                          //border="1px"
+                          >
+                            {/* ================ Intention Letter ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">
+                                    Intention Letter
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <CustomFileInput
+                                    name={
+                                      formFieldsName.pwh_clients_details
+                                        .intention_letter
+                                    }
+                                    placeholder="Excel upload"
+                                    label=""
+                                    type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    style={{ w: "100%" }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Remarks ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="start"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">Remarks</Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={1} textAlign={"left"}>
+                                  <CustomTextArea
+                                    name={
+                                      formFieldsName.pwh_clients_details.remarks
+                                    }
+                                    placeholder="Remarks"
+                                    type="textarea"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
                           </Box>
                           <Box
                             display="flex"
@@ -4004,9 +4576,12 @@ const Pwh = () => {
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
                               borderRadius={"full"}
-                              isLoading={false}
+                              isLoading={saveAsDraftApiIsLoading}
                               my={"4"}
                               px={"10"}
+                              onClick={() => {
+                                saveAsDraftData("PWH_CLIENTS_DETAILS");
+                              }}
                             >
                               Save as Draft
                             </Button>
@@ -4065,48 +4640,3 @@ const toasterAlert = (obj) => {
 };
 
 // ==========================================
-
-// import React from "react";
-// import { useFormik } from "formik";
-// import * as Yup from "yup";
-// import Select from "react-select";
-
-// const validationSchema = Yup.object().shape({
-//   selectedOptions: Yup.array()
-//     .min(1, "At least one option must be selected")
-//     .max(3, "Maximum three options can be selected")
-//     .required("Options are required"),
-// });
-
-// const MyForm = () => {
-//   const formik = useFormik({
-//     initialValues: {
-//       selectedOptions: [],
-//     },
-//     validationSchema: validationSchema,
-//     onSubmit: (values) => {
-//       // Handle form submission
-//       console.log("Form values:", values);
-//     },
-//   });
-
-//   return (
-//     <form onSubmit={formik.handleSubmit}>
-//       <Select
-//         name="selectedOptions"
-//         options={options} // Your options for the multiselect component
-//         isMulti
-//         onChange={(selected) => {
-//           formik.setFieldValue("selectedOptions", selected);
-//         }}
-//         onBlur={formik.handleBlur}
-//       />
-
-//       {formik.touched.selectedOptions && formik.errors.selectedOptions ? (
-//         <div>{formik.errors.selectedOptions}</div>
-//       ) : null}
-
-//       <button type="submit">Submit</button>
-//     </form>
-//   );
-// };
