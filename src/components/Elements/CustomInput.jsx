@@ -45,8 +45,8 @@ function CustomInput({ name, placeholder, type, label, style, height, max }) {
               }}
               max={max}
               p={{ base: "4" }}
-              fontWeight={{ base: "normal" }}
-              fontStyle={"normal"}
+              // fontWeight={{ base: "normal" }}
+              // fontStyle={"normal"}
               placeholder={placeholder}
             />
           )}

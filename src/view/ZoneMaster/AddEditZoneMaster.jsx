@@ -78,7 +78,8 @@ const AddEditZoneMaster = () => {
     try {
       const response = await getStateMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.state_name,
         value: item.id,
       }));
@@ -107,8 +108,8 @@ const AddEditZoneMaster = () => {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));
@@ -154,7 +155,7 @@ const AddEditZoneMaster = () => {
       });
     }
   }, [details]);
- 
+
   useEffect(() => {
     getRegionMasterList();
     getAllStateMaster();
@@ -162,10 +163,15 @@ const AddEditZoneMaster = () => {
   }, []);
 
   return (
-    <Box bg="white" borderRadius={10} p="10">
+    <Box
+      bg="white"
+      borderRadius={10}
+      p="10"
+      style={{ height: "calc(100vh - 160px)" }}
+    >
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="370px" overflowY="auto">
+          <Box maxHeight="280px" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
@@ -221,7 +227,7 @@ const AddEditZoneMaster = () => {
                       }}
                     />
                   </Box>
-                </MotionSlideUp> 
+                </MotionSlideUp>
               </Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>

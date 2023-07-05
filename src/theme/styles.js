@@ -76,9 +76,10 @@ export const globalStyles = {
   fonts: {
     body: "'Poppins', sans-serif",
     heading: "'Poppins', sans-serif",
+    p: "'Poppins', sans-serif",
     mono: "'Poppins', monospace",
   },
-  fontWeights: {
+  fontWeight: {
     normal: 400,
     medium: 500,
     semibold: 600,
@@ -93,6 +94,21 @@ export const globalStyles = {
       html: {
         fontFamily: "'Poppins', sans-serif",
       },
+      h1: {
+        fontFamily: "heading",
+        fontWeight: "semibold",
+      },
+      p: {
+        fontFamily: "body",
+        fontWeight: "medium",
+      },
     }),
+  },
+  components: {
+    Input: {
+      baseStyle: {
+        fontWeight: "semibold", // Set the default fontWeight for Input component globally
+      },
+    },
   },
 };

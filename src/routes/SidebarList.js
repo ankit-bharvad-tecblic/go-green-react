@@ -117,6 +117,18 @@ const SidebarList = [
         icon: <PeopleIcon color="inherit" />,
         views: [
           {
+            path: "/employee-master",
+            name: "Employee Master",
+            secondaryNavbar: true,
+            component: EmployeeMaster,
+          },
+          {
+            path: "/department-master",
+            name: "Department Master",
+            secondaryNavbar: true,
+            component: DepartmentMaster,
+          },
+          {
             path: "/manage-users/user-master",
             name: "User Master",
             secondaryNavbar: true,
@@ -273,26 +285,26 @@ const SidebarList = [
           },
         ],
       },
-      {
-        name: "Manage Employee",
-        category: "employee",
-        state: "pageCollapse",
-        icon: <TwoPeopleIcon color="inherit" />,
-        views: [
-          {
-            path: "/employee-master",
-            name: "Employee Master",
-            secondaryNavbar: true,
-            component: EmployeeMaster,
-          },
-          {
-            path: "/department-master",
-            name: "Department Master",
-            secondaryNavbar: true,
-            component: DepartmentMaster,
-          },
-        ],
-      },
+      // {
+      //   name: "Manage Employee",
+      //   category: "employee",
+      //   state: "pageCollapse",
+      //   icon: <TwoPeopleIcon color="inherit" />,
+      //   views: [
+      //     // {
+      //     //   path: "/employee-master",
+      //     //   name: "Employee Master",
+      //     //   secondaryNavbar: true,
+      //     //   component: EmployeeMaster,
+      //     // },
+      //     // {
+      //     //   path: "/department-master",
+      //     //   name: "Department Master",
+      //     //   secondaryNavbar: true,
+      //     //   component: DepartmentMaster,
+      //     // },
+      //   ],
+      // },
       {
         name: "Manage Client",
         category: "client",
