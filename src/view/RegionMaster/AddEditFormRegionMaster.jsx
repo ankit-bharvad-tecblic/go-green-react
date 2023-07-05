@@ -21,7 +21,7 @@ const AddEditFormRegionMaster = () => {
   const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(schema),
-  });
+  }); 
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 

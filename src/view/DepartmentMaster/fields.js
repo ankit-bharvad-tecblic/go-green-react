@@ -10,23 +10,41 @@ const filterFields = [
     placeholder: "Department Name",
     type: "text",
   },
+  {
+    "CREATION DATE": "creation_date",
+    isActiveFilter: false,
+    label: "Creation Date",
+    name: "creation_date",
+    placeholder: "Creation Date",
+    type: "date",
+    max: new Date().toISOString().split("T")[0],
+  },
+  {
+    "LAST UPDATED DATE": "last_updated_date",
+    isActiveFilter: false,
+    label: "Last Updated Date",
+    name: "last_updated_date",
+    placeholder: "Last Updated Date",
+    type: "date",
+    max: new Date().toISOString().split("T")[0],
+  },
 
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "is_active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
-        label: "DeActive",
+        label: "Deactive",
         value: "False",
       },
     ],
@@ -35,41 +53,21 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    name: "bank_name",
-    label: "Bank Name",
-    placeholder: "Bank Name",
+    name: "department_name",
+    label: "Department Name",
+    placeholder: "Department Name",
     type: "text",
   },
-  // {
-  //   name: "region",
-  //   label: "Region ",
-  //   placeholder: "Region ",
-  //   type: "select",
-  // },
-  // {
-  //   name: "state",
-  //   label: "State NAME",
-  //   placeholder: "State NAME",
-  //   type: "select",
-  // },
-  // {
-  //   name: "bank_address",
-  //   label: " Bank Address",
-  //   placeholder: " Bank Address",
-  //   type: "text",
-  // },
-  // {
-  //   label: "ACTIVE/DeActive",
-  //   name: "active",
-  //   type: "switch",
-  // },
+
+  {
+    label: "Active",
+    name: "is_active",
+    type: "switch",
+  },
 ];
 
 const schema = yup.object().shape({
-  bank_name: yup.string().required("bank name is required"),
-  region: yup.string().required("region is required"),
-  state: yup.string().required("state is required"),
-  bank_address: yup.string().required("bank address is required"),
+  department_name: yup.string().required("Department name is required"),
   is_active: yup.string(),
 });
 

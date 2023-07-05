@@ -158,7 +158,7 @@ const SidebarList = [
           },
           {
             path: "/bank-master/bank-branch-master",
-            name: "Branch Master",
+            name: "Bank Branch Master",
             secondaryNavbar: true,
             icon: <HomeIcon color="inherit" />,
             component: BankBranchMaster,
@@ -187,7 +187,7 @@ const SidebarList = [
           },
           {
             path: "/manage-insurance/earthquake-zone-type-master",
-            name: "Earthquake Master",
+            name: "Earthquake Zone Type Master",
             secondaryNavbar: true,
             icon: <HomeIcon color="inherit" />,
             component: EarthquakeZoneTypeMaster,

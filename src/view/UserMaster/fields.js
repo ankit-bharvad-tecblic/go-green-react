@@ -6,7 +6,7 @@ const filterFields = [
     Email: "email",
     isActiveFilter: false,
 
-    label: "Email", 
+    label: "Email",
     name: "email",
     placeholder: "Email",
     type: "text",
@@ -144,7 +144,7 @@ const addEditFormFields = [
     type: "switch",
   },
 ];
-
+ 
 const schema = yup.object().shape({
   email: yup.string().required("email is required"),
   first_name: yup.string().required("first name is required"),
@@ -152,7 +152,7 @@ const schema = yup.object().shape({
     .string()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-    user_role: yup.string().required("role is required"),
+  user_role: yup.string().required("role is required"),
   // last_name: yup.string().required("last name is required"),
 
   // last_login: yup.date().required("last login is required"),

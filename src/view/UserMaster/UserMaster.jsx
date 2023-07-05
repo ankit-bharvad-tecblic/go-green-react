@@ -102,9 +102,16 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "CONTACT NO",
     }),
-    columnHelper.accessor("user_role[].role_name", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("user_role", {
       header: "ROLE",
+      cell: (info) => {
+        const userRoles = info.row.original.user_role;
+        if (userRoles && userRoles.length > 0) {
+          const roleNames = userRoles.map((role) => role.role_name);
+          return roleNames.join(", ");
+        }
+        return "N/A";
+      },
     }),
     // columnHelper.accessor("last_name", {
     //   cell: (info) => info.getValue(),

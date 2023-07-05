@@ -13,6 +13,7 @@ import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
 import { useNavigate } from "react-router-dom";
+import CustomDatepicker from "../../components/Elements/CustomDatepicker";
 
 function RegionMaster() {
   const navigate = useNavigate();
@@ -85,9 +86,6 @@ function RegionMaster() {
       console.error("Error:", error);
     }
   };
-
- 
-
 
   const columns = [
     columnHelper.accessor("id", {
@@ -172,7 +170,7 @@ function RegionMaster() {
             .join("&");
         }
         return `${key}=${encodeURIComponent(value)}`;
-      }) 
+      })
       .join("&");
     // }
 
@@ -235,7 +233,6 @@ function RegionMaster() {
         loading={getRegionMasterApiIsLoading}
         addForm={() => addForm()}
       />
-     
     </div>
   );
 }

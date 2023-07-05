@@ -8,7 +8,7 @@ import {
   useAddDepartmentMasterMutation,
   useUpdateDepartmentMasterMutation,
 } from "../../features/master-api-slice";
-import { schema } from "./fields";
+import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
@@ -75,12 +75,10 @@ function AddEditFormDepartmentMaster() {
   };
 
   useEffect(() => {
+    setAddEditFormFieldsList(addEditFormFields);
     if (details?.id) {
       let obj = {
-        bank_name: details?.bank_name,
-        region: details?.region.region_name,
-        state: details?.state.state_name,
-        bank_address: details?.bank_address,
+        department_name: details?.department_name,
         is_active: details.is_active,
       };
       console.log("details", details);
