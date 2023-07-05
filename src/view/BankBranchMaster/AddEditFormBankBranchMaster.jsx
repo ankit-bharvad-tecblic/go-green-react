@@ -243,217 +243,225 @@ function AddEditFormBankBranchMaster() {
       bg="white"
       borderRadius={10}
       p="10"
-      style={{ height: "calc(100vh - 200px)" }}
+      style={{ height: "calc(100vh - 160px)" }}
     >
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
-            {addEditFormFieldsList &&
-              addEditFormFieldsList.map((item, i) => (
-                <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+          <Box maxHeight="280px" overflowY="auto">
+            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {addEditFormFieldsList &&
+                addEditFormFieldsList.map((item, i) => (
+                  <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                    <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                      <Text textAlign="right" w="550px">
+                        {item.label}
+                      </Text>
+                      {generateFormField({
+                        ...item,
+                        label: "",
+                        // options: item.type === "select" && commodityTypeMaster,
+                        isChecked: details?.is_active,
+                        style: { mb: 1, mt: 1 },
+                      })}
+                    </Box>
+                  </MotionSlideUp>
+                ))}
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      {item.label}
+                      Bank
                     </Text>
-                    {generateFormField({
-                      ...item,
-                      label: "",
-                      // options: item.type === "select" && commodityTypeMaster,
-                      isChecked: details?.is_active,
-                      style: { mb: 1, mt: 1 },
-                    })}
+                    <CustomSelector
+                      name="bank"
+                      label=""
+                      options={selectBoxOptions.banks}
+                      selectedValue={selectBoxOptions.banks.find(
+                        (opt) => opt.label === details?.bank.bank_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
                   </Box>
                 </MotionSlideUp>
-              ))}
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    Bank
-                  </Text>
-                  <CustomSelector
-                    name="bank"
-                    label=""
-                    options={selectBoxOptions.banks}
-                    selectedValue={selectBoxOptions.banks.find(
-                      (opt) => opt.label === details?.bank.bank_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <CustomSelector
+                      name="region"
+                      label=""
+                      options={selectBoxOptions.regions}
+                      selectedValue={selectBoxOptions.regions.find(
+                        (opt) => opt.label === details?.region.region_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    Region
-                  </Text>
-                  <CustomSelector
-                    name="region"
-                    label=""
-                    options={selectBoxOptions.regions}
-                    selectedValue={selectBoxOptions.regions.find(
-                      (opt) => opt.label === details?.region.region_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      State
+                    </Text>
+                    <CustomSelector
+                      name="state"
+                      label=""
+                      options={selectBoxOptions.states}
+                      selectedValue={selectBoxOptions.states.find(
+                        (opt) => opt?.label === details?.state?.state_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    State
-                  </Text>
-                  <CustomSelector
-                    name="state"
-                    label=""
-                    options={selectBoxOptions.states}
-                    selectedValue={selectBoxOptions.states.find(
-                      (opt) => opt?.label === details?.state?.state_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      District
+                    </Text>{" "}
+                    <CustomSelector
+                      name="district"
+                      label=""
+                      isChecked="details?.is_active"
+                      options={selectBoxOptions.district}
+                      selectedValue={selectBoxOptions.district.find(
+                        (opt) => opt.label === details?.district.district_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    District
-                  </Text>{" "}
-                  <CustomSelector
-                    name="district"
-                    label=""
-                    isChecked="details?.is_active"
-                    options={selectBoxOptions.district}
-                    selectedValue={selectBoxOptions.district.find(
-                      (opt) => opt.label === details?.district.district_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Address
+                    </Text>
+                    <CustomTextArea
+                      name="branch_address"
+                      placeholder=" Address"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    Address
-                  </Text>
-                  <CustomTextArea
-                    name="branch_address"
-                    placeholder=" Address"
-                    type="text"
-                    label=""
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Pincode
+                    </Text>
+                    <CustomInput
+                      name="pincode"
+                      placeholder=" pincode"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
 
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    Pincode
-                  </Text>
-                  <CustomInput
-                    name="pincode"
-                    placeholder=" pincode"
-                    type="number"
-                    label=""
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Active
+                    </Text>
+                    <CustomSwitch
+                      name="is_active"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
             </Box>
-
-            <Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    Active
-                  </Text>
-                  <CustomSwitch
-                    name="is_active"
-                    // type="switch"
-                    label=""
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                    isChecked={details?.is_active}
-                  />
-                </Box>
-              </MotionSlideUp>
-            </Box>
-          </Box>
-          <Box display="flex" gap={2} justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="button"
-              backgroundColor={"white"}
-              borderWidth={"1px"}
-              borderColor={"#F82F2F"}
-              _hover={{ backgroundColor: "" }}
-              color={"#F82F2F"}
-              borderRadius={"full"}
-              my={"4"}
-              px={"10"}
-              onClick={clearForm}
+            <Box
+              display="flex"
+              gap={2}
+              justifyContent="flex-end"
+              mt="10"
+              px="0"
             >
-              Clear
-            </Button>
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={
-                addBankBranchMasterApiIsLoading ||
-                updateBankBranchMasterApiIsLoading
-              }
-              my={"4"}
-              px={"10"}
-            >
-              {details?.id ? "Update" : "Add"}
-            </Button>
+              <Button
+                type="button"
+                backgroundColor={"white"}
+                borderWidth={"1px"}
+                borderColor={"#F82F2F"}
+                _hover={{ backgroundColor: "" }}
+                color={"#F82F2F"}
+                borderRadius={"full"}
+                my={"4"}
+                px={"10"}
+                onClick={clearForm}
+              >
+                Clear
+              </Button>
+              <Button
+                type="submit"
+                //w="full"
+                backgroundColor={"primary.700"}
+                _hover={{ backgroundColor: "primary.700" }}
+                color={"white"}
+                borderRadius={"full"}
+                isLoading={
+                  addBankBranchMasterApiIsLoading ||
+                  updateBankBranchMasterApiIsLoading
+                }
+                my={"4"}
+                px={"10"}
+              >
+                {details?.id ? "Update" : "Add"}
+              </Button>
+            </Box>
           </Box>
         </form>
       </FormProvider>

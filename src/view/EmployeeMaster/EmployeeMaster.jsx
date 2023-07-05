@@ -101,10 +101,6 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("user.email", {
-      cell: (info) => info.getValue(),
-      header: "User",
-    }),
     columnHelper.accessor("employee_full_name", {
       cell: (info) => info.getValue(),
       header: "Full Name",
@@ -113,6 +109,11 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "Mobile Number",
     }),
+    columnHelper.accessor("user.email", {
+      cell: (info) => info.getValue(),
+      header: "User",
+    }),
+
     columnHelper.accessor("region_id.region_name", {
       cell: (info) => info.getValue(),
       header: "Region",

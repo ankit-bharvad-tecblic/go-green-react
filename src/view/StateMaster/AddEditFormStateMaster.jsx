@@ -31,7 +31,7 @@ const AddEditFormStateMaster = () => {
   });
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
-
+  const [isClear, setIsClear] = useState(false);
   const details = location.state?.details;
   console.log("details ---> ", details);
 
@@ -46,10 +46,18 @@ const AddEditFormStateMaster = () => {
 
   // for clear data in form
   const clearForm = () => {
+    // setIsClear(true)
     const defaultValues = methods.getValues();
     Object.keys(defaultValues).forEach((key) => {
-      methods.setValue(key, "");
+      const field = methods.getFieldState(key);
+      if (field && field.ref && field.ref.type === "select-one") {
+        methods.setValue(key, "");
+        field.ref.blur();
+      } else {
+        methods.setValue(key, "");
+      }
     });
+    methods.reset(); // Optionally, reset the form validation state
   };
   const [getRegionMaster] = useGetRegionMasterMutation();
   const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
@@ -79,7 +87,8 @@ const AddEditFormStateMaster = () => {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));
@@ -149,89 +158,92 @@ const AddEditFormStateMaster = () => {
   }, []);
 
   return (
-    <Box bg="white" borderRadius={10} style={{ height: "calc(100vh - 60px)" }}>
-      <Box bg="white" borderRadius={10} p="10">
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Box maxHeight="370px" overflowY="auto">
-              <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
-                {addEditFormFieldsList &&
-                  addEditFormFieldsList.map((item, i) => (
-                    <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                      <Box
-                        w="full"
-                        gap="4"
-                        display={{ base: "flex" }}
-                        alignItems="center"
-                      >
-                        {" "}
-                        <Text textAlign="right" w="550px">
-                          {item.label}
-                        </Text>{" "}
-                        {generateFormField({
-                          ...item,
-                          label: "",
-                          isChecked: details?.is_active,
-                          style: {
-                            mb: 1,
-                            mt: 1,
-                          },
+    <Box
+      bg="white"
+      borderRadius={10}
+      p="10"
+      style={{ height: "calc(100vh - 160px)" }}
+    >
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <Box maxHeight="280px" overflowY="auto">
+            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {addEditFormFieldsList &&
+                addEditFormFieldsList.map((item, i) => (
+                  <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                    <Box
+                      w="full"
+                      gap="4"
+                      display={{ base: "flex" }}
+                      alignItems="center"
+                    >
+                      {" "}
+                      <Text textAlign="right" w="550px">
+                        {item.label}
+                      </Text>{" "}
+                      {generateFormField({
+                        ...item,
+                        label: "",
+                        isChecked: details?.is_active,
+                        style: {
+                          mb: 1,
+                          mt: 1,
+                        },
 
-                          selectedValue:
-                            item.type === "select" &&
-                            item?.options?.find((opt) => {
-                              console.log("opt", opt);
-                              console.log("details", details);
-                              return opt.label === details?.region.region_name;
-                            }),
-                          selectType: "value",
-                          isClearable: false,
-                        })}
-                      </Box>
-                    </MotionSlideUp>
-                  ))}
-              </Box>
-              <Box
-                display="flex"
-                gap={2}
-                justifyContent="flex-end"
-                mt="10"
-                px="0"
-              >
-                <Button
-                  type="button"
-                  backgroundColor={"white"}
-                  borderWidth={"1px"}
-                  borderColor={"#F82F2F"}
-                  _hover={{ backgroundColor: "" }}
-                  color={"#F82F2F"}
-                  borderRadius={"full"}
-                  my={"4"}
-                  px={"10"}
-                  onClick={clearForm}
-                >
-                  Clear
-                </Button>
-
-                <Button
-                  type="submit"
-                  backgroundColor={"primary.700"}
-                  _hover={{ backgroundColor: "primary.700" }}
-                  color={"white"}
-                  borderRadius={"full"}
-                  isLoading={
-                    addStateMasterApiIsLoading || updateStateMasterApiIsLoading
-                  }
-                  my={"4"}
-                  px={"10"}
-                >
-                  {details?.id ? "Update" : "Add"}
-                </Button>
-              </Box>
+                        selectedValue:
+                          item.type === "select" &&
+                          item?.options?.find((opt) => {
+                            console.log("opt", opt);
+                            console.log("details", details);
+                            return opt.label === details?.region.region_name;
+                          }),
+                        selectType: "value",
+                        isClearable: false,
+                      })}
+                    </Box>
+                  </MotionSlideUp>
+                ))}
             </Box>
-          </form>
-        </FormProvider>
-      </Box>
+            <Box
+              display="flex"
+              gap={2}
+              justifyContent="flex-end"
+              mt="10"
+              px="0"
+            >
+              <Button
+                type="button"
+                backgroundColor={"white"}
+                borderWidth={"1px"}
+                borderColor={"#F82F2F"}
+                _hover={{ backgroundColor: "" }}
+                color={"#F82F2F"}
+                borderRadius={"full"}
+                my={"4"}
+                px={"10"}
+                onClick={clearForm}
+              >
+                Clear
+              </Button>
+
+              <Button
+                type="submit"
+                backgroundColor={"primary.700"}
+                _hover={{ backgroundColor: "primary.700" }}
+                color={"white"}
+                borderRadius={"full"}
+                isLoading={
+                  addStateMasterApiIsLoading || updateStateMasterApiIsLoading
+                }
+                my={"4"}
+                px={"10"}
+              >
+                {details?.id ? "Update" : "Add"}
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </FormProvider>
     </Box>
   );
 };

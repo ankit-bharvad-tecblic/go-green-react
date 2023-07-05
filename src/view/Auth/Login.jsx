@@ -135,9 +135,7 @@ function Login() {
           <Box height={40}>
             <Image src={logoImg} alt="logo" width={{ base: "30%" }} />
           </Box>
-          <Text fontWeight="bold" fontSize="4xl">
-            Login
-          </Text>
+          <Text fontSize="4xl">Login</Text>
           <Text my="4">Please fill your detail to access your account.</Text>
 
           <form onSubmit={handleSubmit(onSubmit)}>

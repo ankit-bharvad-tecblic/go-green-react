@@ -154,7 +154,7 @@ const addEditFormFields = [
     type: "textArea",
   },
   {
-    label: "ACTIVE",
+    label: "Active",
     name: "is_active",
     type: "switch",
   },
