@@ -65,6 +65,7 @@ const filterFields = [
     name: "created_at",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
@@ -73,6 +74,7 @@ const filterFields = [
     name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",

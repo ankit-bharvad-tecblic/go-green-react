@@ -6,7 +6,7 @@ const filterFields = [
     Email: "email",
     isActiveFilter: false,
 
-    label: "Email",
+    label: "Email", 
     name: "email",
     placeholder: "Email",
     type: "text",
@@ -65,6 +65,7 @@ const filterFields = [
     name: "created_at",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "updated_at",
@@ -74,6 +75,7 @@ const filterFields = [
     name: "updated_at",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED ACTIVE": "is_active",

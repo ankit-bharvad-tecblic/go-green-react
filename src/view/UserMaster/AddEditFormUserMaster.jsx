@@ -6,7 +6,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import {
   useAddUserMasterMutation,
-  useGetUserMasterMutation,
   useUpdateUserMasterMutation,
 } from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
@@ -112,7 +111,7 @@ function AddEditFormUserMaster() {
                         ...item,
                         label: "",
                         // options: item.type === "select" && commodityTypeMaster,
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         style: { mb: 1, mt: 1 },
                       })}
                     </Box>

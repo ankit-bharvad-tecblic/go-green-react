@@ -222,7 +222,7 @@ const UserMaster = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {

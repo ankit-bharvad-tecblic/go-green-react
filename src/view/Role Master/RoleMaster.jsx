@@ -32,10 +32,8 @@ const RoleMaster = () => {
     excelDownload: "Role",
   });
 
-  const [
-    getRoleMaster,
-    { error: getRoleMasterApiErr, isLoading: getRoleMasterApiIsLoading },
-  ] = useGetRoleMasterMutation();
+  const [getRoleMaster, { isLoading: getRoleMasterApiIsLoading }] =
+    useGetRoleMasterMutation();
   const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
@@ -179,6 +177,7 @@ const RoleMaster = () => {
   const getData = async () => {
     //params filter
     // if (filter.filter.length || filter.search) {
+    // if (filterQuery) {
     paramString = Object.entries(filter)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
@@ -191,10 +190,14 @@ const RoleMaster = () => {
       .join("&");
     // }
 
+    console.log("paramString ---> ", paramString);
+
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
       const response = await getRoleMaster(query).unwrap();
       console.log("Success:", response);
+      // const activeResponse =await
       setData(response?.results || []);
       setFilter((old) => ({
         ...old,
@@ -210,7 +213,7 @@ const RoleMaster = () => {
   useEffect(() => {
     tableFilterSet();
     getData();
-  }, [filter.limit, filter.page]);
+  }, [filter.limit, filter.page, filterQuery]);
 
   // useMemo(() => {
   //   if (filter.search !== null) {
@@ -226,7 +229,7 @@ const RoleMaster = () => {
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getRoleMasterApiErr}
+        loading={getRoleMasterApiIsLoading}
         addForm={() => addForm()}
       />
     </div>
