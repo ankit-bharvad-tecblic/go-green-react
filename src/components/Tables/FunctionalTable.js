@@ -461,6 +461,7 @@ function FunctionalTable({
                           <Switch
                             size="md"
                             colorScheme="whatsapp"
+
                             // isReadOnly
                             // isChecked={flexRender(
                             //   cell.column.columnDef.cell,
@@ -516,14 +517,16 @@ function FunctionalTable({
       <Flex justifyContent="space-between" alignItems="center" mt="30px">
         <Box>
           {isShow ? (
-            <Text>
+            <Text fontSize={"14px"}>
               {" "}
               Total Record According to filter : {filter?.totalFilter || 0}{" "}
             </Text>
           ) : (
             <></>
           )}
-          <Text>Total Record In Database : {filter?.total} </Text>
+          <Text fontSize={"14px"}>
+            Total Record In Database : {filter?.total}{" "}
+          </Text>
         </Box>
         <Flex justifyContent="end" alignItems="center" gap="3px">
           <Button
@@ -542,16 +545,17 @@ function FunctionalTable({
           >
             {"<"}
           </Button>
-          <Text fontSize="18px"> Page </Text>
+          <Text fontSize="14px"> Page </Text>
           <Button
             p="5px"
             color="secondary.500"
             bg="secondary.100"
             borderRadius="4px"
+            fontSize={"14px"}
           >
             {filter.page}
           </Button>
-          <Text fontSize="18px"> of {filter.totalPage} </Text>
+          <Text fontSize="14px"> of {filter.totalPage} </Text>
           <Button
             variant="ghost"
             onClick={() => setFilter((old) => ({ ...old, page: old.page + 1 }))}
@@ -568,7 +572,7 @@ function FunctionalTable({
           >
             {">>"}
           </Button>
-          <Text fontSize="18px" borderLeft="1px" pl="10px">
+          <Text fontSize="14px" borderLeft="1px" pl="10px">
             {" "}
             Go to page{" "}
           </Text>
@@ -576,6 +580,7 @@ function FunctionalTable({
             disabled={loading}
             width="70px"
             ml="10px"
+            fontSize={"14px"}
             value={filter?.page}
             onChange={(e) => {
               if (

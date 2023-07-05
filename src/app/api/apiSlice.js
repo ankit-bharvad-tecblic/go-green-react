@@ -5,7 +5,7 @@ import { localStorageService } from "../../services/localStorge.service";
 const baseQuery = fetchBaseQuery({
   // baseUrl: "http://192.168.0.124:8000/",
   // baseUrl: process.env.REACT_APP_API_BASE_URL_LOCAL,
-  baseUrl: "http://192.168.0.186:8001/",
+  baseUrl: "http://192.168.0.186:8003/",
 
   // credentials: "include",
   mode: "cors",

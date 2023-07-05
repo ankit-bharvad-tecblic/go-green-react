@@ -3,6 +3,7 @@ import CustomInput from "./CustomInput";
 import CustomSelector from "./CustomSelector";
 import CustomSwitch from "./CustomSwitch";
 import CustomTextArea from "./CustomTextArea";
+import CustomDatepicker from "./CustomDatepicker";
 
 function generateFormField(obj) {
   const {
@@ -17,7 +18,7 @@ function generateFormField(obj) {
     selectType,
     isChecked,
     style,
-    max
+    max,
   } = obj;
   const formatDate = (value) => {
     const formattedDate = moment(value).format("YYYY-MM-DD");
@@ -62,6 +63,21 @@ function generateFormField(obj) {
           max={max}
         />
       );
+    case "date-from-to":
+      return (
+        <CustomDatepicker
+          name={name}
+          placeholder={placeholder}
+          size={size}
+          height={height}
+          type={type}
+          label={label}
+          style={style}
+          formatDate={formatDate}
+          max={max}
+        />
+      );
+
     case "number":
       return (
         <CustomInput
