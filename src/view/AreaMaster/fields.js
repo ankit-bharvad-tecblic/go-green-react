@@ -2,14 +2,6 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "AREA NAME": "area_name",
-    isActiveFilter: false,
-    label: "Area",
-    name: "area_name",
-    placeholder: "Area",
-    type: "text",
-  },
-  {
     "DISTRICT NAME": "district__district_name",
     isActiveFilter: false,
     label: "District",
@@ -17,7 +9,14 @@ const filterFields = [
     placeholder: "District",
     type: "text",
   },
-
+  {
+    "AREA NAME": "area_name",
+    isActiveFilter: false,
+    label: "Area",
+    name: "area_name",
+    placeholder: "Area",
+    type: "text",
+  },
   {
     Block: "is_block",
     isActiveFilter: false,

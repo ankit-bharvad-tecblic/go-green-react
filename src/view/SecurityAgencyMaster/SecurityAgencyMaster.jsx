@@ -158,7 +158,7 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
+      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -180,7 +180,7 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col">UPDATE</Text>,
+      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

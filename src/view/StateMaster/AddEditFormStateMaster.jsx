@@ -22,6 +22,7 @@ import {
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { motion } from "framer-motion";
 import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 
 const AddEditFormStateMaster = () => {
   const navigate = useNavigate();
@@ -30,10 +31,22 @@ const AddEditFormStateMaster = () => {
     resolver: yupResolver(schema),
   });
 
+  const { setValue, getValues } = methods;
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
   const [isClear, setIsClear] = useState(false);
   const details = location.state?.details;
   console.log("details ---> ", details);
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    earthQuack: [],
+    regions: [],
+    zones: [],
+    districts: [],
+    states: [],
+  });
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -46,20 +59,12 @@ const AddEditFormStateMaster = () => {
 
   // for clear data in form
   const clearForm = () => {
-    // setIsClear(true)
     const defaultValues = methods.getValues();
     Object.keys(defaultValues).forEach((key) => {
-      const field = methods.getFieldState(key);
-      if (field && field.ref && field.ref.type === "select-one") {
-        methods.setValue(key, "");
-        field.ref.blur();
-      } else {
-        methods.setValue(key, "");
-      }
+      methods.setValue(key, "");
     });
-    methods.reset(); // Optionally, reset the form validation state
   };
-  const [getRegionMaster] = useGetRegionMasterMutation();
+
   const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
     useGetStateMasterMutation();
 
@@ -126,12 +131,42 @@ const AddEditFormStateMaster = () => {
     }
   };
 
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
+
+  const getRegionMasterList = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: response?.results
+            ?.filter((item) => item.region_name !== "ALL - Region")
+            .map(({ region_name, id }) => ({
+              label: region_name,
+              value: id,
+            })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("region", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
   useEffect(() => {
     if (details?.id) {
       console.log(details);
       let obj = {
         state_name: details.state_name,
-        region: details.region.region_name,
+        region: details.region.id,
         state_code: details.state_code,
         tin_no: details.tin_no,
         gstn: details.gstn,
@@ -155,19 +190,44 @@ const AddEditFormStateMaster = () => {
   }, []);
   useEffect(() => {
     getAllRegionMaster();
+    getRegionMasterList();
   }, []);
 
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-      style={{ height: "calc(100vh - 160px)" }}
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="280px" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <ReactCustomSelect
+                      name="region"
+                      label=""
+                      isLoading={getRegionMasterApiIsLoading}
+                      options={selectBoxOptions?.regions || []}
+                      selectedValue={
+                        selectBoxOptions?.regions?.filter(
+                          (item) => item.value === getValues("region")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>

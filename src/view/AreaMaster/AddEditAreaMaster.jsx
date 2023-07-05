@@ -21,6 +21,8 @@ import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import { useDispatch } from "react-redux";
+import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 
 const AddEditFormArea = () => {
   const dispatch = useDispatch();
@@ -29,22 +31,28 @@ const AddEditFormArea = () => {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
+
+  const { setValue, getValues } = methods;
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
   const [getZoneMaster] = useGetZoneMasterMutation();
   const [getStateMaster] = useGetStateMasterMutation();
-  const [getRegionMaster] = useGetRegionMasterMutation();
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] =
     useState(addEditFormFields);
+
   const [selectBoxOptions, setSelectBoxOptions] = useState({
-    district: [],
     earthQuack: [],
     regions: [],
     zones: [],
-    district: [],
+    districts: [],
+    states: [],
   });
 
   const details = location.state?.details;
   console.log("details ---> ", details);
+
   const onSubmit = (data) => {
     console.log("data==>", data);
     if (details?.id) {
@@ -82,110 +90,89 @@ const AddEditFormArea = () => {
     }
   };
   // get all district data
-  const getAllDistrict = async () => {
-    try {
-      const response = await getDistrictMaster().unwrap();
+  // const getAllDistrict = async () => {
+  //   try {
+  //     const response = await getDistrictMaster().unwrap();
 
-      console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
-        label: item.district_name,
-        value: item.id,
-      }));
+  //     console.log("Success:", response);
+  //     // setCommodityTypeMaster();
+  //     let arr = response?.results.map((item) => ({
+  //       label: item.district_name,
+  //       value: item.id,
+  //     }));
 
-      setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  //API of all zone data
-  const getAllZone = async () => {
-    try {
-      const response = await getZoneMaster().unwrap();
+  //     setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+  // //API of all zone data
+  // const getAllZone = async () => {
+  //   try {
+  //     const response = await getZoneMaster().unwrap();
 
-      console.log("Success:", response);
-      console.log(details);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
-        label: item.zone_name,
-        value: item.id,
-      }));
-      console.log(arr);
+  //     console.log("Success:", response);
+  //     console.log(details);
+  //     // setCommodityTypeMaster();
+  //     let arr = response?.results.map((item) => ({
+  //       label: item.zone_name,
+  //       value: item.id,
+  //     }));
+  //     console.log(arr);
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
-      console.log(arr);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        zones: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  // All state Call
-  const getAllStateMaster = async () => {
-    try {
-      const response = await getStateMaster().unwrap();
-      console.log("response ", response);
-      let arr = response?.results.map((item) => ({
-        label: item.state_name,
-        value: item.id,
-      }));
+  //     setAddEditFormFieldsList(
+  //       addEditFormFields.map((field) => {
+  //         if (field.type === "select") {
+  //           return {
+  //             ...field,
+  //             options: arr,
+  //           };
+  //         } else {
+  //           return field;
+  //         }
+  //       })
+  //     );
+  //     console.log(arr);
+  //     setSelectBoxOptions((prev) => ({
+  //       ...prev,
+  //       zones: arr,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+  // // All state Call
+  // const getAllStateMaster = async () => {
+  //   try {
+  //     const response = await getStateMaster().unwrap();
+  //     console.log("response ", response);
+  //     let arr = response?.results.map((item) => ({
+  //       label: item.state_name,
+  //       value: item.id,
+  //     }));
 
-      console.log(arr);
+  //     console.log(arr);
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  // All region call
-  const getRegionMasterList = async () => {
-    try {
-      const response = await getRegionMaster().unwrap();
-      console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
-        label: item.region_name,
-        value: item.id,
-      }));
-
-      console.log(arr);
-
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //     setAddEditFormFieldsList(
+  //       addEditFormFields.map((field) => {
+  //         if (field.type === "select") {
+  //           return {
+  //             ...field,
+  //             options: arr,
+  //           };
+  //         } else {
+  //           return field;
+  //         }
+  //       })
+  //     );
+  //     setSelectBoxOptions((prev) => ({
+  //       ...prev,
+  //       states: arr,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
   const updateData = async (data) => {
     try {
       const response = await updateAreaMaster(data).unwrap();
@@ -200,13 +187,174 @@ const AddEditFormArea = () => {
     }
   };
 
+  // Region State  Zone District Area  onChange drill down api start //
+
+  // location drill down api hook
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
+
+  const getRegionMasterList = async () => {
+    try {
+      const response = await getRegionMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: response?.results?.filter((item)=> item.region_name !== "ALL - Region").map(({ region_name, id }) => ({
+            label: region_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("region", val?.value, {
+      shouldValidate: true,
+    });
+    setValue("state", null, {
+      shouldValidate: false,
+    });
+
+    setValue("zone", null, {
+      shouldValidate: false,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: val?.value,
+    }));
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state?.filter((item)=> item.state_name !== "All - State").map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("state", val?.value, {
+      shouldValidate: true,
+    });
+
+    setValue("zone", null, {
+      shouldValidate: false,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        zones: response?.zone?.filter((item)=> item.zone_name !== "All - Zone").map(({ zone_name, id }) => ({
+          label: zone_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("zone", val?.value, {
+      shouldValidate: true,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      zone: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      zone: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: response?.district?.filter((item)=> item.district_name !== "All - District").map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("district", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
+  // Region State  Zone District Area  onChange drill down api end //
+
   useEffect(() => {
     if (details?.id) {
+      regionOnChange({ value: details.district?.zone?.state?.region?.id });
+      stateOnChange({ value: details.district?.zone?.state?.id });
+      zoneOnChange({ value: details.district?.zone?.id });
+      districtOnChange({ value: details.district?.id});
       let obj = {
-        district_name: details.district.district_name,
-        zone: details.zone.zone_name,
-        region: details.region.region_name,
-        state: details.state.state_name,
+        district_name: details.district?.id,
+        zone: details.district?.zone?.id,
+        region: details.district?.zone?.state?.region.id,
+        state: details.district?.zone?.state.id,
         is_active: details?.is_active,
         is_block: details?.is_block,
         area_name: details.area_name,
@@ -237,10 +385,10 @@ const AddEditFormArea = () => {
   }, [details]);
 
   useEffect(() => {
-    getAllDistrict();
-    getAllStateMaster();
+    // getAllDistrict();
+    // getAllStateMaster();
     getRegionMasterList();
-    getAllZone();
+    // getAllZone();
 
     return () => {
       dispatch(setBreadCrumb([]));
@@ -250,16 +398,126 @@ const AddEditFormArea = () => {
   }, []);
 
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-      style={{ height: "calc(100vh - 160px)" }}
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="280px" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <ReactCustomSelect
+                      name="region"
+                      label=""
+                      isLoading={getRegionMasterApiIsLoading}
+                      options={selectBoxOptions?.regions || []}
+                      selectedValue={
+                        selectBoxOptions?.regions?.filter(
+                          (item) => item.value === getValues("region")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      State
+                    </Text>
+                    <ReactCustomSelect
+                      name="state"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.states || []}
+                      selectedValue={
+                        selectBoxOptions?.states?.filter(
+                          (item) => item.value === getValues("state")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        stateOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Zone
+                    </Text>
+                    <ReactCustomSelect
+                      name="zone"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.zones || []}
+                      selectedValue={
+                        selectBoxOptions?.zones?.filter(
+                          (item) => item.value === getValues("zone")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        zoneOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box></Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
+                    District
+                  </Text>{" "}
+                  <ReactCustomSelect
+                    name="district"
+                    label=""
+                    isLoading={fetchLocationDrillDownApiIsLoading}
+                    options={selectBoxOptions?.districts || []}
+                    selectedValue={
+                      selectBoxOptions?.districts?.filter(
+                        (item) => item.value === getValues("district")
+                      )[0] || {}
+                    }
+                    isClearable={false}
+                    selectType="label"
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    handleOnChange={(val) => {
+                      districtOnChange(val);
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>{" "}
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
@@ -290,98 +548,6 @@ const AddEditFormArea = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
-              <Box></Box>
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Region
-                    </Text>
-                    <CustomSelector
-                      name="region"
-                      label=""
-                      options={selectBoxOptions.regions}
-                      selectedValue={selectBoxOptions.regions.find(
-                        (opt) => opt.label === details?.region.region_name
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      State
-                    </Text>
-                    <CustomSelector
-                      name="state"
-                      label=""
-                      options={selectBoxOptions.states}
-                      selectedValue={selectBoxOptions.states?.find(
-                        (opt) => opt?.label === details?.state?.state_name
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Zone
-                    </Text>
-                    <CustomSelector
-                      name="zone"
-                      label=""
-                      options={selectBoxOptions.zones}
-                      selectedValue={selectBoxOptions.zones.find(
-                        (opt) => opt.label === details?.zone?.zone_name
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                  <Text textAlign="right" w="550px">
-                    District
-                  </Text>{" "}
-                  <CustomSelector
-                    name="district"
-                    label=""
-                    // isChecked="details?.active"
-                    options={selectBoxOptions.district}
-                    selectedValue={selectBoxOptions.district.find(
-                      (opt) => opt.label === details?.district.district_name
-                    )}
-                    isClearable={false}
-                    selectType={"value"}
-                    style={{
-                      mb: 1,
-                      mt: 1,
-                    }}
-                  />
-                </Box>
-              </MotionSlideUp>{" "}
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="4" display={{ base: "flex" }} alignItems="center">
                   <Text textAlign="right" w="550px">

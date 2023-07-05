@@ -2,14 +2,6 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "Zone Name": "zone_name",
-    isActiveFilter: false,
-    label: "Zone Name",
-    name: "zone_name",
-    placeholder: "Zone Name",
-    type: "text",
-  },
-  {
     " Region": "region__region_name",
     isActiveFilter: false,
     label: "Region ",
@@ -24,6 +16,14 @@ const filterFields = [
     name: "state__state_name",
     placeholder: "State ",
     type: "select",
+  },
+  {
+    "Zone Name": "zone_name",
+    isActiveFilter: false,
+    label: "Zone Name",
+    name: "zone_name",
+    placeholder: "Zone Name",
+    type: "text",
   },
   {
     "CREATION DATE": "created_at",
@@ -67,17 +67,17 @@ const filterFields = [
 ];
 
 const addEditFormFields = [
+  // {
+  //   name: "state",
+  //   label: "State Name",
+  //   placeholder: "State Name",
+  //   type: "select",
+  // },
   {
     name: "zone_name",
     label: "Zone Name",
     placeholder: "Zone Name",
     type: "text",
-  },
-  {
-    name: "state",
-    label: "State Name",
-    placeholder: "State Name",
-    type: "select",
   },
   // {
   //   label: "Active",

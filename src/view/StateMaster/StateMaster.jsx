@@ -94,13 +94,13 @@ const StateMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("state_name", {
-      cell: (info) => info.getValue(),
-      header: "STATE NAME",
-    }),
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
       header: "REGION NAME",
+    }),
+    columnHelper.accessor("state_name", {
+      cell: (info) => info.getValue(),
+      header: "STATE NAME",
     }),
     columnHelper.accessor("state_code", {
       cell: (info) => info.getValue(),
@@ -132,7 +132,7 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
+      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -154,7 +154,7 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col">UPDATE</Text>,
+      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
