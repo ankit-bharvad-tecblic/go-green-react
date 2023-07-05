@@ -9,11 +9,14 @@ import {
   useUpdateUserMasterMutation,
 } from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
-import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode"; 
 import { MotionSlideUp } from "../../utils/animation";
 
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 function AddEditFormUserMaster() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -91,6 +94,20 @@ function AddEditFormUserMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: "User Master",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
   return (
     // <Box bg={"white"}>

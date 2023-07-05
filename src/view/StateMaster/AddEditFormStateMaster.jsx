@@ -12,18 +12,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-  useAddZoneMasterMutation,
-  useUpdateZoneMasterMutation,
   useGetStateMasterMutation,
   useAddStateMasterMutation,
   useUpdateStateMasterMutation,
   useGetRegionMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
-import { motion } from "framer-motion";
-import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
+
+import { MotionSlideUp } from "../../utils/animation";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 const AddEditFormStateMaster = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
@@ -60,8 +61,6 @@ const AddEditFormStateMaster = () => {
     methods.reset(); // Optionally, reset the form validation state
   };
   const [getRegionMaster] = useGetRegionMasterMutation();
-  const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
-    useGetStateMasterMutation();
 
   const [addStateMaster, { isLoading: addStateMasterApiIsLoading }] =
     useAddStateMasterMutation();
@@ -148,6 +147,21 @@ const AddEditFormStateMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/state-master",
+      },
+      {
+        title: "State Master",
+        link: "/manage-location/state-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
   useEffect(() => {
@@ -157,6 +171,11 @@ const AddEditFormStateMaster = () => {
     getAllRegionMaster();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
   return (
     <Box
       bg="white"

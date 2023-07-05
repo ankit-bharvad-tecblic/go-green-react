@@ -21,7 +21,7 @@ const filterFields = [
   {
     "CREATION DATE ": "created_at",
     isActiveFilter: false,
-    label: "Creation Date ",
+    label: "Creation Date ", 
     name: "created_at",
     placeholder: "Creation Date ",
     type: "date",

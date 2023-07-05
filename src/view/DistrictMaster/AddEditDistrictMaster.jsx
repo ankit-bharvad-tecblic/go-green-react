@@ -23,10 +23,12 @@ import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
-
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 const AddEditFormDistrictMaster = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -200,12 +202,33 @@ const AddEditFormDistrictMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/district-master",
+      },
+      {
+        title: "District Master",
+        link: "/manage-location/district-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
     setAddEditFormFieldsList(addEditFormFields);
   }, [details]);
   useEffect(() => {
     getAllStateMaster();
     getRegionMasterList();
     getAllZone();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
   }, []);
 
   return (
@@ -269,7 +292,7 @@ const AddEditFormDistrictMaster = () => {
                     />
                   </Box>
                 </MotionSlideUp>
-              </Box>
+              </Box> 
 
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>

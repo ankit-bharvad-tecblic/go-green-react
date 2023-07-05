@@ -94,7 +94,7 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    columnHelper.accessor("region.region_name", {
+    columnHelper.accessor("state.region.region_name", {
       cell: (info) => info.getValue(),
       header: "Region",
     }),

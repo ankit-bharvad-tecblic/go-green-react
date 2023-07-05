@@ -17,9 +17,12 @@ import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
 import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { useDispatch } from "react-redux";
 
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -154,12 +157,32 @@ const AddEditZoneMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/zone-master",
+      },
+      {
+        title: "Zone Master",
+        link: "/manage-location/zone-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
   useEffect(() => {
     getRegionMasterList();
     getAllStateMaster();
     // setAddEditFormFieldsList(addEditFormFields);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
   }, []);
 
   return (
@@ -217,7 +240,7 @@ const AddEditZoneMaster = () => {
                       label=""
                       options={selectBoxOptions.regions}
                       selectedValue={selectBoxOptions.regions.find(
-                        (opt) => opt.label === details?.region.region_name
+                        (opt) => opt.label === details?.state.region.region_name
                       )}
                       isClearable={false}
                       selectType={"value"}

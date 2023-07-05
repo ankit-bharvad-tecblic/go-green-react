@@ -73,7 +73,7 @@ function RegionMaster() {
           } else {
             return item;
           }
-        });
+        }); 
 
         console.log("updatedData", updatedData);
 
