@@ -915,7 +915,7 @@ const Pwh = () => {
       }
 
       console.log("Success:", response);
-      setData(response?.results || []);
+      // setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -2098,7 +2098,6 @@ const Pwh = () => {
                                           {index + 1}
                                         </Box>
                                       </Box>
-
                                       {/* =============== Bank Name ============= */}
                                       <Box w="210px">
                                         <Text
@@ -2151,7 +2150,6 @@ const Pwh = () => {
                                           </Text>
                                         </Box>
                                       </Box>
-
                                       {/* =============== Branch Name ============= */}
                                       <Box w="210px">
                                         <Text

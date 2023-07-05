@@ -43,7 +43,15 @@ import {
 import CustomTextArea from "../../components/Elements/CustomTextArea";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
-import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
+import {
+  useFetchLocationDrillDownMutation,
+  useGetSecurityGuardDayShiftMutation,
+  useGetSecurityGuardNightShiftMutation,
+  useGetSupervisorDayShiftMutation,
+  useGetSupervisorNightShiftMutation,
+  useSaveAsDraftMutation,
+} from "../../features/warehouse-proposal.slice";
+import moment from "moment";
 
 const commonStyle = {
   mt: 2,
@@ -106,6 +114,7 @@ const formFieldsName = {
     // avg_rent: "avg_rent",
     rent: "rent",
     total_rent_per_month: "total_rent_per_month",
+    security_deposit_month: "security_deposit_month",
     security_deposit_amt: "security_deposit_amt",
     advance_rent: "advance_rent",
     advance_rent_month: "advance_rent_month",
@@ -131,10 +140,10 @@ const formFieldsName = {
       address: "address", //not found
       wms_charges: "wms_charges", //not found
       billing_cycle: "billing_cycle", //not found
-      reservation_qty: "reservation_qty", //not found
-      reservation_period: "reservation_period", //not found
-      reservation_start_date: "reservation_start_date", //not found
-      reservation_end_date: "reservation_end_date", //not found
+      // reservation_qty: "reservation_qty", //not found
+      // reservation_period: "reservation_period", //not found
+      // reservation_start_date: "reservation_start_date", //not found
+      // reservation_end_date: "reservation_end_date", //not found
     },
     intention_letter: "intention_letter", //not found
     remarks: "remarks", //not found
@@ -154,11 +163,7 @@ const schema = yup.object().shape({
   is_factory_permise: yup
     .string()
     .required("Warehouse in factory premises is required"),
-  standard_capacity: yup.string().when("is_factory_permise", {
-    is: (value) => value === "true",
-    then: () => yup.string().required("Standard capacity is required"),
-    otherwise: () => yup.string(),
-  }),
+  standard_capacity: yup.string().required("Standard capacity is required"),
   currrent_capacity: yup
     .string()
     .required("Current warehouse capacity is required"),
@@ -190,17 +195,29 @@ const schema = yup.object().shape({
   commodity_inward_type: yup
     .string()
     .required("Commodity inward type is required"),
-  prestack_commodity: yup.string().required("Pre stack commodity is required"),
-  prestack_commodity_qty: yup
-    .string()
-    .required("Pre stack commodity quantity is required"),
+  prestack_commodity: yup.string().when("commodity_inward_type", {
+    is: (value) => value === "PS",
+    then: () => yup.string().required("Pre stack commodity is required"),
+    otherwise: () => yup.string(),
+  }),
+  prestack_commodity_qty: yup.number().when("commodity_inward_type", {
+    is: (value) => value === "PS",
+    then: () =>
+      yup.string().required("Pre stack commodity quantity is required"),
+    otherwise: () => yup.string(),
+  }),
   is_funding_required: yup.string().required("Funding required is required"),
-  bank_details: yup.array().of(
-    yup.object().shape({
-      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
-      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
-    })
-  ),
+  bank_details: yup.array().when("is_funding_required", {
+    is: (value) => value === "true",
+    then: () =>
+      yup.array().of(
+        yup.object().shape({
+          bank_name: yup.string().trim().required("Bank name is required"),
+          branch_name: yup.string().trim().required("Branch name is required"),
+        })
+      ),
+    otherwise: () => yup.array(),
+  }),
   warehouse_owner_details: yup.array().of(
     yup.object().shape({
       owner_name: yup.string().trim() /*.required("Owner name is required")*/,
@@ -212,10 +229,13 @@ const schema = yup.object().shape({
   // min_rent: yup.string().required("Minimum rent is required"),
   // max_rent: yup.string().required("Maximum rent is required"),
   // avg_rent: yup.string().required("Avg rent is required"),
-  rent: yup.string().required("rent is required"),
+  rent: yup.number().required("Rent is required"),
   total_rent_per_month: yup
     .string()
     .required("Total rent payable month is required"),
+  security_deposit_month: yup
+    .string()
+    .required("Security deposit (Month) is required"),
   security_deposit_amt: yup
     .string()
     .required("Security deposit amount is required"),
@@ -232,28 +252,29 @@ const schema = yup.object().shape({
   notice_period_month: yup.string().required("Notice period is required"),
   wms_charges_according_to_commodity: yup.array(),
   // .required("WMS Charges according to commodity is required"),
-  projection_plan_file_path: yup.string().required("Your project is required"),
+  projection_plan_file_path:
+    yup.string() /*.required("Your project is required")*/,
   client_list: yup.array().of(
     yup.object().shape({
-      client_type: yup.string() /*.required("Client type is required")*/,
-      client_name: yup.string() /*.required("Client name is required")*/,
-      mobile_number: yup.string() /*.required("Mobile number is required")*/,
-      region: yup.string() /*.required("Region is required")*/,
-      state: yup.string() /*.required("State is required")*/,
-      zone: yup.string() /*.required(" Zone is required")*/,
-      district: yup.string() /*.required("District is required")*/,
-      area: yup.string() /*.required("Area is required")*/,
-      address: yup.string() /*.required("Address is required")*/,
-      wms_charges: yup.string() /*.required("wms charges is required")*/,
-      billing_cycle: yup.string() /*.required("billing cycle is required")*/,
-      reservation_qty:
-        yup.string() /*.required("reservation qty is required")*/,
+      client_type: yup.string().required("Client type is required"),
+      client_name: yup.string().required("Client name is required"),
+      mobile_number: yup.string().required("Mobile number is required"),
+      region: yup.string().required("Region is required"),
+      state: yup.string().required("State is required"),
+      zone: yup.string().required(" Zone is required"),
+      district: yup.string().required("District is required"),
+      area: yup.string().required("Area is required"),
+      address: yup.string().required("Address is required"),
+      wms_charges: yup.string().required("wms charges is required"),
+      billing_cycle: yup.string().required("billing cycle is required"),
+      /*reservation_qty:
+        yup.string().required("reservation qty is required"),
       reservation_period:
-        yup.string() /*.required("reservation period is required")*/,
+        yup.string().required("reservation period is required"),
       reservation_start_date:
-        yup.string() /*.required("reservation start date is required")*/,
+        yup.string().required("reservation start date is required"),
       reservation_end_date:
-        yup.string() /*.required("reservation end date is required")*/,
+        yup.string().required("reservation end date is required"),*/
     })
   ),
   intention_letter: yup.string() /*.required("Intention letter is required")*/,
@@ -267,6 +288,13 @@ const Wms = () => {
     banks: [],
     branch: [],
   });
+
+  const [selected, setSelected] = useState({});
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
+  const [clientLocationDrillDownState, setClientLocationDrillDownState] =
+    useState([{ states: [], zones: [], districts: [], areas: [] }]);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -288,10 +316,10 @@ const Wms = () => {
           address: "",
           wms_charges: "",
           billing_cycle: "",
-          reservation_qty: "",
-          reservation_period: "",
-          reservation_start_date: "",
-          reservation_end_date: "",
+          // reservation_qty: "",
+          // reservation_period: "",
+          // reservation_start_date: "",
+          // reservation_end_date: "",
         },
       ],
     },
@@ -341,10 +369,10 @@ const Wms = () => {
       address: "",
       wms_charges: "",
       billing_cycle: "",
-      reservation_qty: "",
-      reservation_period: "",
-      reservation_start_date: "",
-      reservation_end_date: "",
+      // reservation_qty: "",
+      // reservation_period: "",
+      // reservation_start_date: "",
+      // reservation_end_date: "",
     });
   };
 
@@ -374,20 +402,16 @@ const Wms = () => {
     console.log("warehouse_owner_details --> ", warehouse_owner_details);
   }, [warehouse_owner_details]);
 
+  // Region State  Zone District Area  onChange drill down api start //
+
+  // location drill down api hook
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
   const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
     useGetRegionMasterMutation();
-
-  const [getStateMaster, { isLoading: getStateApiIsLoading }] =
-    useGetStateMasterMutation();
-
-  const [getZoneMaster, { isLoading: getZoneApiIsLoading }] =
-    useGetZoneMasterMutation();
-
-  const [getDistrictMaster, { isLoading: getDistrictApiIsLoading }] =
-    useGetDistrictMasterMutation();
-
-  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
-    useGetAreaMasterMutation();
 
   const getRegionMasterList = async () => {
     try {
@@ -407,77 +431,326 @@ const Wms = () => {
     }
   };
 
-  const getStateList = async () => {
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.wms_warehouse_details.region, val?.value, {
+      shouldValidate: true,
+    });
+    setSelected((prev) => ({ ...prev, region: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      state: {},
+      zone: {},
+      district: {},
+      area: {},
+    }));
+    setValue(formFieldsName.wms_warehouse_details.state, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.zone, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      region: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      region: val?.value,
+    };
+
     try {
-      const response = await getStateMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          states: response?.results.map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-        }));
-      }
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state?.map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getZonesList = async () => {
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.wms_warehouse_details.state, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, state: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      zone: {},
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.wms_warehouse_details.zone, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      state: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      state: val?.value,
+    };
+
     try {
-      const response = await getZoneMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          zones: response?.results.map(({ zone_name, id }) => ({
-            label: zone_name,
-            value: id,
-          })),
-        }));
-      }
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        zones: response?.zone?.map(({ zone_name, id }) => ({
+          label: zone_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getDistrictMasterList = async () => {
+  const zoneOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.wms_warehouse_details.zone, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, zone: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.wms_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.wms_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      zone: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      zone: val?.value,
+    };
+
     try {
-      const response = await getDistrictMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          districts: response?.results.map(({ district_name, id }) => ({
-            label: district_name,
-            value: id,
-          })),
-        }));
-      }
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: response?.district?.map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const getAreaMasterList = async () => {
+  const districtOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.wms_warehouse_details.district, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, district: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      area: {},
+    }));
+
+    setValue(formFieldsName.wms_warehouse_details.area, val?.value, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      ...prev,
+      district: val?.value,
+    }));
+
+    const query = {
+      ...locationDrillDownState,
+      district: val?.value,
+    };
+
     try {
-      const response = await getAreaMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          areas: response?.results.map(({ area_name, id }) => ({
-            label: area_name,
-            value: id,
-          })),
-        }));
-      }
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: response?.area?.map(({ area_name, id }) => ({
+          label: area_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const areaOnChange = (val) => {
+    setSelected((prev) => ({ ...prev, area: val }));
+    setValue(formFieldsName.wms_warehouse_details.area, val?.value, {
+      shouldValidate: true,
+    });
+  };
+
+  // Region State  Zone District Area  onChange drill down api end //
+
+  // hire api start
+
+  const [
+    getSupervisorDayShift,
+    { isLoading: getSupervisorDayShiftApiIsLoading },
+  ] = useGetSupervisorDayShiftMutation();
+
+  const [
+    getSupervisorNightShift,
+    { isLoading: getSupervisorNightShiftApiIsLoading },
+  ] = useGetSupervisorNightShiftMutation();
+
+  const [
+    getSecurityGuardDayShift,
+    { isLoading: getSecurityGuardDayShiftApiIsLoading },
+  ] = useGetSecurityGuardDayShiftMutation();
+
+  const [
+    getSecurityGuardNightShift,
+    { isLoading: getSecurityGuardNightShiftApiIsLoading },
+  ] = useGetSecurityGuardNightShiftMutation();
+
+  const fetchSupervisorDayShift = async () => {
+    try {
+      const response = await getSupervisorDayShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorDayShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSupervisorNightShift = async () => {
+    try {
+      const response = await getSupervisorNightShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorNightShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSecurityGuardDayShift = async () => {
+    try {
+      const response = await getSecurityGuardDayShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardDayShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSecurityGuardNightShift = async () => {
+    try {
+      const response = await getSecurityGuardNightShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardNightShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // hire api end
 
   // second accordian function start
 
@@ -546,6 +819,258 @@ const Wms = () => {
 
   //second accordian function end
 
+  // client list drill down api start
+  const regionOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`,
+      val?.value,
+      {
+        shouldValidate: true,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.states = response?.state?.map(({ state_name, id }) => ({
+        label: state_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.zones = response?.zone?.map(({ zone_name, id }) => ({
+        label: zone_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+      ),
+      zone: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.districts = response?.district?.map(({ district_name, id }) => ({
+        label: district_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+      ),
+      zone: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`
+      ),
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      let location = clientLocationDrillDownState[index];
+
+      location.areas = response?.area?.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      }));
+
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
+        location,
+        ...item.slice(index + 1),
+      ]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const areaOnClientChange = (val, index) => {
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+  };
+
+  // client list drill down api end
+
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
 
@@ -612,6 +1137,7 @@ const Wms = () => {
           // avg_rent: getValues("avg_rent"),
           rent: getValues("rent"),
           total_rent_per_month: getValues("total_rent_per_month"),
+          security_deposit_month: getValues("security_deposit_month"),
           security_deposit_amt: getValues("security_deposit_amt"),
           advance_rent: getValues("advance_rent"),
           advance_rent_month: getValues("advance_rent_month"),
@@ -649,13 +1175,13 @@ const Wms = () => {
 
   useEffect(() => {
     getRegionMasterList();
-    getStateList();
-    getZonesList();
-    getDistrictMasterList();
-    getAreaMasterList();
     getCommodityMasterList();
     getBankMasterList();
     getBranchMasterList();
+    fetchSupervisorDayShift();
+    fetchSupervisorNightShift();
+    fetchSecurityGuardDayShift();
+    fetchSecurityGuardNightShift();
   }, []);
 
   return (
@@ -753,21 +1279,12 @@ const Wms = () => {
                                     label=""
                                     isLoading={getRegionMasterApiIsLoading}
                                     options={selectBoxOptions?.regions || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.region}
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_warehouse_details
-                                          .region,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      regionOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -793,22 +1310,15 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.state}
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: "100%" }}
-                                    isLoading={getStateApiIsLoading}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_warehouse_details
-                                          .state,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      stateOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -834,22 +1344,15 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.zones || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.zone}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getZoneApiIsLoading}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_warehouse_details
-                                          .zone,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      zoneOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -857,7 +1360,6 @@ const Wms = () => {
                             </Box>
                             {/* -------------- District -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -876,22 +1378,15 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.district}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getDistrictApiIsLoading}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_warehouse_details
-                                          .district,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      districtOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -918,22 +1413,15 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.area}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getAreaMasterApiIsLoading}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_warehouse_details
-                                          .area,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      areaOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -1077,40 +1565,33 @@ const Wms = () => {
                               </Grid>
                             </Box>
                             {/* --------------  standard_capacity (in MT)-------------- */}
-                            {getValues(
-                              formFieldsName.wms_warehouse_details
-                                .is_factory_permise
-                            ) === "true" ? (
-                              <Box mt={commonStyle.mt}>
-                                <Grid
-                                  textAlign="right"
-                                  alignItems="center"
-                                  templateColumns="repeat(4, 1fr)"
-                                  gap={4}
-                                >
-                                  <GridItem colSpan={1}>
-                                    {" "}
-                                    <Text textAlign="right">
-                                      Standard Capacity (in MT)
-                                    </Text>{" "}
-                                  </GridItem>
-                                  <GridItem colSpan={1}>
-                                    <CustomInput
-                                      name={
-                                        formFieldsName.wms_warehouse_details
-                                          .standard_capacity
-                                      }
-                                      placeholder=" Standard Capacity (in MT)"
-                                      type="text"
-                                      label=""
-                                      style={{ w: "100%" }}
-                                    />
-                                  </GridItem>
-                                </Grid>
-                              </Box>
-                            ) : (
-                              <></>
-                            )}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                alignItems="center"
+                                templateColumns="repeat(4, 1fr)"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  {" "}
+                                  <Text textAlign="right">
+                                    Standard Capacity (in MT)
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_warehouse_details
+                                        .standard_capacity
+                                    }
+                                    placeholder=" Standard Capacity (in MT)"
+                                    type="text"
+                                    label=""
+                                    style={{ w: "100%" }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
                             {/* --------------  currrent_capacity (in MT)-------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
@@ -1313,22 +1794,26 @@ const Wms = () => {
                                           .supervisor_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.superVisorDay}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
+                                      isLoading={
+                                        getSupervisorDayShiftApiIsLoading
+                                      }
                                       style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.wms_warehouse_details
                                             .supervisor_day_shift,
@@ -1354,7 +1839,6 @@ const Wms = () => {
                             </Box>
                             {/* -------------- supervisor_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -1367,7 +1851,6 @@ const Wms = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Box
                                     display="flex"
                                     alignItems="center"
@@ -1379,22 +1862,26 @@ const Wms = () => {
                                           .supervisor_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorNightShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected.superVisorNight}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
+                                      isLoading={
+                                        getSupervisorNightShiftApiIsLoading
+                                      }
                                       style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorNight: val,
+                                        }));
                                         setValue(
                                           formFieldsName.wms_warehouse_details
                                             .supervisor_night_shift,
@@ -1447,22 +1934,26 @@ const Wms = () => {
                                           .security_guard_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.securityGuardDay}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
+                                      isLoading={
+                                        getSecurityGuardDayShiftApiIsLoading
+                                      }
                                       style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.wms_warehouse_details
                                             .security_guard_day_shift,
@@ -1515,18 +2006,24 @@ const Wms = () => {
                                           .security_guard_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardNightShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={
+                                        selected?.securityGuardNight
+                                      }
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
+                                      isLoading={
+                                        getSecurityGuardNightShiftApiIsLoading
+                                      }
                                       style={{ w: "100%" }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardNight: val,
+                                        }));
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
@@ -1558,7 +2055,6 @@ const Wms = () => {
                               </Grid>
                             </Box>
                           </Box>
-
                           <Box
                             display="flex"
                             justifyContent="flex-end"
@@ -1612,16 +2108,7 @@ const Wms = () => {
                         </AccordionButton>
 
                         <AccordionPanel bg="white" mt="5" pb={4}>
-                          <Box
-                          //border="1px"
-                          // w={{
-                          //   base: "100%",
-                          //   sm: "100%",
-                          //   md: "100%",
-                          //   lg: "100%",
-                          //   xl: "90%",
-                          // }}
-                          >
+                          <Box>
                             {/* ================ Expected Commodity Name ================= */}
                             <Box>
                               <Grid
@@ -1643,7 +2130,7 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.community || []}
-                                    selectedValue={[]}
+                                    selectedValue={selected.expectedCommodity}
                                     isClearable={false}
                                     isMultipleSelect={true}
                                     isLoading={getCommodityMasterApiIsLoading}
@@ -1653,6 +2140,10 @@ const Wms = () => {
                                         "selectedOption @@@@@@@@@@@------> ",
                                         val
                                       );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        expectedCommodity: val,
+                                      }));
                                       setValue(
                                         formFieldsName.wms_commodity_details
                                           .expected_commodity,
@@ -1687,18 +2178,18 @@ const Wms = () => {
                                     options={[
                                       {
                                         label: "Fresh Stock",
-                                        value: "Fresh Stock",
+                                        value: "FS",
                                       },
                                       {
                                         label: "Pre-Stacked",
-                                        value: "Pre-Stacked",
+                                        value: "PS",
                                       },
                                       {
                                         label: "Take Over",
-                                        value: "Take Over",
+                                        value: "TO",
                                       },
                                     ]}
-                                    selectedValue={{}}
+                                    selectedValue={selected.commodityInwardType}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -1708,6 +2199,10 @@ const Wms = () => {
                                         "selectedOption @@@@@@@@@@@------> ",
                                         val
                                       );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        commodityInwardType: val,
+                                      }));
                                       setValue(
                                         formFieldsName.wms_commodity_details
                                           .commodity_inward_type,
@@ -1719,75 +2214,94 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* ================ Pre-Stack Commodity ================= */}
-                            <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                templateColumns="repeat(4, 1fr)"
-                                alignItems="center"
-                                gap={4}
-                              >
-                                <GridItem colSpan={1}>
-                                  <Text textAlign="right">
-                                    Pre-Stack Commodity
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                  <ReactCustomSelect
-                                    name={
-                                      formFieldsName.wms_commodity_details
-                                        .prestack_commodity
-                                    }
-                                    label=""
-                                    options={selectBoxOptions?.community || []}
-                                    selectedValue={{}}
-                                    isClearable={false}
-                                    selectType="label"
-                                    isLoading={getCommodityMasterApiIsLoading}
-                                    style={{ w: "100%" }}
-                                    handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_commodity_details
-                                          .prestack_commodity,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
-                            {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
-                            <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                templateColumns="repeat(4, 1fr)"
-                                alignItems="center"
-                                gap={4}
-                              >
-                                <GridItem colSpan={1}>
-                                  <Text textAlign="right">
-                                    Pre-Stack Commodity Quantity(MT)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_commodity_details
-                                        .prestack_commodity_qty
-                                    }
-                                    placeholder="Pre-Stack Commodity Quantity(MT)"
-                                    type="number"
-                                    label=""
-                                    style={{ w: "100%" }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
+                            {getValues(
+                              formFieldsName.wms_commodity_details
+                                .commodity_inward_type
+                            ) === "PS" ? (
+                              <>
+                                {/* ================ Pre-Stack Commodity ================= */}
+                                <Box mt={commonStyle.mt}>
+                                  <Grid
+                                    textAlign="right"
+                                    templateColumns="repeat(4, 1fr)"
+                                    alignItems="center"
+                                    gap={4}
+                                  >
+                                    <GridItem colSpan={1}>
+                                      <Text textAlign="right">
+                                        Pre-Stack Commodity
+                                      </Text>{" "}
+                                    </GridItem>
+                                    <GridItem colSpan={1}>
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.wms_commodity_details
+                                            .prestack_commodity
+                                        }
+                                        label=""
+                                        options={
+                                          selectBoxOptions?.community || []
+                                        }
+                                        selectedValue={
+                                          selected.prestackCommodity
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={
+                                          getCommodityMasterApiIsLoading
+                                        }
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setSelected((prev) => ({
+                                            ...prev,
+                                            prestackCommodity: val,
+                                          }));
+                                          setValue(
+                                            formFieldsName.wms_commodity_details
+                                              .prestack_commodity,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                  </Grid>
+                                </Box>
+                                {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
+                                <Box mt={commonStyle.mt}>
+                                  <Grid
+                                    textAlign="right"
+                                    templateColumns="repeat(4, 1fr)"
+                                    alignItems="center"
+                                    gap={4}
+                                  >
+                                    <GridItem colSpan={1}>
+                                      <Text textAlign="right">
+                                        Pre-Stack Commodity Quantity(MT)
+                                      </Text>{" "}
+                                    </GridItem>
+                                    <GridItem colSpan={1}>
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.wms_commodity_details
+                                            .prestack_commodity_qty
+                                        }
+                                        placeholder="Pre-Stack Commodity Quantity(MT)"
+                                        type="number"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                  </Grid>
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
                             {/* ================ Funding required ================= */}
                             <Box mt={commonStyle.mt}>
                               <Grid
@@ -1881,30 +2395,15 @@ const Wms = () => {
                                           options={
                                             selectBoxOptions?.banks || []
                                           }
-                                          // selectedValue={{value:bank_details_fields[index].bank_name}}
-                                          // selectedValue={{
-                                          //   label: "Fresh Stock",
-                                          //   value: 1,
-                                          // }}
-                                          // selectedValue={
-                                          //   [
-                                          //     {
-                                          //       label: "Fresh Stock",
-                                          //       value: 1,
-                                          //     },
-                                          //     {
-                                          //       label: "Pre-stock",
-                                          //       value: 2,
-                                          //     },
-                                          //     {
-                                          //       label: "Take over",
-                                          //       value: 3,
-                                          //     },
-                                          //   ].filter(
-                                          //     (d) =>
-                                          //       d.value === item[index].bank_name
-                                          //   )[0]
-                                          // }
+                                          selectedValue={
+                                            selectBoxOptions?.banks?.filter(
+                                              (item) =>
+                                                item.value ===
+                                                getValues(
+                                                  `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.bank_name}`
+                                                )
+                                            )[0] || {}
+                                          }
                                           isClearable={false}
                                           selectType="label"
                                           isLoading={getBankMasterApiIsLoading}
@@ -1933,9 +2432,15 @@ const Wms = () => {
                                           options={
                                             selectBoxOptions?.branch || []
                                           }
-                                          selectedValue={{
-                                            value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
-                                          }}
+                                          selectedValue={
+                                            selectBoxOptions?.branch?.filter(
+                                              (item) =>
+                                                item.value ===
+                                                getValues(
+                                                  `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`
+                                                )
+                                            )[0] || {}
+                                          }
                                           isClearable={false}
                                           selectType="label"
                                           isLoading={
@@ -2082,7 +2587,7 @@ const Wms = () => {
                                       </Text>{" "}
                                       <CustomInput
                                         name={`warehouse_owner_details.${index}.${formFieldsName.wms_commercial_details.warehouse_owner_details.owner_name}`}
-                                        placeholder="Warehouse Name"
+                                        placeholder="Owner Name"
                                         type="text"
                                         label=""
                                         style={{ w: "100%" }}
@@ -2096,20 +2601,21 @@ const Wms = () => {
                                       <CustomInput
                                         name={`warehouse_owner_details.${index}.${formFieldsName.wms_commercial_details.warehouse_owner_details.mobile_no}`}
                                         placeholder="Mobile No"
-                                        type="text"
+                                        type="number"
                                         label=""
                                         style={{ w: "100%" }}
                                       />
                                     </GridItem>
                                     {/* =============== Address ============= */}
-                                    <GridItem colSpan={2}>
+                                    <GridItem colSpan={3}>
                                       <Text fontWeight="bold" textAlign="left">
                                         Address
                                       </Text>{" "}
-                                      <CustomInput
+                                      <CustomTextArea
                                         name={`warehouse_owner_details.${index}.${formFieldsName.wms_commercial_details.warehouse_owner_details.address}`}
                                         placeholder="Address"
                                         type="text"
+                                        rowLength={1}
                                         label=""
                                         style={{ w: "100%" }}
                                       />
@@ -2122,13 +2628,13 @@ const Wms = () => {
                                       <CustomInput
                                         name={`warehouse_owner_details.${index}.${formFieldsName.wms_commercial_details.warehouse_owner_details.rent}`}
                                         placeholder="Rent"
-                                        type="text"
+                                        type="number"
                                         label=""
                                         style={{ w: "100%" }}
                                       />
                                     </GridItem>
                                     {/* =============== Add / Delete ============= */}
-                                    <GridItem colSpan={3}>
+                                    <GridItem colSpan={2}>
                                       <Flex
                                         gap="10px"
                                         justifyContent="end"
@@ -2164,109 +2670,7 @@ const Wms = () => {
                             </Grid>
                           </Box>
 
-                          <Box
-                          //border="1px"
-                          // w={{
-                          //   base: "100%",
-                          //   sm: "100%",
-                          //   md: "100%",
-                          //   lg: "100%",
-                          //   xl: "90%",
-                          // }}
-                          >
-                            {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
-                            {/* <Box mt={commonStyle.mt}>
-                              <Grid
-                                // textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                justifyContent="flex-start"
-                                gap={4}
-                              >
-                                <GridItem colSpan={1}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Minimum Rent(per/sq ft/month)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_commercial_details
-                                        .min_rent
-                                    }
-                                    placeholder="minimum Rent(per/sq ft/month)"
-                                    type="text"
-                                    label=""
-                                    style={{
-                                      w: "100%",
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box> */}
-                            {/* --------------Maximum Rent(per/sq ft/month)-------------- */}
-                            {/* <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 2fr)"
-                                gap={4}
-                              >
-                                <GridItem colSpan={1}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Maximum Rent(per/sq ft/month)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_commercial_details
-                                        .max_rent
-                                    }
-                                    placeholder="Warehouse Name"
-                                    type="text"
-                                    label=""
-                                    style={{
-                                      w: "100%",
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box> */}
-
-                            {/* --------------Avg Rent(per/sq ft/month)-------------- */}
-                            {/* <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 2fr)"
-                                gap={4}
-                              >
-                                <GridItem colSpan={1}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Avg Rent(per/sq ft/month)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={1}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.wms_commercial_details
-                                        .avg_rent
-                                    }
-                                    placeholder="Warehouse Name"
-                                    type="text"
-                                    label=""
-                                    style={{
-                                      w: "100%",
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box> */}
-
+                          <Box>
                             {/* -------------- Rent (per/sq ft/month)-------------- */}
                             <Box mt={commonStyle.mt}>
                               <Grid
@@ -2276,7 +2680,6 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">
                                     Rent (per/sq ft/month)
                                   </Text>{" "}
@@ -2286,8 +2689,8 @@ const Wms = () => {
                                     name={
                                       formFieldsName.wms_commercial_details.rent
                                     }
-                                    placeholder="Warehouse Name"
-                                    type="text"
+                                    placeholder="Rent (per/sq ft/month)"
+                                    type="number"
                                     label=""
                                     style={{
                                       w: "100%",
@@ -2313,7 +2716,6 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">
                                     Total rent payable (per month)
                                   </Text>{" "}
@@ -2325,8 +2727,89 @@ const Wms = () => {
                                         .total_rent_per_month
                                     }
                                     placeholder="Total rent payable (per month)"
-                                    type="text"
+                                    type="number"
                                     label=""
+                                    onChange={(e) => {
+                                      setValue(
+                                        formFieldsName.wms_commercial_details
+                                          .total_rent_per_month,
+                                        e.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.wms_commercial_details
+                                            .security_deposit_month
+                                        )
+                                      ) {
+                                        setValue(
+                                          formFieldsName.wms_commercial_details
+                                            .security_deposit_amt,
+                                          getValues(
+                                            formFieldsName
+                                              .wms_commercial_details
+                                              .security_deposit_month
+                                          ) * e.target.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
+                                    style={{
+                                      w: "100%",
+                                    }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+
+                            {/* -------------- Security deposit (Month) -------------- */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                // textAlign="right"
+                                alignItems="center"
+                                templateColumns="repeat(4, 1fr)"
+                                justifyContent="flex-start"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">
+                                    Security deposit (Month)
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <CustomInput
+                                    name={
+                                      formFieldsName.wms_commercial_details
+                                        .security_deposit_month
+                                    }
+                                    placeholder="Security deposit(Month)"
+                                    type="number"
+                                    label=""
+                                    onChange={(e) => {
+                                      setValue(
+                                        formFieldsName.wms_commercial_details
+                                          .security_deposit_month,
+                                        e.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.wms_commercial_details
+                                            .total_rent_per_month
+                                        )
+                                      ) {
+                                        setValue(
+                                          formFieldsName.wms_commercial_details
+                                            .security_deposit_amt,
+                                          getValues(
+                                            formFieldsName
+                                              .wms_commercial_details
+                                              .total_rent_per_month
+                                          ) * e.target.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
                                     style={{
                                       w: "100%",
                                     }}
@@ -2345,7 +2828,6 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">
                                     Security deposit amount
                                   </Text>{" "}
@@ -2356,9 +2838,14 @@ const Wms = () => {
                                       formFieldsName.wms_commercial_details
                                         .security_deposit_amt
                                     }
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .security_deposit_amt
+                                    )}
                                     placeholder="Security deposit amount"
                                     type="text"
                                     label=""
+                                    InputDisabled={true}
                                     style={{
                                       w: "100%",
                                     }}
@@ -2484,7 +2971,7 @@ const Wms = () => {
                                         value: "Not applicable",
                                       },
                                     ]}
-                                    selectedValue={{}}
+                                    selectedValue={selected.gst}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -2494,6 +2981,10 @@ const Wms = () => {
                                         "selectedOption @@@@@@@@@@@------> ",
                                         val
                                       );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        gst: val,
+                                      }));
                                       setValue(
                                         formFieldsName.wms_commercial_details
                                           .gst,
@@ -2516,7 +3007,6 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">
                                     Commencement Date
                                   </Text>{" "}
@@ -2531,6 +3021,40 @@ const Wms = () => {
                                     placeholder="Commencement Date"
                                     type="date"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .commencement_date
+                                    )}
+                                    onChange={(val) => {
+                                      setValue(
+                                        formFieldsName.wms_commercial_details
+                                          .commencement_date,
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.wms_commercial_details
+                                            .agreement_period_month
+                                        )
+                                      ) {
+                                        setValue(
+                                          formFieldsName.wms_commercial_details
+                                            .expiry_date,
+                                          moment(val.target.value)
+                                            .add(
+                                              getValues(
+                                                formFieldsName
+                                                  .wms_commercial_details
+                                                  .agreement_period_month
+                                              ),
+                                              "months"
+                                            )
+                                            .format("DD/MM/YYYY"),
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
                                     style={{
                                       w: "100%",
                                     }}
@@ -2549,13 +3073,11 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">
                                     Agreement period (Month)
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2564,6 +3086,39 @@ const Wms = () => {
                                     placeholder=" Agreement period (Month)"
                                     type="text"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .agreement_period_month
+                                    )}
+                                    onChange={(val) => {
+                                      setValue(
+                                        formFieldsName.wms_commercial_details
+                                          .agreement_period_month,
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.wms_commercial_details
+                                            .commencement_date
+                                        )
+                                      ) {
+                                        setValue(
+                                          formFieldsName.wms_commercial_details
+                                            .expiry_date,
+                                          moment(
+                                            getValues(
+                                              formFieldsName
+                                                .wms_commercial_details
+                                                .commencement_date
+                                            )
+                                          )
+                                            .add(val.target.value, "months")
+                                            .format("DD/MM/YYYY"),
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
                                     style={{
                                       w: "100%",
                                     }}
@@ -2582,13 +3137,9 @@ const Wms = () => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Expiry Date
-                                  </Text>{" "}
+                                  <Text textAlign="right">Expiry Date</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <CustomInput
                                     name={
                                       formFieldsName.wms_commercial_details
@@ -2597,6 +3148,11 @@ const Wms = () => {
                                     placeholder="Expiry Date"
                                     type="text"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .expiry_date
+                                    )}
+                                    InputDisabled={true}
                                     style={{
                                       w: "100%",
                                     }}
@@ -2662,25 +3218,13 @@ const Wms = () => {
                                     }
                                     label=""
                                     isMultipleSelect="true"
-                                    selectedValue={getValues(
-                                      "expected_commodity"
-                                    )}
+                                    options={selectBoxOptions?.community || []}
+                                    selectedValue={selected.expectedCommodity}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
                                     style={{ w: "100%" }}
-                                    handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.wms_commercial_details
-                                          .wms_charges_according_to_commodity,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
-                                    }}
+                                    handleOnChange={(val) => {}}
                                   />
                                 </GridItem>
                               </Grid>
@@ -2705,7 +3249,8 @@ const Wms = () => {
                                   {" "}
                                   <CustomFileInput
                                     name={
-                                      formFieldsName.wms_commercial_details.rent
+                                      formFieldsName.wms_commercial_details
+                                        .projection_plan_file_path
                                     }
                                     // placeholder="Warehouse Name"
                                     type="text"
@@ -2812,7 +3357,24 @@ const Wms = () => {
                                             value: "Retail",
                                           },
                                         ]}
-                                        selectedValue={{}}
+                                        selectedValue={
+                                          [
+                                            {
+                                              label: "Corporate",
+                                              value: "Corporate",
+                                            },
+                                            {
+                                              label: "Retail",
+                                              value: "Retail",
+                                            },
+                                          ]?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
@@ -2838,6 +3400,16 @@ const Wms = () => {
                                       <CustomInput
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`}
                                         placeholder="client name"
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                         type="text"
                                         label=""
                                         style={{ w: "100%" }}
@@ -2853,6 +3425,16 @@ const Wms = () => {
                                         placeholder="mobile number"
                                         type="text"
                                         label=""
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                         style={{ w: "100%" }}
                                       />
                                     </GridItem>
@@ -2861,35 +3443,24 @@ const Wms = () => {
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          selectBoxOptions?.regions || []
+                                        }
+                                        selectedValue={
+                                          selectBoxOptions?.regions?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
+                                          regionOnClientChange(val, index);
                                         }}
                                       />
                                     </GridItem>
@@ -2898,35 +3469,27 @@ const Wms = () => {
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.states || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.states?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
+                                          stateOnClientChange(val, index);
                                         }}
                                       />
                                     </GridItem>
@@ -2935,35 +3498,27 @@ const Wms = () => {
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.zones || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.zones?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
+                                          zoneOnClientChange(val, index);
                                         }}
                                       />
                                     </GridItem>
@@ -2972,35 +3527,27 @@ const Wms = () => {
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.districts || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.districts?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
+                                          districtOnClientChange(val, index);
                                         }}
                                       />
                                     </GridItem>
@@ -3009,46 +3556,49 @@ const Wms = () => {
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`}
                                         label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={{}}
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.areas || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.areas?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
+                                          areaOnClientChange(val, index);
                                         }}
                                       />
                                     </GridItem>
-                                    <GridItem>
+                                    <GridItem colSpan={{ base: 1, sm: 2 }}>
                                       <Text textAlign="left"> Address </Text>{" "}
-                                      <CustomInput
+                                      <CustomTextArea
                                         name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`}
                                         placeholder="address"
                                         type="text"
+                                        rowLength={1}
                                         label=""
                                         style={{ w: "100%" }}
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                       />
                                     </GridItem>
                                     <GridItem>
@@ -3062,6 +3612,16 @@ const Wms = () => {
                                         type="text"
                                         label=""
                                         style={{ w: "100%" }}
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
                                       />
                                     </GridItem>
                                     <GridItem>
@@ -3089,7 +3649,32 @@ const Wms = () => {
                                             value: "Monthly",
                                           },
                                         ]}
-                                        selectedValue={{}}
+                                        selectedValue={
+                                          [
+                                            {
+                                              label: "Daily",
+                                              value: "Daily",
+                                            },
+                                            {
+                                              label: "Weekly",
+                                              value: "Weekly",
+                                            },
+                                            {
+                                              label: "Fortnighty",
+                                              value: "Fortnighty",
+                                            },
+                                            {
+                                              label: "Monthly",
+                                              value: "Monthly",
+                                            },
+                                          ]?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`
+                                              )
+                                          )[0] || {}
+                                        }
                                         isClearable={false}
                                         selectType="label"
                                         isLoading={false}
@@ -3173,6 +3758,17 @@ const Wms = () => {
                                           cursor={"pointer"}
                                           onClick={() => {
                                             append_client_list();
+                                            setClientLocationDrillDownState(
+                                              (item) => [
+                                                ...item,
+                                                {
+                                                  states: [],
+                                                  zones: [],
+                                                  districts: [],
+                                                  areas: [],
+                                                },
+                                              ]
+                                            );
                                           }}
                                         />
                                         <MdIndeterminateCheckBox
@@ -3182,6 +3778,12 @@ const Wms = () => {
                                           onClick={() => {
                                             if (client_list?.length > 1) {
                                               remove_client_list(index);
+                                              setClientLocationDrillDownState(
+                                                (item) => [
+                                                  ...item.slice(0, index),
+                                                  ...item.slice(index + 1),
+                                                ]
+                                              );
                                             }
                                           }}
                                         />
