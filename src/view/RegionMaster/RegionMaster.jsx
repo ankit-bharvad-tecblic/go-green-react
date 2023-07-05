@@ -172,7 +172,7 @@ function RegionMaster() {
             .join("&");
         }
         return `${key}=${encodeURIComponent(value)}`;
-      })
+      }) 
       .join("&");
     // }
 

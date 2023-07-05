@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MotionSlideUp } from "../../utils/animation";
 import { addEditFormFields, schema } from "./fields";
 import {
   useAddRoleMasterMutation,
-  useGetRoleMasterMutation,
   useUpdateRoleMasterMutation,
 } from "../../features/master-api-slice";
 import generateFormField from "../../components/Elements/GenerateFormField";
@@ -23,7 +17,7 @@ const AddEditRoleMaster = () => {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
   const details = location.state?.details;
@@ -45,7 +39,7 @@ const AddEditRoleMaster = () => {
     });
   };
 
-  const [getRoleMaster] = useGetRoleMasterMutation();
+  // const [getRoleMaster] = useGetRoleMasterMutation();
 
   const [addRoleMaster, { isLoading: addRoleMasterApiIsLoading }] =
     useAddRoleMasterMutation();
@@ -66,35 +60,35 @@ const AddEditRoleMaster = () => {
       toasterAlert(error);
     }
   };
-  const getRole = async () => {
-    try {
-      // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+  // const getRole = async () => {
+  //   try {
+  //     // let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
 
-      const response = await getRoleMaster().unwrap();
+  //     const response = await getRoleMaster().unwrap();
 
-      console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
-        value: type.id,
-      }));
+  //     console.log("Success:", response);
+  //     // setCommodityTypeMaster();
+  //     let arr = response?.results.map((type) => ({
+  //       label: type.commodity_type,
+  //       value: type.id,
+  //     }));
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //     setAddEditFormFieldsList(
+  //       addEditFormFields.map((field) => {
+  //         if (field.type === "select") {
+  //           return {
+  //             ...field,
+  //             options: arr,
+  //           };
+  //         } else {
+  //           return field;
+  //         }
+  //       })
+  //     );
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   const updateData = async (data) => {
     try {
@@ -111,7 +105,9 @@ const AddEditRoleMaster = () => {
   };
 
   useEffect(() => {
-    getRole();
+    // getRole();
+
+    setAddEditFormFieldsList(addEditFormFields);
     if (details?.id) {
       let obj = {
         role_name: details?.role_name,
@@ -146,15 +142,7 @@ const AddEditRoleMaster = () => {
                       {generateFormField({
                         ...item,
                         label: "",
-                        // options: item.type === "select" && commodityTypeMaster,
-                        selectedValue:
-                          item.type === "select" &&
-                          item?.options?.find(
-                            (opt) =>
-                              opt.label ===
-                              details?.commodity_type?.commodity_type
-                          ),
-                        selectType: "label",
+
                         isChecked: details?.is_active,
                         isClearable: false,
                         style: { mb: 1, mt: 1 },

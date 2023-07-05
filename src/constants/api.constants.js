@@ -25,7 +25,7 @@ export const API = {
     DEPARTMENT_MASTER_ACTIVE: "",
     HIRING_PROPOSAL_MASTER: "/warehouse/warehousehiring_proposal/",
     HIRING_PROPOSAL_MASTER_ACTIVE: "",
-    ROLE_MASTER: "/role",
+    ROLE_MASTER: "/role/",
     ROLE_PAGE_ASSIGNMENT_MASTER: "/role",
     USER_MASTER: "/user/",
     COMMODITY_VARIETY: "/warehouse/commodity_variety/",

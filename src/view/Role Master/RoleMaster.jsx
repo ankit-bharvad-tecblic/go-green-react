@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetRoleMasterMutation,
-  useGetStateMasterMutation,
 } from "../../features/master-api-slice";
 import { filterFields } from "./fields";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
@@ -37,10 +36,7 @@ const RoleMaster = () => {
     getRoleMaster,
     { error: getRoleMasterApiErr, isLoading: getRoleMasterApiIsLoading },
   ] = useGetRoleMasterMutation();
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 
@@ -162,6 +158,11 @@ const RoleMaster = () => {
 
   const [data, setData] = useState([]);
 
+  const params = {
+    filter: [],
+    search: "",
+  };
+
   let paramString = "";
   const addForm = () => {
     navigate(`/manage-users/add/role-master/`);
@@ -177,21 +178,22 @@ const RoleMaster = () => {
 
   const getData = async () => {
     //params filter
-    if (filter.filter.length || filter.search) {
-      paramString = Object.entries(filter)
-        .map(([key, value]) => {
-          if (Array.isArray(value)) {
-            return value
-              .map((item) => `${key}=${encodeURIComponent(item)}`)
-              .join("&");
-          }
-          return `${key}=${encodeURIComponent(value)}`;
-        })
-        .join("&");
-    }
+    // if (filter.filter.length || filter.search) {
+    paramString = Object.entries(filter)
+      .map(([key, value]) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => `${key}=${encodeURIComponent(item)}`)
+            .join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&");
+    // }
 
     try {
-      const response = await getRoleMaster(paramString).unwrap();
+      let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getRoleMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
