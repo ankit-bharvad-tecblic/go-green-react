@@ -8,7 +8,18 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function CustomInput({ name, placeholder, type, label, style, height, max }) {
+function CustomInput({
+  name,
+  placeholder,
+  type,
+  label,
+  style,
+  inputValue,
+  height,
+  InputDisabled,
+  onChange,
+  max,
+}) {
   const {
     control,
     formState: { errors },
@@ -23,33 +34,65 @@ function CustomInput({ name, placeholder, type, label, style, height, max }) {
         <Controller
           control={control}
           name={name}
-          render={({ field }) => (
-            <Input
-              {...field}
-              type={type}
-              // width={{ base: "90%" }}
-              border="1px"
-              borderColor="gray.10"
-              backgroundColor={"white"}
-              height={"15px "}
-              borderRadius={"lg"}
-              _placeholder={{ color: "gray.300" }}
-              _hover={{
-                borderColor: "primary.700",
-                backgroundColor: "primary.200",
-              }}
-              _focus={{
-                borderColor: "primary.700",
-                backgroundColor: "primary.200",
-                boxShadow: "none",
-              }}
-              max={max}
-              p={{ base: "4" }}
-              // fontWeight={{ base: "normal" }}
-              // fontStyle={"normal"}
-              placeholder={placeholder}
-            />
-          )}
+          render={({ field }) =>
+            onChange ? (
+              <Input
+                {...field}
+                type={type}
+                // width={{ base: "90%" }}
+                border="1px"
+                borderColor="gray.10"
+                backgroundColor={"white"}
+                height={"15px "}
+                borderRadius={"lg"}
+                value={inputValue}
+                onChange={onChange}
+                _placeholder={{ color: "gray.300" }}
+                _hover={{
+                  borderColor: "primary.700",
+                  backgroundColor: "primary.200",
+                }}
+                _focus={{
+                  borderColor: "primary.700",
+                  backgroundColor: "primary.200",
+                  boxShadow: "none",
+                }}
+                max={max}
+                isDisabled={InputDisabled || false}
+                p={{ base: "4" }}
+                fontWeight={{ base: "normal" }}
+                fontStyle={"normal"}
+                placeholder={placeholder}
+              />
+            ) : (
+              <Input
+                {...field}
+                type={type}
+                // width={{ base: "90%" }}
+                border="1px"
+                borderColor="gray.10"
+                backgroundColor={"white"}
+                height={"15px "}
+                borderRadius={"lg"}
+                _placeholder={{ color: "gray.300" }}
+                _hover={{
+                  borderColor: "primary.700",
+                  backgroundColor: "primary.200",
+                }}
+                _focus={{
+                  borderColor: "primary.700",
+                  backgroundColor: "primary.200",
+                  boxShadow: "none",
+                }}
+                max={max}
+                p={{ base: "4" }}
+                fontWeight={{ base: "normal" }}
+                fontStyle={"normal"}
+                isDisabled={InputDisabled || false}
+                placeholder={placeholder}
+              />
+            )
+          }
         />
       </Box>
       <FormErrorMessage>{error && error?.message}</FormErrorMessage>

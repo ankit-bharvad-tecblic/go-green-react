@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function CustomTextArea({ name, placeholder, type, label, style }) {
+function CustomTextArea({ name, placeholder, type, rowLength, label, style }) {
   const {
     control,
     formState: { errors },
@@ -30,6 +30,7 @@ function CustomTextArea({ name, placeholder, type, label, style }) {
             <Textarea
               {...field}
               type={type}
+              rows={rowLength || 3}
               // width={{ base: "90%" }}
               backgroundColor={"white"}
               borderColor="#c3c3c3"
@@ -44,7 +45,8 @@ function CustomTextArea({ name, placeholder, type, label, style }) {
                 backgroundColor: "primary.200",
                 boxShadow: "none",
               }}
-              p={{ base: "4" }}
+              px={{ base: "4" }}
+              py={{ base: "5px" }}
               fontWeight={{ base: "normal" }}
               fontStyle={"normal"}
               placeholder={placeholder}

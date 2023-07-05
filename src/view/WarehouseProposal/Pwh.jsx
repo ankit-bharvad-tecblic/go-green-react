@@ -967,7 +967,7 @@ const Pwh = () => {
       }
 
       console.log("Success:", response);
-      setData(response?.results || []);
+      // setData(response?.results || []);
     } catch (error) {
       console.error("Error:", error);
     }
