@@ -9,14 +9,14 @@ const filterFields = [
     placeholder: "Commodity Grade",
     type: "text",
   },
-  {
-    DESCRIPTION: "description",
-    isActiveFilter: false,
-    label: "Description",
-    name: "description",
-    placeholder: "Description",
-    type: "text",
-  },
+  // {
+  //   DESCRIPTION: "description",
+  //   isActiveFilter: false,
+  //   label: "Description",
+  //   name: "description",
+  //   placeholder: "Description",
+  //   type: "text",
+  // },
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
@@ -37,7 +37,7 @@ const filterFields = [
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
@@ -61,12 +61,12 @@ const addEditFormFields = [
     placeholder: "Commodity Grade",
     type: "text",
   },
-  {
-    label: "Description",
-    name: "description",
-    placeholder: "Description",
-    type: "text",
-  },
+  // {
+  //   label: "Description",
+  //   name: "description",
+  //   placeholder: "Description",
+  //   type: "text",
+  // },
   {
     label: "Active",
     name: "is_active",
@@ -75,9 +75,9 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  description: yup.string().required("Description is required"),
+  // description: yup.string().required("Description is required"),
   is_active: yup.string(),
-  commodity_grade_name: yup.string().required("Commodity type is required"),
+  commodity_grade_name: yup.string().required("Commodity grade is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

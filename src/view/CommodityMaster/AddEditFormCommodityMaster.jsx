@@ -160,7 +160,7 @@ const AddEditFormCommodityMaster = () => {
                               details?.commodity_type?.commodity_type
                           ),
                         selectType: "value",
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         isClearable: false,
                         style: { mb: 1, mt: 1 },
                       })}
@@ -181,7 +181,7 @@ const AddEditFormCommodityMaster = () => {
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
+                      isChecked={details?.is_active}
                     />
                   </Box>
                 </MotionSlideUp>

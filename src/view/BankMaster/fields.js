@@ -5,7 +5,7 @@ const filterFields = [
     "Bank Name": "bank_name",
     isActiveFilter: false,
 
-    label: "Bank `Name`",
+    label: "Bank Name",
     name: "bank_name",
     placeholder: "Bank Name",
     type: "text",
@@ -43,7 +43,7 @@ const filterFields = [
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACtive",
+    label: "Active",
     name: "is_active",
     placeholder: "Active",
     type: "select",
@@ -94,10 +94,14 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  bank_name: yup.string().required("bank name is required"),
-  region: yup.string().required("region is required"),
-  state: yup.string().required("state is required"),
-  bank_address: yup.string().required("bank address is required"),
+  bank_name: yup.string().required("Bank name is required"),
+  region: yup.string().required("Region is required"),
+  state: yup.string().required("State is required"),
+  bank_address: yup
+    .string()
+    .min(20)
+    .max(300)
+    .required("Bank address is required"),
   is_active: yup.string(),
 });
 

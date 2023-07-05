@@ -165,7 +165,7 @@ const AddEditFormCommodityVariety = () => {
                       {generateFormField({
                         ...item,
                         label: "",
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         style: {
                           mb: 1,
                           mt: 1,

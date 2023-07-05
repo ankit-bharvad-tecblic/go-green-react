@@ -174,7 +174,7 @@ function AddEditFormBankMaster() {
         region: details?.region.region_name,
         state: details?.state.state_name,
         bank_address: details?.bank_address,
-        active: details.active,
+        is_active: details.is_active,
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -207,7 +207,7 @@ function AddEditFormBankMaster() {
                         ...item,
                         label: "",
                         // options: item.type === "select" && commodityTypeMaster,
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         style: { mb: 1, mt: 1 },
                       })}
                     </Box>
@@ -296,7 +296,7 @@ function AddEditFormBankMaster() {
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
+                      isChecked={details?.is_active}
                     />
                   </Box>
                 </MotionSlideUp>

@@ -141,8 +141,8 @@ const HsnMaster = () => {
           />
         </Box>
       ),
-      id: "is_active",
-      accessorFn: (row) => row.is_active,
+      id: "active",
+      accessorFn: (row) => row.active,
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",

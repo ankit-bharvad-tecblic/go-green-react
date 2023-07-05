@@ -110,7 +110,7 @@ function AddEditFormWareHouseSubTypeMaster() {
       let obj = {
         warehouse_subtype: details.warehouse_subtype,
         description: details.description,
-        active: details.active,
+        is_active: details.is_active,
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -139,7 +139,7 @@ function AddEditFormWareHouseSubTypeMaster() {
                         ...item,
                         label: "",
                         // options: item.type === "select" && commodityTypeMaster,
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         style: { mb: 1, mt: 1 },
                       })}
                     </Box>

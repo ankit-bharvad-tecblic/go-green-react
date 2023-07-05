@@ -10,6 +10,14 @@ const filterFields = [
     type: "text",
   },
   {
+    "Commodity Type": "commodity_type.commodity_type",
+    isActiveFilter: false,
+    label: "Commodity Type",
+    name: "commodity_type.commodity_type",
+    placeholder: "Commodity Type",
+    type: "text",
+  },
+  {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
 
@@ -32,7 +40,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,

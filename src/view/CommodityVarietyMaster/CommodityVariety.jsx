@@ -151,7 +151,7 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("is_block", {
       // cell: (info) => info.getValue(),
-      header: "IS BLOCK",
+      header: "BLOCK",
       cell: (info) => (
         <Box>
           <Switch
