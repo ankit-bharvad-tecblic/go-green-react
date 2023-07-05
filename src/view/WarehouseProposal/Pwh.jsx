@@ -235,7 +235,7 @@ const schema = Yup.object().shape({
     "Security guard for night shift is required"
   ),
   // commodity details schema start
-  expected_commodity: Yup.number().required(
+  expected_commodity: Yup.array().required(
     "Expected commodity name is required"
   ),
   commodity_inward_type: Yup.string().required(
@@ -358,7 +358,8 @@ const Pwh = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       is_factory_permise: "false",
-      lock_in_period: "false",
+      lock_in_period: "true",
+      is_funding_required: "false",
       pwh_commodity_bank_details: [{ bank_name: "", branch_name: "" }],
       pwh_commercial_multipal_details: [
         {
@@ -623,7 +624,13 @@ const Pwh = () => {
           standard_warehouse_capacity: getValues("standard_warehouse_capacity"),
           currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
           lock_in_period: getValues("lock_in_period"),
-          lock_in_period_month: getValues("lock_in_period_month"),
+          //   lock_in_period_month: getValues("lock_in_period_month"),
+          lock_in_period_month: yup.string().when("lock_in_period", {
+            is: (value) => value === "true",
+            then: () =>
+              yup.number().required("Lock in period month is required"),
+            otherwise: () => yup.number(),
+          }),
           covered_area: getValues("covered_area"),
           supervisor_day_shift: getValues("supervisor_day_shift"),
           supervisor_night_shift: getValues("supervisor_night_shift"),
@@ -1430,17 +1437,17 @@ const Pwh = () => {
                                       formFieldsName.pwh_warehouse_details
                                         .lock_in_period
                                     }
-                                    {...methods.register(
-                                      formFieldsName.pwh_warehouse_details
-                                        .lock_in_period
-                                    )}
-                                    defaultValue="false"
+                                    // {...methods.register(
+                                    //   formFieldsName.pwh_warehouse_details
+                                    //     .lock_in_period
+                                    // )}
+                                    defaultValue="true"
                                     onChange={(val) => {
                                       console.log(val);
                                       setValue(
                                         formFieldsName.pwh_warehouse_details
                                           .lock_in_period,
-                                        val ? "true" : "false",
+                                        val,
                                         { shouldValidate: true }
                                       );
                                     }}
@@ -1464,32 +1471,39 @@ const Pwh = () => {
                               </Grid>
                             </Box>
                             {/* --------------  lock_in_period_month------------- */}
-                            <Box mt={commonStyle.mt}>
-                              <Grid
-                                textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                gap={8}
-                              >
-                                <GridItem colSpan={2}>
-                                  <Text textAlign="right">
-                                    Lock In Period Month
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.pwh_warehouse_details
-                                        .lock_in_period_month
-                                    }
-                                    placeholder=" Lock In Period Month"
-                                    type="number"
-                                    label=""
-                                    style={{ w: commonStyle.w }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
+                            {getValues(
+                              formFieldsName.pwh_warehouse_details
+                                .lock_in_period
+                            ) === "true" ? (
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  gap={8}
+                                >
+                                  <GridItem colSpan={2}>
+                                    <Text textAlign="right">
+                                      Lock In Period Month
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={1}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.pwh_warehouse_details
+                                          .lock_in_period_month
+                                      }
+                                      placeholder=" Lock In Period Month"
+                                      type="number"
+                                      label=""
+                                      style={{ w: "100%" }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            ) : (
+                              <></>
+                            )}
                             {/* --------------  covered_area------------- */}
                             <Box mt={commonStyle.mt}>
                               {" "}
@@ -1852,8 +1866,10 @@ const Pwh = () => {
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
+                                  isMultipleSelect={true}
                                   style={{ w: commonStyle.w }}
                                   handleOnChange={(val) => {
+                                    console.log(" on change val = ", val);
                                     setSelected((prev) => ({
                                       ...prev,
                                       commodity: val,
@@ -1861,7 +1877,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .expected_commodity_name,
-                                      val?.value,
+                                      val,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -1903,12 +1919,16 @@ const Pwh = () => {
                                       value: 3,
                                     },
                                   ]}
-                                  selectedValue={{}}
+                                  selectedValue={selected?.commodityInwardType}
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
                                   handleOnChange={(val) => {
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      commodityInwardType: val,
+                                    }));
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .commodity_inward_type,
@@ -1940,26 +1960,19 @@ const Pwh = () => {
                                       .pre_stack_commodity
                                   }
                                   label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
+                                  options={
+                                    selectBoxOptions?.commodityMasterOpt || []
+                                  }
+                                  selectedValue={selected?.preStackCommodity}
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
                                   style={{ w: commonStyle.w }}
                                   handleOnChange={(val) => {
+                                    setSelected((prev) => ({
+                                      ...prev,
+                                      preStackCommodity: val,
+                                    }));
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .pre_stack_commodity,
@@ -3901,3 +3914,48 @@ const toasterAlert = (obj) => {
 };
 
 // ==========================================
+
+// import React from "react";
+// import { useFormik } from "formik";
+// import * as Yup from "yup";
+// import Select from "react-select";
+
+// const validationSchema = Yup.object().shape({
+//   selectedOptions: Yup.array()
+//     .min(1, "At least one option must be selected")
+//     .max(3, "Maximum three options can be selected")
+//     .required("Options are required"),
+// });
+
+// const MyForm = () => {
+//   const formik = useFormik({
+//     initialValues: {
+//       selectedOptions: [],
+//     },
+//     validationSchema: validationSchema,
+//     onSubmit: (values) => {
+//       // Handle form submission
+//       console.log("Form values:", values);
+//     },
+//   });
+
+//   return (
+//     <form onSubmit={formik.handleSubmit}>
+//       <Select
+//         name="selectedOptions"
+//         options={options} // Your options for the multiselect component
+//         isMulti
+//         onChange={(selected) => {
+//           formik.setFieldValue("selectedOptions", selected);
+//         }}
+//         onBlur={formik.handleBlur}
+//       />
+
+//       {formik.touched.selectedOptions && formik.errors.selectedOptions ? (
+//         <div>{formik.errors.selectedOptions}</div>
+//       ) : null}
+
+//       <button type="submit">Submit</button>
+//     </form>
+//   );
+// };

@@ -26,6 +26,11 @@ const WarehouseProposal = () => {
     subType: { label: "Leased", value: "leased" },
   });
 
+  const [selected, setSelected] = useState({
+    selectedWarehouse: { label: "PWH ", value: "pwh" },
+    selectedWarehouseSubType: { label: "Leased", value: "leased" },
+  });
+
   const methods = useForm({
     // resolver: yupResolver(schema),
   });
@@ -70,11 +75,12 @@ const WarehouseProposal = () => {
                   { label: "THIRD PARTY", value: "third" },
                   { label: "WMS + RENT", value: "rent" },
                 ]}
-                selectedValue={{ label: "PWH ", value: "pwh" }}
+                selectedValue={selected?.selectedWarehouse}
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
                 handleOnChange={(val) => {
+                  setSelected((prev) => ({ ...prev, selectedWarehouse: val }));
                   console.log("selectedOption @@@@@@@@@@@------> ", val);
                   setHiringProposal((old) => ({ ...old, type: val }));
                 }}
@@ -93,12 +99,16 @@ const WarehouseProposal = () => {
                   { label: "Tri Party ", value: "tri-party" },
                   { label: "Revenue Sharing ", value: "revenue" },
                 ]}
-                selectedValue={{ label: "Leased", value: "leased" }}
+                selectedValue={selected?.selectedWarehouseSubType}
                 isClearable={false}
                 selectType="label"
                 style={{ w: commonStyle.w }}
                 handleOnChange={(val) => {
                   console.log("selectedOption @@@@@@@@@@@------> ", val);
+                  setSelected((prev) => ({
+                    ...prev,
+                    selectedWarehouseSubType: val,
+                  }));
                   setHiringProposal((old) => ({ ...old, subType: val }));
                 }}
               />
