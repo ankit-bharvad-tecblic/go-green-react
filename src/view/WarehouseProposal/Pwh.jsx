@@ -1013,13 +1013,15 @@ const Pwh = () => {
   };
 
   const calcPBPM = () => {
+    console.log(getValues());
+
     let coveredArea = getValues(
       formFieldsName.pwh_warehouse_details.covered_area
     );
 
-    let commodity = getValues(
-      formFieldsName.pwh_warehouse_details.covered_area
-    );
+    let commodity = getValues("expected_commodity");
+
+    // console.log(object);
   };
 
   // Region State  Zone District Area  onChange drill down api end //
