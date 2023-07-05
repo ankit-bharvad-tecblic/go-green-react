@@ -122,70 +122,76 @@ const AddEditFormRegionMaster = () => {
   }, []);
 
   return (
-    <Box bg="white" borderRadius={10} p="10">
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="370px" overflowY="auto">
-            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
-              {addEditFormFieldsList &&
-                addEditFormFieldsList.map((item, i) => (
-                  <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
-                    <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                      {" "}
-                      <Text textAlign="right" w="550px">
-                        {item.label}
-                      </Text>{" "}
-                      {generateFormField({
-                        ...item,
-                        label: "",
-                        isChecked: details?.is_active,
-                        isClearable: false, 
-                        style: { mb: 1, mt: 1 },
-                      })}
-                    </Box>
-                  </MotionSlideUp>
-                ))}
-            </Box>
-            <Box
-              display="flex"
-              gap={2}
-              justifyContent="flex-end"
-              mt="10"
-              px="0"
-            >
-              <Button
-                type="button"
-                backgroundColor={"white"}
-                borderWidth={"1px"}
-                borderColor={"#F82F2F"}
-                _hover={{ backgroundColor: "" }}
-                color={"#F82F2F"}
-                borderRadius={"full"}
-                my={"4"}
-                px={"10"}
-                onClick={clearForm}
+    <Box bg="white" borderRadius={10} style={{ height: "calc(100vh - 200px)" }}>
+      <Box bg="white" borderRadius={10} p="10">
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Box maxHeight="370px" overflowY="auto">
+              <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+                {addEditFormFieldsList &&
+                  addEditFormFieldsList.map((item, i) => (
+                    <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
+                      <Box
+                        gap="4"
+                        display={{ base: "flex" }}
+                        alignItems="center"
+                      >
+                        {" "}
+                        <Text textAlign="right" w="550px">
+                          {item.label}
+                        </Text>{" "}
+                        {generateFormField({
+                          ...item,
+                          label: "",
+                          isChecked: details?.is_active,
+                          isClearable: false,
+                          style: { mb: 1, mt: 1 },
+                        })}
+                      </Box>
+                    </MotionSlideUp>
+                  ))}
+              </Box>
+              <Box
+                display="flex"
+                gap={2}
+                justifyContent="flex-end"
+                mt="10"
+                px="0"
               >
-                Clear
-              </Button>
-              <Button
-                type="submit"
-                //w="full"
-                backgroundColor={"primary.700"}
-                _hover={{ backgroundColor: "primary.700" }}
-                color={"white"}
-                borderRadius={"full"}
-                my={"4"}
-                px={"10"}
-                isLoading={
-                  updateCommodityGradeLoading || addCommodityGradeLoading
-                }
-              >
-                {details?.id ? " Update" : "Add"}
-              </Button>
+                <Button
+                  type="button"
+                  backgroundColor={"white"}
+                  borderWidth={"1px"}
+                  borderColor={"#F82F2F"}
+                  _hover={{ backgroundColor: "" }}
+                  color={"#F82F2F"}
+                  borderRadius={"full"}
+                  my={"4"}
+                  px={"10"}
+                  onClick={clearForm}
+                >
+                  Clear
+                </Button>
+                <Button
+                  type="submit"
+                  //w="full"
+                  backgroundColor={"primary.700"}
+                  _hover={{ backgroundColor: "primary.700" }}
+                  color={"white"}
+                  borderRadius={"full"}
+                  my={"4"}
+                  px={"10"}
+                  isLoading={
+                    updateCommodityGradeLoading || addCommodityGradeLoading
+                  }
+                >
+                  {details?.id ? " Update" : "Add"}
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </form>
-      </FormProvider>
+          </form>
+        </FormProvider>
+      </Box>
     </Box>
   );
 };

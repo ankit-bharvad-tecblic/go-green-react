@@ -239,7 +239,12 @@ function AddEditFormBankBranchMaster() {
   }, [details]);
 
   return (
-    <Box bg="white" borderRadius={10} p="10">
+    <Box
+      bg="white"
+      borderRadius={10}
+      p="10"
+      style={{ height: "calc(100vh - 200px)" }}
+    >
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
