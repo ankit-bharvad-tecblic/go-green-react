@@ -33,6 +33,8 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
   useGetAreaMasterMutation,
+  useGetBankBranchMasterMutation,
+  useGetBankMasterMutation,
   useGetCommodityMasterMutation,
   useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
@@ -54,6 +56,8 @@ import {
   useSaveAsDraftMutation,
 } from "../../features/warehouse-proposal.slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { calculateExpiryDate } from "../../utils/calculateDates";
+import moment from "moment";
 
 const reactSelectStyle = {
   menu: (base) => ({
@@ -136,8 +140,8 @@ const formFieldsName = {
     pre_stack_commodity_quantity: "prestack_commodity_qty",
     funding_required: "is_funding_required",
     bank_details_fields: {
-      bank_name: "bank_name",
-      branch_name: "branch_name",
+      bank: "bank",
+      branch: "branch",
     },
   },
   pwh_commercial_details: {
@@ -218,9 +222,14 @@ const schema = Yup.object().shape({
     "Standard utilized capacity is required"
   ),
   lock_in_period: Yup.string().required("Lock in period is required"),
-  lock_in_period_month: Yup.number().required(
-    "Lock in period month is required"
-  ),
+  // lock_in_period_month: Yup.number().required(
+  //   "Lock in period month is required"
+  // ),
+  lock_in_period_month: Yup.string().when("lock_in_period", {
+    is: (value) => value === "true",
+    then: () => Yup.number().required("Lock in period month is required"),
+    otherwise: () => Yup.number(),
+  }),
   covered_area: Yup.number().required("Covered area is required"),
   supervisor_day_shift: Yup.string().required(
     "Supervisor for day shift is required"
@@ -257,9 +266,9 @@ const schema = Yup.object().shape({
   ),
 
   // PWH COMMERCIAL DETAILS details schema start
-  min_rent: Yup.number().required("Minimum rent is required"),
-  max_rent: Yup.number().required("Maximum rent is required"),
-  avg_rent: Yup.number().required("Avg rent is required"),
+  min_rent: Yup.number(),
+  max_rent: Yup.number(),
+  avg_rent: Yup.number(),
   rent: Yup.number().required("rent is required"),
   total_rent_per_month: Yup.number().required(
     "Total rent payable month is required"
@@ -285,7 +294,14 @@ const schema = Yup.object().shape({
     "Security deposit amount is required"
   ),
   advance_rent: Yup.string().required("Advance rent is required"),
-  advance_rent_month: Yup.number().required("Advance rent month is required"),
+  // advance_rent_month: Yup.number().required("Advance rent month is required"),
+
+  advance_rent_month: Yup.string().when("advance_rent", {
+    is: (value) => value === "true",
+    then: () => Yup.number().required("Advance rent month is required"),
+    otherwise: () => Yup.number(),
+  }),
+
   gst: Yup.string()
     .matches(gstNumberValidation(), "Invalid GST number")
     .required("GST number is required"),
@@ -294,6 +310,7 @@ const schema = Yup.object().shape({
   expiry_date: Yup.string().required("Expiry date is required"),
   notice_period_month: Yup.number().required("Notice period is required"),
   storage_charges_according_to_commodity: Yup.string(),
+
   // .required(
   //   "storage charges according to commodity is required"
   // ),
@@ -360,7 +377,7 @@ const Pwh = () => {
       is_factory_permise: "false",
       lock_in_period: "true",
       is_funding_required: "false",
-      pwh_commodity_bank_details: [{ bank_name: "", branch_name: "" }],
+      pwh_commodity_bank_details: [{ bank: "", branch: "" }],
       pwh_commercial_multipal_details: [
         {
           owner_name: "",
@@ -376,6 +393,7 @@ const Pwh = () => {
   const {
     setValue,
     getValues,
+    watch,
     formState: { errors },
   } = methods;
 
@@ -411,8 +429,8 @@ const Pwh = () => {
 
   const append_new_bank_details = () => {
     add_new_bank_detail({
-      bank_name: "",
-      branch_name: "",
+      bank: "",
+      branch: "",
     });
   };
 
@@ -428,6 +446,33 @@ const Pwh = () => {
   const append_new_pwh_client_detail = () => {
     append_new_client_detail(client_details_obj);
   };
+
+  const handleExpiryDateChange = (value) => {
+    const { commencement_date, agreement_period_month } = value;
+
+    const expiryDate = calculateExpiryDate(
+      new Date(commencement_date),
+      agreement_period_month
+    );
+
+    if (commencement_date && agreement_period_month) {
+      setValue(formFieldsName.pwh_commercial_details.expiry_date, expiryDate, {
+        shouldValidate: true,
+      });
+      console.log("expiryDate ---> ", expiryDate);
+    }
+  };
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      console.log("watch --> ", value, name, type);
+      // handleExpiryDateChange(value);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [watch, setValue]);
 
   useEffect(() => {
     console.log("bank_details_fields --> ", bank_details_fields);
@@ -468,6 +513,9 @@ const Pwh = () => {
     getSecurityGuardNightShift,
     { isLoading: getSecurityGuardNightShiftApiIsLoading },
   ] = useGetSecurityGuardNightShiftMutation();
+
+  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
+    useGetBankMasterMutation();
 
   // Save as draft api
 
@@ -624,13 +672,7 @@ const Pwh = () => {
           standard_warehouse_capacity: getValues("standard_warehouse_capacity"),
           currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
           lock_in_period: getValues("lock_in_period"),
-          //   lock_in_period_month: getValues("lock_in_period_month"),
-          lock_in_period_month: yup.string().when("lock_in_period", {
-            is: (value) => value === "true",
-            then: () =>
-              yup.number().required("Lock in period month is required"),
-            otherwise: () => yup.number(),
-          }),
+          lock_in_period_month: getValues("lock_in_period_month"),
           covered_area: getValues("covered_area"),
           supervisor_day_shift: getValues("supervisor_day_shift"),
           supervisor_night_shift: getValues("supervisor_night_shift"),
@@ -643,9 +685,12 @@ const Pwh = () => {
       if (type === "PWH_COMMODITY_DETAILS") {
         data = {
           is_draft: true,
-          expected_commodity: getValues("expected_commodity"),
+          expected_commodity: getValues("expected_commodity")?.map((item) => ({
+            commodity: item?.value,
+          })),
           commodity_inward_type: getValues("commodity_inward_type"),
           prestack_commodity: getValues("prestack_commodity"),
+          bank: getValues("pwh_commodity_bank_details"),
           prestack_commodity_qty: getValues("prestack_commodity_qty"),
           is_funding_required: getValues("is_funding_required"),
         };
@@ -928,6 +973,55 @@ const Pwh = () => {
     }
   };
 
+  const getBankMasterList = async () => {
+    try {
+      const response = await getBankMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          banks: response?.results.map(({ bank_name, id }) => ({
+            label: bank_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const [getBankBranchMaster, { isLoading: getBankBranchMasterApiIsLoading }] =
+    useGetBankBranchMasterMutation();
+
+  const getBranchMasterList = async () => {
+    try {
+      const response = await getBankBranchMaster().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          branch: response?.results.map(({ branch_name, id }) => ({
+            label: branch_name,
+            value: id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const calcPBPM = () => {
+    let coveredArea = getValues(
+      formFieldsName.pwh_warehouse_details.covered_area
+    );
+
+    let commodity = getValues(
+      formFieldsName.pwh_warehouse_details.covered_area
+    );
+  };
+
   // Region State  Zone District Area  onChange drill down api end //
 
   useEffect(() => {
@@ -938,6 +1032,8 @@ const Pwh = () => {
     fetchSecurityGuardNightShift();
 
     fetchCommodityMaster();
+    getBankMasterList();
+    getBranchMasterList();
 
     // getStateList();
     // getZonesList();
@@ -1908,15 +2004,15 @@ const Pwh = () => {
                                   options={[
                                     {
                                       label: "Fresh Stock",
-                                      value: 1,
+                                      value: "FS",
                                     },
                                     {
-                                      label: "Pre-stock",
-                                      value: 2,
+                                      label: "Pre Stock",
+                                      value: "PS",
                                     },
                                     {
-                                      label: "Take over",
-                                      value: 3,
+                                      label: "Take Over",
+                                      value: "TO",
                                     },
                                   ]}
                                   selectedValue={selected?.commodityInwardType}
@@ -1932,7 +2028,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .commodity_inward_type,
-                                      val?.label,
+                                      val?.value,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -2037,7 +2133,7 @@ const Pwh = () => {
                                     setValue(
                                       formFieldsName.pwh_commodity_details
                                         .funding_required,
-                                      val ? "true" : "false",
+                                      val,
                                       { shouldValidate: true }
                                     );
                                   }}
@@ -2046,13 +2142,13 @@ const Pwh = () => {
                                   <Stack spacing={5} direction="row">
                                     <Radio
                                       colorScheme="radioBoxPrimary"
-                                      value="yes"
+                                      value="true"
                                     >
                                       Yes
                                     </Radio>
                                     <Radio
                                       colorScheme="radioBoxPrimary"
-                                      value="no"
+                                      value="false"
                                     >
                                       No
                                     </Radio>
@@ -2064,206 +2160,224 @@ const Pwh = () => {
 
                           {/* ================ Bank Details ================= */}
 
-                          {/* <input {...register(`test.${index}.firstName`)} /> */}
+                          {getValues(
+                            formFieldsName.pwh_commodity_details
+                              .funding_required
+                          ) == "true" ? (
+                            <Box mt="4" bgColor={"#DBFFF5"} p="4">
+                              <Heading as="h5" fontSize="lg">
+                                Bank Details
+                              </Heading>
 
-                          <Box mt="4" bgColor={"#DBFFF5"} p="4">
-                            <Heading as="h5" fontSize="lg">
-                              Bank Details
-                            </Heading>
-
-                            {bank_details_fields &&
-                              bank_details_fields.map((item, index) => (
-                                <Box
-                                  bgColor={"#DBFFF5"}
-                                  key={item.id}
-                                  mt={commonStyle.mt}
-                                  p="4"
-                                >
-                                  <Flex
-                                    //padding="20px"
-                                    borderRadius="10px"
-                                    gap="3"
-                                    alignItems="center"
-                                    justifyContent="space-between"
+                              {bank_details_fields &&
+                                bank_details_fields.map((item, index) => (
+                                  <Box
+                                    bgColor={"#DBFFF5"}
+                                    key={item.id}
+                                    mt={commonStyle.mt}
+                                    p="4"
                                   >
-                                    <Box
-                                      display="flex"
-                                      gap="4"
+                                    <Flex
+                                      //padding="20px"
+                                      borderRadius="10px"
+                                      gap="3"
                                       alignItems="center"
+                                      justifyContent="space-between"
                                     >
-                                      {/* =============== SR No============= */}
-                                      <Box w="50px">
-                                        <Text
-                                          mb="0"
-                                          fontWeight="bold"
-                                          textAlign="left"
-                                        >
-                                          {" "}
-                                          Sr No{" "}
-                                        </Text>{" "}
-                                        <Box
-                                          textAlign="center"
-                                          border="1px"
-                                          p="2"
-                                          borderColor="gray.10"
-                                          borderRadius="6"
-                                        >
-                                          {index + 1}
-                                        </Box>
-                                      </Box>
-
-                                      {/* =============== Bank Name ============= */}
-                                      <Box w="210px">
-                                        <Text
-                                          fontWeight="bold"
-                                          textAlign="left"
-                                        >
-                                          Bank Name
-                                        </Text>{" "}
-                                        <Box>
-                                          <ReactSelect
-                                            options={[
-                                              {
-                                                label: "ankit",
-                                                value: "ankit",
-                                              },
-                                            ]}
-                                            name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`}
-                                            onChange={(val) => {
-                                              console.log("val: " + val);
-                                              setValue(
-                                                `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank_name}`,
-                                                val?.value,
-                                                { shouldValidate: true }
-                                              );
-                                              return val;
-                                            }}
-                                            styles={{
-                                              control: (base, state) => ({
-                                                ...base,
-                                                backgroundColor: "#fff",
-                                                borderRadius: "6px",
-                                                borderColor: errors
-                                                  ?.pwh_commodity_bank_details?.[
-                                                  index
-                                                ]?.bank_name?.message
-                                                  ? "red"
-                                                  : "#c3c3c3",
-
-                                                padding: "1px",
-                                              }),
-                                              ...reactSelectStyle,
-                                            }}
-                                          />
-                                          <Text color="red">
-                                            {errors &&
-                                              errors
-                                                ?.pwh_commodity_bank_details?.[
-                                                index
-                                              ]?.bank_name?.message}
-                                          </Text>
-                                        </Box>
-                                      </Box>
-
-                                      {/* =============== Branch Name ============= */}
-                                      <Box w="210px">
-                                        <Text
-                                          fontWeight="bold"
-                                          textAlign="left"
-                                        >
-                                          Branch Name
-                                        </Text>{" "}
-                                        <Box>
-                                          <ReactSelect
-                                            options={[
-                                              {
-                                                label: "ankit",
-                                                value: "ankit",
-                                              },
-                                            ]}
-                                            name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`}
-                                            onChange={(val) => {
-                                              console.log("val: " + val);
-                                              setValue(
-                                                `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch_name}`,
-                                                val?.value,
-                                                { shouldValidate: true }
-                                              );
-                                              return val;
-                                            }}
-                                            styles={{
-                                              control: (base, state) => ({
-                                                ...base,
-                                                backgroundColor: "#fff",
-                                                borderRadius: "6px",
-                                                borderColor: errors
-                                                  ?.pwh_commodity_bank_details?.[
-                                                  index
-                                                ]?.branch_name?.message
-                                                  ? "red"
-                                                  : "#c3c3c3",
-
-                                                padding: "1px",
-                                              }),
-                                              ...reactSelectStyle,
-                                            }}
-                                          />
-                                          <Text color="red">
-                                            {errors &&
-                                              errors
-                                                ?.pwh_commodity_bank_details?.[
-                                                index
-                                              ]?.branch_name?.message}
-                                          </Text>
-                                        </Box>
-                                      </Box>
-                                    </Box>
-
-                                    {/* =============== Add / Delete ============= */}
-                                    <Box w="180px">
                                       <Box
-                                        mt="7"
                                         display="flex"
+                                        gap="4"
                                         alignItems="center"
-                                        justifyContent="flex-end"
-                                        gap="2"
                                       >
-                                        <Button
-                                          borderColor="gray.10"
-                                          borderRadius="6"
-                                          bg="primary.700"
-                                          color="white"
-                                          fontWeight="bold"
-                                          _hover={{}}
-                                          onClick={() => {
-                                            append_new_bank_details();
-                                          }}
-                                        >
-                                          +
-                                        </Button>
+                                        {/* =============== SR No============= */}
+                                        <Box w="50px">
+                                          <Text
+                                            mb="0"
+                                            fontWeight="bold"
+                                            textAlign="left"
+                                          >
+                                            {" "}
+                                            Sr No{" "}
+                                          </Text>{" "}
+                                          <Box
+                                            textAlign="center"
+                                            border="1px"
+                                            p="2"
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                          >
+                                            {index + 1}
+                                          </Box>
+                                        </Box>
 
-                                        <Button
-                                          borderColor="gray.10"
-                                          borderRadius="6"
-                                          bg="red"
-                                          color="white"
-                                          fontWeight="bold"
-                                          _hover={{}}
-                                          isDisabled={
-                                            bank_details_fields?.length === 1
-                                          }
-                                          onClick={() =>
-                                            remove_bank_detail(index)
-                                          }
-                                        >
-                                          -
-                                        </Button>
+                                        {/* =============== Bank Name ============= */}
+                                        <Box w="210px">
+                                          <Text
+                                            fontWeight="bold"
+                                            textAlign="left"
+                                          >
+                                            Bank Name
+                                          </Text>{" "}
+                                          <Box>
+                                            <ReactSelect
+                                              options={
+                                                selectBoxOptions?.banks || []
+                                              }
+                                              name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`}
+                                              value={
+                                                selectBoxOptions?.banks?.filter(
+                                                  (item) =>
+                                                    item.value ===
+                                                    getValues(
+                                                      `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`
+                                                    )
+                                                )[0] || {}
+                                              }
+                                              onChange={(val) => {
+                                                console.log("val: " + val);
+
+                                                setValue(
+                                                  `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`,
+                                                  val?.value,
+                                                  { shouldValidate: true }
+                                                );
+                                                return val;
+                                              }}
+                                              styles={{
+                                                control: (base, state) => ({
+                                                  ...base,
+                                                  backgroundColor: "#fff",
+                                                  borderRadius: "6px",
+                                                  borderColor: errors
+                                                    ?.pwh_commodity_bank_details?.[
+                                                    index
+                                                  ]?.bank?.message
+                                                    ? "red"
+                                                    : "#c3c3c3",
+
+                                                  padding: "1px",
+                                                }),
+                                                ...reactSelectStyle,
+                                              }}
+                                            />
+                                            <Text color="red">
+                                              {errors &&
+                                                errors
+                                                  ?.pwh_commodity_bank_details?.[
+                                                  index
+                                                ]?.bank?.message}
+                                            </Text>
+                                          </Box>
+                                        </Box>
+
+                                        {/* =============== Branch Name ============= */}
+                                        <Box w="210px">
+                                          <Text
+                                            fontWeight="bold"
+                                            textAlign="left"
+                                          >
+                                            Branch Name
+                                          </Text>{" "}
+                                          <Box>
+                                            <ReactSelect
+                                              options={
+                                                selectBoxOptions?.branch || []
+                                              }
+                                              name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`}
+                                              value={
+                                                selectBoxOptions?.branch?.filter(
+                                                  (item) =>
+                                                    item.value ===
+                                                    getValues(
+                                                      `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`
+                                                    )
+                                                )[0] || {}
+                                              }
+                                              onChange={(val) => {
+                                                console.log("val: " + val);
+                                                setValue(
+                                                  `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`,
+                                                  val?.value,
+                                                  { shouldValidate: true }
+                                                );
+                                                return val;
+                                              }}
+                                              styles={{
+                                                control: (base, state) => ({
+                                                  ...base,
+                                                  backgroundColor: "#fff",
+                                                  borderRadius: "6px",
+                                                  borderColor: errors
+                                                    ?.pwh_commodity_bank_details?.[
+                                                    index
+                                                  ]?.branch?.message
+                                                    ? "red"
+                                                    : "#c3c3c3",
+
+                                                  padding: "1px",
+                                                }),
+                                                ...reactSelectStyle,
+                                              }}
+                                            />
+                                            <Text color="red">
+                                              {errors &&
+                                                errors
+                                                  ?.pwh_commodity_bank_details?.[
+                                                  index
+                                                ]?.q?.message}
+                                            </Text>
+                                          </Box>
+                                        </Box>
                                       </Box>
-                                    </Box>
-                                  </Flex>
-                                </Box>
-                              ))}
-                          </Box>
+
+                                      {/* =============== Add / Delete ============= */}
+                                      <Box w="180px">
+                                        <Box
+                                          mt="7"
+                                          display="flex"
+                                          alignItems="center"
+                                          justifyContent="flex-end"
+                                          gap="2"
+                                        >
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="primary.700"
+                                            color="white"
+                                            fontWeight="bold"
+                                            _hover={{}}
+                                            onClick={() => {
+                                              append_new_bank_details();
+                                            }}
+                                          >
+                                            +
+                                          </Button>
+
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="red"
+                                            color="white"
+                                            fontWeight="bold"
+                                            _hover={{}}
+                                            isDisabled={
+                                              bank_details_fields?.length === 1
+                                            }
+                                            onClick={() =>
+                                              remove_bank_detail(index)
+                                            }
+                                          >
+                                            -
+                                          </Button>
+                                        </Box>
+                                      </Box>
+                                    </Flex>
+                                  </Box>
+                                ))}
+                            </Box>
+                          ) : (
+                            <> </>
+                          )}
 
                           <Box
                             display="flex"
@@ -2325,11 +2439,11 @@ const Pwh = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "60%",
+                              xl: "80%",
                             }}
                           >
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
-                            <Box w="full">
+                            {/* <Box w="full">
                               <Grid
                                 // textAlign="right"
                                 alignItems="center"
@@ -2358,9 +2472,9 @@ const Pwh = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
                             {/* --------------Maximum Rent(per/sq ft/month)-------------- */}
-                            <Box>
+                            {/* <Box>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -2388,10 +2502,10 @@ const Pwh = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
 
                             {/* --------------Avg Rent(per/sq ft/month)-------------- */}
-                            <Box>
+                            {/* <Box>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -2419,34 +2533,43 @@ const Pwh = () => {
                                   />
                                 </GridItem>
                               </Grid>
-                            </Box>
+                            </Box> */}
 
                             {/* -------------- Rent (per/sq ft/month)-------------- */}
-                            <Box>
+
+                            <Box mt={commonStyle.mt}>
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
-                                templateColumns="repeat(4, 2fr)"
-                                gap={8}
+                                templateColumns="repeat(4, 1fr)"
+                                gap={4}
+                                mx="2"
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Rent (per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details.rent
                                     }
-                                    placeholder="Rent (per/sq ft/month)"
-                                    type="number"
+                                    placeholder=" Rent (per/sq ft/month)"
+                                    type="text"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: "100%",
                                     }}
                                   />
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <Flex gap={"4"}>
+                                    <Text textAlign="right">Min: 1223</Text>
+                                    <Text textAlign="right">Avg: 1223</Text>
+                                    <Text textAlign="right">Max: 1223</Text>
+                                  </Flex>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2459,7 +2582,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Total rent payable (per month)
@@ -2882,7 +3005,7 @@ const Pwh = () => {
                                       setValue(
                                         formFieldsName.pwh_commercial_details
                                           .advance_rent,
-                                        val ? "true" : "false",
+                                        val,
                                         { shouldValidate: true }
                                       );
                                     }}
@@ -2907,36 +3030,40 @@ const Pwh = () => {
                             </Box>
 
                             {/* -------------- Advance rent(month) -------------- */}
-                            <Box mt="1" w="full">
-                              <Grid
-                                // textAlign="right"
-                                alignItems="center"
-                                templateColumns="repeat(4, 1fr)"
-                                justifyContent="flex-start"
-                                gap={8}
-                              >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    Advance rent(month)
-                                  </Text>{" "}
-                                </GridItem>
-                                <GridItem colSpan={2}>
-                                  <CustomInput
-                                    name={
-                                      formFieldsName.pwh_commercial_details
-                                        .advance_rent_month
-                                    }
-                                    placeholder="Advance rent(month)"
-                                    type="number"
-                                    label=""
-                                    style={{
-                                      w: commonStyle.comm_details_style.w,
-                                    }}
-                                  />
-                                </GridItem>
-                              </Grid>
-                            </Box>
+                            {getValues(
+                              formFieldsName.pwh_commercial_details.advance_rent
+                            ) == "true" && (
+                              <Box mt="1" w="full">
+                                <Grid
+                                  // textAlign="right"
+                                  alignItems="center"
+                                  templateColumns="repeat(4, 1fr)"
+                                  justifyContent="flex-start"
+                                  gap={8}
+                                >
+                                  <GridItem colSpan={2}>
+                                    {" "}
+                                    <Text textAlign="right">
+                                      Advance rent(month)
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={2}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.pwh_commercial_details
+                                          .advance_rent_month
+                                      }
+                                      placeholder="Advance rent(month)"
+                                      type="number"
+                                      label=""
+                                      style={{
+                                        w: commonStyle.comm_details_style.w,
+                                      }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            )}
 
                             {/* -------------- GST-------------- */}
                             <Box mt={commonStyle.mt}>
@@ -2990,7 +3117,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details
                                         .commencement_date
                                     }
-                                    placeholder="Advance rent(month)"
+                                    placeholder=""
                                     type="date"
                                     label=""
                                     style={{
@@ -3023,7 +3150,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_commercial_details
                                         .agreement_period
                                     }
-                                    placeholder=" Agreement period (Month)"
+                                    placeholder="Agreement period (Month)"
                                     type="number"
                                     label=""
                                     style={{
@@ -3115,6 +3242,7 @@ const Pwh = () => {
                                     storage Charges according to commodity
                                   </Text>{" "}
                                 </GridItem>
+
                                 <GridItem colSpan={2}>
                                   {" "}
                                   <ReactCustomSelect
@@ -3123,13 +3251,11 @@ const Pwh = () => {
                                         .storage_charges_according_to_commodity
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "1",
-                                        value: 1,
-                                      },
-                                    ]}
-                                    selectedValue={{}}
+                                    options={
+                                      selectBoxOptions?.commodityMasterOpt || []
+                                    }
+                                    isMultipleSelect={true}
+                                    selectedValue={selected?.commodity}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -3137,6 +3263,10 @@ const Pwh = () => {
                                       w: commonStyle.comm_details_style.w,
                                     }}
                                     handleOnChange={(val) => {
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        commodity: val,
+                                      }));
                                       setValue(
                                         formFieldsName.pwh_commercial_details
                                           .storage_charges_according_to_commodity,
@@ -3145,6 +3275,23 @@ const Pwh = () => {
                                       );
                                     }}
                                   />
+                                </GridItem>
+
+                                <GridItem colSpan={2}>
+                                  <Button
+                                    type="button"
+                                    //w="full"
+                                    backgroundColor={"primary.700"}
+                                    _hover={{ backgroundColor: "primary.700" }}
+                                    color={"white"}
+                                    borderRadius={"full"}
+                                    isLoading={false}
+                                    my={"4"}
+                                    px={"10"}
+                                    onClick={() => calcPBPM()}
+                                  >
+                                    Check PBPM
+                                  </Button>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -3898,14 +4045,16 @@ const toasterAlert = (obj) => {
   let msg = obj?.message;
   let status = obj?.status;
   if (status === 400) {
-    const errorData = obj.data;
+    const errorData = obj?.data;
     let errorMessage = "";
 
-    Object.keys(errorData).forEach((key) => {
+    Object.keys(errorData)?.forEach((key) => {
       const messages = errorData[key];
-      messages.forEach((message) => {
-        errorMessage += `${key} : ${message} \n`;
-      });
+      console.log("messages --> ", messages);
+      messages &&
+        messages?.forEach((message) => {
+          errorMessage += `${key} : ${message} \n`;
+        });
     });
     showToastByStatusCode(status, errorMessage);
     return false;

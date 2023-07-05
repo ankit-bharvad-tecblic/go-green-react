@@ -65,6 +65,7 @@ export const API = {
     SUPERVISOR_NIGHT: "/warehouse/night/supervisor",
     SECURITY_DAY: "/warehouse/day/security",
     SECURITY_NIGHT: "/warehouse/night/security",
+    PBPM: "/operational_flow/pbpm/pbpm_list/",
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",

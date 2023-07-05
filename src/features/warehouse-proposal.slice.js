@@ -43,6 +43,12 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    calculatePBPM: builder.mutation({
+      query: () => ({
+        url: API.WAREHOUSE_PROPOSAL.PBPM,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -54,4 +60,6 @@ export const {
 
   useGetSecurityGuardDayShiftMutation,
   useGetSecurityGuardNightShiftMutation,
+
+  useCalculatePBPMMutation,
 } = warehouseProposalApiSlice;
