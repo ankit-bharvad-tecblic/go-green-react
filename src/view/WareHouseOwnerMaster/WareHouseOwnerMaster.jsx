@@ -1,27 +1,28 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   useActiveDeActiveMutation,
-  useGetAreaMasterMutation,
+  useGetWareHouseOwnerTypeMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
-import { setUpFilterFields } from "../../features/filter.slice";
 import { API } from "../../constants/api.constants";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { filterFields } from "./fields";
-import { useNavigate } from "react-router-dom";
+import FunctionalTable from "../../components/Tables/FunctionalTable";
+import { setUpFilterFields } from "../../features/filter.slice";
 
-const AreaMaster = () => {
+const WareHouseOwnerMaster = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const columnHelper = createColumnHelper();
 
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
-
-  const columnHelper = createColumnHelper();
+  console.log("Warehouse Owner Type Master", filterQuery);
   const [filter, setFilter] = useState({
     // filter: [],
     // search: null,
@@ -30,11 +31,12 @@ const AreaMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    excelDownload: "Area",
   });
 
-  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
-    useGetAreaMasterMutation();
+  const [
+    getWareHouseOwnerType,
+    { isLoading: getWareHouseOwnerTypeApiIsLoading },
+  ] = useGetWareHouseOwnerTypeMutation();
 
   const [activeDeActive] = useActiveDeActiveMutation();
 
@@ -45,7 +47,7 @@ const AreaMaster = () => {
     let obj = {
       id: info.row.original.id,
       active: e.target.checked,
-      endPoint: API.DASHBOARD.DISTRICT_ACTIVE,
+      endPoint: API.DASHBOARD.WAREHOUSE_OWNER_MASTER,
     };
 
     try {
@@ -85,76 +87,67 @@ const AreaMaster = () => {
     }
   };
 
+  const editForm = (info) => {
+    console.log("Warehouse owner master info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/warehouse-master/edit/warehouse-owner-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
+  };
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("area_name", {
+    columnHelper.accessor("hiring_proposal_id.id", {
       cell: (info) => info.getValue(),
-      header: "AREA NAME",
+      header: "Hiring Proposal ID",
     }),
-    columnHelper.accessor("district.district_name", {
+    columnHelper.accessor("warehouse_owner_name", {
       cell: (info) => info.getValue(),
-      header: "DISTRICT NAME",
+      header: "Owner Name",
     }),
-    columnHelper.accessor("zone.zone_name", {
+    columnHelper.accessor("warehouse_owner_contact_no", {
       cell: (info) => info.getValue(),
-      header: " Zone",
-    }),
-    columnHelper.accessor("state.state_name", {
-      cell: (info) => info.getValue(),
-      header: " State",
-    }),
-    columnHelper.accessor("region.region_name", {
-      cell: (info) => info.getValue(),
-      header: " Region",
+      header: " Owner ContactNo",
     }),
 
-    columnHelper.accessor("creation_date", {
+    columnHelper.accessor("warehouse_owner_address", {
       cell: (info) => info.getValue(),
-      header: "Creation Date",
+      header: "Owner Address",
     }),
-    columnHelper.accessor("last_updated_date", {
+
+    columnHelper.accessor("rent_amount", {
       cell: (info) => info.getValue(),
-      header: "Last Updated Date",
+      header: "Rent Amt ",
     }),
-    columnHelper.accessor("is_block", {
-      // cell: (info) => info.getValue(),
-      header: "Block",
-      cell: (info) => (
-        <Box id="active_row">
-          <Switch
-            size="md"
-            colorScheme="whatsapp"
-            isReadOnly
-            isChecked={info.row.original.is_block}
-          />
-        </Box>
-      ),
+
+    columnHelper.accessor("revenue_sharing_ratio", {
+      cell: (info) => info.getValue(),
+      header: "Revenue Sharing Ratio ",
     }),
-    columnHelper.accessor("is_active", {
-      // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
-      cell: (info) => (
-        <Box id="active_row">
-          <Switch
-            size="md"
-            colorScheme="whatsapp"
-            // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.is_active}
-            // id="active_row"
-            // isReadOnly
-            // isChecked={flexRender(
-            //   cell.column.columnDef.cell,
-            //   cell.getContext()
-            // )}
-          />
-        </Box>
-      ),
-      id: "active",
-      accessorFn: (row) => row.active,
-    }),
+    // columnHelper.accessor("is_active", {
+    //   // header: "ACTIVE",
+    //   header: () => <Text id="active_col">Active</Text>,
+    //   cell: (info) => (
+    //     <Box id="active_row">
+    //       <Switch
+    //         size="md"
+    //         colorScheme="whatsapp"
+    //         // onChange={(e) => handleActiveDeActive(e, info)}
+    //         isChecked={info.row.original.is_active}
+    //         // id="active_row"
+    //         // isReadOnly
+    //         // isChecked={flexRender(
+    //         //   cell.column.columnDef.cell,
+    //         //   cell.getContext()
+    //         // )}
+    //       />
+    //     </Box>
+    //   ),
+    //   id: "active",
+    //   accessorFn: (row) => row.active,
+    // }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
       header: () => <Text id="update_col">UPDATE</Text>,
@@ -176,26 +169,16 @@ const AreaMaster = () => {
   const tableFilterSet = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
-
   const [data, setData] = useState([]);
 
   let paramString = "";
   const addForm = () => {
-    navigate(`/manage-location/add/area-master/`);
-  };
-
-  const editForm = (info) => {
-    console.log("info --> ", info);
-    let editedFormId = info.row.original.id;
-
-    navigate(`/manage-location/edit/area-master/${editedFormId}`, {
-      state: { details: info.row.original },
-    });
+    navigate(`/warehouse-master/add/warehouse-owner-master`);
   };
 
   const getData = async () => {
     //params filter
-    // if (filter.filter.length || filter.search) {
+    //filter.filter.length || filter.search
     // if (filterQuery) {
     paramString = Object.entries(filter)
       .map(([key, value]) => {
@@ -211,28 +194,35 @@ const AreaMaster = () => {
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+      const response = await getWareHouseOwnerType(query).unwrap();
 
-      const response = await getAreaMaster(query).unwrap();
+      if (response.status === 200) {
+        console.log("Success:", response);
 
-      console.log("Success:", response);
-      setData(response?.results || []);
-      setFilter((old) => ({
-        ...old,
-        totalPage: Math.ceil(response?.total / old.limit),
-        total: response?.total_data,
-        totalFilter: response?.total,
-      }));
-
-      console.log(Math.ceil(response?.total / filter.limit), "length");
+        let arr = response?.results.map((item, i) => {
+          return {
+            ...item,
+            hiring_proposal_id: {
+              ...item.hiring_proposal_id,
+              id: `HP${item.hiring_proposal_id.id}`,
+            },
+          };
+        });
+        setData(arr || []);
+        setFilter((old) => ({
+          ...old,
+          totalPage: Math.ceil(response?.total / old.limit),
+          total: response?.total_data,
+          totalFilter: response?.total,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  // test
 
   useEffect(() => {
     tableFilterSet();
-
     getData();
   }, [filter.limit, filter.page, filterQuery]);
 
@@ -250,20 +240,20 @@ const AreaMaster = () => {
   // }, [filterQuery]);
 
   return (
-    <div>
-      <FunctionalTable
-        filter={filter}
-        filterFields={filterFields}
-        setFilter={setFilter}
-        columns={columns}
-        data={data}
-        loading={getAreaMasterApiIsLoading}
-        addForm={() => addForm()}
-      />
-    </div>
+    <>
+      <div>
+        <FunctionalTable
+          filter={filter}
+          filterFields={filterFields}
+          setFilter={setFilter}
+          columns={columns}
+          data={data}
+          loading={getWareHouseOwnerTypeApiIsLoading}
+          addForm={() => addForm()}
+        />
+      </div>
+    </>
   );
 };
 
-export default AreaMaster;
-
-// zone, state, disrct , area,
+export default WareHouseOwnerMaster;

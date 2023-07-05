@@ -63,6 +63,11 @@ import AddEditFormEmployeeMaster from "../view/EmployeeMaster/AddEditFormEmploye
 import AddEditFormDepartmentMaster from "../view/DepartmentMaster/AddEditFormDepartmentMaster";
 import AddEditRoleMaster from "../view/Role Master/AddEditRoleMaster";
 import AddEditBankCmLocationMaster from "../view/BankCMLocationMaster/AddEditBankCmLocationMaster";
+import ClientMaster from "../view/ClientMaster/ClientMaster";
+import AddEditClientMaster from "../view/ClientMaster/AddEditClientMaster";
+import WareHouseOwnerMaster from "../view/WareHouseOwnerMaster/WareHouseOwnerMaster";
+import AddEditWareHouseOwnerMaster from "../view/WareHouseOwnerMaster/AddEditWareHouseOwnerMaster";
+import AddEditHsnMaster from "../view/HsnMaster/AddEditHsnMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 
@@ -501,6 +506,47 @@ const routes = [
     ],
   },
   {
+    path: "/manage-client",
+    children: [
+      {
+        path: "client-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Client-master"}>
+                <ClientMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/client-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Client-master"}>
+                <AddEditClientMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/client-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Client-master"}>
+                <AddEditClientMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+    ],
+  },
+  {
     path: "/warehouse-master",
     children: [
       {
@@ -570,6 +616,42 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Warehouse Type Master"}>
                 <AddEditFormWareHouseTypeMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "warehouse-owner-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Owner Master"}>
+                <WareHouseOwnerMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/warehouse-owner-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Owner Master"}>
+                <AddEditWareHouseOwnerMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/warehouse-owner-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Warehouse Owner Master"}>
+                <AddEditWareHouseOwnerMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>
@@ -1063,6 +1145,30 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"HSN Master"}>
                 <HsnMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/hsn-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"HSN Master"}>
+                <AddEditHsnMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/hsn-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"HSN Master"}>
+                <AddEditHsnMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

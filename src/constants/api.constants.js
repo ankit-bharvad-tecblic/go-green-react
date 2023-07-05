@@ -45,7 +45,7 @@ export const API = {
     INSURANCE_ACTIVE: "/business_flow/insurance/",
     SECURITY_AGENCY_ACTIVE: "",
     SECURITY_GUARD_ACTIVE: "",
-
+    CLIENT_MASTER: "",
     PAGE_MASTER_ACTIVE: "",
     BANK_MASTER_ACTIVE: "",
     BANK_BRANCH_MASTER_ACTIVE: "",
@@ -54,12 +54,17 @@ export const API = {
     USER_MASTER_ACTIVE: "",
     BANK_CM_LOCATION_MASTER: "/business_flow/bank_cm_location/",
     COMMODITY_BAG_MASTER: "",
-    HSN_MASTER: "",
+    HSN_MASTER: "/warehouse/hsn/",
+    WAREHOUSE_OWNER_MASTER: "/warehouse/HiringProposalWarehouseOwnerDetails/",
     EXCEL_DOWNLOAD_MASTER: "excel_download",
   },
 
   WAREHOUSE_PROPOSAL: {
     SAVE_AS_DRAFT: "/warehouse/save_draft_create/",
+    SUPERVISOR_DAY: "/warehouse/day/supervisor",
+    SUPERVISOR_NIGHT: "/warehouse/night/supervisor",
+    SECURITY_DAY: "/warehouse/day/security",
+    SECURITY_NIGHT: "/warehouse/night/security",
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",

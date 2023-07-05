@@ -92,7 +92,7 @@ const BankCMLocationMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("bank_branch", {
+    columnHelper.accessor("bank_branch.branch_name", {
       cell: (info) => info.getValue(),
       header: "BRANCH NAME",
     }),

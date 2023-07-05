@@ -84,17 +84,6 @@ const UserMaster = () => {
       console.error("Error:", error);
     }
   };
-  const addForm = () => {
-    navigate(`/manage-users/add/user-master/`);
-  };
-
-  const editForm = (info) => {
-    console.log("bank info --->", info);
-    const editedFormId = info.row.original.id;
-    navigate(`/manage-users/edit/user-master/${editedFormId}`, {
-      state: { details: info.row.original },
-    });
-  };
 
   const columns = [
     columnHelper.accessor("id", {
@@ -113,7 +102,7 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "CONTACT NO",
     }),
-    columnHelper.accessor("user_role", {
+    columnHelper.accessor("user_role[].role_name", {
       cell: (info) => info.getValue(),
       header: "ROLE",
     }),
@@ -179,6 +168,11 @@ const UserMaster = () => {
   };
   const [data, setData] = useState([]);
 
+  const params = {
+    filter: [],
+    search: "",
+  };
+
   let paramString = "";
 
   const getData = async () => {
@@ -211,6 +205,18 @@ const UserMaster = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  const addForm = () => {
+    navigate(`/manage-users/add/user-master/`);
+  };
+
+  const editForm = (info) => {
+    console.log("User info --->", info);
+    const editedFormId = info.row.original.id;
+    navigate(`/manage-users/edit/user-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
   };
 
   useEffect(() => {

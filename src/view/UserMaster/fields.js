@@ -3,11 +3,11 @@ import validation from "../../utils/validation";
 
 const filterFields = [
   {
-    "USER NAME": "email",
+    Email: "email",
     isActiveFilter: false,
 
     label: "Email",
-    name: "mail",
+    name: "email",
     placeholder: "Email",
     type: "text",
   },
@@ -30,11 +30,11 @@ const filterFields = [
     type: "text",
   },
   {
-    ROLE: "user_role",
+    ROLE: "user_role__role_name",
     isActiveFilter: false,
 
     label: "Role",
-    name: "user_role",
+    name: "user_role__role_name",
     placeholder: "Role",
     type: "text",
   },
@@ -47,15 +47,6 @@ const filterFields = [
   //   placeholder: "LAST NAME",
   //   type: "text",
   // },
-  {
-    PASSWORD: "password",
-    isActiveFilter: false,
-
-    label: "PASSWORD",
-    name: "password",
-    placeholder: "PASSWORD",
-    type: "password",
-  },
 
   // {
   //   "LAST LOGIN": "last_login",
@@ -85,17 +76,17 @@ const filterFields = [
     type: "date",
   },
   {
-    "LAST UPDATED ACTIVE": "ACTIVE",
+    "LAST UPDATED ACTIVE": "is_active",
     isActiveFilter: false,
 
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -126,7 +117,7 @@ const addEditFormFields = [
     type: "text",
   },
   {
-    name: "user_role",
+    name: "user_role.role_name",
     label: "Role",
     placeholder: "Role",
     type: "text",
@@ -147,7 +138,7 @@ const addEditFormFields = [
 
   {
     label: "Active",
-    name: "active",
+    name: "is_active",
     type: "switch",
   },
 ];
@@ -159,11 +150,11 @@ const schema = yup.object().shape({
     .string()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-  user_role: yup.string().required("role is required"),
+    user_role: yup.string().required("role is required"),
   // last_name: yup.string().required("last name is required"),
-  password: yup.string().required("password is required"),
+
   // last_login: yup.date().required("last login is required"),
-  active: yup.string(),
+  is_active: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

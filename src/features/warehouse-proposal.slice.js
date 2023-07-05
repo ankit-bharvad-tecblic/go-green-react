@@ -17,8 +17,41 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
         params: query,
       }),
     }),
+
+    getSupervisorDayShift: builder.mutation({
+      query: () => ({
+        url: API.WAREHOUSE_PROPOSAL.SUPERVISOR_DAY,
+        method: "GET",
+      }),
+    }),
+    getSupervisorNightShift: builder.mutation({
+      query: () => ({
+        url: API.WAREHOUSE_PROPOSAL.SUPERVISOR_NIGHT,
+        method: "GET",
+      }),
+    }),
+
+    getSecurityGuardDayShift: builder.mutation({
+      query: () => ({
+        url: API.WAREHOUSE_PROPOSAL.SUPERVISOR_DAY,
+        method: "GET",
+      }),
+    }),
+    getSecurityGuardNightShift: builder.mutation({
+      query: () => ({
+        url: API.WAREHOUSE_PROPOSAL.SECURITY_NIGHT,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useSaveAsDraftMutation, useFetchLocationDrillDownMutation } =
-  warehouseProposalApiSlice;
+export const {
+  useSaveAsDraftMutation,
+  useFetchLocationDrillDownMutation,
+  useGetSupervisorDayShiftMutation,
+  useGetSupervisorNightShiftMutation,
+
+  useGetSecurityGuardDayShiftMutation,
+  useGetSecurityGuardNightShiftMutation,
+} = warehouseProposalApiSlice;

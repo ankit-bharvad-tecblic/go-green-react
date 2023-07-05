@@ -25,6 +25,7 @@ const filterFields = [
     name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED ACTIVE": "is_active",
@@ -59,7 +60,7 @@ const addEditFormFields = [
     name: "is_active",
     type: "switch",
   },
-];
+]; 
 
 const schema = yup.object().shape({
   is_active: yup.string(),

@@ -20,9 +20,7 @@ const dataTableFiltersSlice = createSlice({
     setSidebarVisibility: (state, action) => {
       state.sidebarVisibility = action.payload;
     },
-    setDisabledFutureDates: (state, action) => {
-      state.disabledFutureDates = action.payload;
-    },
+   
   },
 });
 

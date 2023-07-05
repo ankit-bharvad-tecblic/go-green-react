@@ -1,27 +1,16 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useFormContext,
-} from "react-hook-form";
-import * as yup from "yup";
+import { FormProvider, useForm } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
-  useAddCommodityGradeMutation,
-  useAddCommodityTypeMasterMutation,
-  useGetCommodityTypeMasterMutation,
-  useUpdateCommodityGradeMutation,
-  useUpdateCommodityTypeMasterMutation,
   useUpdateAreaMasterMutation,
   useAddAreaMasterMutation,
   useGetAreaMasterMutation,
   useGetDistrictMasterMutation,
-  useGetEarthQuakeZoneTypeMasterMutation,
   useGetZoneMasterMutation,
   useGetStateMasterMutation,
   useGetRegionMasterMutation,
@@ -43,7 +32,7 @@ const AddEditFormArea = () => {
   const [getZoneMaster] = useGetZoneMasterMutation();
   const [getStateMaster] = useGetStateMasterMutation();
   const [getRegionMaster] = useGetRegionMasterMutation();
-  const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] =
     useState(addEditFormFields);
   const [selectBoxOptions, setSelectBoxOptions] = useState({
@@ -73,8 +62,6 @@ const AddEditFormArea = () => {
   };
 
   const [getDistrictMaster] = useGetDistrictMasterMutation();
-  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
-    useGetAreaMasterMutation();
 
   const [addAreaMaster, { isLoading: addAreaMasterApiIsLoading }] =
     useAddAreaMasterMutation();
@@ -216,13 +203,12 @@ const AddEditFormArea = () => {
   useEffect(() => {
     if (details?.id) {
       let obj = {
-        earthquake_zone_type_id: details.earthquake_zone_type_id,
         district_name: details.district.district_name,
         zone: details.zone.zone_name,
         region: details.region.region_name,
         state: details.state.state_name,
-        is_active: details.is_active,
-        is_block: details.is_block,
+        is_active: details?.is_active,
+        is_block: details?.is_block,
         area_name: details.area_name,
       };
 
@@ -285,7 +271,8 @@ const AddEditFormArea = () => {
                         {generateFormField({
                           ...item,
                           label: "",
-                          isChecked: details?.active,
+                          isChecked: details?.is_active,
+
                           style: {
                             mb: 1,
                             mt: 1,
@@ -381,7 +368,7 @@ const AddEditFormArea = () => {
                     <CustomSelector
                       name="district"
                       label=""
-                      isChecked="details?.active"
+                      // isChecked="details?.active"
                       options={selectBoxOptions.district}
                       selectedValue={selectBoxOptions.district.find(
                         (opt) => opt.label === details?.district.district_name
@@ -404,28 +391,28 @@ const AddEditFormArea = () => {
                       name="is_active"
                       // type="switch"
                       label=""
+                      isChecked={details?.is_active}
                       style={{
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
                     />
                   </Box>
                 </MotionSlideUp>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Is Block
+                      Block
                     </Text>
                     <CustomSwitch
                       name="is_block"
                       // type="switch"
                       label=""
+                      isChecked={details?.is_block}
                       style={{
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
                     />
                   </Box>
                 </MotionSlideUp>

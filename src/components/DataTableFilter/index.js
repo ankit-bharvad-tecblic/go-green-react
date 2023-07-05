@@ -71,6 +71,7 @@ const Index = () => {
     Object.keys(defaultValues).forEach((key) => {
       methods.setValue(key, "");
     });
+    dispatch(setUpFilterQuery([]));
   };
 
   return (

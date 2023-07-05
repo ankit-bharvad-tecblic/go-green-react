@@ -86,6 +86,9 @@ function RegionMaster() {
     }
   };
 
+ 
+
+
   const columns = [
     columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
@@ -232,6 +235,7 @@ function RegionMaster() {
         loading={getRegionMasterApiIsLoading}
         addForm={() => addForm()}
       />
+     
     </div>
   );
 }

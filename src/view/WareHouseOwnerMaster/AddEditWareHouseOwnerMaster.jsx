@@ -1,29 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
-import generateFormField from "../../components/Elements/GenerateFormField";
 import {
-  useAddUserMasterMutation,
-  useGetUserMasterMutation,
-  useUpdateUserMasterMutation,
+  useAddWareHouseOwnerTypeMutation,
+  useGetWarehouseTypeMasterMutation,
+  useUpdateWareHouseOwnerTypeMutation,
 } from "../../features/master-api-slice";
 import { addEditFormFields, schema } from "./fields";
-import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { yupResolver } from "@hookform/resolvers/yup";
+import generateFormField from "../../components/Elements/GenerateFormField";
 
-function AddEditFormUserMaster() {
+const AddEditWareHouseOwnerMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
-  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState();
+  const [getWarehouseTypeMaster] = useGetWarehouseTypeMasterMutation();
+  const [
+    addWareHouseOwnerType,
+    { isLoading: addWareHouseOwnerTypeApiIsLoading },
+  ] = useAddWareHouseOwnerTypeMutation();
+
+  const [
+    updateWareHouseOwnerType,
+    { isLoading: updateWareHouseOwnerTypeApiIsLoading },
+  ] = useUpdateWareHouseOwnerTypeMutation();
 
   const details = location.state?.details;
-  console.log("details ---> ", details);
+  console.log("details", details);
+
+  console.log("methods errors ---> ", methods.formState.errors);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -40,61 +52,80 @@ function AddEditFormUserMaster() {
       methods.setValue(key, "");
     });
   };
-
-  const [addUserMaster, { isLoading: addUserMasterApiIsLoading }] =
-    useAddUserMasterMutation();
-  const [updateUserMaster, { isLoading: updateUserMasterApiIsLoading }] =
-    useUpdateUserMasterMutation();
-
   const addData = async (data) => {
     try {
-      const response = await addUserMaster(data).unwrap();
-      console.log("add User master res", response);
+      const response = await addWareHouseOwnerType(data).unwrap();
+      console.log("add warehouse owner type master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/manage-users/user-master");
+        navigate("/warehouse-master/warehouse-owner-master");
       }
     } catch (error) {
       console.error("Error:", error);
       toasterAlert(error);
+    }
+  };
+
+  const getWarehouseType = async () => {
+    try {
+      const response = await getWarehouseTypeMaster().unwrap();
+      console.log("success:", response);
+      let arr = response?.results.map((type) => ({
+        // label: type.commodity_type,
+        value: type.id,
+      }));
+
+      setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+              options: arr,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
   const updateData = async (data) => {
     try {
-      const response = await updateUserMaster(data).unwrap();
+      const response = await updateWareHouseOwnerType(data).unwrap();
       if (response.status === 200) {
-        console.log("update User master res", response);
+        console.log("update warehouse owner type master res", response);
         toasterAlert(response);
-        navigate("/manage-users/user-master");
+        navigate("/warehouse-master/warehouse-owner-master");
       }
     } catch (error) {
       console.error("Error:", error);
       toasterAlert(error);
     }
   };
+
   useEffect(() => {
-    setAddEditFormFieldsList(addEditFormFields);
+    getWarehouseType();
     if (details?.id) {
       let obj = {
-        email: details.email,
-        first_name: details.first_name,
-        phone: details.phone,
-        user_role: details.user_role,
-        // last_login: details.last_login,
-        is_active: details.is_active,
+        // hiring_proposal_id: details.hiring_proposal_id.id,
+        warehouse_owner_name: details.warehouse_owner_name,
+        warehouse_owner_contact_no: details.warehouse_owner_contact_no,
+        warehouse_owner_address: details.warehouse_owner_address,
+        rent_amount: details.rent_amount,
+
+        revenue_sharing_ratio: details.revenue_sharing_ratio,
       };
       console.log("details", details);
-      console.log("obj", obj);
 
       Object.keys(obj).forEach(function (key) {
-        console.log("key value test : " + key + " : " + obj[key]);
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
   }, [details]);
   return (
-    // <Box bg={"white"}>
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -112,19 +143,28 @@ function AddEditFormUserMaster() {
                         ...item,
                         label: "",
                         // options: item.type === "select" && commodityTypeMaster,
+                        selectedValue:
+                          item.type === "select" &&
+                          item?.options?.find(
+                            (opt) =>
+                              opt.label ===
+                              details?.commodity_type?.commodity_type
+                          ),
+                        selectType: "label",
                         isChecked: details?.active,
+                        isClearable: false,
                         style: { mb: 1, mt: 1 },
                       })}
                     </Box>
                   </MotionSlideUp>
                 ))}
             </Box>
+
             <Box
               display="flex"
               gap={2}
               justifyContent="flex-end"
               mt="10"
-              mr="6"
               px="0"
             >
               <Button
@@ -141,6 +181,7 @@ function AddEditFormUserMaster() {
               >
                 Clear
               </Button>
+
               <Button
                 type="submit"
                 //w="full"
@@ -149,7 +190,8 @@ function AddEditFormUserMaster() {
                 color={"white"}
                 borderRadius={"full"}
                 isLoading={
-                  addUserMasterApiIsLoading || updateUserMasterApiIsLoading
+                  addWareHouseOwnerTypeApiIsLoading ||
+                  updateWareHouseOwnerTypeApiIsLoading
                 }
                 my={"4"}
                 px={"10"}
@@ -161,12 +203,10 @@ function AddEditFormUserMaster() {
         </form>
       </FormProvider>
     </Box>
-    // </Box>
   );
-}
+};
 
-export default AddEditFormUserMaster;
-
+export default AddEditWareHouseOwnerMaster;
 const toasterAlert = (obj) => {
   let msg = obj?.message;
   let status = obj?.status;
