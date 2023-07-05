@@ -96,7 +96,8 @@ const AddEditFormEmployeeMaster = () => {
     try {
       const response = await getStateMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.state_name,
         value: item.id,
       }));
@@ -128,8 +129,9 @@ const AddEditFormEmployeeMaster = () => {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
 
-      let arr = response?.results.map((item) => ({
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));
@@ -150,8 +152,8 @@ const AddEditFormEmployeeMaster = () => {
       const response = await getDistrictMaster().unwrap();
 
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.district_name,
         value: item.id,
       }));
@@ -167,8 +169,8 @@ const AddEditFormEmployeeMaster = () => {
       const response = await getRoleMaster().unwrap();
 
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.role_name,
         value: item.id,
       }));
@@ -186,8 +188,8 @@ const AddEditFormEmployeeMaster = () => {
 
       console.log("Success:", response);
       console.log(details);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.zone_name,
         value: item.id,
       }));
@@ -220,8 +222,8 @@ const AddEditFormEmployeeMaster = () => {
       const response = await getAreaMaster().unwrap();
 
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.area_name,
         value: item.id,
       }));
@@ -237,8 +239,8 @@ const AddEditFormEmployeeMaster = () => {
       const response = await getUserMaster().unwrap();
 
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.email,
         value: item.id,
       }));
@@ -254,8 +256,8 @@ const AddEditFormEmployeeMaster = () => {
       const response = await getUserMaster().unwrap();
 
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.email,
         value: item.id,
       }));
@@ -352,31 +354,11 @@ const AddEditFormEmployeeMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Email
-                    </Text>
-                    <CustomInput
-                      name="email_id"
-                      placeholder="Enter username"
-                      type="email"
-                      label=""
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Full Name
+                      Employee Full Name
                     </Text>
                     <CustomInput
                       name="employee_full_name"
-                      placeholder="Enter fullname"
+                      placeholder="Enter Employee Full Name"
                       type="text"
                       label=""
                       style={{
@@ -392,11 +374,12 @@ const AddEditFormEmployeeMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Mobile Number
+                      Contact Number
                     </Text>
                     <CustomInput
                       name="contact_number"
-                      placeholder="Mobile Number"
+                      placeholder=" Contact Number
+                      "
                       type="text"
                       label=""
                       style={{
@@ -408,7 +391,7 @@ const AddEditFormEmployeeMaster = () => {
                 </MotionSlideUp>
               </Box>
 
-              <Box>
+              {/* <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
@@ -430,7 +413,7 @@ const AddEditFormEmployeeMaster = () => {
                     />
                   </Box>
                 </MotionSlideUp>
-              </Box>
+              </Box> */}
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -478,6 +461,30 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Zone
+                    </Text>
+                    <CustomSelector
+                      name="zone_id"
+                      label=""
+                      options={selectBoxOptions.zones}
+                      selectedValue={selectBoxOptions.zones.find(
+                        (opt) => opt.label === details?.zone_id.zone_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -503,55 +510,6 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
-
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Zone
-                    </Text>
-                    <CustomSelector
-                      name="zone_id"
-                      label=""
-                      options={selectBoxOptions.zones}
-                      selectedValue={selectBoxOptions.zones.find(
-                        (opt) => opt.label === details?.zone_id.zone_name
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Role
-                    </Text>
-                    <CustomSelector
-                      name="role"
-                      label=""
-                      options={selectBoxOptions.roles}
-                      selectedValue={selectBoxOptions.roles.find(
-                        (opt) => opt.label === details?.role.role_name
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -575,6 +533,89 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Address
+                    </Text>
+                    <CustomTextArea
+                      name="address"
+                      placeholder="Address "
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Pin Code
+                    </Text>
+                    <CustomInput
+                      name="pin_code"
+                      placeholder="Pin Code"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Email ID
+                    </Text>
+                    <CustomInput
+                      name="email_id"
+                      placeholder="Enter Emial ID"
+                      type="email"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              {/* <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Role
+                    </Text>
+                    <CustomSelector
+                      name="role"
+                      label=""
+                      options={selectBoxOptions.roles}
+                      selectedValue={selectBoxOptions.roles.find(
+                        (opt) => opt.label === details?.role.role_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box> */}
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -603,50 +644,11 @@ const AddEditFormEmployeeMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Address
-                    </Text>
-                    <CustomTextArea
-                      name="address"
-                      placeholder="Address "
-                      type="text"
-                      label=""
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Pin Code
-                    </Text>
-                    <CustomInput
-                      name="pin_code"
-                      placeholder="Pin Code"
-                      type="number"
-                      label=""
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Job Title
+                      Designation
                     </Text>
                     <CustomInput
                       name="job_title"
-                      placeholder="Job Title"
+                      placeholder="Designation"
                       type="text"
                       label=""
                       style={{
@@ -686,7 +688,7 @@ const AddEditFormEmployeeMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      EMPLOYEE START DATE
+                      Employee start date
                     </Text>
                     <CustomInput
                       name="employee_start_date"

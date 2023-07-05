@@ -116,18 +116,18 @@ const SidebarList = [
         state: "pageCollapse",
         icon: <PeopleIcon color="inherit" />,
         views: [
-          {
-            path: "/employee-master",
-            name: "Employee Master",
-            secondaryNavbar: true,
-            component: EmployeeMaster,
-          },
-          {
-            path: "/department-master",
-            name: "Department Master",
-            secondaryNavbar: true,
-            component: DepartmentMaster,
-          },
+          // {
+          //   path: "/employee-master",
+          //   name: "Employee Master",
+          //   secondaryNavbar: true,
+          //   component: EmployeeMaster,
+          // },
+          // {
+          //   path: "/department-master",
+          //   name: "Department Master",
+          //   secondaryNavbar: true,
+          //   component: DepartmentMaster,
+          // },
           {
             path: "/manage-users/user-master",
             name: "User Master",
@@ -237,12 +237,12 @@ const SidebarList = [
             secondaryNavbar: true,
             component: CommodityGrade,
           },
-          {
-            path: "/commodity-master/commodity-bag-master",
-            name: "Commodity Bag Master",
-            secondaryNavbar: true,
-            component: CommodityBagMaster,
-          },
+          // {
+          //   path: "/commodity-master/commodity-bag-master",
+          //   name: "Commodity Bag Master",
+          //   secondaryNavbar: true,
+          //   component: CommodityBagMaster,
+          // },
           {
             path: "/commodity-master/hsn-master",
             name: "HSN Master",

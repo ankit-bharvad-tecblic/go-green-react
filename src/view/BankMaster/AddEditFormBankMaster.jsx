@@ -77,7 +77,9 @@ function AddEditFormBankMaster() {
     try {
       const response = await getStateMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+
+      let arr = onlyActive?.map((item) => ({
         label: item.state_name,
         value: item.id,
       }));
@@ -109,8 +111,8 @@ function AddEditFormBankMaster() {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));

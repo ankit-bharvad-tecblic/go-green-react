@@ -87,6 +87,7 @@ function AddEditFormBankBranchMaster() {
     try {
       const response = await getBankBranchMaster().unwrap();
       console.log("response==>", response);
+
       let arr = response?.results.map((type) => ({
         label: type.branch_name,
         value: type.id,
@@ -113,8 +114,8 @@ function AddEditFormBankBranchMaster() {
     try {
       const response = await getBankMaster().unwrap();
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.bank_name,
         value: item.id,
       }));
@@ -134,10 +135,16 @@ function AddEditFormBankBranchMaster() {
     try {
       const response = await getStateMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.state_name,
         value: item.id,
       }));
+
+      // let arr = response?.results.map((item) => ({
+      //   label: item.state_name,
+      //   value: item.id,
+      // }));
 
       console.log(arr);
 
@@ -166,8 +173,9 @@ function AddEditFormBankBranchMaster() {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
 
-      let arr = response?.results.map((item) => ({
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));
@@ -188,8 +196,8 @@ function AddEditFormBankBranchMaster() {
       const response = await getDistrictMaster().unwrap();
 
       console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.district_name,
         value: item.id,
       }));

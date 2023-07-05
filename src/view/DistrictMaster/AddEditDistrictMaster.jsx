@@ -85,8 +85,8 @@ const AddEditFormDistrictMaster = () => {
 
       console.log("Success:", response);
       console.log(details);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.zone_name,
         value: item.id,
       }));
@@ -118,7 +118,8 @@ const AddEditFormDistrictMaster = () => {
     try {
       const response = await getStateMaster().unwrap();
       console.log("response ", response);
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.state_name,
         value: item.id,
       }));
@@ -150,8 +151,8 @@ const AddEditFormDistrictMaster = () => {
     try {
       const response = await getRegionMaster().unwrap();
       console.log("Success:", response);
-
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.region_name,
         value: item.id,
       }));

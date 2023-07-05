@@ -63,7 +63,9 @@ const AddEditFormCommodityMaster = () => {
   const getCommodityType = async () => {
     try {
       const response = await getCommodityTypeMaster().unwrap();
-      let arr = response?.results.map((type) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+
+      let arr = onlyActive?.map((type) => ({
         label: type.commodity_type,
         value: type.id,
       }));
