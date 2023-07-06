@@ -330,6 +330,7 @@ function FunctionalTable({
         overflowX="auto"
         h="calc( 100vh - 343px )"
         overflowY="auto"
+        zIndex={1}
       >
         <Table mt="15px">
           <Thead position="sticky" top="0px" background="white" zIndex="10">
