@@ -11,8 +11,11 @@ import {
 import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 function AddEditFormDepartmentMaster() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const methods = useForm({
@@ -89,9 +92,25 @@ function AddEditFormDepartmentMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
-
+    // set breadcrumbArray
+    const breadcrumbArray = [
+      {
+        title: "Department Master",
+        link: "/department-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
     // getBank();
   }, [details]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
   return (
     <Box
       bg="white"

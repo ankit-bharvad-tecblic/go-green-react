@@ -21,8 +21,15 @@ function generateFormField(obj) {
     max,
   } = obj;
   const formatDate = (value) => {
-    const formattedDate = moment(value).format("YYYY-MM-DD");
-    return formattedDate;
+    // const formattedDate = moment(value, "YYYY-MM-DD").format("MMMM D, YYYY");
+    // return formattedDate;
+
+    const options = { month: "long", day: "numeric", year: "numeric" };
+    const date = new Date(value);
+    return date.toLocaleDateString(undefined, options);
+
+    // const formattedDate = moment(value).format("MMMM D, YYYY");
+    // return formattedDate;
   };
   switch (type) {
     case "text":

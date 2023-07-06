@@ -22,8 +22,11 @@ import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomInput from "../../components/Elements/CustomInput";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 function AddEditFormUserMaster() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -268,18 +271,27 @@ function AddEditFormUserMaster() {
     // getAllArea();
     // getAllReportingManager();
     // getAllUsers();
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: "User Master",
+        link: "/manage-location/region-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
   return (
     // <Box bg={"white"}>
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (

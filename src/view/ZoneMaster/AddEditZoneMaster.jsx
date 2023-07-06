@@ -19,9 +19,12 @@ import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { useDispatch } from "react-redux";
 
 const AddEditZoneMaster = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -187,12 +190,32 @@ const AddEditZoneMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    const breadcrumbArray = [
+      {
+        title: "Manage Locations",
+        link: "/manage-location/zone-master",
+      },
+      {
+        title: "Zone Master",
+        link: "/manage-location/zone-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
   useEffect(() => {
     getRegionMasterList();
     // getAllStateMaster();
     setAddEditFormFieldsList(addEditFormFields);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
   }, []);
 
   return (
@@ -292,7 +315,6 @@ const AddEditZoneMaster = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
-
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">

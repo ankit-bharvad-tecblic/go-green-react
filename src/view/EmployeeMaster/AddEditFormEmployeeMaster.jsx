@@ -24,9 +24,12 @@ import CustomSwitch from "../../components/Elements/CustomSwitch";
 
 import CustomInput from "../../components/Elements/CustomInput";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 const AddEditFormEmployeeMaster = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -320,7 +323,24 @@ const AddEditFormEmployeeMaster = () => {
     getAllReportingManager();
     getAllUsers();
     // getBank();
+
+    const breadcrumbArray = [
+      {
+        title: "Employee Master",
+        link: "/employee-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
 
   return (
     <Box bg="white" borderRadius={10} p="10">

@@ -1,4 +1,4 @@
-export const API = {
+export const  API = {
   SIGNUP: "/register/",
   LOGIN: "/login/",
   FORGOT_PWD: "/Forgotpass_Api/",

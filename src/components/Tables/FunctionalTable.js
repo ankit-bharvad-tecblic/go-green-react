@@ -484,6 +484,14 @@ function FunctionalTable({
                                 )
                               : " - "}
                           </Text>
+                        ) : cell.column.id === "last_updated_date" ? (
+                          <Text>
+                            {cell.row.original.last_updated_date
+                              ? moment(
+                                  cell.row.original.last_updated_date
+                                ).format("LL")
+                              : " - "}
+                          </Text>
                         ) : cell.column.id === "last_login" ? (
                           <Text>
                             {cell.row.original.last_login
