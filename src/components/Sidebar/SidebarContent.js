@@ -56,7 +56,7 @@ const SidebarContent = ({ logoText, routes }) => {
           <div key={prop.name}>
             <Accordion allowMultiple>
               <AccordionItem border={"none"}>
-                <AccordionButton p="0px">
+                <AccordionButton p="0px" ml={"5px"}>
                   <Flex
                     as="span"
                     flex="1"
@@ -198,8 +198,8 @@ const SidebarContent = ({ logoText, routes }) => {
                     </IconBox>
                   )}
                   <Text
-                    color={"#A0AEC0"}
-                    fontWeight="600"
+                    color={"#636363"}
+                    fontWeight="medium"
                     my="auto"
                     fontSize="14px"
                   >

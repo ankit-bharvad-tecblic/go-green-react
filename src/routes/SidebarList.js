@@ -57,15 +57,6 @@ const SidebarList = [
     icon: <HouseIcon color="inherit" />,
     component: Dashboard,
   },
-
-  {
-    path: "/warehouse-proposal",
-    name: "Warehouse Proposal",
-    secondaryNavbar: false,
-    icon: <HomeIcon color="inherit" />,
-    component: WarehouseProposal,
-  },
-
   {
     name: "All Masters",
     category: "masters",
@@ -357,6 +348,14 @@ const SidebarList = [
         ],
       },
     ],
+  },
+
+  {
+    path: "/warehouse-proposal",
+    name: "Warehouse Proposal",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: WarehouseProposal,
   },
 
   // {
