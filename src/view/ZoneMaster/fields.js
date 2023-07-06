@@ -7,7 +7,7 @@ const filterFields = [
     label: "Region ",
     name: "region__region_name",
     placeholder: "Region ",
-    type: "select",
+    type: "text",
   },
   {
     " State": "state__state_name",
@@ -15,7 +15,7 @@ const filterFields = [
     label: "State ",
     name: "state__state_name",
     placeholder: "State ",
-    type: "select",
+    type: "text",
   },
   {
     "Zone Name": "zone_name",

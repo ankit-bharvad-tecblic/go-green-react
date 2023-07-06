@@ -2,6 +2,30 @@ import * as yup from "yup";
 
 const filterFields = [
   {
+    Region: "zone__state__region__region_name",
+    isActiveFilter: false,
+    label: "Region",
+    name: "zone__state__region__region_name",
+    placeholder: "Region",
+    type: "text",
+  },
+  {
+    State: "zone__state__state_name",
+    isActiveFilter: false,
+    label: "State",
+    name: "zone__state__state_name",
+    placeholder: "State",
+    type: "text",
+  },
+  {
+    "ZONE": "zone__zone_name",
+    isActiveFilter: false,
+    label: "Zone",
+    name: "zone__zone_name",
+    placeholder: "Zone",
+    type: "text",
+  },
+  {
     "DISTRICT NAME": "district__district_name",
     isActiveFilter: false,
     label: "District",
