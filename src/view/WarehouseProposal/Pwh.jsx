@@ -86,7 +86,7 @@ const reactSelectStyle = {
 };
 
 const client_details_obj = {
-  client_type: "",
+  client_type: "Retail",
   client_name: "",
   mobile_number: "",
   region: "",
@@ -96,15 +96,15 @@ const client_details_obj = {
   area: "",
   address: "",
 
-  storage_charges: "",
-  reservation_qty: "",
+  storage_charges: null,
+  reservation_qty: null,
   reservation_start_date: "",
   reservation_end_date: "",
-  reservation_period_month: "",
+  reservation_period_month: null,
   reservation_billing_cycle: "",
 
   post_reservation_billing_cycle: "",
-  post_reservation_billing_cycle_charges: "",
+  post_reservation_storage_charges: "",
 };
 
 const commonStyle = {
@@ -201,8 +201,7 @@ const formFieldsName = {
       reservation_billing_cycle: "reservation_billing_cycle",
 
       post_reservation_billing_cycle: "post_reservation_billing_cycle",
-      post_reservation_billing_cycle_charges:
-        "post_reservation_billing_cycle_charges",
+      post_reservation_storage_charges: "post_reservation_storage_charges",
     },
     intention_letter: "intention_letter",
     remarks: "remarks",
@@ -339,30 +338,119 @@ const schema = Yup.object().shape({
       area: Yup.string().trim().required("Area is required"),
       address: Yup.string().trim().required("Address is required"),
 
-      storage_charges: Yup.number()
-        .typeError("Storage charges is required")
-        .required("Storage charges is required"),
-      reservation_qty: Yup.number()
-        .typeError("Reservation qty is required")
-        .required("Reservation qty is required"),
-      reservation_start_date: Yup.string().required(
-        "Reservation start date is required"
-      ),
-      reservation_end_date: Yup.string().required(
-        "Reservation end date is required"
-      ),
-      reservation_period_month: Yup.string().required(
-        "Reservation period month is required"
-      ),
-      reservation_billing_cycle: Yup.string().required(
-        "Reservation billing cycle is required"
-      ),
-      post_reservation_billing_cycle: Yup.string().required(
-        "Post reservation billing cycle is required"
-      ),
-      post_reservation_billing_cycle_charges: Yup.string().required(
-        "Post reservation billing cycle charges is required"
-      ),
+      // Start dynamic's fields when show only client type === corporate
+
+      storage_charges: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.number()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("Storage charges is required"),
+        otherwise: () => Yup.number(),
+      }),
+
+      reservation_qty: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.number()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("Reservation qty is required"),
+        otherwise: () => Yup.number(),
+      }),
+
+      reservation_start_date: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.date()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("Reservation start date is required")
+            .test("isValidDate", "Invalid reservation start date", (value) => {
+              return value instanceof Date && !isNaN(value);
+            }),
+        otherwise: () => Yup.date(),
+      }),
+
+      reservation_end_date: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.date()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("Reservation end date is required")
+            .test("isValidDate", "Invalid reservation end date", (value) => {
+              return value instanceof Date && !isNaN(value);
+            }),
+        otherwise: () => Yup.date(),
+      }),
+
+      reservation_period_month: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.number()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("PReservation period month is required"),
+        otherwise: () => Yup.number(),
+      }),
+
+      reservation_billing_cycle: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.string().required("Reservation billing cycle is required"),
+        otherwise: () => Yup.string(),
+      }),
+
+      post_reservation_billing_cycle: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.string().required("Post reservation billing cycle is required"),
+        otherwise: () => Yup.string(),
+      }),
+
+      post_reservation_storage_charges: Yup.string().when("client_type", {
+        is: (value) => value === "Corporate",
+        then: () =>
+          Yup.number()
+            .nullable()
+            .transform((value, originalValue) => {
+              if (originalValue === "") {
+                return null;
+              }
+              return value;
+            })
+            .required("Post reservation storage charges is required"),
+        otherwise: () => Yup.number(),
+      }),
+
+      // end dynamic's fields when show only client type === corporate
     })
   ),
   intention_letter: Yup.string()
@@ -458,22 +546,7 @@ const Pwh = () => {
   };
 
   const append_client_list = () => {
-    add_client_list({
-      client_type: "",
-      client_name: "",
-      mobile_number: "",
-      region: "",
-      state: "",
-      zone: "",
-      district: "",
-      area: "",
-      address: "",
-
-      // reservation_qty: "",
-      // reservation_period: "",
-      // reservation_start_date: "",
-      // reservation_end_date: "",
-    });
+    add_client_list(client_details_obj);
   };
 
   const handleExpiryDateChange = (value) => {
@@ -3803,7 +3876,10 @@ const Pwh = () => {
                                                 getValues(
                                                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
                                                 )
-                                            )[0] || {}
+                                            )[0] || {
+                                              label: "Retail",
+                                              value: "Retail",
+                                            }
                                           }
                                           isClearable={false}
                                           selectType="label"
@@ -4422,7 +4498,7 @@ const Pwh = () => {
                                             >
                                               {
                                                 errors?.client_list?.[index]
-                                                  ?.post_reservation_billing_cycle_charges
+                                                  ?.post_reservation_billing_cycle
                                                   ?.message
                                               }
                                             </Box>
@@ -4436,7 +4512,7 @@ const Pwh = () => {
                                               Post Reservation Storage charges
                                             </Text>{" "}
                                             <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle_charges}`}
+                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_storage_charges}`}
                                               placeholder="Post Reservation Storage charges"
                                               type="number"
                                               label=""
@@ -4449,7 +4525,7 @@ const Pwh = () => {
                                             >
                                               {
                                                 errors?.client_list?.[index]
-                                                  ?.post_reservation_billing_cycle_charges
+                                                  ?.post_reservation_storage_charges
                                                   ?.message
                                               }
                                             </Box>
