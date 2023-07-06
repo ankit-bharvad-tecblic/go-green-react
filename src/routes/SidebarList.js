@@ -303,7 +303,7 @@ const SidebarList = [
         icon: <PeopleIcon color="inherit" />,
         views: [
           {
-            path: "manage-client/client-master",
+            path: "/manage-client/client-master",
             name: "Client Master",
             secondaryNavbar: true,
             component: ClientMaster,

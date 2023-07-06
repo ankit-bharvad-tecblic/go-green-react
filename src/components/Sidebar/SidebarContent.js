@@ -33,10 +33,32 @@ const SidebarContent = ({ logoText, routes }) => {
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    console.log(location.pathname);
-    console.log(routeName);
-    return location.pathname === routeName ? "active" : "";
+    // console.log(location.pathname, 8989);
+    // console.log(routeName, 8989);
+    // console.log(location.pathname.includes(routeName), 8989);
+    // console.log(location.pathname.split("/"), 9000);
+    if (routeName === "/") {
+      return location.pathname === routeName ? "active" : "";
+    } else {
+      function isSubset(array1, array2) {
+        let i = 0;
+        let j = 0;
+
+        while (i < array1.length && j < array2.length) {
+          if (array1[i] === array2[j]) {
+            i++;
+          }
+          j++;
+        }
+
+        return i === array1.length;
+      }
+      return isSubset(routeName.split("/"), location.pathname.split("/"))
+        ? "active"
+        : "";
+    }
   };
+
   const createLinks = (routes) => {
     // Chakra Color Mode
     // const activeBg = useColorModeValue("white", "gray.700");
