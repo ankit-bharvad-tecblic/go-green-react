@@ -109,11 +109,6 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "Mobile Number",
     }),
-    columnHelper.accessor("user.email", {
-      cell: (info) => info.getValue(),
-      header: "User",
-    }),
-
     columnHelper.accessor("region_id.region_name", {
       cell: (info) => info.getValue(),
       header: "Region",
@@ -130,17 +125,9 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "District ",
     }),
-    columnHelper.accessor("role.role_name", {
-      cell: (info) => info.getValue(),
-      header: "Role ",
-    }),
     columnHelper.accessor("area.area_name", {
       cell: (info) => info.getValue(),
       header: "Area ",
-    }),
-    columnHelper.accessor("department.department_name", {
-      cell: (info) => info.getValue(),
-      header: "Department ",
     }),
     columnHelper.accessor("address", {
       cell: (info) => info.getValue(),
@@ -152,17 +139,35 @@ function EmployeeMaster() {
     }),
     columnHelper.accessor("email_id", {
       cell: (info) => info.getValue(),
-      header: "Email",
+      header: "Email ID",
     }),
-
+    columnHelper.accessor("department.department_name", {
+      cell: (info) => info.getValue(),
+      header: "Department ",
+    }),
     columnHelper.accessor("job_title", {
       cell: (info) => info.getValue(),
-      header: "Job Title",
+      header: "Designation",
     }),
+
+    // columnHelper.accessor("user.email", {
+    //   cell: (info) => info.getValue(),
+    //   header: "User",
+    // }),
     columnHelper.accessor("reporting_manager_id.email", {
       cell: (info) => info.getValue(),
       header: "Reporting Manager",
     }),
+
+    // columnHelper.accessor("role.role_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Role ",
+    // }),
+
+    // columnHelper.accessor("reporting_manager_id.email", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Reporting Manager",
+    // }),
     columnHelper.accessor("employee_start_date", {
       cell: (info) => info.getValue(),
       header: "Employee start date",
@@ -184,7 +189,7 @@ function EmployeeMaster() {
             size="md"
             colorScheme="whatsapp"
             // onChange={(e) => handleActiveDeActive(e, info)}
-            isChecked={info.row.original.active}
+            isChecked={info.row.original.is_active}
             // id="active_row"
             // isReadOnly
             // isChecked={flexRender(

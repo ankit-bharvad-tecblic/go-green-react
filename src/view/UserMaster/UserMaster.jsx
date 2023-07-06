@@ -90,17 +90,46 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("email", {
-      cell: (info) => info.getValue(),
-      header: "USER EMAIL",
-    }),
-    columnHelper.accessor("first_name", {
+    columnHelper.accessor("employee_name", {
       cell: (info) => info.getValue(),
       header: "FULL NAME",
     }),
     columnHelper.accessor("phone", {
       cell: (info) => info.getValue(),
       header: "CONTACT NO",
+    }),
+    columnHelper.accessor("address", {
+      cell: (info) => info.getValue(),
+      header: "Address ",
+    }),
+    // columnHelper.accessor("region_id.region_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Region",
+    // }),
+    // columnHelper.accessor("state_id.state_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "State ",
+    // }),
+    // columnHelper.accessor("zone_id.zone_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Zone ",
+    // }),
+    // columnHelper.accessor("district_id.district_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "District ",
+    // }),
+    // columnHelper.accessor("area.area_name", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Area ",
+    // }),
+
+    columnHelper.accessor("Pin Code", {
+      cell: (info) => info.getValue(),
+      header: " Pin Code ",
+    }),
+    columnHelper.accessor("email", {
+      cell: (info) => info.getValue(),
+      header: "USER EMAIL",
     }),
     columnHelper.accessor("user_role", {
       header: "ROLE",
@@ -113,15 +142,15 @@ const UserMaster = () => {
         return "N/A";
       },
     }),
-    // columnHelper.accessor("last_name", {
-    //   cell: (info) => info.getValue(),
-    //   header: "LAST NAME",
-    // }),
-
-    columnHelper.accessor("last_login", {
+    columnHelper.accessor("reporting_manager", {
       cell: (info) => info.getValue(),
-      header: "LAST LOGIN",
+      header: "Reporting Manager",
     }),
+
+    // columnHelper.accessor("last_login", {
+    //   cell: (info) => info.getValue(),
+    //   header: "LAST LOGIN",
+    // }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",

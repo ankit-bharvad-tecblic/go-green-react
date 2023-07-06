@@ -81,8 +81,8 @@ const AddEditFormCommodityVariety = () => {
       const response = await getCommodityMaster().unwrap();
 
       console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((item) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
         label: item.commodity_name,
         value: item.id,
       }));

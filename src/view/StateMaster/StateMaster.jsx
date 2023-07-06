@@ -189,26 +189,77 @@ const StateMaster = () => {
     });
   };
 
-  const getData = async () => {
-    //params filter
-    // if (filter.filter.length || filter.search) {
-    // if (filterQuery) {
+  // const getData = async () => {
+  //   //params filter
+  //   // if (filter.filter.length || filter.search) {
+  //   // if (filterQuery) {
 
-    paramString = Object.entries(filter)
-      .map(([key, value]) => {
-        if (Array.isArray(value)) {
-          return value
-            .map((item) => `${key}=${encodeURIComponent(item)}`)
-            .join("&");
-        }
-        return `${key}=${encodeURIComponent(value)}`;
-      })
-      .join("&");
-    // }
+  //   paramString = Object.entries(filter)
+  //     .map(([key, value]) => {
+  //       if (Array.isArray(value)) {
+  //         return value
+  //           .map((item) => `${key}=${encodeURIComponent(item)}`)
+  //           .join("&");
+  //       }
+  //       return `${key}=${encodeURIComponent(value)}`;
+  //     })
+  //     .join("&");
+  //   // }
+
+  //   try {
+  //     let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
+
+  //     const response = await getStateMaster(query).unwrap();
+  //     console.log("Success:", response);
+  //     setData(response?.results || []);
+  //     setFilter((old) => ({
+  //       ...old,
+  //       totalPage: Math.ceil(response?.total / old.limit),
+  //       total: response?.total_data,
+  //       totalFilter: response?.total,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
+  const getData = async () => {
+    let paramString = "";
+
+    // Check if filterQuery is an object
+    if (typeof filterQuery === "object") {
+      // Convert filterQuery object to a string
+      const filterQueryStr = Object.entries(filterQuery)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join("&");
+
+      paramString = Object.entries(filter)
+        .map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return value
+              .map((item) => `${key}=${encodeURIComponent(item)}`)
+              .join("&");
+          }
+          return `${key}=${encodeURIComponent(value)}`;
+        })
+        .join("&");
+
+      paramString += `&${filterQueryStr}`; // Append the filterQuery string to the paramString
+    } else {
+      paramString = Object.entries(filter)
+        .map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return value
+              .map((item) => `${key}=${encodeURIComponent(item)}`)
+              .join("&");
+          }
+          return `${key}=${encodeURIComponent(value)}`;
+        })
+        .join("&");
+    }
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-
       const response = await getStateMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);

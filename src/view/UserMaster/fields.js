@@ -3,20 +3,11 @@ import validation from "../../utils/validation";
 
 const filterFields = [
   {
-    Email: "email",
-    isActiveFilter: false,
-
-    label: "Email",
-    name: "email",
-    placeholder: "Email",
-    type: "text",
-  },
-  {
-    "FULL NAME": "first_name",
+    "FULL NAME": "employee_name",
     isActiveFilter: false,
 
     label: "Full Name",
-    name: "first_name",
+    name: "employee_name",
     placeholder: "Full Name",
     type: "text",
   },
@@ -30,13 +21,97 @@ const filterFields = [
     type: "text",
   },
   {
+    Address: "Address",
+    isActiveFilter: false,
+
+    label: "Address",
+    name: "",
+    placeholder: "Address",
+    type: "text",
+  },
+  // {
+  //   region: "region",
+  //   isActiveFilter: false,
+
+  //   label: "Region ",
+  //   name: "phone",
+  //   placeholder: "Region",
+  //   type: "select",
+  // },
+  // {
+  //   state: "state",
+  //   isActiveFilter: false,
+
+  //   label: "State",
+  //   name: "phone",
+  //   placeholder: "State",
+  //   type: "select",
+  // },
+  // {
+  //   zone: "zone",
+  //   isActiveFilter: false,
+
+  //   label: "Zone",
+  //   name: "phone",
+  //   placeholder: "Zone",
+  //   type: "select",
+  // },
+  // {
+  //   district: "district",
+  //   isActiveFilter: false,
+
+  //   label: "District",
+  //   name: "District",
+  //   placeholder: "",
+  //   type: "select",
+  // },
+  // {
+  //   Area: "Area",
+  //   isActiveFilter: false,
+
+  //   label: "Area",
+  //   name: "Area",
+  //   placeholder: "",
+  //   type: "select",
+  // },
+
+  {
+    "Pin code": "",
+    isActiveFilter: false,
+
+    label: "Pin code",
+    name: "Pin Code",
+    placeholder: "",
+    type: "number",
+  },
+
+  {
+    Email: "email",
+    isActiveFilter: false,
+
+    label: "Email",
+    name: "email",
+    placeholder: "Email",
+    type: "text",
+  },
+
+  {
     ROLE: "user_role__role_name",
     isActiveFilter: false,
 
     label: "Role",
     name: "user_role__role_name",
     placeholder: "Role",
-    type: "text",
+    type: "select",
+  },
+  {
+    ROLE: "reporting_manager",
+    isActiveFilter: false,
+
+    label: "Reporting Manager",
+    name: "reporting_manager",
+    placeholder: "Reporting Manager",
+    type: "select",
   },
   // {
   //   "LAST NAME": "last_name",
@@ -101,13 +176,7 @@ const filterFields = [
 
 const addEditFormFields = [
   {
-    name: "email",
-    label: " Email",
-    placeholder: "Email",
-    type: "email",
-  },
-  {
-    name: "first_name",
+    name: "employee_name",
     label: "Full Name ",
     placeholder: "Full Name",
     type: "text",
@@ -119,11 +188,31 @@ const addEditFormFields = [
     type: "text",
   },
   {
-    name: "user_role.role_name",
-    label: "Role",
-    placeholder: "Role",
+    name: "address",
+    label: "Address",
+    placeholder: "Address",
     type: "text",
   },
+
+  // {
+  //   name: "",
+  //   label: " Pin Code",
+  //   placeholder: "Pin Code",
+  //   type: "number",
+  // },
+  // {
+  //   name: "",
+  //   label: "Email",
+  //   placeholder: "Email",
+  //   type: "email",
+  // },
+
+  // {
+  //   name: "user_role.role_name",
+  //   label: "Role",
+  //   placeholder: "Role",
+  //   type: "text",
+  // },
   // {
   //   name: "last_name",
   //   label: "LAST NAME",
@@ -138,23 +227,23 @@ const addEditFormFields = [
   //   type: "date",
   // },
 
-  {
-    label: "Active",
-    name: "is_active",
-    type: "switch",
-  },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
 ];
- 
+
 const schema = yup.object().shape({
-  email: yup.string().required("email is required"),
-  first_name: yup.string().required("first name is required"),
+  email: yup.string().required("Email is required"),
+  employee_name: yup.string().required("Employee name is required"),
   phone: yup
     .string()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-  user_role: yup.string().required("role is required"),
-  // last_name: yup.string().required("last name is required"),
-
+  //user_role: yup.string().required("role is required"),
+  pin_code: yup.number().required("Pin number is required"),
+  address: yup.string().required("Address is required"),
   // last_login: yup.date().required("last login is required"),
   is_active: yup.string(),
 });

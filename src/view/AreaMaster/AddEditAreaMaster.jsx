@@ -94,12 +94,13 @@ const AddEditFormArea = () => {
   //   try {
   //     const response = await getDistrictMaster().unwrap();
 
-  //     console.log("Success:", response);
-  //     // setCommodityTypeMaster();
-  //     let arr = response?.results.map((item) => ({
-  //       label: item.district_name,
-  //       value: item.id,
-  //     }));
+  console.log("Success:", response);
+  // setCommodityTypeMaster();
+  let onlyActive = response?.results?.filter((item) => item.is_active);
+  let arr = onlyActive?.map((item) => ({
+    label: item.district_name,
+    value: item.id,
+  }));
 
   //     setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
   //   } catch (error) {
@@ -205,10 +206,12 @@ const AddEditFormArea = () => {
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          regions: response?.results?.filter((item)=> item.region_name !== "ALL - Region").map(({ region_name, id }) => ({
-            label: region_name,
-            value: id,
-          })),
+          regions: response?.results
+            ?.filter((item) => item.region_name !== "ALL - Region")
+            .map(({ region_name, id }) => ({
+              label: region_name,
+              value: id,
+            })),
         }));
       }
     } catch (error) {
@@ -247,10 +250,12 @@ const AddEditFormArea = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        states: response?.state?.filter((item)=> item.state_name !== "All - State").map(({ state_name, id }) => ({
-          label: state_name,
-          value: id,
-        })),
+        states: response?.state
+          ?.filter((item) => item.state_name !== "All - State")
+          .map(({ state_name, id }) => ({
+            label: state_name,
+            value: id,
+          })),
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -287,10 +292,12 @@ const AddEditFormArea = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.zone?.filter((item)=> item.zone_name !== "All - Zone").map(({ zone_name, id }) => ({
-          label: zone_name,
-          value: id,
-        })),
+        zones: response?.zone
+          ?.filter((item) => item.zone_name !== "All - Zone")
+          .map(({ zone_name, id }) => ({
+            label: zone_name,
+            value: id,
+          })),
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -325,10 +332,12 @@ const AddEditFormArea = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        districts: response?.district?.filter((item)=> item.district_name !== "All - District").map(({ district_name, id }) => ({
-          label: district_name,
-          value: id,
-        })),
+        districts: response?.district
+          ?.filter((item) => item.district_name !== "All - District")
+          .map(({ district_name, id }) => ({
+            label: district_name,
+            value: id,
+          })),
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -349,7 +358,7 @@ const AddEditFormArea = () => {
       regionOnChange({ value: details.district?.zone?.state?.region?.id });
       stateOnChange({ value: details.district?.zone?.state?.id });
       zoneOnChange({ value: details.district?.zone?.id });
-      districtOnChange({ value: details.district?.id});
+      districtOnChange({ value: details.district?.id });
       let obj = {
         district_name: details.district?.id,
         zone: details.district?.zone?.id,

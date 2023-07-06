@@ -83,8 +83,8 @@ const AddEditBankCmLocationMaster = () => {
       const response = await getBankBranchMaster().unwrap();
 
       console.log("Success:", response);
-      // setCommodityTypeMaster();
-      let arr = response?.results.map((type) => ({
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((type) => ({
         label: type.branch_name,
         value: type.id,
       }));

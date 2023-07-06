@@ -3,10 +3,18 @@ import { gstNumber, tinNumber } from "../../services/validation.service";
 
 const filterFields = [
   {
-    "REGION NAME": "region.region_name",
+    "STATE NAME": "state_name",
+    isActiveFilter: false,
+    label: "State ",
+    name: "state_name",
+    placeholder: "State",
+    type: "text",
+  },
+  {
+    "REGION NAME": "region",
     isActiveFilter: false,
     label: "Region",
-    name: "region.region_name",
+    name: "region",
     placeholder: "Region",
     type: "text",
   },
