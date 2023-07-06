@@ -2,27 +2,27 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    Region: "zone__state__region__region_name",
+    Region: "district__substate__state__region__region_name",
     isActiveFilter: false,
     label: "Region",
-    name: "zone__state__region__region_name",
+    name: "district__substate__state__region__region_name",
     placeholder: "Region",
     type: "text",
   },
   {
-    State: "zone__state__state_name",
+    State: "district__substate__state__state_name",
     isActiveFilter: false,
     label: "State",
-    name: "zone__state__state_name",
+    name: "district__substate__state__state_name",
     placeholder: "State",
     type: "text",
   },
   {
-    "ZONE": "zone__zone_name",
+    "SUBSTATE": "district__substate__substate_name",
     isActiveFilter: false,
-    label: "Zone",
-    name: "zone__zone_name",
-    placeholder: "Zone",
+    label: "Sub State",
+    name: "district__substate__substate_name",
+    placeholder: "Sub State",
     type: "text",
   },
   {
@@ -42,10 +42,10 @@ const filterFields = [
     type: "text",
   },
   {
-    "Earthquack zone": "earthquake_zone_type.earthquake_zone_type",
+    "Earthquack zone": "earthquake_zone_type",
     isActiveFilter: false,
     label: "Earthquack zone",
-    name: "earthquake_zone_type.earthquake_zone_type",
+    name: "earthquake_zone_type",
     placeholder: "Earthquack zone",
     type: "text",
   },
@@ -144,7 +144,7 @@ const schema = yup.object().shape({
   region: yup.string().required("Region name is required"),
   state: yup.string().required("State name is required"),
   area_name: yup.string().required("Area Name is required"),
-  zone: yup.string().required("Zone name  is required"),
+  substate: yup.string().required("Sub State name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

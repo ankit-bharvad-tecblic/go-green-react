@@ -90,17 +90,17 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("district.zone.state.region.region_name", {
+    columnHelper.accessor("district.substate.state.region.region_name", {
       cell: (info) => info.getValue(),
       header: " Region",
     }),
-    columnHelper.accessor("district.zone.state.state_name", {
+    columnHelper.accessor("district.substate.state.state_name", {
       cell: (info) => info.getValue(),
       header: " State",
     }),
-    columnHelper.accessor("district.zone.zone_name", {
+    columnHelper.accessor("district.substate.substate_name", {
       cell: (info) => info.getValue(),
-      header: " Zone",
+      header: "Sub State",
     }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
@@ -278,4 +278,4 @@ const AreaMaster = () => {
 
 export default AreaMaster;
 
-// zone, state, disrct , area,
+// substate, state, disrct , area,

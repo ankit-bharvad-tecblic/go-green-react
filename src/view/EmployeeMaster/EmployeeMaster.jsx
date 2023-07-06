@@ -117,7 +117,7 @@ function EmployeeMaster() {
       cell: (info) => info.getValue(),
       header: "State ",
     }),
-    columnHelper.accessor("zone_id.zone_name", {
+    columnHelper.accessor("zone_id.substate_name", {
       cell: (info) => info.getValue(),
       header: "Zone ",
     }),

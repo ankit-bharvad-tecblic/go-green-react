@@ -82,8 +82,8 @@ const SidebarList = [
             component: StateMaster,
           },
           {
-            path: "/manage-location/zone-master",
-            name: "Zone Master",
+            path: "/manage-location/sub-state-master",
+            name: "Sub State Master",
             secondaryNavbar: true,
             component: ZoneMaster,
           },

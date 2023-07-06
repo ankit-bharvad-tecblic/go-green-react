@@ -2,27 +2,27 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    Region: "zone__state__region__region_name",
+    Region: "substate__state__region__region_name",
     isActiveFilter: false,
     label: "Region",
-    name: "zone__state__region__region_name",
+    name: "substate__state__region__region_name",
     placeholder: "Region",
     type: "text",
   },
   {
-    State: "zone__state__state_name",
+    State: "substate__state__state_name",
     isActiveFilter: false,
     label: "State",
-    name: "zone__state__state_name",
+    name: "substate__state__state_name",
     placeholder: "State",
     type: "text",
   },
   {
-    "ZONE NAME": "zone__zone_name",
+    "SUBSTATE NAME": "substate__substate_name",
     isActiveFilter: false,
-    label: "Zone",
-    name: "zone__zone_name",
-    placeholder: "Zone",
+    label: "Sub State",
+    name: "substate__substate_name",
+    placeholder: "Sub State",
     type: "text",
   },
   {
@@ -97,7 +97,7 @@ const schema = yup.object().shape({
   region: yup.string().required("Region name is required"),
   state: yup.string().required("State name is required"),
   is_active: yup.string(),
-  zone: yup.string().required("Zone name  is required"),
+  substate: yup.string().required("Sub State name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };
