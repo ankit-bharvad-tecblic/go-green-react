@@ -432,6 +432,49 @@ function AddEditFormUserMaster() {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
+                      Role
+                    </Text>
+                    <CustomSelector
+                      name="user_role"
+                      label=""
+                      isChecked="details?.active"
+                      options={selectBoxOptions.roles}
+                      selectedValue={selectBoxOptions.roles.find(
+                        (opt) => opt.label === details?.user_role
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Address
+                    </Text>
+                    <CustomInput
+                      name="address"
+                      placeholder=" Address"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
                       Pin Code
                     </Text>
                     <CustomInput
@@ -468,7 +511,7 @@ function AddEditFormUserMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
-              <Box>
+              {/* <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
@@ -488,32 +531,9 @@ function AddEditFormUserMaster() {
                     />
                   </Box>
                 </MotionSlideUp>
-              </Box>
+              </Box> */}
               {/* // This is for role dropdown */}
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Role
-                    </Text>
-                    <CustomSelector
-                      name="user_role"
-                      label=""
-                      isChecked="details?.active"
-                      options={selectBoxOptions.district}
-                      selectedValue={selectBoxOptions.district.find(
-                        (opt) => opt.label === details?.user_role
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">

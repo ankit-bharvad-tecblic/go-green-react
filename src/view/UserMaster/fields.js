@@ -187,12 +187,12 @@ const addEditFormFields = [
     placeholder: "Contact Number",
     type: "text",
   },
-  {
-    name: "address",
-    label: "Address",
-    placeholder: "Address",
-    type: "text",
-  },
+  // {
+  //   name: "address",
+  //   label: "Address",
+  //   placeholder: "Address",
+  //   type: "text",
+  // },
 
   // {
   //   name: "",

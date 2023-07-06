@@ -476,7 +476,15 @@ function FunctionalTable({
                             )}{" "}
                             {cell.row.original.last_name}{" "}
                           </Text>
-                        ) : cell.column.id === "created_at" ? (
+                        ) : cell.column.id === "creation_date" ? (
+                          <Text>
+                            {cell.row.original.creation_date
+                              ? moment(cell.row.original.creation_date).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) :cell.column.id === "created_at" ? (
                           <Text>
                             {cell.row.original.created_at
                               ? moment(cell.row.original.created_at).format(

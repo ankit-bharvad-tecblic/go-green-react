@@ -635,17 +635,15 @@ const Pwh = () => {
 
   const getRegionMasterList = async () => {
     try {
-      const response = await getRegionMaster().unwrap();
+      const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          regions: response?.results.map(({ region_name, id }) => ({
+          regions: response?.region?.map(({ region_name, id }) => ({
             label: region_name,
             value: id,
           })),
         }));
-      }
     } catch (error) {
       console.error("Error:", error);
     }

@@ -143,16 +143,16 @@ const SidebarList = [
           },
           {
             path: "/manage-users/page-master",
-            name: "Page Master",
+            name: "Module Master",
             secondaryNavbar: true,
             component: PageMaster,
           },
-          // {
-          //   path: "/manage-users/role-page-assignment-master",
-          //   name: "Role Page Assignment Master",
-          //   secondaryNavbar: true,
-          //   component: RolePageAssignmentMaster,
-          // },
+          {
+            path: "/manage-users/role-page-assignment-ma",
+            name: "Role Module Assignment",
+            secondaryNavbar: true,
+            component: RolePageAssignmentMaster,
+          },
         ],
       },
       {

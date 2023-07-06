@@ -23,6 +23,7 @@ import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 
 const AddEditFormStateMaster = () => {
   const dispatch = useDispatch();
@@ -132,24 +133,25 @@ const AddEditFormStateMaster = () => {
     }
   };
 
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
   const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
     useGetRegionMasterMutation();
 
   const getRegionMasterList = async () => {
     try {
-      const response = await getRegionMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          regions: response?.results
-            ?.filter((item) => item.region_name !== "ALL - Region")
-            .map(({ region_name, id }) => ({
-              label: region_name,
-              value: id,
-            })),
-        }));
-      }
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: response?.region?.map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -229,7 +231,7 @@ const AddEditFormStateMaster = () => {
                     <ReactCustomSelect
                       name="region"
                       label=""
-                      isLoading={getRegionMasterApiIsLoading}
+                      isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.regions || []}
                       selectedValue={
                         selectBoxOptions?.regions?.filter(

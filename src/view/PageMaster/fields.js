@@ -5,9 +5,9 @@ const filterFields = [
     "PAGE NAME": "page_name",
     isActiveFilter: false,
 
-    label: "Page Name",
+    label: "Module Name",
     name: "page_name",
-    placeholder: "Page Name",
+    placeholder: "Module Name",
     type: "text",
   },
   {
@@ -68,8 +68,8 @@ const addEditFormFields = [
   //   },
   {
     name: "page_name",
-    label: "Page Name",
-    placeholder: "Page Name",
+    label: "Module Name",
+    placeholder: "Module Name",
     type: "text",
   },
   {
@@ -87,8 +87,8 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  page_name: yup.string().required("Page name is required"),
-  description: yup.string().required("description  is required"),
+  page_name: yup.string().required("Module name is required"),
+  description: yup.string().required("Description  is required"),
 
   is_active: yup.string(),
 });
