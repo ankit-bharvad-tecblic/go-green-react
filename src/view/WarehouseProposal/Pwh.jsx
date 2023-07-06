@@ -747,6 +747,10 @@ const Pwh = () => {
       console.log("submit  - Success:", response);
       if (response.status === 200) {
         console.log("response --> ", response);
+        toasterAlert({
+          message: response?.message,
+          status: response?.status,
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -1466,20 +1470,15 @@ const Pwh = () => {
                           )}
                         </AccordionButton>
 
-                        <AccordionPanel
-                          height={"auto"}
-                          bg="white"
-                          mt="3"
-                          pb={4}
-                        >
+                        <AccordionPanel bg="white" mt="5" pb={4} py="4" px="8">
                           <Box
-                            //border="1px"
+                            // border="1px"
                             w={{
                               base: "100%",
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "90%",
+                              xl: "95%",
                             }}
                           >
                             {/* --------------  Warehouse Name -------------- */}
@@ -1490,7 +1489,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Warehouse Name
@@ -1519,7 +1518,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Region</Text>{" "}
                                 </GridItem>
@@ -1551,7 +1550,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">State</Text>{" "}
                                 </GridItem>
@@ -1585,7 +1584,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Zone</Text>{" "}
                                 </GridItem>
@@ -1618,7 +1617,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">District</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
@@ -1651,7 +1650,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Area</Text>{" "}
                                 </GridItem>
@@ -1683,7 +1682,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Warehouse Address
@@ -1713,7 +1712,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">Pin Code</Text>{" "}
                                 </GridItem>
@@ -1740,7 +1739,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     No Of Chambers
@@ -1769,7 +1768,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Warehouse In Factory Premises
@@ -1824,7 +1823,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Standard Capacity (in MT)
@@ -1853,7 +1852,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Current warehouse capacity (MT)
@@ -1883,7 +1882,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Standard Utilizes Capacity (in MT)
@@ -1912,7 +1911,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     {" "}
@@ -1971,7 +1970,7 @@ const Pwh = () => {
                                   templateColumns="repeat(4, 1fr)"
                                   gap={8}
                                 >
-                                  <GridItem colSpan={2}>
+                                  <GridItem colSpan={1}>
                                     <Text textAlign="right">
                                       Lock In Period Month
                                     </Text>{" "}
@@ -2002,7 +2001,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Covered Area (In Sq.Ft)
@@ -2032,7 +2031,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For day Shift
                                   </Text>{" "}
@@ -2093,7 +2092,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For night Shift
                                   </Text>{" "}
@@ -2155,7 +2154,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For day shift
                                   </Text>{" "}
@@ -2217,7 +2216,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For night shift
                                   </Text>{" "}
@@ -2336,7 +2335,7 @@ const Pwh = () => {
                               alignItems="center"
                               gap={8}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   Expected Commodity Name
                                 </Text>{" "}
@@ -2382,7 +2381,7 @@ const Pwh = () => {
                               alignItems="center"
                               gap={8}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   Commodity Inward Type
                                 </Text>{" "}
@@ -2437,7 +2436,7 @@ const Pwh = () => {
                               alignItems="center"
                               gap={8}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   Pre-Stack Commodity
                                 </Text>{" "}
@@ -2481,7 +2480,7 @@ const Pwh = () => {
                               alignItems="center"
                               gap={8}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   Pre-Stack Commodity Quantity(MT)
                                 </Text>{" "}
@@ -2508,7 +2507,7 @@ const Pwh = () => {
                               alignItems="center"
                               gap={8}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">Funding Required </Text>{" "}
                               </GridItem>
                               <GridItem colSpan={2}>
@@ -2832,7 +2831,7 @@ const Pwh = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "80%",
+                              xl: "94%",
                             }}
                           >
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
@@ -2991,7 +2990,8 @@ const Pwh = () => {
                                     type="number"
                                     label=""
                                     style={{
-                                      w: commonStyle.comm_details_style.w,
+                                      w: "50%",
+                                      mb: 4,
                                     }}
                                   />
                                 </GridItem>
@@ -3004,7 +3004,7 @@ const Pwh = () => {
                           {pwh_commercial_multipal_details_fields &&
                             pwh_commercial_multipal_details_fields.map(
                               (item, index) => (
-                                <Box key={item.id} mt={commonStyle.mt}>
+                                <Box key={item.id}>
                                   <Flex
                                     bgColor={"#DBFFF5"}
                                     padding="20px"
@@ -3015,7 +3015,7 @@ const Pwh = () => {
                                     {/* =============== SR No============= */}
                                     <Box w="50px">
                                       <Text
-                                        mb="2"
+                                        mb="0"
                                         fontWeight="bold"
                                         textAlign="left"
                                       >
@@ -3300,7 +3300,7 @@ const Pwh = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "60%",
+                              xl: "94%",
                             }}
                           >
                             {/* -------------- Go Green revenue sharing ratio-------------- */}
@@ -3310,15 +3310,15 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Go Green revenue sharing ratio
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -3342,15 +3342,15 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Security deposit amount
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -3374,15 +3374,15 @@ const Pwh = () => {
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 justifyContent="flex-start"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Advance rent
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <RadioGroup
                                     p="0"
                                     defaultValue="false"
@@ -3432,15 +3432,15 @@ const Pwh = () => {
                                   alignItems="center"
                                   templateColumns="repeat(4, 1fr)"
                                   justifyContent="flex-start"
-                                  gap={8}
+                                  gap={4}
                                 >
-                                  <GridItem colSpan={2}>
+                                  <GridItem colSpan={1}>
                                     {" "}
                                     <Text textAlign="right">
                                       Advance rent(month)
                                     </Text>{" "}
                                   </GridItem>
-                                  <GridItem colSpan={2}>
+                                  <GridItem colSpan={1}>
                                     <CustomInput
                                       name={
                                         formFieldsName.pwh_commercial_details
@@ -3465,13 +3465,13 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">GST</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3495,15 +3495,15 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Commencement Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3513,6 +3513,40 @@ const Pwh = () => {
                                     placeholder=""
                                     type="date"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.pwh_commercial_details
+                                        .commencement_date
+                                    )}
+                                    onChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_commercial_details
+                                          .commencement_date,
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.pwh_commercial_details
+                                            .agreement_period
+                                        )
+                                      ) {
+                                        setValue(
+                                          formFieldsName.pwh_commercial_details
+                                            .expiry_date,
+                                          moment(val.target.value)
+                                            .add(
+                                              getValues(
+                                                formFieldsName
+                                                  .pwh_commercial_details
+                                                  .agreement_period
+                                              ),
+                                              "months"
+                                            )
+                                            .format("DD/MM/YYYY"),
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
                                     style={{
                                       w: commonStyle.comm_details_style.w,
                                     }}
@@ -3528,15 +3562,15 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Agreement period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3546,6 +3580,50 @@ const Pwh = () => {
                                     placeholder="Agreement period (Month)"
                                     type="number"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.pwh_commercial_details
+                                        .agreement_period
+                                    )}
+                                    onChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_commercial_details
+                                          .agreement_period,
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                      if (
+                                        getValues(
+                                          formFieldsName.pwh_commercial_details
+                                            .commencement_date
+                                        )
+                                      ) {
+                                        console.log(
+                                          moment(
+                                            getValues(
+                                              formFieldsName
+                                                .pwh_commercial_details
+                                                .commencement_date
+                                            )
+                                          )
+                                            .add(val.target.value, "months")
+                                            .format("DD/MM/YYYY")
+                                        );
+                                        setValue(
+                                          formFieldsName.pwh_commercial_details
+                                            .expiry_date,
+                                          moment(
+                                            getValues(
+                                              formFieldsName
+                                                .pwh_commercial_details
+                                                .commencement_date
+                                            )
+                                          )
+                                            .add(val.target.value, "months")
+                                            .format("DD/MM/YYYY"),
+                                          { shouldValidate: true }
+                                        );
+                                      }
+                                    }}
                                     style={{
                                       w: commonStyle.comm_details_style.w,
                                     }}
@@ -3561,15 +3639,15 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Expiry Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3577,8 +3655,13 @@ const Pwh = () => {
                                         .expiry_date
                                     }
                                     placeholder="Expiry Date"
-                                    type="date"
+                                    type="text"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.pwh_commercial_details
+                                        .expiry_date
+                                    )}
+                                    InputDisabled={true}
                                     style={{
                                       w: commonStyle.comm_details_style.w,
                                     }}
@@ -3594,15 +3677,15 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Notice period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3627,16 +3710,16 @@ const Pwh = () => {
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
-                                gap={8}
+                                gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     storage Charges according to commodity
                                   </Text>{" "}
                                 </GridItem>
 
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -3738,7 +3821,7 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Your projected
