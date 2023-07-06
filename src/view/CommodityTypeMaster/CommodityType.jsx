@@ -98,6 +98,10 @@ const CommodityType = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "PRIMARY COMMODITY TYPE",
+    }),
     columnHelper.accessor("commodity_type", {
       cell: (info) => info.getValue(),
       header: "COMMODITY TYPE NAME",
@@ -116,7 +120,11 @@ const CommodityType = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -138,7 +146,11 @@ const CommodityType = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

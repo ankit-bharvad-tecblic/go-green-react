@@ -36,6 +36,7 @@ function AddEditFormBankMaster() {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     states: [],
+    sector: [],
   });
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
@@ -93,7 +94,6 @@ function AddEditFormBankMaster() {
 
       console.log(arr);
 
-      
       setSelectBoxOptions((prev) => ({
         ...prev,
         states: arr,
@@ -140,21 +140,21 @@ function AddEditFormBankMaster() {
   const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
     useGetRegionMasterMutation();
 
-    const getRegionMasterList = async () => {
-      try {
-        const response = await fetchLocationDrillDown().unwrap();
-        console.log("getRegionMasterList:", response);
-          setSelectBoxOptions((prev) => ({
-            ...prev,
-            regions: response?.region?.map(({ region_name, id }) => ({
-              label: region_name,
-              value: id,
-            })),
-          }));
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  const getRegionMasterList = async () => {
+    try {
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: response?.region?.map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const regionOnChange = async (val) => {
     console.log("value --> ", val);
@@ -196,7 +196,26 @@ function AddEditFormBankMaster() {
   };
 
   // Region State  Zone District Area  onChange drill down api end //
+  const getSectorList = async () => {
+    try {
+      const response = await getBankMaster().unwrap();
+      console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
+        label: item.bank_name,
+        value: item.id,
+      }));
 
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        sector: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const updateData = async (data) => {
     try {
       const response = await updateBankMaster(data).unwrap();
@@ -212,12 +231,14 @@ function AddEditFormBankMaster() {
   };
 
   useEffect(() => {
+    getSectorList();
     if (details?.id) {
       regionOnChange({ value: details.region?.id });
       let obj = {
         bank_name: details?.bank_name,
         region: details?.region?.id,
         state: details?.state?.id,
+        sector: details?.sector,
         bank_address: details?.bank_address,
         is_active: details.is_active,
       };
@@ -230,16 +251,16 @@ function AddEditFormBankMaster() {
       });
     }
     setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
+      addEditFormFields.map((field) => {
+        if (field.type === "select") {
+          return {
+            ...field,
+          };
+        } else {
+          return field;
+        }
+      })
+    );
     //  getAllStateMaster();
     getRegionMasterList();
     // getBank();
@@ -350,7 +371,30 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
-
+              {/* for the sector code */}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Sector
+                    </Text>
+                    <CustomSelector
+                      name="sector"
+                      label=""
+                      options={selectBoxOptions.sector}
+                      selectedValue={selectBoxOptions.sector?.find(
+                        (opt) => opt.label === details?.sector
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">

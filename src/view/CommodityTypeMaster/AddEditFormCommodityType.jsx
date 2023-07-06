@@ -86,7 +86,7 @@ const AddEditFormCommodityType = () => {
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
+        label: type.primay_commodity_type,
         value: type.id,
       }));
       console.log(arr);
@@ -186,7 +186,8 @@ const AddEditFormCommodityType = () => {
                         selectedValue:
                           item.type === "select" &&
                           item?.options?.find(
-                            (opt) => opt.label === details?.state.state_name
+                            (opt) =>
+                              opt.label === details?.primay_commodity_type
                           ),
                         selectType: "value",
                         isClearable: false,

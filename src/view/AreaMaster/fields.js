@@ -42,6 +42,15 @@ const filterFields = [
     type: "text",
   },
   {
+    "Earthquack zone": "earthquake_zone_type.earthquake_zone_type",
+    isActiveFilter: false,
+    label: "Earthquack zone",
+    name: "earthquake_zone_type.earthquake_zone_type",
+    placeholder: "Earthquack zone",
+    type: "text",
+  },
+
+  {
     Block: "is_block",
     isActiveFilter: false,
     label: "Block",
@@ -129,6 +138,9 @@ const schema = yup.object().shape({
   is_active: yup.string(),
   district: yup.string().required("District name is"),
   is_block: yup.string(),
+  earthquake_zone_type: yup
+    .string()
+    .required("Earthquake zone type is required"),
   region: yup.string().required("Region name is required"),
   state: yup.string().required("State name is required"),
   area_name: yup.string().required("Area Name is required"),
