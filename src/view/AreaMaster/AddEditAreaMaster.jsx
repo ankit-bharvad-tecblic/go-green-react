@@ -94,13 +94,7 @@ const AddEditFormArea = () => {
   //   try {
   //     const response = await getDistrictMaster().unwrap();
 
-  console.log("Success:", response);
-  // setCommodityTypeMaster();
-  let onlyActive = response?.results?.filter((item) => item.is_active);
-  let arr = onlyActive?.map((item) => ({
-    label: item.district_name,
-    value: item.id,
-  }));
+
 
   //     setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
   //   } catch (error) {
