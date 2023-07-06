@@ -103,23 +103,23 @@ const DistrictMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("district_name", {
+
+    columnHelper.accessor("zone.state.region.region_name", {
       cell: (info) => info.getValue(),
-      header: "DISTRICT NAME",
+      header: "REGION NAME",
+    }),
+    columnHelper.accessor("zone.state.state_name", {
+      cell: (info) => info.getValue(),
+      header: "STATE NAME",
     }),
     columnHelper.accessor("zone.zone_name", {
       cell: (info) => info.getValue(),
       header: "ZONE NAME",
     }),
-    columnHelper.accessor("state.state_name", {
+    columnHelper.accessor("district_name", {
       cell: (info) => info.getValue(),
-      header: "STATE NAME",
+      header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("region.region_name", {
-      cell: (info) => info.getValue(),
-      header: "REGION NAME",
-    }),
-
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
       header: " Creation Date",
@@ -151,7 +151,11 @@ const DistrictMaster = () => {
     // }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -173,7 +177,11 @@ const DistrictMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

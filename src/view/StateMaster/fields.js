@@ -3,19 +3,19 @@ import { gstNumber, tinNumber } from "../../services/validation.service";
 
 const filterFields = [
   {
-    "STATE NAME": "state_name",
-    isActiveFilter: false,
-    label: "State ",
-    name: "state_name",
-    placeholder: "State",
-    type: "text",
-  },
-  {
     "REGION NAME": "region.region_name",
     isActiveFilter: false,
     label: "Region",
     name: "region.region_name",
     placeholder: "Region",
+    type: "text",
+  },
+  {
+    "STATE NAME": "state_name",
+    isActiveFilter: false,
+    label: "State ",
+    name: "state_name",
+    placeholder: "State",
     type: "text",
   },
   {
@@ -103,12 +103,6 @@ const addEditFormFields = [
     label: "State Name",
     placeholder: "State Name",
     type: "text",
-  },
-  {
-    label: "Region Name",
-    name: "region",
-    placeholder: "Region Name",
-    type: "select",
   },
   {
     name: "state_code",

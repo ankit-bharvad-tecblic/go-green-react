@@ -144,11 +144,11 @@ const AddEditFormSecurityAgencyMaster = () => {
       bg="white"
       borderRadius={10}
       p="10"
-      style={{ height: "calc(100vh - 160px)" }}
+       
     >
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="280px" overflowY="auto">
+          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (

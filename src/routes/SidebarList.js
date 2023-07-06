@@ -147,12 +147,12 @@ const SidebarList = [
             secondaryNavbar: true,
             component: PageMaster,
           },
-          {
-            path: "/manage-users/role-page-assignment-master",
-            name: "Role Page Assignment Master",
-            secondaryNavbar: true,
-            component: RolePageAssignmentMaster,
-          },
+          // {
+          //   path: "/manage-users/role-page-assignment-master",
+          //   name: "Role Page Assignment Master",
+          //   secondaryNavbar: true,
+          //   component: RolePageAssignmentMaster,
+          // },
         ],
       },
       {

@@ -90,25 +90,25 @@ const AreaMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("area_name", {
+    columnHelper.accessor("district.zone.state.region.region_name", {
       cell: (info) => info.getValue(),
-      header: "AREA NAME",
+      header: " Region",
+    }),
+    columnHelper.accessor("district.zone.state.state_name", {
+      cell: (info) => info.getValue(),
+      header: " State",
+    }),
+    columnHelper.accessor("district.zone.zone_name", {
+      cell: (info) => info.getValue(),
+      header: " Zone",
     }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
     }),
-    columnHelper.accessor("zone.zone_name", {
+    columnHelper.accessor("area_name", {
       cell: (info) => info.getValue(),
-      header: " Zone",
-    }),
-    columnHelper.accessor("state.state_name", {
-      cell: (info) => info.getValue(),
-      header: " State",
-    }),
-    columnHelper.accessor("region.region_name", {
-      cell: (info) => info.getValue(),
-      header: " Region",
+      header: "AREA NAME",
     }),
 
     columnHelper.accessor("creation_date", {
@@ -135,7 +135,7 @@ const AreaMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col">Active</Text>,
+      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -157,7 +157,7 @@ const AreaMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col">UPDATE</Text>,
+      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
