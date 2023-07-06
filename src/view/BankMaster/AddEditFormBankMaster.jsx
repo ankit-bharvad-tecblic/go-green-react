@@ -20,9 +20,12 @@ import CustomTextArea from "../../components/Elements/CustomTextArea";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -240,7 +243,28 @@ function AddEditFormBankMaster() {
     //  getAllStateMaster();
     getRegionMasterList();
     // getBank();
+
+    const breadcrumbArray = [
+      {
+        title: "Manage Banks",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: "Bank Master",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
 
   return (
     <Box bg="white" borderRadius={10} p="10">

@@ -273,12 +273,12 @@ function AddEditFormUserMaster() {
     // getAllUsers();
     const breadcrumbArray = [
       {
-        title: "Manage Locations",
-        link: "/manage-location/region-master",
+        title: "Manage Users",
+        link: "/manage-users/user-master",
       },
       {
         title: "User Master",
-        link: "/manage-location/region-master",
+        link: "/manage-users/user-master",
       },
       {
         title: details?.id ? "Edit" : "Add",
@@ -286,6 +286,11 @@ function AddEditFormUserMaster() {
     ];
     dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
   return (
     // <Box bg={"white"}>
     <Box bg="white" borderRadius={10} p="10">
