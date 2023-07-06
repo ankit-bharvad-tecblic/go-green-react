@@ -265,6 +265,7 @@ const AddEditFormEmployeeMaster = () => {
       console.error("Error:", error);
     }
   };
+
   const updateData = async (data) => {
     try {
       const response = await updateEmployeeMaster(data).unwrap();
@@ -278,6 +279,7 @@ const AddEditFormEmployeeMaster = () => {
       toasterAlert(error);
     }
   };
+  
   useEffect(() => {
     if (details?.id) {
       let obj = {
@@ -288,7 +290,7 @@ const AddEditFormEmployeeMaster = () => {
         state_id: details?.state_id.state_name,
         zone_id: details?.zone_id.zone_name,
         district_id: details?.district_id?.district_name,
-        role: details?.role?.role_name,
+        role: details?.role?.role_name||"",
         area_id: details?.area?.area_name,
         department__department_name: details?.department?.department_name,
         address: details?.address,
@@ -539,7 +541,7 @@ const AddEditFormEmployeeMaster = () => {
                       label=""
                       options={selectBoxOptions.roles}
                       selectedValue={selectBoxOptions.roles.find(
-                        (opt) => opt.label === details?.role.role_name
+                        (opt) => opt.label === details?.role?.role_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -575,6 +577,7 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -618,6 +621,7 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -657,6 +661,7 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -686,7 +691,7 @@ const AddEditFormEmployeeMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      EMPLOYEE START DATE
+                      Employee Start Date
                     </Text>
                     <CustomInput
                       name="employee_start_date"
@@ -702,6 +707,7 @@ const AddEditFormEmployeeMaster = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -722,6 +728,7 @@ const AddEditFormEmployeeMaster = () => {
                 </MotionSlideUp>
               </Box>
             </Box>
+            
             <Box
               display="flex"
               gap={2}

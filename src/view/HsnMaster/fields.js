@@ -5,9 +5,9 @@ const filterFields = [
     "HSN CODE": "hsn_code",
     isActiveFilter: false,
 
-    label: "HSN CODE",
+    label: "HSN Code",
     name: "hsn_code",
-    placeholder: "HSN CODE",
+    placeholder: "HSN Code",
     type: "number",
   },
   {
@@ -50,17 +50,17 @@ const filterFields = [
   {
     "CREATION DATE": "created_at",
     isActiveFilter: false,
-    label: "CREATION DATE",
+    label: "Creation Date",
     name: "created_at",
-    placeholder: "CREATION DATE",
+    placeholder: "Creation Date",
     type: "date",
   },
   {
     "LAST UPDATED DATE": "updated_at",
     isActiveFilter: false,
-    label: "LAST UPDATED DATE",
+    label: "Last Updated Date",
     name: "updated_at",
-    placeholder: "LAST UPDATED DATE",
+    placeholder: "Last Updated Date",
     type: "date",
   },
 
@@ -68,9 +68,9 @@ const filterFields = [
     "LAST UPDATED ACTIVE": "ACTIVE",
     isActiveFilter: false,
 
-    label: "ACTIVE/DeActive",
+    label: "Active",
     name: "is_active",
-    placeholder: "Active/DeActive",
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [

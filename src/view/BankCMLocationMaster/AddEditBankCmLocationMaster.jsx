@@ -124,7 +124,7 @@ const AddEditBankCmLocationMaster = () => {
   useEffect(() => {
     if (details?.id) {
       let obj = {
-        bank_branch: details?.bank_branch.branch_name,
+        bank_branch: details?.bank_branch?.branch_name,
         bank_cm_location_name: details.bank_cm_location_name,
         cm_charges: details.cm_charges,
         fix_charges: details.fix_charges,
@@ -177,7 +177,7 @@ const AddEditBankCmLocationMaster = () => {
                           item?.options?.find((opt) => {
                             console.log("opt", opt);
                             console.log("details", details);
-                            return opt.value === details?.bank_branch.bank_name;
+                            return opt.value === details?.bank_branch?.id;
                           }),
                         selectType: "value",
                         isClearable: false,
