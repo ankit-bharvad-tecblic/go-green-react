@@ -17,7 +17,7 @@ const filterFields = [
     label: "Bank",
     name: "bank__bank_name",
     placeholder: "Bank ",
-    type: "select",
+    type: "text",
   },
   {
     Region: "region__region_name",
@@ -26,7 +26,7 @@ const filterFields = [
     label: "Region ",
     name: "region__region_name",
     placeholder: "Region ",
-    type: "select",
+    type: "text",
   },
   {
     " State": "state__state_name",
@@ -35,7 +35,7 @@ const filterFields = [
     label: "State ",
     name: "state__state_name",
     placeholder: "State ",
-    type: "select",
+    type: "text",
   },
   {
     "Discrict ": "district__district_name",
@@ -44,7 +44,7 @@ const filterFields = [
     label: "Discrict ",
     name: "district__district_name",
     placeholder: "Discrict ",
-    type: "select",
+    type: "text",
   },
   {
     Address: "branch_address",
@@ -69,7 +69,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Active",
-    name: "active",
+    name: "is_active",
     placeholder: "Active",
     type: "select",
     multi: false,
@@ -144,7 +144,7 @@ const schema = yup.object().shape({
   district: yup.string().required("District name is required"),
   branch_address: yup.string().required("Branch address name is required"),
   pincode: yup.number().required("Pincode is required"),
-  active: yup.string(),
+  is_active: yup.string(),
   // commodity_type: yup.string().required("Commodity type is required"),
 });
 

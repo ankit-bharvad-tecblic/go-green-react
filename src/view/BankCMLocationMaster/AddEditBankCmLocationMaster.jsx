@@ -18,9 +18,12 @@ import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { addEditFormFields, schema } from "./fields";
 import generateFormField from "../../components/Elements/GenerateFormField";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 const AddEditBankCmLocationMaster = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -140,19 +143,34 @@ const AddEditBankCmLocationMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
     getBankCMLocation();
+    const breadcrumbArray = [
+      {
+        title: "Manage Banks",
+        link: "/bank-master/bank-cm-location-master",
+      },
+      {
+        title: "Bank CM Location Master",
+        link: "/bank-master/bank-cm-location-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
 
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (

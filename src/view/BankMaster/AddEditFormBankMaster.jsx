@@ -17,17 +17,21 @@ import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
   const [getStateMaster] = useGetStateMasterMutation();
   // const [getBankMaster] = useGetBankMasterMutation();
-  const [getRegionMaster] = useGetRegionMasterMutation();
 
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
@@ -38,7 +42,10 @@ function AddEditFormBankMaster() {
   const [updateBankMaster, { isLoading: updateBankMasterApiIsLoading }] =
     useUpdateBankMasterMutation();
 
+  const { setValue, getValues } = methods;
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
 
   const details = location.state?.details;
   console.log("details ---> ", details);
@@ -86,18 +93,7 @@ function AddEditFormBankMaster() {
 
       console.log(arr);
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
+      
       setSelectBoxOptions((prev) => ({
         ...prev,
         states: arr,
@@ -107,26 +103,6 @@ function AddEditFormBankMaster() {
     }
   };
 
-  const getRegionMasterList = async () => {
-    try {
-      const response = await getRegionMaster().unwrap();
-      console.log("Success:", response);
-      let onlyActive = response?.results?.filter((item) => item.is_active);
-      let arr = onlyActive?.map((item) => ({
-        label: item.region_name,
-        value: item.id,
-      }));
-
-      console.log(arr);
-
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
   // const getBank = async () => {
   //   try {
   //     const response = await getBankMaster().unwrap();
@@ -155,6 +131,72 @@ function AddEditFormBankMaster() {
   //   }
   // };
 
+  // location drill down api hook
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
+
+    const getRegionMasterList = async () => {
+      try {
+        const response = await fetchLocationDrillDown().unwrap();
+        console.log("getRegionMasterList:", response);
+          setSelectBoxOptions((prev) => ({
+            ...prev,
+            regions: response?.region?.map(({ region_name, id }) => ({
+              label: region_name,
+              value: id,
+            })),
+          }));
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("region", val?.value, {
+      shouldValidate: true,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: val?.value,
+    }));
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state
+          ?.filter((item) => item.state_name !== "All - State")
+          .map(({ state_name, id }) => ({
+            label: state_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("state", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
+  // Region State  Zone District Area  onChange drill down api end //
+
   const updateData = async (data) => {
     try {
       const response = await updateBankMaster(data).unwrap();
@@ -171,10 +213,11 @@ function AddEditFormBankMaster() {
 
   useEffect(() => {
     if (details?.id) {
+      regionOnChange({ value: details.region?.id });
       let obj = {
         bank_name: details?.bank_name,
-        region: details?.region.region_name,
-        state: details?.state.state_name,
+        region: details?.region?.id,
+        state: details?.state?.id,
         bank_address: details?.bank_address,
         is_active: details.is_active,
       };
@@ -186,21 +229,48 @@ function AddEditFormBankMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
-    getAllStateMaster();
+    setAddEditFormFieldsList(
+        addEditFormFields.map((field) => {
+          if (field.type === "select") {
+            return {
+              ...field,
+            };
+          } else {
+            return field;
+          }
+        })
+      );
+    //  getAllStateMaster();
     getRegionMasterList();
     // getBank();
+
+    const breadcrumbArray = [
+      {
+        title: "Manage Banks",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: "Bank Master",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
+
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
@@ -227,18 +297,24 @@ function AddEditFormBankMaster() {
                     <Text textAlign="right" w="550px">
                       Region
                     </Text>
-                    <CustomSelector
+                    <ReactCustomSelect
                       name="region"
                       label=""
-                      options={selectBoxOptions.regions}
-                      selectedValue={selectBoxOptions.regions.find(
-                        (opt) => opt.label === details?.region.region_name
-                      )}
+                      isLoading={getRegionMasterApiIsLoading}
+                      options={selectBoxOptions?.regions || []}
+                      selectedValue={
+                        selectBoxOptions?.regions?.filter(
+                          (item) => item.value === getValues("region")
+                        )[0] || {}
+                      }
                       isClearable={false}
-                      selectType={"value"}
+                      selectType="label"
                       style={{
                         mb: 1,
                         mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
                       }}
                     />
                   </Box>
@@ -251,18 +327,24 @@ function AddEditFormBankMaster() {
                     <Text textAlign="right" w="550px">
                       State
                     </Text>
-                    <CustomSelector
+                    <ReactCustomSelect
                       name="state"
                       label=""
-                      options={selectBoxOptions.states}
-                      selectedValue={selectBoxOptions.states.find(
-                        (opt) => opt?.label === details?.state?.state_name
-                      )}
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.states || []}
+                      selectedValue={
+                        selectBoxOptions?.states?.filter(
+                          (item) => item.value === getValues("state")
+                        )[0] || {}
+                      }
                       isClearable={false}
-                      selectType={"value"}
+                      selectType="label"
                       style={{
                         mb: 1,
                         mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        stateOnChange(val);
                       }}
                     />
                   </Box>

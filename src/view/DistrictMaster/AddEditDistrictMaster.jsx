@@ -116,19 +116,15 @@ const AddEditFormDistrictMaster = () => {
 
   const getRegionMasterList = async () => {
     try {
-      const response = await getRegionMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          regions: response?.results
-            ?.filter((item) => item.region_name !== "ALL - Region")
-            .map(({ region_name, id }) => ({
-              label: region_name,
-              value: id,
-            })),
-        }));
-      }
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: response?.region?.map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }

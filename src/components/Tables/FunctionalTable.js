@@ -330,6 +330,7 @@ function FunctionalTable({
         overflowX="auto"
         h="calc( 100vh - 343px )"
         overflowY="auto"
+        zIndex={1}
       >
         <Table mt="15px">
           <Thead position="sticky" top="0px" background="white" zIndex="10">
@@ -476,7 +477,15 @@ function FunctionalTable({
                             )}{" "}
                             {cell.row.original.last_name}{" "}
                           </Text>
-                        ) : cell.column.id === "created_at" ? (
+                        ) : cell.column.id === "creation_date" ? (
+                          <Text>
+                            {cell.row.original.creation_date
+                              ? moment(cell.row.original.creation_date).format(
+                                  "LL"
+                                )
+                              : " - "}
+                          </Text>
+                        ) :cell.column.id === "created_at" ? (
                           <Text>
                             {cell.row.original.created_at
                               ? moment(cell.row.original.created_at).format(

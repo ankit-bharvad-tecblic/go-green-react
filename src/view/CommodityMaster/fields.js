@@ -59,6 +59,14 @@ const filterFields = [
 
 const addEditFormFields = [
   {
+    label: "Commodity Type",
+    name: "commodity_type",
+    placeholder: "Commodity Type",
+    type: "select",
+    multi: false,
+    options: [],
+  },
+  {
     name: "commodity_name",
     label: "Commodity Name",
     placeholder: "Commodity Name",
@@ -87,14 +95,6 @@ const addEditFormFields = [
   //   name: "active",
   //   type: "switch",
   // },
-  {
-    label: "Commodity Type",
-    name: "commodity_type",
-    placeholder: "Commodity Type",
-    type: "select",
-    multi: false,
-    options: [],
-  },
 ];
 
 const schema = yup.object().shape({

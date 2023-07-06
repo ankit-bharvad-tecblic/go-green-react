@@ -422,7 +422,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Page Master"}>
+              <Layout variant={headerType} title={"Module Master"}>
                 <PageMaster />
               </Layout>
             </Suspense>
@@ -434,7 +434,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Page Master"}>
+              <Layout variant={headerType} title={"Module Master"}>
                 <AddEditPageMaster />
               </Layout>
             </Suspense>
@@ -446,7 +446,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Page Master"}>
+              <Layout variant={headerType} title={"Module Master"}>
                 <AddEditPageMaster />
               </Layout>
             </Suspense>

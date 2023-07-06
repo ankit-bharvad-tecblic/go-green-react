@@ -57,15 +57,6 @@ const SidebarList = [
     icon: <HouseIcon color="inherit" />,
     component: Dashboard,
   },
-
-  {
-    path: "/warehouse-proposal",
-    name: "Warehouse Proposal",
-    secondaryNavbar: false,
-    icon: <HomeIcon color="inherit" />,
-    component: WarehouseProposal,
-  },
-
   {
     name: "All Masters",
     category: "masters",
@@ -143,16 +134,16 @@ const SidebarList = [
           },
           {
             path: "/manage-users/page-master",
-            name: "Page Master",
+            name: "Module Master",
             secondaryNavbar: true,
             component: PageMaster,
           },
-          // {
-          //   path: "/manage-users/role-page-assignment-master",
-          //   name: "Role Page Assignment Master",
-          //   secondaryNavbar: true,
-          //   component: RolePageAssignmentMaster,
-          // },
+          {
+            path: "/manage-users/role-page-assignment-ma",
+            name: "Role Module Assignment",
+            secondaryNavbar: true,
+            component: RolePageAssignmentMaster,
+          },
         ],
       },
       {
@@ -177,7 +168,7 @@ const SidebarList = [
           },
           {
             path: "/bank-master/bank-cm-location-master",
-            name: "Bank CM  Master",
+            name: "Bank CM Location Master",
             secondaryNavbar: true,
             icon: <HomeIcon color="inherit" />,
             component: BankCMLocationMaster,
@@ -357,6 +348,14 @@ const SidebarList = [
         ],
       },
     ],
+  },
+
+  {
+    path: "/warehouse-proposal",
+    name: "Warehouse Proposal",
+    secondaryNavbar: false,
+    icon: <HomeIcon color="inherit" />,
+    component: WarehouseProposal,
   },
 
   // {
