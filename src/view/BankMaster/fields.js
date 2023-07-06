@@ -38,6 +38,15 @@ const filterFields = [
     placeholder: " Bank Address",
     type: "text",
   },
+  {
+    " sector": "sector",
+    isActiveFilter: false,
+
+    label: "Sector",
+    name: "bank_address",
+    placeholder: " Sector",
+    type: "text",
+  },
 
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
@@ -97,6 +106,7 @@ const schema = yup.object().shape({
   bank_name: yup.string().required("Bank name is required"),
   region: yup.string().required("Region is required"),
   state: yup.string().required("State is required"),
+  sector: yup.string().required("Sector is required"),
   bank_address: yup
     .string()
     .min(20)
