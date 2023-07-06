@@ -18,10 +18,13 @@ import {
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 
 const AddEditFormEarthQuackZoneTypeMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -133,18 +136,33 @@ const AddEditFormEarthQuackZoneTypeMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    const breadcrumbArray = [
+      {
+        title: "Manage Insurance",
+        link: "/manage-insurance/earthquake-zone-type-master",
+      },
+      {
+        title: " Earthquake Zone Type Master",
+        link: "/manage-insurance/earthquake-zone-type-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
+
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (

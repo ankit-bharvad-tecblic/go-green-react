@@ -273,7 +273,7 @@ function AddEditFormUserMaster() {
     // getAllUsers();
     const breadcrumbArray = [
       {
-        title: "Manage User",
+        title: "Manage Users",
         link: "/manage-users/user-master",
       },
       {

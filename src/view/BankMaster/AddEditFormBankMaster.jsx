@@ -17,10 +17,12 @@ import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
-
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -189,18 +191,34 @@ function AddEditFormBankMaster() {
     getAllStateMaster();
     getRegionMasterList();
     // getBank();
+
+    const breadcrumbArray = [
+      {
+        title: "Manage Banks",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: "Bank Master",
+        link: "/bank-master/bank-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
+
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (

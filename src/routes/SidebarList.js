@@ -177,7 +177,7 @@ const SidebarList = [
           },
           {
             path: "/bank-master/bank-cm-location-master",
-            name: "Bank CM  Master",
+            name: "Bank CM Location Master",
             secondaryNavbar: true,
             icon: <HomeIcon color="inherit" />,
             component: BankCMLocationMaster,
