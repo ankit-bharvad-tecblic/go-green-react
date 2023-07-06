@@ -349,7 +349,6 @@ const SidebarList = [
       },
     ],
   },
-
   {
     path: "/warehouse-proposal",
     name: "Warehouse Proposal",

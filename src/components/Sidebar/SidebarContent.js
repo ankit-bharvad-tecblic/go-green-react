@@ -107,7 +107,9 @@ const SidebarContent = ({ logoText, routes }) => {
                         {prop.icon}
                       </IconBox>
                     )}
-                    <Text color={"gray.800"}>{prop.name}</Text>
+                    <Text color={"gray.800"} fontSize="13px" fontWeight={"600"}>
+                      {prop.name}
+                    </Text>
                   </Flex>
                   <AccordionIcon color={"gray.600"} fontSize="20px" />
                 </AccordionButton>
@@ -167,7 +169,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   <Text
                     color={"white"}
                     my="auto"
-                    fontSize="12px"
+                    fontSize="13px"
                     fontWeight="700"
                   >
                     {prop.name}
@@ -221,9 +223,9 @@ const SidebarContent = ({ logoText, routes }) => {
                   )}
                   <Text
                     color={"#636363"}
-                    fontWeight="medium"
+                    fontWeight={prop.secondaryNavbar ? "medium" : "600"}
                     my="auto"
-                    fontSize="14px"
+                    fontSize="13px"
                   >
                     {prop.name}
                   </Text>

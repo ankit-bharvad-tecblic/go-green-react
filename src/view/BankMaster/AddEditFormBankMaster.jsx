@@ -198,7 +198,7 @@ function AddEditFormBankMaster() {
   // Region State  Zone District Area  onChange drill down api end //
   const getSectorList = async () => {
     try {
-      const response = await getBankMaster().unwrap();
+      const response = {}; /*= await getBankMaster().unwrap();*/
       console.log("Success:", response);
       let onlyActive = response?.results?.filter((item) => item.is_active);
       let arr = onlyActive?.map((item) => ({
