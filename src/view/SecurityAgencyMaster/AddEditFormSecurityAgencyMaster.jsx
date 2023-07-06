@@ -13,10 +13,12 @@ import {
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
-
+import { useDispatch } from "react-redux";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 const AddEditFormSecurityAgencyMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -138,7 +140,26 @@ const AddEditFormSecurityAgencyMaster = () => {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+    const breadcrumbArray = [
+      {
+        title: "Manage Vendors",
+        link: "/security-agency-master",
+      },
+      {
+        title: " Security Agency Master",
+        link: "/security-agency-master",
+      },
+      {
+        title: details?.id ? "Edit" : "Add",
+      },
+    ];
+    dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+  useEffect(() => {
+    return () => {
+      dispatch(setBreadCrumb([]));
+    };
+  }, []);
   return (
     <Box
       bg="white"

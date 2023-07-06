@@ -2,11 +2,19 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "DISTRICT NAME": "district_name",
+    Region: "zone__state__region__region_name",
     isActiveFilter: false,
-    label: "District",
-    name: "district_name",
-    placeholder: "District",
+    label: "Region",
+    name: "zone__state__region__region_name",
+    placeholder: "Region",
+    type: "text",
+  },
+  {
+    State: "zone__state__state_name",
+    isActiveFilter: false,
+    label: "State",
+    name: "zone__state__state_name",
+    placeholder: "State",
     type: "text",
   },
   {
@@ -15,6 +23,14 @@ const filterFields = [
     label: "Zone",
     name: "zone__zone_name",
     placeholder: "Zone",
+    type: "text",
+  },
+  {
+    "DISTRICT NAME": "district_name",
+    isActiveFilter: false,
+    label: "District",
+    name: "district_name",
+    placeholder: "District",
     type: "text",
   },
   {

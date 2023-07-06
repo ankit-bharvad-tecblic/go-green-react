@@ -1061,7 +1061,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <CommodityGrade />
               </Layout>
             </Suspense>
@@ -1073,7 +1073,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <AddEditFormCommodityGrade />
               </Layout>
             </Suspense>
@@ -1085,7 +1085,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <AddEditFormCommodityGrade />
               </Layout>
             </Suspense>

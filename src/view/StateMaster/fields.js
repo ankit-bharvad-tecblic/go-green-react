@@ -2,14 +2,7 @@ import * as yup from "yup";
 import { gstNumber, tinNumber } from "../../services/validation.service";
 
 const filterFields = [
-  {
-    "STATE NAME": "state_name",
-    isActiveFilter: false,
-    label: "State ",
-    name: "state_name",
-    placeholder: "State",
-    type: "text",
-  },
+ 
   {
     "REGION NAME": "region",
     isActiveFilter: false,
