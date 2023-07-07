@@ -38,16 +38,15 @@ function AddEditFormBankBranchMaster() {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     earthQuack: [],
     regions: [],
-    zones: [],
+    substate: [],
     districts: [],
     states: [],
     banks: [],
+    areas: [],
   });
-
 
   const [getBankMaster] = useGetBankMasterMutation();
   const [getStateMaster] = useGetStateMasterMutation();
-  const [getRegionMaster] = useGetRegionMasterMutation();
   const [getDistrictMaster] = useGetDistrictMasterMutation();
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
@@ -228,11 +227,15 @@ function AddEditFormBankBranchMaster() {
       shouldValidate: false,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
     setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -268,11 +271,15 @@ function AddEditFormBankBranchMaster() {
       shouldValidate: true,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
     setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -292,7 +299,7 @@ function AddEditFormBankBranchMaster() {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.substate
+        substate: response?.substate
           ?.filter((item) => item.substate_name !== "All - Zone")
           .map(({ substate_name, id }) => ({
             label: substate_name,
@@ -306,11 +313,15 @@ function AddEditFormBankBranchMaster() {
 
   const zoneOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("zone", val?.value, {
+    setValue("substate", val?.value, {
       shouldValidate: true,
     });
 
     setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -349,8 +360,49 @@ function AddEditFormBankBranchMaster() {
     setValue("district", val?.value, {
       shouldValidate: true,
     });
+
+    setValue("area", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: locationDrillDownState.substate,
+      district: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: locationDrillDownState.substate,
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: response?.area
+          ?.filter((item) => item.area_name !== "All - District")
+          .map(({ area_name, id }) => ({
+            label: area_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
-  
+
+  const areaOnChange = (val) => {
+    setValue("area", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
   const updateData = async (data) => {
     try {
       const response = await updateBankBranchMaster(data).unwrap();
@@ -519,16 +571,16 @@ function AddEditFormBankBranchMaster() {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Zone
+                      Sub State
                     </Text>
                     <ReactCustomSelect
-                      name="zone"
+                      name="substate"
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
-                      options={selectBoxOptions?.zones || []}
+                      options={selectBoxOptions?.substate || []}
                       selectedValue={
                         selectBoxOptions?.substate?.filter(
-                          (item) => item.value === getValues("zone")
+                          (item) => item.value === getValues("substate")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -570,7 +622,35 @@ function AddEditFormBankBranchMaster() {
                     }}
                   />
                 </Box>
-              </MotionSlideUp>{" "}
+              </MotionSlideUp>
+
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
+                    Area
+                  </Text>{" "}
+                  <ReactCustomSelect
+                    name="area"
+                    label=""
+                    isLoading={fetchLocationDrillDownApiIsLoading}
+                    options={selectBoxOptions?.areas || []}
+                    selectedValue={
+                      selectBoxOptions?.areas?.filter(
+                        (item) => item.value === getValues("area")
+                      )[0] || {}
+                    }
+                    isClearable={false}
+                    selectType="label"
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    handleOnChange={(val) => {
+                      areaOnChange(val);
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
 
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
