@@ -58,7 +58,10 @@ import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import * as Yup from "yup";
 import ReactSelect from "react-select";
-import { gstNumberValidation } from "../../services/validation.service";
+import {
+  gstNumber,
+  gstNumberValidation,
+} from "../../services/validation.service";
 import {
   useCalculatePBPMMutation,
   useFetchLocationDrillDownMutation,
@@ -100,15 +103,17 @@ const client_details_obj = {
   area: "",
   address: "",
 
-  storage_charges: null,
-  reservation_qty: null,
-  reservation_start_date: "",
-  reservation_end_date: "",
-  reservation_period_month: null,
-  reservation_billing_cycle: "",
+  dynamicFields: {
+    storage_charges: null,
+    reservation_qty: null,
+    reservation_start_date: "",
+    reservation_end_date: "",
+    reservation_period_month: null,
+    reservation_billing_cycle: "",
 
-  post_reservation_billing_cycle: "",
-  post_reservation_storage_charges: "",
+    post_reservation_billing_cycle: "",
+    post_reservation_storage_charges: "",
+  },
 };
 
 const commonStyle = {
@@ -192,7 +197,7 @@ const formFieldsName = {
       mobile_number: "mobile_number",
       region: "region",
       state: "state",
-      zone: "zone",
+      zone: "SubState",
       district: "district",
       area: "area",
       address: "address",
@@ -216,7 +221,7 @@ const schema = Yup.object().shape({
   warehouse_name: Yup.string().trim().required("Warehouse name is required"),
   region: Yup.string().trim().required("Region name is required"),
   state: Yup.string().trim().required("State name is required"),
-  zone: Yup.string().trim().required("Zone name is required"),
+  substate: Yup.string().trim().required("SubState name is required"),
   district: Yup.string().trim().required("District name is required"),
   area: Yup.string().trim().required("Area name is required"),
   warehouse_address: Yup.string()
@@ -319,9 +324,14 @@ const schema = Yup.object().shape({
     otherwise: () => Yup.number(),
   }),
 
+  // gst: Yup.string()
+  //   .matches(gstNumberValidation(), "Invalid GST number")
+  //   .required("GST number is required"),
+
   gst: Yup.string()
-    .matches(gstNumberValidation(), "Invalid GST number")
-    .required("GST number is required"),
+    .test("gst", "Invalid GST Number", (value) => gstNumber(value))
+    .required("Invalid GST number"),
+
   commencement_date: Yup.string().required("Commencement date is required"),
   // agreement_period_month: Yup.number().required("Agreement period is required"),
 
@@ -359,19 +369,147 @@ const schema = Yup.object().shape({
   your_project: Yup.string(),
 
   // PWH CLIENTS DETAILS schema start here
+  // client_list: Yup.array().of(
+  //   Yup.object().shape({
+  //     client_type: Yup.string().required("client type name is required"),
+  //     client_name: Yup.string().trim().required("Client name  is required"),
+  //     mobile_number: Yup.string().trim().required("Mobile number is required"),
+  //     region: Yup.string().trim().required("Region is required"),
+  //     state: Yup.string().trim().required("State is required"),
+  //     zone: Yup.string().trim().required("Zone is required"),
+  //     district: Yup.string().trim().required("District is required"),
+  //     area: Yup.string().trim().required("Area is required"),
+  //     address: Yup.string().trim().required("Address is required"),
+
+  //     // Start dynamic's fields when show only client type === corporate
+  //     storage_charges: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.number()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("Storage charges is required"),
+  //       otherwise: () => Yup.number(),
+  //     }),
+
+  //     reservation_qty: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.number()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("Reservation qty is required"),
+  //       otherwise: () => Yup.number(),
+  //     }),
+
+  //     reservation_start_date: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.date()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("Reservation start date is required")
+  //           .test("isValidDate", "Invalid reservation start date", (value) => {
+  //             return value instanceof Date && !isNaN(value);
+  //           }),
+  //       otherwise: () => Yup.date(),
+  //     }),
+
+  //     reservation_end_date: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.date()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("Reservation end date is required")
+  //           .test("isValidDate", "Invalid reservation end date", (value) => {
+  //             return value instanceof Date && !isNaN(value);
+  //           }),
+  //       otherwise: () => Yup.date(),
+  //     }),
+
+  //     reservation_period_month: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.number()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("PReservation period month is required"),
+  //       otherwise: () => Yup.number(),
+  //     }),
+
+  //     reservation_billing_cycle: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.string().required("Reservation billing cycle is required"),
+  //       otherwise: () => Yup.string(),
+  //     }),
+
+  //     post_reservation_billing_cycle: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.string().required("Post reservation billing cycle is required"),
+  //       otherwise: () => Yup.string(),
+  //     }),
+
+  //     post_reservation_storage_charges: Yup.string().when("client_type", {
+  //       is: (value) => value === "Corporate",
+  //       then: () =>
+  //         Yup.number()
+  //           .nullable()
+  //           .transform((value, originalValue) => {
+  //             if (originalValue === "") {
+  //               return null;
+  //             }
+  //             return value;
+  //           })
+  //           .required("Post reservation storage charges is required"),
+  //       otherwise: () => Yup.number(),
+  //     }),
+
+  //     // end dynamic's fields when show only client type === corporate
+  //   })
+  // ),
+
+  // new for testing schema
+
   client_list: Yup.array().of(
     Yup.object().shape({
-      client_type: Yup.string().required("client type name is required"),
-      client_name: Yup.string().trim().required("Client name  is required"),
+      client_type: Yup.string().trim().required("Client type name is required"),
+      client_name: Yup.string().trim().required("Client name is required"),
       mobile_number: Yup.string().trim().required("Mobile number is required"),
       region: Yup.string().trim().required("Region is required"),
       state: Yup.string().trim().required("State is required"),
-      zone: Yup.string().trim().required("Zone is required"),
+      substate: Yup.string().trim().required("Substate is required"),
       district: Yup.string().trim().required("District is required"),
       area: Yup.string().trim().required("Area is required"),
       address: Yup.string().trim().required("Address is required"),
-
-      // Start dynamic's fields when show only client type === corporate
+      // Start dynamic fields when client_type === "Corporate"
 
       storage_charges: Yup.string().when("client_type", {
         is: (value) => value === "Corporate",
@@ -483,9 +621,10 @@ const schema = Yup.object().shape({
         otherwise: () => Yup.number(),
       }),
 
-      // end dynamic's fields when show only client type === corporate
+      // End dynamic fields when client_type === "Corporate"
     })
   ),
+
   intention_letter: Yup.string()
     .trim()
     .required("Intention letter is required"),
@@ -530,6 +669,7 @@ const Pwh = () => {
     setValue,
     getValues,
     watch,
+    setError,
     formState: { errors },
   } = methods;
 
@@ -921,8 +1061,8 @@ const Pwh = () => {
 
       let location = clientLocationDrillDownState[index];
 
-      location.zones = response?.zone?.map(({ zone_name, id }) => ({
-        label: zone_name,
+      location.zones = response?.substate?.map(({ substate_name, id }) => ({
+        label: substate_name,
         value: id,
       }));
 
@@ -1252,8 +1392,8 @@ const Pwh = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.zone?.map(({ zone_name, id }) => ({
-          label: zone_name,
+        zones: response?.substate?.map(({ substate_name, id }) => ({
+          label: substate_name,
           value: id,
         })),
       }));
@@ -1434,6 +1574,9 @@ const Pwh = () => {
       formFieldsName.pwh_warehouse_details.covered_area
     );
 
+    console.log("containing area", coveredArea);
+
+    console.log(getValues("expected_commodity"));
     let commodity = getValues("expected_commodity")?.map((item) => item.value);
 
     let obj = {
@@ -1441,23 +1584,29 @@ const Pwh = () => {
       covered_area: coveredArea,
     };
     console.log(obj);
-    if (obj.commodity && obj.covered_area) {
+    if (obj?.commodity && obj?.covered_area) {
       fetchPBPM(obj);
     } else {
       if (obj?.commodity === undefined) {
+        setError("expected_commodity", {
+          //type: "manual",
+          message: "Expected commodity name is required",
+        });
         toasterAlert({
           message: "Please select commodity ",
           status: 440,
         });
-      }
-
-      if (obj?.covered_area === undefined) {
+      } else if (obj?.covered_area === undefined) {
+        setError("covered_area", {
+          // type: "manual",
+          message: "Covered area is required",
+        });
         toasterAlert({
           message: "Please select covered area ",
           status: 440,
         });
       }
-      setValue(formFieldsName.pwh_clients_details);
+      // setValue('covered_area');
     }
 
     console.log(obj);
@@ -2136,7 +2285,7 @@ const Pwh = () => {
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
-                                      textDecoration="underline"
+                                      //textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       <Checkbox
@@ -2206,7 +2355,7 @@ const Pwh = () => {
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
-                                      textDecoration="underline"
+                                      //textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       <Checkbox
@@ -2277,12 +2426,13 @@ const Pwh = () => {
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
-                                      textDecoration="underline"
+                                      //textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       <Checkbox
                                         colorScheme="green"
                                         borderColor="gray.300"
+
                                         //defaultChecked
                                       >
                                         Hire new security guard
@@ -2349,7 +2499,7 @@ const Pwh = () => {
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
-                                      textDecoration="underline"
+                                      //textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       <Checkbox
@@ -3622,7 +3772,7 @@ const Pwh = () => {
                                     name={
                                       formFieldsName.pwh_commercial_details.gst
                                     }
-                                    placeholder="Warehouse Name"
+                                    placeholder="GST"
                                     type="text"
                                     label=""
                                     style={{
@@ -4100,7 +4250,7 @@ const Pwh = () => {
                                               },
                                             ]?.filter(
                                               (item) =>
-                                                item.value ===
+                                                item.value ==
                                                 getValues(
                                                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
                                                 )
@@ -4257,7 +4407,7 @@ const Pwh = () => {
                                         name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`}
                                         label=""
                                         options={
-                                          clientLocationDrillDownState[index]
+                                          clientLocationDrillDownState?.[index]
                                             ?.states || {}
                                         }
                                         selectedValue={
@@ -4287,14 +4437,14 @@ const Pwh = () => {
                                       </Box>
                                     </GridItem>
 
-                                    {/* Zone */}
+                                    {/* Zone  SubState*/}
                                     <GridItem>
-                                      <Text textAlign="left">Zone </Text>{" "}
+                                      <Text textAlign="left">SubState </Text>{" "}
                                       <ReactCustomSelect
                                         name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`}
                                         label=""
                                         options={
-                                          clientLocationDrillDownState[index]
+                                          clientLocationDrillDownState?.[index]
                                             ?.zones || {}
                                         }
                                         selectedValue={
@@ -4313,12 +4463,13 @@ const Pwh = () => {
                                         isLoading={false}
                                         style={{ w: "100%" }}
                                         handleOnChange={(val) => {
+                                          console.log(val);
                                           zoneOnClientChange(val, index);
                                         }}
                                       />
                                       <Box mx="1" color="red" textAlign="left">
                                         {
-                                          errors?.client_list?.[index]?.zone
+                                          errors?.client_list?.[index]?.substate
                                             ?.message
                                         }
                                       </Box>
@@ -4331,7 +4482,7 @@ const Pwh = () => {
                                         name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`}
                                         label=""
                                         options={
-                                          clientLocationDrillDownState[index]
+                                          clientLocationDrillDownState?.[index]
                                             ?.districts || {}
                                         }
                                         selectedValue={
@@ -4368,7 +4519,7 @@ const Pwh = () => {
                                         name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`}
                                         label=""
                                         options={
-                                          clientLocationDrillDownState[index]
+                                          clientLocationDrillDownState?.[index]
                                             ?.areas || {}
                                         }
                                         selectedValue={
@@ -4831,7 +4982,48 @@ const Pwh = () => {
                                   </>
                                 ))}
                             </Grid>
+                            ;
                           </Box>
+
+                          {/* show client table start */}
+                          {/* <TableContainer mt="4">
+                            <Table variant="striped" colorScheme="teal">
+                              <Thead>
+                                <Tr>
+                                  <Th>To convert</Th>
+                                  <Th>into</Th>
+                                  <Th isNumeric>multiply by</Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                <Tr>
+                                  <Td>inches</Td>
+                                  <Td>millimetres (mm)</Td>
+                                  <Td isNumeric>25.4</Td>
+                                </Tr>
+                                <Tr>
+                                  <Td>feet</Td>
+                                  <Td>centimetres (cm)</Td>
+                                  <Td isNumeric>30.48</Td>
+                                </Tr>
+                                <Tr>
+                                  <Td>yards</Td>
+                                  <Td>metres (m)</Td>
+                                  <Td isNumeric>0.91444</Td>
+                                </Tr>
+                              </Tbody>
+                              <Tfoot>
+                                <Tr>
+                                  <Th>To convert</Th>
+                                  <Th>into</Th>
+                                  <Th isNumeric>multiply by</Th>
+                                </Tr>
+                              </Tfoot>
+                            </Table>
+                          </TableContainer> */}
+                          {/* show client table end */}
+
+                          <Box></Box>
                           <Box
                           //border="1px"
                           >
@@ -4964,3 +5156,118 @@ const toasterAlert = (obj) => {
 };
 
 // ==========================================
+
+// client_list: Yup.array().of(
+//   Yup.object().shape({
+//     client_type: Yup.string().required("Client type name is required"),
+//     client_name: Yup.string().trim().required("Client name is required"),
+//     mobile_number: Yup.string().trim().required("Mobile number is required"),
+//     region: Yup.string().trim().required("Region is required"),
+//     state: Yup.string().trim().required("State is required"),
+//     zone: Yup.string().trim().required("Zone is required"),
+//     district: Yup.string().trim().required("District is required"),
+//     area: Yup.string().trim().required("Area is required"),
+//     address: Yup.string().trim().required("Address is required"),
+
+//     // Start dynamic fields when client_type === "Corporate"
+
+//     dynamicFields: Yup.object().when("client_type", {
+//       is: "Corporate",
+//       then: Yup.object().shape({
+//         storage_charges: Yup.number()
+//           .nullable()
+//           .required("Storage charges is required"),
+//         reservation_qty: Yup.number()
+//           .nullable()
+//           .required("Reservation qty is required"),
+//         reservation_start_date: Yup.date()
+//           .nullable()
+//           .required("Reservation start date is required")
+//           .test("isValidDate", "Invalid reservation start date", (value) => {
+//             return value instanceof Date && !isNaN(value);
+//           }),
+//         reservation_end_date: Yup.date()
+//           .nullable()
+//           .required("Reservation end date is required")
+//           .test("isValidDate", "Invalid reservation end date", (value) => {
+//             return value instanceof Date && !isNaN(value);
+//           }),
+//         reservation_period_month: Yup.number()
+//           .nullable()
+//           .required("Reservation period month is required"),
+//         reservation_billing_cycle: Yup.string().required(
+//           "Reservation billing cycle is required"
+//         ),
+//         post_reservation_billing_cycle: Yup.string().required(
+//           "Post reservation billing cycle is required"
+//         ),
+//         post_reservation_storage_charges: Yup.number()
+//           .nullable()
+//           .required("Post reservation storage charges is required"),
+//       }),
+//       otherwise: Yup.object().shape({
+//         // Define optional fields when client_type is not "Corporate"
+//       }),
+//     }),
+
+//     // End dynamic fields when client_type === "Corporate"
+//   })
+// ),
+
+// client_list: Yup.array().of(
+//   Yup.object().shape({
+//     client_type: Yup.string().trim().required("Client type name is required"),
+//     client_name: Yup.string().trim().required("Client name is required"),
+//     mobile_number: Yup.string().trim().required("Mobile number is required"),
+//     region: Yup.string().trim().required("Region is required"),
+//     state: Yup.string().trim().required("State is required"),
+//     zone: Yup.string().trim().required("Zone is required"),
+//     district: Yup.string().trim().required("District is required"),
+//     area: Yup.string().trim().required("Area is required"),
+//     address: Yup.string().trim().required("Address is required"),
+//     // Start dynamic fields when client_type === "Corporate"
+//     dynamicFields: Yup.object().when("client_type", {
+//       is: "Corporate",
+//       then: Yup.object().shape({
+//         storage_charges: Yup.number()
+//           .nullable()
+//           .required("Storage charges is required"),
+//         reservation_qty: Yup.number()
+//           .nullable()
+//           .required("Reservation qty is required"),
+//         reservation_start_date: Yup.date()
+//           .nullable()
+//           .required("Reservation start date is required")
+//           .test(
+//             "isValidDate",
+//             "Invalid reservation start date",
+//             (value) => {
+//               return value instanceof Date && !isNaN(value);
+//             }
+//           ),
+//         reservation_end_date: Yup.date()
+//           .nullable()
+//           .required("Reservation end date is required")
+//           .test("isValidDate", "Invalid reservation end date", (value) => {
+//             return value instanceof Date && !isNaN(value);
+//           }),
+//         reservation_period_month: Yup.number()
+//           .nullable()
+//           .required("Reservation period month is required"),
+//         reservation_billing_cycle: Yup.string().required(
+//           "Reservation billing cycle is required"
+//         ),
+//         post_reservation_billing_cycle: Yup.string().required(
+//           "Post reservation billing cycle is required"
+//         ),
+//         post_reservation_storage_charges: Yup.number()
+//           .nullable()
+//           .required("Post reservation storage charges is required"),
+//       }),
+//       otherwise: Yup.object().shape({
+//         // Define optional fields when client_type is not "Corporate"
+//       }),
+//     }),
+//     // End dynamic fields when client_type === "Corporate"
+//   })
+// ),
