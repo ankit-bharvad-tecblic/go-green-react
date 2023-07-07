@@ -113,6 +113,10 @@ const schema = yup.object().shape({
     .max(300)
     .required("Bank address is required"),
   is_active: yup.string(),
+  rate: yup.number().required("rate is required"),
+  agreement_start_date: yup.string().required(" Agreement start date is required"),
+  agreement_end_date: yup.string().required(" Agreement end date is required"),
+  upload_agreement: yup.string().required(" Upload agreement is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

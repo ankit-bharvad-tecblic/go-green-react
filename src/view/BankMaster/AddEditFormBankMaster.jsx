@@ -49,6 +49,7 @@ function AddEditFormBankMaster() {
       },
     ],
   });
+
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
 
@@ -153,13 +154,31 @@ function AddEditFormBankMaster() {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+
+      if (details?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.region?.region_name,
+              value: details?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -183,15 +202,30 @@ function AddEditFormBankMaster() {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+
+      if (details?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.state?.state_name,
+              value: details?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -289,18 +323,24 @@ function AddEditFormBankMaster() {
                     <Text textAlign="right" w="550px">
                       Sector
                     </Text>
-                    <CustomSelector
+                    <ReactCustomSelect
                       name="sector"
                       label=""
-                      options={selectBoxOptions.sector}
-                      selectedValue={selectBoxOptions.sector?.find(
-                        (opt) => opt.label === details?.sector
-                      )}
+                      isLoading={false}
+                      options={selectBoxOptions?.sector || []}
+                      selectedValue={
+                        selectBoxOptions?.sector?.filter(
+                          (item) => item.value === getValues("sector")
+                        )[0] || {}
+                      }
                       isClearable={false}
-                      selectType={"value"}
+                      selectType="label"
                       style={{
                         mb: 1,
                         mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        setValue("sector", val.value, { shouldValidate: true });
                       }}
                     />
                   </Box>
@@ -496,7 +536,14 @@ function AddEditFormBankMaster() {
                       name={"upload_agreement"}
                       placeholder="Agreement upload"
                       label=""
-                      type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      type=""
+                      onChange={(e) => {
+                        console.log(e, "file");
+                        setValue("upload_agreement", e, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      value={getValues("upload_agreement")}
                       style={{
                         mb: 1,
                         mt: 1,

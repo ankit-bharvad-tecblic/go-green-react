@@ -134,8 +134,8 @@ const AddEditFormArea = () => {
           regions: [
             ...arr,
             {
-              label: details?.region?.region_name,
-              value: details?.region?.id,
+              label: details?.district?.substate?.state?.region?.region_name,
+              value: details?.district?.substate?.state?.region?.id,
             },
           ],
         }));
