@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import {
-  useAddBankMasterMutation, 
+  useAddBankMasterMutation,
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
   useUpdateBankMasterMutation,
@@ -429,34 +429,6 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
-<<<<<<< HEAD
-              {/* for the sector code */}
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Sector
-                    </Text>
-                    <CustomSelector
-                      name="sector"
-                      label=""
-                      options={options}
-                      selectedValue={selectBoxOptions.sector?.find(
-                        (opt) => opt.label === details?.sector
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
-=======
-
->>>>>>> gg-aasim-warehouse-form
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
