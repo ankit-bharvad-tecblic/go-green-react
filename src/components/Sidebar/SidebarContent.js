@@ -33,10 +33,32 @@ const SidebarContent = ({ logoText, routes }) => {
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
-    console.log(location.pathname);
-    console.log(routeName);
-    return location.pathname === routeName ? "active" : "";
+    // console.log(location.pathname, 8989);
+    // console.log(routeName, 8989);
+    // console.log(location.pathname.includes(routeName), 8989);
+    // console.log(location.pathname.split("/"), 9000);
+    if (routeName === "/") {
+      return location.pathname === routeName ? "active" : "";
+    } else {
+      function isSubset(array1, array2) {
+        let i = 0;
+        let j = 0;
+
+        while (i < array1.length && j < array2.length) {
+          if (array1[i] === array2[j]) {
+            i++;
+          }
+          j++;
+        }
+
+        return i === array1.length;
+      }
+      return isSubset(routeName.split("/"), location.pathname.split("/"))
+        ? "active"
+        : "";
+    }
   };
+
   const createLinks = (routes) => {
     // Chakra Color Mode
     // const activeBg = useColorModeValue("white", "gray.700");
@@ -85,7 +107,9 @@ const SidebarContent = ({ logoText, routes }) => {
                         {prop.icon}
                       </IconBox>
                     )}
-                    <Text color={"gray.800"}>{prop.name}</Text>
+                    <Text color={"gray.800"} fontSize="13px" fontWeight={"600"}>
+                      {prop.name}
+                    </Text>
                   </Flex>
                   <AccordionIcon color={"gray.600"} fontSize="20px" />
                 </AccordionButton>
@@ -145,7 +169,7 @@ const SidebarContent = ({ logoText, routes }) => {
                   <Text
                     color={"white"}
                     my="auto"
-                    fontSize="12px"
+                    fontSize="13px"
                     fontWeight="700"
                   >
                     {prop.name}
@@ -199,9 +223,9 @@ const SidebarContent = ({ logoText, routes }) => {
                   )}
                   <Text
                     color={"#636363"}
-                    fontWeight="medium"
+                    fontWeight={prop.secondaryNavbar ? "medium" : "600"}
                     my="auto"
-                    fontSize="14px"
+                    fontSize="13px"
                   >
                     {prop.name}
                   </Text>

@@ -193,7 +193,7 @@ const AddEditFormEmployeeMaster = () => {
       console.log(details);
       let onlyActive = response?.results?.filter((item) => item.is_active);
       let arr = onlyActive?.map((item) => ({
-        label: item.zone_name,
+        label: item.substate_name,
         value: item.id,
       }));
       console.log(arr);
@@ -293,7 +293,7 @@ const AddEditFormEmployeeMaster = () => {
         contact_number: details?.contact_number,
         region_id: details?.region_id.region_name,
         state_id: details?.state_id.state_name,
-        zone_id: details?.zone_id.zone_name,
+        zone_id: details?.zone_id.substate_name,
         district_id: details?.district_id?.district_name,
         role: details?.role?.role_name || "",
         area_id: details?.area?.area_name,
@@ -490,7 +490,7 @@ const AddEditFormEmployeeMaster = () => {
                       label=""
                       options={selectBoxOptions.zones}
                       selectedValue={selectBoxOptions.zones.find(
-                        (opt) => opt.label === details?.zone_id.zone_name
+                        (opt) => opt.label === details?.zone_id.substate_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -645,7 +645,7 @@ const AddEditFormEmployeeMaster = () => {
                       label=""
                       options={selectBoxOptions.zones}
                       selectedValue={selectBoxOptions.zones.find(
-                        (opt) => opt.label === details?.zone_id.zone_name
+                        (opt) => opt.label === details?.zone_id.substate_name
                       )}
                       isClearable={false}
                       selectType={"value"}

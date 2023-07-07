@@ -150,7 +150,12 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  hsn_code: yup.number().required("HSN code is required"),
+  hsn_code: yup
+    .number()
+    .integer()
+    .min(1000, "HSN code must be at least 4 digits")
+    .max(99999999, "HSN code cannot exceed 8 digits")
+    .required("HSN code is required"),
   igst_perc: yup.number().required("IGST percentage is required"),
   sgst_perc: yup.number().required("SGST percentage is required"),
   cgst_perc: yup.number().required("CGSt percentage is required"),

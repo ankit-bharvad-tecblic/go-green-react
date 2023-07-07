@@ -82,8 +82,8 @@ const SidebarList = [
             component: StateMaster,
           },
           {
-            path: "/manage-location/zone-master",
-            name: "Zone Master",
+            path: "/manage-location/sub-state-master",
+            name: "Sub State Master",
             secondaryNavbar: true,
             component: ZoneMaster,
           },
@@ -303,7 +303,7 @@ const SidebarList = [
         icon: <PeopleIcon color="inherit" />,
         views: [
           {
-            path: "manage-client/client-master",
+            path: "/manage-client/client-master",
             name: "Client Master",
             secondaryNavbar: true,
             component: ClientMaster,
@@ -349,7 +349,6 @@ const SidebarList = [
       },
     ],
   },
-
   {
     path: "/warehouse-proposal",
     name: "Warehouse Proposal",

@@ -530,8 +530,8 @@ const Wms = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.zone?.map(({ zone_name, id }) => ({
-          label: zone_name,
+        zones: response?.zone?.map(({ substate_name, id }) => ({
+          label: substate_name,
           value: id,
         })),
       }));
@@ -935,8 +935,8 @@ const Wms = () => {
 
       let location = clientLocationDrillDownState[index];
 
-      location.zones = response?.zone?.map(({ zone_name, id }) => ({
-        label: zone_name,
+      location.zones = response?.zone?.map(({ substate_name, id }) => ({
+        label: substate_name,
         value: id,
       }));
 

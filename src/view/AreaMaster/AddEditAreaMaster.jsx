@@ -14,6 +14,7 @@ import {
   useGetZoneMasterMutation,
   useGetStateMasterMutation,
   useGetRegionMasterMutation,
+  useGetEarthQuakeZoneTypeMasterMutation,
 } from "../../features/master-api-slice";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
@@ -45,7 +46,7 @@ const AddEditFormArea = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     earthQuack: [],
     regions: [],
-    zones: [],
+    substate: [],
     districts: [],
     states: [],
   });
@@ -69,7 +70,8 @@ const AddEditFormArea = () => {
     });
   };
 
-  const [getDistrictMaster] = useGetDistrictMasterMutation();
+  const [getEarthQuakeZoneTypeMaster] =
+    useGetEarthQuakeZoneTypeMasterMutation();
 
   const [addAreaMaster, { isLoading: addAreaMasterApiIsLoading }] =
     useAddAreaMasterMutation();
@@ -216,7 +218,7 @@ const AddEditFormArea = () => {
       shouldValidate: false,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
@@ -256,7 +258,7 @@ const AddEditFormArea = () => {
       shouldValidate: true,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
@@ -280,10 +282,10 @@ const AddEditFormArea = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.zone
-          ?.filter((item) => item.zone_name !== "All - Zone")
-          .map(({ zone_name, id }) => ({
-            label: zone_name,
+        substate: response?.substate
+          ?.filter((item) => item.substate_name !== "All - Zone")
+          .map(({ substate_name, id }) => ({
+            label: substate_name,
             value: id,
           })),
       }));
@@ -294,7 +296,7 @@ const AddEditFormArea = () => {
 
   const zoneOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("zone", val?.value, {
+    setValue("substate", val?.value, {
       shouldValidate: true,
     });
 
@@ -305,13 +307,13 @@ const AddEditFormArea = () => {
     setLocationDrillDownState((prev) => ({
       region: locationDrillDownState.region,
       state: locationDrillDownState.state,
-      zone: val?.value,
+      substate: val?.value,
     }));
 
     const query = {
       region: locationDrillDownState.region,
       state: locationDrillDownState.state,
-      zone: val?.value,
+      substate: val?.value,
     };
 
     try {
@@ -339,19 +341,42 @@ const AddEditFormArea = () => {
     });
   };
 
+  const getEarthquackList = async () => {
+    try {
+      const response = await getEarthQuakeZoneTypeMaster().unwrap();
+      console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
+        label: item.earthquake_zone_type,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        earthquack: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   // Region State  Zone District Area  onChange drill down api end //
 
   useEffect(() => {
+    getEarthquackList();
     if (details?.id) {
-      regionOnChange({ value: details.district?.zone?.state?.region?.id });
-      stateOnChange({ value: details.district?.zone?.state?.id });
-      zoneOnChange({ value: details.district?.zone?.id });
+      regionOnChange({ value: details.district?.substate?.state?.region?.id });
+      stateOnChange({ value: details.district?.substate?.state?.id });
+      zoneOnChange({ value: details.district?.substate?.id });
       districtOnChange({ value: details.district?.id });
       let obj = {
+        earthquake_zone_type: details.earthquake_zone_type.earthquake_zone_type,
         district_name: details.district?.id,
-        zone: details.district?.zone?.id,
-        region: details.district?.zone?.state?.region.id,
-        state: details.district?.zone?.state.id,
+        substate: details.district?.substate?.id,
+        region: details.district?.substate?.state?.region.id,
+        state: details.district?.substate?.state.id,
         is_active: details?.is_active,
         is_block: details?.is_block,
         area_name: details.area_name,
@@ -462,16 +487,16 @@ const AddEditFormArea = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Zone
+                      Sub State
                     </Text>
                     <ReactCustomSelect
-                      name="zone"
+                      name="substate"
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
-                      options={selectBoxOptions?.zones || []}
+                      options={selectBoxOptions?.substate || []}
                       selectedValue={
-                        selectBoxOptions?.zones?.filter(
-                          (item) => item.value === getValues("zone")
+                        selectBoxOptions?.substate?.filter(
+                          (item) => item.value === getValues("substate")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -487,7 +512,6 @@ const AddEditFormArea = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
-              <Box></Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="4" display={{ base: "flex" }} alignItems="center">
                   <Text textAlign="right" w="550px">
@@ -515,6 +539,32 @@ const AddEditFormArea = () => {
                   />
                 </Box>
               </MotionSlideUp>{" "}
+              {/* This one for Earthquack zone id  */}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Earthquack Zone
+                    </Text>
+                    <CustomSelector
+                      name="earthquake_zone_type"
+                      label=""
+                      options={selectBoxOptions.earthquack}
+                      selectedValue={selectBoxOptions.earthquack?.find(
+                        (opt) =>
+                          opt.label ===
+                          details?.earthquake_zone_type.earthquake_zone_type
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>

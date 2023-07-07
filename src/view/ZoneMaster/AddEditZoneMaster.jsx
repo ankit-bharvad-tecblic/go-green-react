@@ -76,7 +76,7 @@ const AddEditZoneMaster = () => {
       console.log("add commodity master res", response);
       if (response.status === 201) {
         toasterAlert(response);
-        navigate("/manage-location/zone-master");
+        navigate("/manage-location/sub-state-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -90,7 +90,7 @@ const AddEditZoneMaster = () => {
       if (response.status === 200) {
         console.log("update commodity master res", response);
         toasterAlert(response);
-        navigate("/manage-location/zone-master");
+        navigate("/manage-location/sub-state-master");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -174,7 +174,7 @@ const AddEditZoneMaster = () => {
     if (details?.id) {
       regionOnChange({ value: details.state?.region?.id });
       let obj = {
-        zone_name: details.zone_name,
+        substate_name: details.substate_name,
         state: details.state.id,
         region: details.state?.region?.id,
         is_active: details?.is_active,
@@ -189,11 +189,11 @@ const AddEditZoneMaster = () => {
     const breadcrumbArray = [
       {
         title: "Manage Locations",
-        link: "/manage-location/zone-master",
+        link: "/manage-location/sub-state-master",
       },
       {
-        title: "Zone Master",
-        link: "/manage-location/zone-master",
+        title: "Sub State Master",
+        link: "/manage-location/sub-state-master",
       },
       {
         title: details?.id ? "Edit" : "Add",

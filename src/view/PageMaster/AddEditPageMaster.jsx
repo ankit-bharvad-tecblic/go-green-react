@@ -140,7 +140,7 @@ const AddEditPageMaster = () => {
         link: "/manage-users/page-master",
       },
       {
-        title: "Page Master",
+        title: "Module Master",
         link: "/manage-users/page-master",
       },
       {

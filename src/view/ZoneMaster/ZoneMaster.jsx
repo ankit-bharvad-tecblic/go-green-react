@@ -98,9 +98,9 @@ const ZoneMaster = () => {
       cell: (info) => info.getValue(),
       header: "State",
     }),
-    columnHelper.accessor("zone_name", {
+    columnHelper.accessor("substate_name", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "Sub State NAME",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
@@ -205,14 +205,14 @@ const ZoneMaster = () => {
   };
 
   const addForm = () => {
-    navigate(`/manage-location/add/zone-master/`);
+    navigate(`/manage-location/add/sub-state-master/`);
   };
 
   const editForm = (info) => {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(`/manage-location/edit/zone-master/${editedFormId}`, {
+    navigate(`/manage-location/edit/sub-state-master/${editedFormId}`, {
       state: { details: info.row.original },
     });
   };
@@ -300,14 +300,14 @@ export default ZoneMaster;
 //   ] = useActiveDeActiveMutation();
 
 //   const addForm = () => {
-//     navigate(`/location-master/add/zone-master/`);
+//     navigate(`/location-master/add/sub-state-master/`);
 //   };
 
 //   const editForm = (info) => {
 //     console.log("info --> ", info);
 //     let editedFormId = info.row.original.id;
 
-//     navigate(`/location-master/edit/zone-master/${editedFormId}`, {
+//     navigate(`/location-master/edit/sub-state-master/${editedFormId}`, {
 //       state: { details: info.row.original },
 //     });
 //   };

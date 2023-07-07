@@ -139,7 +139,7 @@ const AddEditFormDistrictMaster = () => {
       shouldValidate: false,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
@@ -175,7 +175,7 @@ const AddEditFormDistrictMaster = () => {
       shouldValidate: true,
     });
 
-    setValue("zone", null, {
+    setValue("substate", null, {
       shouldValidate: false,
     });
 
@@ -195,10 +195,10 @@ const AddEditFormDistrictMaster = () => {
 
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.zone
-          ?.filter((item) => item.zone_name !== "All - Zone")
-          .map(({ zone_name, id }) => ({
-            label: zone_name,
+        zones: response?.substate
+          ?.filter((item) => item.substate_name !== "All - Zone")
+          .map(({ substate_name, id }) => ({
+            label: substate_name,
             value: id,
           })),
       }));
@@ -209,7 +209,7 @@ const AddEditFormDistrictMaster = () => {
 
   const zoneOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("zone", val?.value, {
+    setValue("substate", val?.value, {
       shouldValidate: true,
     });
   };
@@ -222,14 +222,14 @@ const AddEditFormDistrictMaster = () => {
     console.log(details);
 
     if (details?.id) {
-      regionOnChange({ value: details.zone?.state?.region?.id });
-      stateOnChange({ value: details.zone?.state?.id });
-      zoneOnChange({ value: details.zone?.id });
+      regionOnChange({ value: details.substate?.state?.region?.id });
+      stateOnChange({ value: details.substate?.state?.id });
+      zoneOnChange({ value: details.substate?.id });
       let obj = {
         district_name: details.district_name,
-        zone: details.zone?.id,
-        region: details.zone?.state?.region?.id,
-        state: details.zone?.state?.id,
+        substate: details.substate?.id,
+        region: details.substate?.state?.region?.id,
+        state: details.substate?.state?.id,
         is_active: details.is_active,
       };
 
@@ -337,16 +337,16 @@ const AddEditFormDistrictMaster = () => {
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
-                      Zone
+                      Sub State
                     </Text>
                     <ReactCustomSelect
-                      name="zone"
+                      name="substate"
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.zones || []}
                       selectedValue={
                         selectBoxOptions?.zones?.filter(
-                          (item) => item.value === getValues("zone")
+                          (item) => item.value === getValues("substate")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -383,7 +383,7 @@ const AddEditFormDistrictMaster = () => {
                         selectedValue:
                           item.type === "select" &&
                           item?.options?.find(
-                            (opt) => opt.label === details?.zone.zone_name
+                            (opt) => opt.label === details?.substate.substate_name
                           ),
                         selectType: "value",
                         isClearable: false,

@@ -2,6 +2,25 @@ import * as yup from "yup";
 
 const filterFields = [
   {
+    "Primary commodity type": "Primary Commodity Type",
+    isActiveFilter: false,
+    label: "Primary Commodity ",
+    name: "primary_comodity_key",
+    placeholder: "Primary Commodity ",
+    type: "select",
+    multi: false,
+    options: [
+      {
+        label: "Agriculture",
+        value: "True",
+      },
+      {
+        label: "NonAgriculture",
+        value: "False",
+      },
+    ],
+  },
+  {
     "COMMODITY NAME": "commodity_type",
     isActiveFilter: false,
     label: "Commodity Type",
@@ -56,6 +75,11 @@ const filterFields = [
 
 const addEditFormFields = [
   {
+    label: "Primary Commodity Type",
+    name: "primary_comodity_key",
+    type: "select",
+  },
+  {
     label: "Commodity Type",
     name: "commodity_type",
     placeholder: "Commodity Type",
@@ -67,6 +91,7 @@ const addEditFormFields = [
     placeholder: "Description",
     type: "text",
   },
+
   {
     label: "Active",
     name: "is_active",
@@ -75,6 +100,9 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
+  primary_comodity_key: yup
+    .string()
+    .required("Primary commodity type is required"),
   description: yup.string().required("Description is required"),
   is_active: yup.string(),
   commodity_type: yup.string().required("Commodity type is required"),

@@ -54,21 +54,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
     // start Zone-Master get add update mutation methods
     getZoneMaster: builder.mutation({
       query: (params) => ({
-        url: API.DASHBOARD.ZONE_MASTER,
+        url: API.DASHBOARD.SUBSTATE_MASTER,
         method: "GET",
         params: params,
       }),
     }),
     addZoneMaster: builder.mutation({
       query: (data) => ({
-        url: API.DASHBOARD.ZONE_MASTER,
+        url: API.DASHBOARD.SUBSTATE_MASTER,
         method: "POST",
         body: data,
       }),
     }),
     updateZoneMaster: builder.mutation({
       query: (data) => ({
-        url: `${API.DASHBOARD.ZONE_MASTER}${data.id}/`,
+        url: `${API.DASHBOARD.SUBSTATE_MASTER}${data.id}/`,
         method: "PATCH",
         body: data,
       }),

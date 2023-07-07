@@ -165,11 +165,11 @@ const routes = [
     children: [
       // zone master get add update start
       {
-        path: "zone-master",
+        path: "sub-state-master",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Zone Master"}>
+              <Layout variant={headerType} title={"Sub State Master"}>
                 <ZoneMaster />
               </Layout>
             </Suspense>
@@ -177,11 +177,11 @@ const routes = [
         ),
       },
       {
-        path: "add/zone-master",
+        path: "add/sub-state-master",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Zone Master"}>
+              <Layout variant={headerType} title={"Sub State Master"}>
                 <AddEditZoneMaster />
               </Layout>
             </Suspense>
@@ -189,11 +189,11 @@ const routes = [
         ),
       },
       {
-        path: "edit/zone-master/:id",
+        path: "edit/sub-state-master/:id",
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Zone Master"}>
+              <Layout variant={headerType} title={"Sub State Master"}>
                 <AddEditZoneMaster />
               </Layout>
             </Suspense>
@@ -1061,7 +1061,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <CommodityGrade />
               </Layout>
             </Suspense>
@@ -1073,7 +1073,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <AddEditFormCommodityGrade />
               </Layout>
             </Suspense>
@@ -1085,7 +1085,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity Grade"}>
+              <Layout variant={headerType} title={"Commodity Grade Master"}>
                 <AddEditFormCommodityGrade />
               </Layout>
             </Suspense>

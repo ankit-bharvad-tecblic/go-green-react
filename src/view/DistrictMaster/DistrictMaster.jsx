@@ -104,17 +104,17 @@ const DistrictMaster = () => {
       header: "SR. NO",
     }),
 
-    columnHelper.accessor("zone.state.region.region_name", {
+    columnHelper.accessor("substate.state.region.region_name", {
       cell: (info) => info.getValue(),
       header: "REGION NAME",
     }),
-    columnHelper.accessor("zone.state.state_name", {
+    columnHelper.accessor("substate.state.state_name", {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
-    columnHelper.accessor("zone.zone_name", {
+    columnHelper.accessor("substate.substate_name", {
       cell: (info) => info.getValue(),
-      header: "ZONE NAME",
+      header: "Sub State NAME",
     }),
     columnHelper.accessor("district_name", {
       cell: (info) => info.getValue(),
