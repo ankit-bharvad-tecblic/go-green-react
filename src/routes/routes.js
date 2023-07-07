@@ -941,18 +941,18 @@ const routes = [
           </ProtectedRoutes>
         ),
       },
-      {
-        path: "add/insurance-policy-master",
-        element: (
-          <ProtectedRoutes>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Insurance Policy Master"}>
-                <AddEditInsurancePolicy />
-              </Layout>
-            </Suspense>
-          </ProtectedRoutes>
-        ),
-      },
+      // {
+      //   path: "add/insurance-policy-master",
+      //   element: (
+      //     <ProtectedRoutes>
+      //       <Suspense fallback={<div>Loading...</div>}>
+      //         <Layout variant={headerType} title={"Insurance Policy Master"}>
+      //           <AddEditInsurancePolicy />
+      //         </Layout>
+      //       </Suspense>
+      //     </ProtectedRoutes>
+      //   ),
+      // },
       {
         path: "edit/insurance-policy-master/:id",
         element: (

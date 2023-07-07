@@ -31,7 +31,6 @@ function CustomTextArea({ name, placeholder, type, rowLength, label, style }) {
               {...field}
               type={type}
               rows={rowLength || 3}
-              // width={{ base: "90%" }}
               backgroundColor={"white"}
               borderColor="#c3c3c3"
               borderRadius={"lg"}
