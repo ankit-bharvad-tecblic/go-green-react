@@ -485,7 +485,7 @@ function FunctionalTable({
                                 )
                               : " - "}
                           </Text>
-                        ) :cell.column.id === "created_at" ? (
+                        ) : cell.column.id === "created_at" ? (
                           <Text>
                             {cell.row.original.created_at
                               ? moment(cell.row.original.created_at).format(
@@ -507,6 +507,14 @@ function FunctionalTable({
                               ? moment(cell.row.original.last_login).format(
                                   "LL"
                                 )
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "last_update_date" ? (
+                          <Text>
+                            {cell.row.original.last_update_date
+                              ? moment(
+                                  cell.row.original.last_update_date
+                                ).format("LL")
                               : " - "}
                           </Text>
                         ) : cell.column.id === "updated_at" ? (

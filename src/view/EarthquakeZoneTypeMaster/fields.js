@@ -18,6 +18,7 @@ const filterFields = [
     name: "creation_date",
     placeholder: "Creation Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED DATE": "last_updated_date",
@@ -27,6 +28,7 @@ const filterFields = [
     name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
+    max: new Date().toISOString().split("T")[0],
   },
   {
     "LAST UPDATED ACTIVE": "ACTIVE",
@@ -74,9 +76,10 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   earthquake_zone_type: yup
     .string()
+    .trim()
     .required("Earth quack zone type is required"),
 
-  is_active: yup.string(),
+  is_active: yup.string(), 
 });
 
 export { filterFields, addEditFormFields, schema };

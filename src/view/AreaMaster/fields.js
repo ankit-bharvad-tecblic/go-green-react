@@ -60,11 +60,11 @@ const filterFields = [
     multi: false,
     options: [
       {
-        label: "Block",
+        label: "Yes",
         value: "True",
       },
       {
-        label: "UnBlock",
+        label: "No",
         value: "False",
       },
     ],
@@ -136,15 +136,15 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   is_active: yup.string(),
-  district: yup.string().required("District name is"),
+  district: yup.string().trim().required("District name is"),
   is_block: yup.string(),
   earthquake_zone_type: yup
     .string()
     .required("Earthquake zone type is required"),
-  region: yup.string().required("Region name is required"),
-  state: yup.string().required("State name is required"),
-  area_name: yup.string().required("Area Name is required"),
-  substate: yup.string().required("Sub State name  is required"),
+  region: yup.string().trim().required("Region name is required"),
+  state: yup.string().trim().required("State name is required"),
+  area_name: yup.string().trim().required("Area Name is required"),
+  substate: yup.string().trim().required("Sub State name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

@@ -176,10 +176,13 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  commodity_variety: yup.string().required("Commodity variety is required "),
-  description: yup.string().required("Description is required"),
+  commodity_variety: yup
+    .string()
+    .trim()
+    .required("Commodity variety is required "),
+  description: yup.string().trim().required("Description is required"),
   is_active: yup.string(),
-  commodity_id: yup.string().required("Commodity is required"),
+  commodity_id: yup.string().trim().required("Commodity is required"),
   hsn_code: yup.number().required("hsn code is required"),
   fumigation_day: yup
     .number("Only numeric values are allowed for fumigation day")

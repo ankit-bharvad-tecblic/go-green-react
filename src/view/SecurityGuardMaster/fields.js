@@ -203,11 +203,18 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   security_guard_name: yup
     .string()
+    .trim()
     .required("security Guard Name name is required"),
-  region__region_name: yup.string().required("Region Name is required"),
-  state__state_name: yup.string().required("State Name is required"),
-  district__district_name: yup.string().required("District Name is required"),
-  address_of_security_guard: yup.string().required("Address  is required"),
+  region__region_name: yup.string().trim().required("Region Name is required"),
+  state__state_name: yup.string().trim().required("State Name is required"),
+  district__district_name: yup
+    .string()
+    .trim()
+    .required("District Name is required"),
+  address_of_security_guard: yup
+    .string()
+    .trim()
+    .required("Address  is required"),
 
   dob_of_security_guard: yup.number().required(" Date of birth is required"),
   experience_as_security_guard: yup
@@ -215,14 +222,16 @@ const schema = yup.object().shape({
     .required("Experience As Security guard  is required"),
   alternate_contact_number: yup
     .string()
+    .trim()
     .matches(validation.phoneRegExp, "Alternative contact number is not valid")
     .required("Alternative contact number is required"),
   contact_number: yup
     .string()
+    .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
   is_active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
+  commodity_type: yup.string().trim().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

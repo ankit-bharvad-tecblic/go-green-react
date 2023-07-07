@@ -4,7 +4,7 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
-  useGetEarthQuakeZoneTypeMasterMutation,
+  useGetEarthQuakeZoneTypeMasterMutation, 
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";

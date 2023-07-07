@@ -84,7 +84,7 @@ const SidebarContent = ({ logoText, routes }) => {
                     flex="1"
                     textAlign="left"
                     alignItems="center"
-                    gap="5px"
+                    gap="9px"
                     fontWeight="bold"
                     mx="auto"
                     ps={{
@@ -103,6 +103,7 @@ const SidebarContent = ({ logoText, routes }) => {
                         h="30px"
                         w="30px"
                         ms="12px"
+                        // ms="9px"
                       >
                         {prop.icon}
                       </IconBox>

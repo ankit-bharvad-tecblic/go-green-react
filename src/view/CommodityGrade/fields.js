@@ -75,9 +75,12 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  // description: yup.string().required("Description is required"),
+  // description: yup.string().trim().required("Description is required"),
   is_active: yup.string(),
-  commodity_grade_name: yup.string().required("Commodity grade is required"),
+  commodity_grade_name: yup
+    .string()
+    .trim()
+    .required("Commodity grade is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

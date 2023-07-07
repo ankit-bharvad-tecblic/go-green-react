@@ -98,12 +98,15 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  commodity_name: yup.string().required("Commodity name is required"),
+  commodity_name: yup.string().trim().required("Commodity name is required"),
   minimum_bag_size: yup.number().required("Minimum bag size is required"),
-  maximum_bag_size: yup.string().required("Maximum bag size is required"),
-  rent_on_bag: yup.string().required("Rent on bag is required"),
+  maximum_bag_size: yup
+    .string()
+    .trim()
+    .required("Maximum bag size is required"),
+  rent_on_bag: yup.string().trim().required("Rent on bag is required"),
   is_active: yup.string(),
-  commodity_type: yup.string().required("Commodity type is required"),
+  commodity_type: yup.string().trim().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

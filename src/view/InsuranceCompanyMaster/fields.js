@@ -11,6 +11,24 @@ const filterFields = [
     type: "text",
   },
   {
+    "Region ": "region",
+    isActiveFilter: false,
+
+    label: " Region",
+    name: "region",
+    placeholder: "Region ",
+    type: "text",
+  },
+  {
+    " State": "state",
+    isActiveFilter: false,
+
+    label: " Region",
+    name: "state",
+    placeholder: "Region ",
+    type: "text",
+  },
+  {
     ADDRESS: "insurance_company_address",
     isActiveFilter: false,
 
@@ -48,12 +66,12 @@ const addEditFormFields = [
     placeholder: "Company Name",
     type: "text",
   },
-  {
-    name: "insurance_company_address",
-    label: "Address",
-    placeholder: "Address",
-    type: "text",
-  },
+  // {
+  //   name: "insurance_company_address",
+  //   label: "Address",
+  //   placeholder: "Address",
+  //   type: "text",
+  // },
   //   {
   //     name: "maximum_bag_size",
   //     label: "MAXIMUM BAG SIZE",
@@ -66,11 +84,11 @@ const addEditFormFields = [
   //     placeholder: "RENT ON BAG",
   //     type: "number",
   //   },
-  {
-    label: "Active",
-    name: "is_active",
-    type: "switch",
-  },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
   //   {
   //     label: "COMMODITY TYPE",
   //     name: "commodity_type",
@@ -82,8 +100,14 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  insurance_company_name: yup.string().required("Company name is required"),
-  insurance_company_address: yup.string().required("Address name  is required"),
+  insurance_company_name: yup
+    .string()
+    .trim()
+    .required("Company name is required"),
+  insurance_company_address: yup
+    .string()
+    .trim()
+    .required("Address name  is required"),
 
   active: yup.string(),
 });

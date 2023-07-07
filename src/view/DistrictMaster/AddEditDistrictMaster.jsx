@@ -406,7 +406,7 @@ const AddEditFormDistrictMaster = () => {
                         mb: 1,
                         mt: 1,
                       }}
-                      // isChecked="regions?.active"
+                       isChecked={details?.is_active}
                     />
                   </Box>
                 </MotionSlideUp>

@@ -16,6 +16,10 @@ import { motion } from "framer-motion";
 import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
+import CustomTextArea from "../../components/Elements/CustomTextArea";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
 
 const AddEditFormInsuranceCompanyMaster = () => {
   const navigate = useNavigate();
@@ -26,7 +30,10 @@ const AddEditFormInsuranceCompanyMaster = () => {
   });
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
-
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    regions: [],
+    states: [],
+  });
   const details = location.state?.details;
   console.log("details ---> ", details);
   const onSubmit = (data) => {
@@ -102,6 +109,10 @@ const AddEditFormInsuranceCompanyMaster = () => {
     }
   };
 
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
   const updateData = async (data) => {
     try {
       const response = await updateInsuranceCompanyMaster(data).unwrap();
@@ -187,6 +198,106 @@ const AddEditFormInsuranceCompanyMaster = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <ReactCustomSelect
+                      name="region"
+                      label=""
+                      isLoading={getInsuranceCompanyMasterApiIsLoading}
+                      options={selectBoxOptions?.regions || []}
+                      selectedValue={
+                        selectBoxOptions?.regions?.filter(
+                          (item) => item.value === getValues("region")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      State
+                    </Text>
+                    <ReactCustomSelect
+                      name="state_name"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.states || []}
+                      selectedValue={
+                        selectBoxOptions?.states?.filter(
+                          (item) => item.value === getValues("state_name")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        stateOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Address
+                    </Text>
+                    <CustomTextArea
+                      name="insurance_company_address"
+                      placeholder=" Address"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Active
+                    </Text>
+                    <CustomSwitch
+                      name="is_active"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
             </Box>
             <Box
               display="flex"
