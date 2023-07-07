@@ -1,4 +1,4 @@
-export const  API = {
+export const API = {
   SIGNUP: "/register/",
   LOGIN: "/login/",
   FORGOT_PWD: "/Forgotpass_Api/",
@@ -66,6 +66,7 @@ export const  API = {
     SECURITY_DAY: "/warehouse/day/security",
     SECURITY_NIGHT: "/warehouse/night/security",
     PBPM: "/operational_flow/pbpm/pbpm_list/",
+    MIN_MAX_AVG: "warehouse/warehousehiring_proposal/",
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",

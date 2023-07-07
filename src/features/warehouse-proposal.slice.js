@@ -50,6 +50,12 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    minMaxAvg: builder.mutation({
+      query: (id) => ({
+        url: `${API.WAREHOUSE_PROPOSAL.MIN_MAX_AVG}${id}/min_max_average_rent/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -63,4 +69,5 @@ export const {
   useGetSecurityGuardNightShiftMutation,
 
   useCalculatePBPMMutation,
+  useMinMaxAvgMutation,
 } = warehouseProposalApiSlice;

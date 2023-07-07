@@ -6,9 +6,12 @@ import {
   AccordionPanel,
   Box,
   Button,
+  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
+  FormLabel,
   Grid,
   GridItem,
   Heading,
@@ -63,6 +66,7 @@ import {
   useGetSecurityGuardNightShiftMutation,
   useGetSupervisorDayShiftMutation,
   useGetSupervisorNightShiftMutation,
+  useMinMaxAvgMutation,
   useSaveAsDraftMutation,
 } from "../../features/warehouse-proposal.slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
@@ -234,9 +238,13 @@ const schema = Yup.object().shape({
   // lock_in_period_month: Yup.number().required(
   //   "Lock in period month is required"
   // ),
+
   lock_in_period_month: Yup.string().when("lock_in_period", {
     is: (value) => value === "true",
-    then: () => Yup.number().required("Lock in period month is required"),
+    then: () =>
+      Yup.number()
+        .required("Lock In Period Month is required")
+        .min(1, "Lock In Period Month must be greater than or equal to 1"),
     otherwise: () => Yup.number(),
   }),
   covered_area: Yup.number().required("Covered area is required"),
@@ -315,8 +323,33 @@ const schema = Yup.object().shape({
     .matches(gstNumberValidation(), "Invalid GST number")
     .required("GST number is required"),
   commencement_date: Yup.string().required("Commencement date is required"),
-  agreement_period_month: Yup.number().required("Agreement period is required"),
-  expiry_date: Yup.string().required("Expiry date is required"),
+  // agreement_period_month: Yup.number().required("Agreement period is required"),
+
+  // agreement_period_month: Yup.number()
+  //   .required("Agreement period is required")
+  //   .typeError("Agreement period is required")
+  //   .min(11, "Agreement period (Month) must be greater than or equal to 11"),
+
+  agreement_period_month: Yup.number()
+    .required("Agreement period (Month) is required")
+    .typeError("Agreement period is required")
+    .min(11, "Agreement period (Month) must be greater than or equal to 11")
+    .test(
+      "agreementPeriodValid",
+      "Agreement period must not be less than Lock In Period",
+      function (value) {
+        const lockInPeriod = this.parent.lock_in_period_month;
+        return value >= lockInPeriod;
+      }
+    ),
+
+  // .test('agreementPeriodValid', 'Agreement period must be at least Lock In Period + 6 months', function (value) {
+  //   const lockInPeriod = this.parent.lock_in_period_month;
+  //   const minAgreementPeriod = lockInPeriod + 6;
+  //   return value === null || value >= minAgreementPeriod;
+  // }),
+
+  expiry_date: Yup.string(),
   notice_period_month: Yup.number().required("Notice period is required"),
   storage_charges_according_to_commodity: Yup.string(),
 
@@ -466,6 +499,7 @@ const Pwh = () => {
 
   const [pbpmList, setPbpmList] = useState([]);
   const [selected, setSelected] = useState({});
+  const [minMaxAvgState, setMinMaxAvgState] = useState({});
 
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
 
@@ -595,6 +629,9 @@ const Pwh = () => {
   const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
     useGetAreaMasterMutation();
 
+  const [minMaxAvg, { isLoading: minMaxAvgApiIsLoading }] =
+    useMinMaxAvgMutation();
+
   ///  getSupervisorDayShift
   const [
     getSupervisorDayShift,
@@ -637,13 +674,13 @@ const Pwh = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          regions: response?.region?.map(({ region_name, id }) => ({
-            label: region_name,
-            value: id,
-          })),
-        }));
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: response?.region?.map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        })),
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -732,6 +769,18 @@ const Pwh = () => {
         ...prev,
         securityGuardNightShiftOpt: optionsArray,
       }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchMinMaxAvg = async (areaId) => {
+    try {
+      const response = await minMaxAvg(areaId).unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setMinMaxAvgState(response?.data);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1395,7 +1444,20 @@ const Pwh = () => {
     if (obj.commodity && obj.covered_area) {
       fetchPBPM(obj);
     } else {
-      //setValue( formFieldsName.pwh_clients_details )
+      if (obj?.commodity === undefined) {
+        toasterAlert({
+          message: "Please select commodity ",
+          status: 440,
+        });
+      }
+
+      if (obj?.covered_area === undefined) {
+        toasterAlert({
+          message: "Please select covered area ",
+          status: 440,
+        });
+      }
+      setValue(formFieldsName.pwh_clients_details);
     }
 
     console.log(obj);
@@ -1470,13 +1532,13 @@ const Pwh = () => {
 
                         <AccordionPanel bg="white" mt="5" pb={4} py="4" px="8">
                           <Box
-                            // border="1px"
+                            //border="1px"
                             w={{
                               base: "100%",
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "95%",
+                              xl: "100%",
                             }}
                           >
                             {/* --------------  Warehouse Name -------------- */}
@@ -1493,7 +1555,7 @@ const Pwh = () => {
                                     Warehouse Name
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_warehouse_details
@@ -1520,7 +1582,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">Region</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.pwh_warehouse_details
@@ -1552,7 +1614,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">State</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -1586,7 +1648,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">Zone</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.pwh_warehouse_details
@@ -1618,7 +1680,7 @@ const Pwh = () => {
                                 <GridItem colSpan={1}>
                                   <Text textAlign="right">District</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -1652,7 +1714,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">Area</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -1686,7 +1748,7 @@ const Pwh = () => {
                                     Warehouse Address
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <CustomTextArea
                                     name={
@@ -1714,7 +1776,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">Pin Code</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_warehouse_details
@@ -1743,7 +1805,7 @@ const Pwh = () => {
                                     No Of Chambers
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1772,7 +1834,7 @@ const Pwh = () => {
                                     Warehouse In Factory Premises
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <RadioGroup
                                     p="0"
                                     defaultValue={"false"}
@@ -1827,7 +1889,7 @@ const Pwh = () => {
                                     Standard Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_warehouse_details
@@ -1856,7 +1918,7 @@ const Pwh = () => {
                                     Current warehouse capacity (MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1886,7 +1948,7 @@ const Pwh = () => {
                                     Standard Utilizes Capacity (in MT)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -1916,7 +1978,7 @@ const Pwh = () => {
                                     Lock In Period
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <RadioGroup
                                     p="0"
                                     name={
@@ -1973,7 +2035,7 @@ const Pwh = () => {
                                       Lock In Period Month
                                     </Text>{" "}
                                   </GridItem>
-                                  <GridItem colSpan={1}>
+                                  <GridItem colSpan={2}>
                                     <CustomInput
                                       name={
                                         formFieldsName.pwh_warehouse_details
@@ -1982,7 +2044,7 @@ const Pwh = () => {
                                       placeholder=" Lock In Period Month"
                                       type="number"
                                       label=""
-                                      style={{ w: "100%" }}
+                                      style={{ w: "84%" }}
                                     />
                                   </GridItem>
                                 </Grid>
@@ -2005,7 +2067,7 @@ const Pwh = () => {
                                     Covered Area (In Sq.Ft)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -2034,7 +2096,7 @@ const Pwh = () => {
                                     Supervisor For day Shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <Box
                                     display="flex"
                                     gap="4"
@@ -2068,15 +2130,22 @@ const Pwh = () => {
                                         );
                                       }}
                                     />
-                                    <Text
+                                    <Stack
+                                      spacing={5}
+                                      direction="row"
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
-                                      Hire new supervisor
-                                    </Text>{" "}
+                                      <Checkbox
+                                        colorScheme="green"
+                                        //defaultChecked
+                                      >
+                                        Hire new supervisor
+                                      </Checkbox>
+                                    </Stack>
                                   </Box>
                                 </GridItem>
                               </Grid>
@@ -2095,7 +2164,7 @@ const Pwh = () => {
                                     Supervisor For night Shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -2130,15 +2199,22 @@ const Pwh = () => {
                                         );
                                       }}
                                     />
-                                    <Text
+                                    <Stack
+                                      spacing={5}
+                                      direction="row"
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
-                                      Hire new supervisor
-                                    </Text>{" "}
+                                      <Checkbox
+                                        colorScheme="green"
+                                        //defaultChecked
+                                      >
+                                        Hire new supervisor
+                                      </Checkbox>
+                                    </Stack>
                                   </Box>
                                 </GridItem>
                               </Grid>
@@ -2157,7 +2233,7 @@ const Pwh = () => {
                                     Security Guard For day shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -2192,15 +2268,23 @@ const Pwh = () => {
                                         );
                                       }}
                                     />
-                                    <Text
+
+                                    <Stack
+                                      spacing={5}
+                                      direction="row"
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
-                                      Hire new security guard
-                                    </Text>{" "}
+                                      <Checkbox
+                                        colorScheme="green"
+                                        //defaultChecked
+                                      >
+                                        Hire new security guard
+                                      </Checkbox>
+                                    </Stack>
                                   </Box>
                                 </GridItem>
                               </Grid>
@@ -2219,7 +2303,7 @@ const Pwh = () => {
                                     Security Guard For night shift
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Box
                                     display="flex"
@@ -2256,15 +2340,22 @@ const Pwh = () => {
                                         );
                                       }}
                                     />
-                                    <Text
+                                    <Stack
+                                      spacing={5}
+                                      direction="row"
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="right"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
-                                      Hire new security guard
-                                    </Text>{" "}
+                                      <Checkbox
+                                        colorScheme="green"
+                                        //defaultChecked
+                                      >
+                                        Hire new security guard
+                                      </Checkbox>
+                                    </Stack>
                                   </Box>
                                 </GridItem>
                               </Grid>
@@ -2338,7 +2429,7 @@ const Pwh = () => {
                                   Expected Commodity Name
                                 </Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={3}>
                                 <ReactCustomSelect
                                   name={
                                     formFieldsName.pwh_commodity_details
@@ -2384,7 +2475,7 @@ const Pwh = () => {
                                   Commodity Inward Type
                                 </Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={3}>
                                 <ReactCustomSelect
                                   name={
                                     formFieldsName.pwh_commodity_details
@@ -2439,7 +2530,7 @@ const Pwh = () => {
                                   Pre-Stack Commodity
                                 </Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={3}>
                                 <ReactCustomSelect
                                   name={
                                     formFieldsName.pwh_commodity_details
@@ -2483,7 +2574,7 @@ const Pwh = () => {
                                   Pre-Stack Commodity Quantity(MT)
                                 </Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={3}>
                                 <CustomInput
                                   name={
                                     formFieldsName.pwh_commodity_details
@@ -2508,7 +2599,7 @@ const Pwh = () => {
                               <GridItem colSpan={1}>
                                 <Text textAlign="right">Funding Required </Text>{" "}
                               </GridItem>
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={3}>
                                 <RadioGroup
                                   p="0"
                                   {...methods.register(
@@ -2829,7 +2920,7 @@ const Pwh = () => {
                               sm: "100%",
                               md: "100%",
                               lg: "100%",
-                              xl: "94%",
+                              xl: "100%",
                             }}
                           >
                             {/* -------------- minimum Rent(per/sq ft/month)-------------- */}
@@ -2841,13 +2932,13 @@ const Pwh = () => {
                                 justifyContent="flex-start"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Text textAlign="right">
                                     Minimum Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -2871,13 +2962,13 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Text textAlign="right">
                                     Maximum Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -2902,13 +2993,13 @@ const Pwh = () => {
                                 templateColumns="repeat(4, 2fr)"
                                 gap={8}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   {" "}
                                   <Text textAlign="right">
                                     Avg Rent(per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -2941,24 +3032,41 @@ const Pwh = () => {
                                     Rent (per/sq ft/month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details.rent
                                     }
-                                    placeholder=" Rent (per/sq ft/month)"
+                                    placeholder="Rent (per/sq ft/month)"
                                     type="text"
                                     label=""
+                                    // inputValue={getValues(
+                                    //   formFieldsName.pwh_commercial_details
+                                    //     .agreement_period
+                                    // )}
+
+                                    onChange={(val) => {
+                                      let areaId = getValues("area");
+
+                                      console.log(areaId);
+                                      fetchMinMaxAvg(areaId);
+                                    }}
                                     style={{
-                                      w: "100%",
+                                      w: "85%",
                                     }}
                                   />
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem>
                                   <Flex gap={"4"}>
-                                    <Text textAlign="right">Min: 1223</Text>
-                                    <Text textAlign="right">Avg: 1223</Text>
-                                    <Text textAlign="right">Max: 1223</Text>
+                                    <Text textAlign="right">
+                                      Min: {minMaxAvgState?.min_rent || 0}
+                                    </Text>
+                                    <Text textAlign="right">
+                                      Max: {minMaxAvgState?.max_rent || 0}
+                                    </Text>
+                                    <Text textAlign="right">
+                                      Avg: {minMaxAvgState?.avg_rent || 0}
+                                    </Text>
                                   </Flex>
                                 </GridItem>
                               </Grid>
@@ -2978,7 +3086,7 @@ const Pwh = () => {
                                     Total rent payable (per month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={3}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -2988,7 +3096,7 @@ const Pwh = () => {
                                     type="number"
                                     label=""
                                     style={{
-                                      w: "50%",
+                                      w: "56%",
                                       mb: 4,
                                     }}
                                   />
@@ -2999,297 +3107,332 @@ const Pwh = () => {
 
                           {/* {/ ================ Owner Name Mobile No Address ================= /} */}
 
-                          {pwh_commercial_multipal_details_fields &&
-                            pwh_commercial_multipal_details_fields.map(
-                              (item, index) => (
-                                <Box key={item.id}>
-                                  <Flex
-                                    bgColor={"#DBFFF5"}
-                                    padding="20px"
-                                    borderRadius="10px"
-                                    gap="3"
-                                    alignItems="center"
-                                  >
-                                    {/* =============== SR No============= */}
-                                    <Box w="50px">
-                                      <Text
-                                        mb="0"
-                                        fontWeight="bold"
-                                        textAlign="left"
-                                      >
-                                        {" "}
-                                        Sr No{" "}
-                                      </Text>{" "}
-                                      <Box
-                                        textAlign="center"
-                                        border="1px"
-                                        p="2"
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                      >
-                                        {index + 1}
-                                      </Box>
-                                    </Box>
+                          <Box bgColor={"#DBFFF5"}>
+                            {/* only header fields */}
+                            <Flex
+                              bgColor={"#DBFFF5"}
+                              pt="4"
+                              px="4"
+                              borderRadius="10px"
+                              gap="3"
+                              alignItems="center"
+                            >
+                              <Box w="50px">
+                                <Text mb="0" fontWeight="bold" textAlign="left">
+                                  {" "}
+                                  Sr No{" "}
+                                </Text>{" "}
+                              </Box>
 
-                                    {/* =============== Owner Name ============= */}
-                                    <Box w="170px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Owner Name
-                                      </Text>{" "}
-                                      <FormControl
-                                        isInvalid={
-                                          errors
-                                            ?.pwh_commercial_multipal_details?.[
-                                            index
-                                          ]?.owner_name?.message
-                                        }
-                                      >
-                                        {/* <FormLabel>{label}</FormLabel> */}
-                                        <Box>
-                                          <Input
-                                            type="text"
-                                            name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`}
-                                            {...methods.register(
-                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`
-                                            )}
-                                            border="1px"
-                                            borderColor="gray.10"
-                                            backgroundColor={"white"}
-                                            borderRadius={"lg"}
-                                            _placeholder={{ color: "gray.300" }}
-                                            _hover={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                            }}
-                                            _focus={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                              boxShadow: "none",
-                                            }}
-                                            p={{ base: "4" }}
-                                            fontWeight={{ base: "normal" }}
-                                            fontStyle={"normal"}
-                                            placeholder={"Owner Name"}
-                                          />
+                              <Box w="170px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Owner Name
+                                </Text>{" "}
+                              </Box>
+
+                              <Box w="180px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Mobile No
+                                </Text>{" "}
+                              </Box>
+
+                              <Box w="270px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Address
+                                </Text>{" "}
+                              </Box>
+
+                              <Box w="160px">
+                                <Text fontWeight="bold" textAlign="left">
+                                  Rent
+                                </Text>{" "}
+                              </Box>
+
+                              <Box w="180px"></Box>
+                            </Flex>
+                            {pwh_commercial_multipal_details_fields &&
+                              pwh_commercial_multipal_details_fields.map(
+                                (item, index) => (
+                                  <Box bgColor={"#DBFFF5"} key={item.id}>
+                                    <Flex
+                                      bgColor={"#DBFFF5"}
+                                      py="2"
+                                      px="16px"
+                                      borderRadius="10px"
+                                      gap="3"
+                                      alignItems="center"
+                                    >
+                                      {/* =============== SR No============= */}
+                                      <Box w="50px">
+                                        <Box
+                                          textAlign="center"
+                                          border="1px"
+                                          p="2"
+                                          borderColor="gray.10"
+                                          borderRadius="6"
+                                        >
+                                          {index + 1}
                                         </Box>
+                                      </Box>
 
-                                        <FormErrorMessage>
-                                          {
+                                      {/* =============== Owner Name ============= */}
+                                      <Box w="170px">
+                                        <FormControl
+                                          isInvalid={
                                             errors
                                               ?.pwh_commercial_multipal_details?.[
                                               index
                                             ]?.owner_name?.message
                                           }
-                                        </FormErrorMessage>
-                                      </FormControl>
-                                    </Box>
+                                        >
+                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <Box>
+                                            <Input
+                                              type="text"
+                                              name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`}
+                                              {...methods.register(
+                                                `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.owner_name}`
+                                              )}
+                                              border="1px"
+                                              borderColor="gray.10"
+                                              backgroundColor={"white"}
+                                              borderRadius={"lg"}
+                                              _placeholder={{
+                                                color: "gray.300",
+                                              }}
+                                              _hover={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                              }}
+                                              _focus={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                                boxShadow: "none",
+                                              }}
+                                              p={{ base: "4" }}
+                                              fontWeight={{ base: "normal" }}
+                                              fontStyle={"normal"}
+                                              placeholder={"Owner Name"}
+                                            />
+                                          </Box>
 
-                                    {/* =============== Mobile No ============= */}
-                                    <Box w="180px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Mobile No
-                                      </Text>{" "}
-                                      <FormControl
-                                        isInvalid={
-                                          errors
-                                            ?.pwh_commercial_multipal_details?.[
-                                            index
-                                          ]?.mobile_no?.message
-                                        }
-                                      >
-                                        {/* <FormLabel>{label}</FormLabel> */}
-                                        <Box>
-                                          <Input
-                                            type="text"
-                                            name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`}
-                                            {...methods.register(
-                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`
-                                            )}
-                                            border="1px"
-                                            borderColor="gray.10"
-                                            backgroundColor={"white"}
-                                            borderRadius={"lg"}
-                                            _placeholder={{ color: "gray.300" }}
-                                            _hover={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                            }}
-                                            _focus={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                              boxShadow: "none",
-                                            }}
-                                            p={{ base: "4" }}
-                                            fontWeight={{ base: "normal" }}
-                                            fontStyle={"normal"}
-                                            placeholder={"Mobile No"}
-                                          />
-                                        </Box>
+                                          <FormErrorMessage>
+                                            {
+                                              errors
+                                                ?.pwh_commercial_multipal_details?.[
+                                                index
+                                              ]?.owner_name?.message
+                                            }
+                                          </FormErrorMessage>
+                                        </FormControl>
+                                      </Box>
 
-                                        <FormErrorMessage>
-                                          {
+                                      {/* =============== Mobile No ============= */}
+                                      <Box w="180px">
+                                        <FormControl
+                                          isInvalid={
                                             errors
                                               ?.pwh_commercial_multipal_details?.[
                                               index
                                             ]?.mobile_no?.message
                                           }
-                                        </FormErrorMessage>
-                                      </FormControl>
-                                    </Box>
+                                        >
+                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <Box>
+                                            <Input
+                                              type="text"
+                                              name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`}
+                                              {...methods.register(
+                                                `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.mobile_no}`
+                                              )}
+                                              border="1px"
+                                              borderColor="gray.10"
+                                              backgroundColor={"white"}
+                                              borderRadius={"lg"}
+                                              _placeholder={{
+                                                color: "gray.300",
+                                              }}
+                                              _hover={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                              }}
+                                              _focus={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                                boxShadow: "none",
+                                              }}
+                                              p={{ base: "4" }}
+                                              fontWeight={{ base: "normal" }}
+                                              fontStyle={"normal"}
+                                              placeholder={"Mobile No"}
+                                            />
+                                          </Box>
 
-                                    {/* =============== Address ============= */}
-                                    <Box w="270px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Address
-                                      </Text>{" "}
-                                      <FormControl
-                                        isInvalid={
-                                          errors
-                                            ?.pwh_commercial_multipal_details?.[
-                                            index
-                                          ]?.address?.message
-                                        }
-                                      >
-                                        {/* <FormLabel>{label}</FormLabel> */}
-                                        <Box>
-                                          <Input
-                                            type="text"
-                                            name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`}
-                                            {...methods.register(
-                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`
-                                            )}
-                                            border="1px"
-                                            borderColor="gray.10"
-                                            backgroundColor={"white"}
-                                            borderRadius={"lg"}
-                                            _placeholder={{ color: "gray.300" }}
-                                            _hover={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                            }}
-                                            _focus={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                              boxShadow: "none",
-                                            }}
-                                            p={{ base: "4" }}
-                                            fontWeight={{ base: "normal" }}
-                                            fontStyle={"normal"}
-                                            placeholder={"Address"}
-                                          />
-                                        </Box>
+                                          <FormErrorMessage>
+                                            {
+                                              errors
+                                                ?.pwh_commercial_multipal_details?.[
+                                                index
+                                              ]?.mobile_no?.message
+                                            }
+                                          </FormErrorMessage>
+                                        </FormControl>
+                                      </Box>
 
-                                        <FormErrorMessage>
-                                          {
+                                      {/* =============== Address ============= */}
+                                      <Box w="270px">
+                                        <FormControl
+                                          isInvalid={
                                             errors
                                               ?.pwh_commercial_multipal_details?.[
                                               index
                                             ]?.address?.message
                                           }
-                                        </FormErrorMessage>
-                                      </FormControl>
-                                    </Box>
+                                        >
+                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <Box>
+                                            <Input
+                                              type="text"
+                                              name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`}
+                                              {...methods.register(
+                                                `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.address}`
+                                              )}
+                                              border="1px"
+                                              borderColor="gray.10"
+                                              backgroundColor={"white"}
+                                              borderRadius={"lg"}
+                                              _placeholder={{
+                                                color: "gray.300",
+                                              }}
+                                              _hover={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                              }}
+                                              _focus={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                                boxShadow: "none",
+                                              }}
+                                              p={{ base: "4" }}
+                                              fontWeight={{ base: "normal" }}
+                                              fontStyle={"normal"}
+                                              placeholder={"Address"}
+                                            />
+                                          </Box>
 
-                                    {/* =============== Rent ============= */}
+                                          <FormErrorMessage>
+                                            {
+                                              errors
+                                                ?.pwh_commercial_multipal_details?.[
+                                                index
+                                              ]?.address?.message
+                                            }
+                                          </FormErrorMessage>
+                                        </FormControl>
+                                      </Box>
 
-                                    <Box w="160px">
-                                      <Text fontWeight="bold" textAlign="left">
-                                        Rent
-                                      </Text>{" "}
-                                      <FormControl
-                                        isInvalid={
-                                          errors
-                                            ?.pwh_commercial_multipal_details?.[
-                                            index
-                                          ]?.rent?.message
-                                        }
-                                      >
-                                        {/* <FormLabel>{label}</FormLabel> */}
-                                        <Box>
-                                          <Input
-                                            type="number"
-                                            name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`}
-                                            {...methods.register(
-                                              `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`
-                                            )}
-                                            border="1px"
-                                            borderColor="gray.10"
-                                            backgroundColor={"white"}
-                                            borderRadius={"lg"}
-                                            _placeholder={{ color: "gray.300" }}
-                                            _hover={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                            }}
-                                            _focus={{
-                                              borderColor: "primary.700",
-                                              backgroundColor: "primary.200",
-                                              boxShadow: "none",
-                                            }}
-                                            p={{ base: "4" }}
-                                            fontWeight={{ base: "normal" }}
-                                            fontStyle={"normal"}
-                                            placeholder={"Rent"}
-                                          />
-                                        </Box>
+                                      {/* =============== Rent ============= */}
 
-                                        <FormErrorMessage>
-                                          {
+                                      <Box w="160px">
+                                        <FormControl
+                                          isInvalid={
                                             errors
                                               ?.pwh_commercial_multipal_details?.[
                                               index
                                             ]?.rent?.message
                                           }
-                                        </FormErrorMessage>
-                                      </FormControl>
-                                    </Box>
-
-                                    {/* =============== Add / Delete ============= */}
-                                    <Box w="180px">
-                                      <Box
-                                        mt="7"
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="flex-end"
-                                        gap="2"
-                                      >
-                                        <Button
-                                          borderColor="gray.10"
-                                          borderRadius="6"
-                                          bg="primary.700"
-                                          color="white"
-                                          fontWeight="bold"
-                                          onClick={() =>
-                                            append_new_commercial_detail()
-                                          }
                                         >
-                                          +
-                                        </Button>
+                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <Box>
+                                            <Input
+                                              type="number"
+                                              name={`pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`}
+                                              {...methods.register(
+                                                `pwh_commercial_multipal_details.${index}.${formFieldsName.pwh_commercial_details.pwh_commercial_multipal_details.rent}`
+                                              )}
+                                              border="1px"
+                                              borderColor="gray.10"
+                                              backgroundColor={"white"}
+                                              borderRadius={"lg"}
+                                              _placeholder={{
+                                                color: "gray.300",
+                                              }}
+                                              _hover={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                              }}
+                                              _focus={{
+                                                borderColor: "primary.700",
+                                                backgroundColor: "primary.200",
+                                                boxShadow: "none",
+                                              }}
+                                              p={{ base: "4" }}
+                                              fontWeight={{ base: "normal" }}
+                                              fontStyle={"normal"}
+                                              placeholder={"Rent"}
+                                            />
+                                          </Box>
 
-                                        <Button
-                                          borderColor="gray.10"
-                                          borderRadius="6"
-                                          bg="red"
-                                          color="white"
-                                          fontWeight="bold"
-                                          isDisabled={
-                                            pwh_commercial_multipal_details_fields?.length ===
-                                            1
-                                          }
-                                          onClick={() =>
-                                            pwh_commercial_multipal_detail_remove(
-                                              index
-                                            )
-                                          }
-                                        >
-                                          -
-                                        </Button>
+                                          <FormErrorMessage>
+                                            {
+                                              errors
+                                                ?.pwh_commercial_multipal_details?.[
+                                                index
+                                              ]?.rent?.message
+                                            }
+                                          </FormErrorMessage>
+                                        </FormControl>
                                       </Box>
-                                    </Box>
-                                  </Flex>
-                                </Box>
-                              )
-                            )}
+
+                                      {/* =============== Add / Delete ============= */}
+                                      <Box w="180px">
+                                        <Box
+                                          // mt="7"
+                                          display="flex"
+                                          alignItems="center"
+                                          justifyContent="flex-end"
+                                          gap="2"
+                                        >
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="primary.700"
+                                            _hover={{}}
+                                            color="white"
+                                            fontWeight="bold"
+                                            onClick={() =>
+                                              append_new_commercial_detail()
+                                            }
+                                          >
+                                            +
+                                          </Button>
+
+                                          <Button
+                                            borderColor="gray.10"
+                                            borderRadius="6"
+                                            bg="red"
+                                            color="white"
+                                            fontWeight="bold"
+                                            _hover={{}}
+                                            isDisabled={
+                                              pwh_commercial_multipal_details_fields?.length ===
+                                              1
+                                            }
+                                            onClick={() =>
+                                              pwh_commercial_multipal_detail_remove(
+                                                index
+                                              )
+                                            }
+                                          >
+                                            -
+                                          </Button>
+                                        </Box>
+                                      </Box>
+                                    </Flex>
+                                  </Box>
+                                )
+                              )}
+                          </Box>
 
                           <Box
                             //border="1px"
@@ -3316,7 +3459,7 @@ const Pwh = () => {
                                     Go Green revenue sharing ratio
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -3348,7 +3491,7 @@ const Pwh = () => {
                                     Security deposit amount
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details
@@ -3380,7 +3523,7 @@ const Pwh = () => {
                                     Advance rent
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   <RadioGroup
                                     p="0"
                                     defaultValue="false"
@@ -3438,7 +3581,7 @@ const Pwh = () => {
                                       Advance rent(month)
                                     </Text>{" "}
                                   </GridItem>
-                                  <GridItem colSpan={1}>
+                                  <GridItem colSpan={2}>
                                     <CustomInput
                                       name={
                                         formFieldsName.pwh_commercial_details
@@ -3469,7 +3612,7 @@ const Pwh = () => {
                                   {" "}
                                   <Text textAlign="right">GST</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3501,7 +3644,7 @@ const Pwh = () => {
                                     Commencement Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3568,7 +3711,7 @@ const Pwh = () => {
                                     Agreement period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3645,7 +3788,7 @@ const Pwh = () => {
                                     Expiry Date
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3683,7 +3826,7 @@ const Pwh = () => {
                                     Notice period (Month)
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <CustomInput
                                     name={
@@ -3717,7 +3860,7 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
 
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   {" "}
                                   <ReactCustomSelect
                                     name={
@@ -3751,7 +3894,7 @@ const Pwh = () => {
                                   />
                                 </GridItem>
 
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Button
                                     type="button"
                                     //w="full"
@@ -3778,10 +3921,11 @@ const Pwh = () => {
                                 <Grid
                                   textAlign="right"
                                   alignItems="center"
-                                  templateColumns="repeat(4, 1fr)"
+                                  justifyContent="center"
+                                  // templateColumns="repeat(6, 1fr)"
                                   gap={8}
                                 >
-                                  <GridItem colSpan={3}>
+                                  <GridItem>
                                     <Box p="1">
                                       <TableContainer>
                                         <Table
@@ -3834,7 +3978,7 @@ const Pwh = () => {
                                     placeholder="Excel upload"
                                     label=""
                                     type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                    style={{ w: "100%" }}
+                                    style={{ w: "90%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -3897,7 +4041,7 @@ const Pwh = () => {
                           {/* ================ Client List ================= */}
                           <Box>
                             <Grid
-                              textAlign="right"
+                              // textAlign="right"
                               templateColumns={{
                                 base: "1fr",
                                 sm: "repeat(2, 1fr)",
@@ -3928,9 +4072,7 @@ const Pwh = () => {
                                             ?.client_type?.message
                                         }
                                       >
-                                        <ReactCustomSelect
-                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`}
-                                          label=""
+                                        <ReactSelect
                                           options={[
                                             {
                                               label: "Corporate",
@@ -3941,7 +4083,8 @@ const Pwh = () => {
                                               value: "Retail",
                                             },
                                           ]}
-                                          selectedValue={
+                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`}
+                                          value={
                                             [
                                               {
                                                 label: "Corporate",
@@ -3963,10 +4106,8 @@ const Pwh = () => {
                                             }
                                           }
                                           isClearable={false}
-                                          selectType="label"
                                           isLoading={false}
-                                          style={{ w: "100%" }}
-                                          handleOnChange={(val) => {
+                                          onChange={(val) => {
                                             console.log(
                                               "selectedOption @@@@@@@@@@@------> ",
                                               val
@@ -3977,45 +4118,67 @@ const Pwh = () => {
                                               { shouldValidate: true }
                                             );
                                           }}
+                                          styles={{
+                                            control: (base, state) => ({
+                                              ...base,
+                                              backgroundColor: "#fff",
+                                              borderRadius: "6px",
+                                              borderColor: errors
+                                                ?.client_list?.[index]
+                                                ?.client_type?.message
+                                                ? "red"
+                                                : "#c3c3c3",
+
+                                              padding: "1px",
+                                            }),
+                                            ...reactSelectStyle,
+                                          }}
                                         />
+                                        {!errors ? (
+                                          <FormHelperText>
+                                            Enter the email you'd like to
+                                            receive the newsletter on.
+                                          </FormHelperText>
+                                        ) : (
+                                          <FormErrorMessage>
+                                            Email is required.
+                                          </FormErrorMessage>
+                                        )}
                                       </FormControl>
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]
-                                            ?.client_type?.message
-                                        }
-                                      </Box>
                                     </GridItem>
 
                                     {/* client_name */}
                                     <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Client Name{" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`}
-                                        placeholder="client name"
-                                        inputValue={getValues(
-                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`
-                                        )}
-                                        onChange={(val) => {
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`,
-                                            val.target.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                        type="text"
-                                        label=""
-                                        style={{ w: "100%" }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
+                                      <FormControl isInvalid={true}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Client Name{" "}
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`}
+                                          placeholder="client name"
+                                          inputValue={getValues(
+                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`
+                                          )}
+                                          onChange={(val) => {
+                                            setValue(
+                                              `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`,
+                                              val.target.value,
+                                              { shouldValidate: true }
+                                            );
+                                          }}
+                                          type="text"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                      </FormControl>
+
+                                      {/* <Box mx="1" color="red" textAlign="left">
                                         {
                                           errors?.client_list?.[index]
                                             ?.client_name?.message
                                         }
-                                      </Box>
+                                      </Box> */}
                                     </GridItem>
 
                                     {/* Mobile Number */}
@@ -4280,7 +4443,7 @@ const Pwh = () => {
                                         >
                                           {/* Storage charges */}
 
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Storage charges
@@ -4305,7 +4468,7 @@ const Pwh = () => {
                                           </GridItem>
 
                                           {/* Reservation qty (Bales, MT) */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Reservation qty (Bales, MT)
@@ -4330,7 +4493,7 @@ const Pwh = () => {
                                           </GridItem>
 
                                           {/* Reservation Start Date */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               Reservation Start Date
                                             </Text>{" "}
@@ -4355,7 +4518,7 @@ const Pwh = () => {
                                           </GridItem>
 
                                           {/* Reservation End Date */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Reservation End Date{" "}
@@ -4396,7 +4559,7 @@ const Pwh = () => {
                                           overscrollBehaviorX={true}
                                         >
                                           {/* Reservation Period(Month) */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Reservation Period(Month)
@@ -4422,7 +4585,7 @@ const Pwh = () => {
                                           </GridItem>
 
                                           {/* Reservation billing cycle */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Reservation billing cycle
@@ -4504,7 +4667,7 @@ const Pwh = () => {
                                           </GridItem>
 
                                           {/* Post Reservation billing cycle */}
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Post Reservation billing cycle
@@ -4587,7 +4750,7 @@ const Pwh = () => {
 
                                           {/* Post Reservation Storage charges */}
 
-                                          <GridItem colSpan={2}>
+                                          <GridItem colSpan={3}>
                                             <Text textAlign="left">
                                               {" "}
                                               Post Reservation Storage charges

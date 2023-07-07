@@ -5,7 +5,7 @@ import {
   useActiveDeActiveMutation,
   useGetStateMasterMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
+import { Box, Flex, Switch, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -120,6 +120,15 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("state_india_office_addr", {
       cell: (info) => info.getValue(),
+      // cell: (info) => (
+      //   <Tooltip label={info.getValue()} aria-label="A tooltip">
+      //     <Box w={160}>
+      //       <Text isTruncated maxW="100%">
+      //         {info.getValue()}
+      //       </Text>
+      //     </Box>
+      //   </Tooltip>
+      // ),
       header: "Office Address",
     }),
     columnHelper.accessor("created_at", {
@@ -132,7 +141,11 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -154,7 +167,11 @@ const StateMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

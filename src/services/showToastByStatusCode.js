@@ -25,6 +25,9 @@ export function showToastByStatusCode(statusCode, msg) {
     case 500:
       message = "Internal Server Error";
       break;
+    case 440:
+      customErr(msg);
+      break;
     default:
       defaultToast(message);
       break;
@@ -40,5 +43,9 @@ const defaultToast = (message) => {
 };
 
 const badRequest = (message) => {
+  toast.error(message || "Bad Request");
+};
+
+const customErr = (message) => {
   toast.error(message || "Bad Request");
 };
