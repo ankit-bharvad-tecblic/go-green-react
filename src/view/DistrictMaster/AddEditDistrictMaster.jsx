@@ -70,7 +70,7 @@ const AddEditFormDistrictMaster = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     earthQuack: [],
     regions: [],
-    zones: [],
+    substate: [],
     districts: [],
     states: [],
   });
@@ -118,13 +118,30 @@ const AddEditFormDistrictMaster = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+      if (details.substate?.state?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details.substate?.state?.region?.region_name,
+              value: details.substate?.state?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -155,15 +172,29 @@ const AddEditFormDistrictMaster = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+      if (details?.substate?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.substate?.state?.state_name,
+              value: details?.substate?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -193,15 +224,29 @@ const AddEditFormDistrictMaster = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        zones: response?.substate
-          ?.filter((item) => item.substate_name !== "All - Zone")
-          .map(({ substate_name, id }) => ({
-            label: substate_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.substate
+        ?.filter((item) => item.substate_name !== "All - Zone")
+        .map(({ substate_name, id }) => ({
+          label: substate_name,
+          value: id,
+        }));
+      if (details?.substate?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          substate: [
+            ...arr,
+            {
+              label: details?.substate?.substate_name,
+              value: details?.substate?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          substate: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -343,9 +388,9 @@ const AddEditFormDistrictMaster = () => {
                       name="substate"
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
-                      options={selectBoxOptions?.zones || []}
+                      options={selectBoxOptions?.substate || []}
                       selectedValue={
-                        selectBoxOptions?.zones?.filter(
+                        selectBoxOptions?.substate?.filter(
                           (item) => item.value === getValues("substate")
                         )[0] || {}
                       }
@@ -383,7 +428,8 @@ const AddEditFormDistrictMaster = () => {
                         selectedValue:
                           item.type === "select" &&
                           item?.options?.find(
-                            (opt) => opt.label === details?.substate.substate_name
+                            (opt) =>
+                              opt.label === details?.substate.substate_name
                           ),
                         selectType: "value",
                         isClearable: false,

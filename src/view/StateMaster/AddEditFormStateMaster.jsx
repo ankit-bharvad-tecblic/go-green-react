@@ -145,13 +145,31 @@ const AddEditFormStateMaster = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+
+      if (details?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.region?.region_name,
+              value: details?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -166,10 +184,10 @@ const AddEditFormStateMaster = () => {
 
   useEffect(() => {
     if (details?.id) {
-      console.log(details);
+      console.log(details, "del");
       let obj = {
         state_name: details.state_name,
-        region: details.region.id,
+        region: details?.region?.id,
         state_code: details.state_code,
         tin_no: details.tin_no,
         gstn: details.gstn,
@@ -206,6 +224,7 @@ const AddEditFormStateMaster = () => {
   useEffect(() => {
     setAddEditFormFieldsList(addEditFormFields);
   }, []);
+
   useEffect(() => {
     getAllRegionMaster();
     getRegionMasterList();
@@ -216,6 +235,7 @@ const AddEditFormStateMaster = () => {
       dispatch(setBreadCrumb([]));
     };
   }, []);
+
   return (
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
@@ -228,6 +248,7 @@ const AddEditFormStateMaster = () => {
                     <Text textAlign="right" w="550px">
                       Region
                     </Text>
+                    {console.log(selectBoxOptions?.regions, "del")}
                     <ReactCustomSelect
                       name="region"
                       label=""

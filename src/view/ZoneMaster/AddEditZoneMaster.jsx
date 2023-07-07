@@ -113,13 +113,31 @@ const AddEditZoneMaster = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+
+      if (details?.state?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.state?.region?.region_name,
+              value: details?.state?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -147,15 +165,29 @@ const AddEditZoneMaster = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+      if (details?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.state?.state_name,
+              value: details?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -172,10 +204,10 @@ const AddEditZoneMaster = () => {
 
   useEffect(() => {
     if (details?.id) {
-      regionOnChange({ value: details.state?.region?.id });
+      regionOnChange({ value: details?.state?.region?.id });
       let obj = {
         substate_name: details.substate_name,
-        state: details.state.id,
+        state: details?.state?.id,
         region: details.state?.region?.id,
         is_active: details?.is_active,
       };

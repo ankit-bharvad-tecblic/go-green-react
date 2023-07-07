@@ -736,6 +736,18 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         // Dispatch actions, show notification, etc.
       },
     }),
+    //Download Excel File API
+    postFileUpload: builder.mutation({
+      query: (data) => ({
+        url: `${API.COMMON_API_END_POINTS.FILE_UPLOAD}`,
+        method: "POST",
+        body: data,
+      }),
+      onError: (error) => {
+        console.log("API Error:", error);
+        // Dispatch actions, show notification, etc.
+      },
+    }),
   }),
 });
 
@@ -880,6 +892,8 @@ export const {
   useAddHsnMasterMutation,
   useUpdateHsnMasterMutation,
   useGetDownLoadExcelMutation,
+  // Api upload file Api
+  usePostFileUploadMutation,
 } = masterApiSlice;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';

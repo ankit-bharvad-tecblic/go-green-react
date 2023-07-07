@@ -22,6 +22,8 @@ import { useFetchLocationDrillDownMutation } from "../../features/warehouse-prop
 
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import CustomInput from "../../components/Elements/CustomInput";
+import CustomFileInput from "../../components/Elements/CustomFileInput";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,10 +38,21 @@ function AddEditFormBankMaster() {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     states: [],
-    sector: [],
+    sector: [
+      {
+        label: "Public Sector",
+        value: "public",
+      },
+      {
+        label: "Private Sector",
+        value: "private",
+      },
+    ],
   });
+
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
+
   const [updateBankMaster, { isLoading: updateBankMasterApiIsLoading }] =
     useUpdateBankMasterMutation();
 
@@ -141,20 +154,35 @@ function AddEditFormBankMaster() {
     { isLoading: fetchLocationDrillDownApiIsLoading },
   ] = useFetchLocationDrillDownMutation();
 
-  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
-    useGetRegionMasterMutation();
-
   const getRegionMasterList = async () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+
+      if (details?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.region?.region_name,
+              value: details?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -178,15 +206,30 @@ function AddEditFormBankMaster() {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+
+      if (details?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.state?.state_name,
+              value: details?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -200,26 +243,7 @@ function AddEditFormBankMaster() {
   };
 
   // Region State  Zone District Area  onChange drill down api end //
-  const getSectorList = async () => {
-    try {
-      const response = {}; /*= await getBankMaster().unwrap();*/
-      console.log("Success:", response);
-      let onlyActive = response?.results?.filter((item) => item.is_active);
-      let arr = onlyActive?.map((item) => ({
-        label: item.bank_name,
-        value: item.id,
-      }));
 
-      console.log(arr);
-
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        sector: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
   const updateData = async (data) => {
     try {
       const response = await updateBankMaster(data).unwrap();
@@ -235,7 +259,6 @@ function AddEditFormBankMaster() {
   };
 
   useEffect(() => {
-    getSectorList();
     if (details?.id) {
       regionOnChange({ value: details.region?.id });
       let obj = {
@@ -297,6 +320,37 @@ function AddEditFormBankMaster() {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {/* for the sector code */}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Sector
+                    </Text>
+                    <ReactCustomSelect
+                      name="sector"
+                      label=""
+                      isLoading={false}
+                      options={selectBoxOptions?.sector || []}
+                      selectedValue={
+                        selectBoxOptions?.sector?.filter(
+                          (item) => item.value === getValues("sector")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        setValue("sector", val.value, { shouldValidate: true });
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
@@ -325,7 +379,7 @@ function AddEditFormBankMaster() {
                     <ReactCustomSelect
                       name="region"
                       label=""
-                      isLoading={getRegionMasterApiIsLoading}
+                      isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.regions || []}
                       selectedValue={
                         selectBoxOptions?.regions?.filter(
@@ -375,6 +429,7 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
+<<<<<<< HEAD
               {/* for the sector code */}
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
@@ -399,6 +454,9 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
+=======
+
+>>>>>>> gg-aasim-warehouse-form
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -434,6 +492,93 @@ function AddEditFormBankMaster() {
                         mt: 1,
                       }}
                       isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Rate
+                    </Text>
+                    <CustomInput
+                      name="rate"
+                      placeholder="Rate"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Agreement Start Date
+                    </Text>
+                    <CustomInput
+                      name="agreement_start_date"
+                      placeholder="Agreement Start Date"
+                      type="date"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Agreement End Date
+                    </Text>
+                    <CustomInput
+                      name="agreement_end_date"
+                      placeholder="Agreement End Date"
+                      type="date"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Upload agreement
+                    </Text>
+                    <CustomFileInput
+                      name={"upload_agreement"}
+                      placeholder="Agreement upload"
+                      label=""
+                      type=""
+                      onChange={(e) => {
+                        console.log(e, "file");
+                        setValue("upload_agreement", e, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      value={getValues("upload_agreement")}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
                     />
                   </Box>
                 </MotionSlideUp>

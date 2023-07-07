@@ -10,12 +10,42 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { usePostFileUploadMutation } from "../../features/master-api-slice";
 
-function CustomFileInput({ name, placeholder, type, label, style }) {
+function CustomFileInput({
+  name,
+  placeholder,
+  type,
+  label,
+  style,
+  onChange,
+  value,
+}) {
   const fileInputRef = useRef(null);
 
   const handleButtonClick = () => {
-    fileInputRef.current.click();
+    if (!addBankMasterApiIsLoading) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const [fileUploadHandle, { isLoading: addBankMasterApiIsLoading }] =
+    usePostFileUploadMutation();
+
+  const handleFileUpload = async (e) => {
+    if (e?.target?.files[0]) {
+      const formData = new FormData();
+      formData.append("vaibhav_file_path", e.target.files[0]);
+
+      const response = await fileUploadHandle(formData).unwrap();
+
+      console.log(response, "file");
+      if (response?.status === 200) {
+        onChange(
+          response?.data?.vaibhav_file_path.split("/media/docs/")[1] || ""
+        );
+      }
+    }
   };
 
   const {
@@ -38,6 +68,8 @@ function CustomFileInput({ name, placeholder, type, label, style }) {
               <Flex
                 onClick={handleButtonClick}
                 backgroundColor={"gray.200"}
+                border={"2px solid"}
+                borderColor={error?"red":"gray.200"}
                 borderRadius={"lg"}
                 _placeholder={{ color: "gray.300" }}
                 _hover={{
@@ -54,17 +86,30 @@ function CustomFileInput({ name, placeholder, type, label, style }) {
                 fontStyle={"normal"}
                 cursor={"pointer"}
                 justifyContent="space-between"
+                alignItems="center"
               >
-                <Text> {placeholder} </Text>
+                <Text>
+                  {" "}
+                  {addBankMasterApiIsLoading
+                    ? "Loading ..."
+                    : value
+                    ? value
+                    : placeholder
+                    ? placeholder
+                    : "File Upload"}{" "}
+                </Text>
+                <Box flex="none">
                 <AiOutlineCloudUpload flex="none" fontSize={"20px"} />
+                </Box>
               </Flex>
               <Input
-                {...field}
+                // {...field}
                 type="file"
                 ref={fileInputRef}
                 height={"15px"}
                 display={"none"}
                 accept={type}
+                onChange={handleFileUpload}
                 // width={{ base: "90%" }}
               />
             </Box>

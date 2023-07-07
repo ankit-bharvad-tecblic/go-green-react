@@ -417,6 +417,7 @@ function AddEditFormBankBranchMaster() {
       toasterAlert(error);
     }
   };
+  
   useEffect(() => {
     // getAllStateMaster();
     getRegionMasterList();
