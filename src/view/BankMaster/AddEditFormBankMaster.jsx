@@ -22,6 +22,8 @@ import { useFetchLocationDrillDownMutation } from "../../features/warehouse-prop
 
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import CustomInput from "../../components/Elements/CustomInput";
+import CustomFileInput from "../../components/Elements/CustomFileInput";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,10 +38,20 @@ function AddEditFormBankMaster() {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     states: [],
-    sector: [],
+    sector: [
+      {
+        label: "Public Sector",
+        value: "public",
+      },
+      {
+        label: "Private Sector",
+        value: "private",
+      },
+    ],
   });
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
+
   const [updateBankMaster, { isLoading: updateBankMasterApiIsLoading }] =
     useUpdateBankMasterMutation();
 
@@ -137,9 +149,6 @@ function AddEditFormBankMaster() {
     { isLoading: fetchLocationDrillDownApiIsLoading },
   ] = useFetchLocationDrillDownMutation();
 
-  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
-    useGetRegionMasterMutation();
-
   const getRegionMasterList = async () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
@@ -196,26 +205,7 @@ function AddEditFormBankMaster() {
   };
 
   // Region State  Zone District Area  onChange drill down api end //
-  const getSectorList = async () => {
-    try {
-      const response = {}; /*= await getBankMaster().unwrap();*/
-      console.log("Success:", response);
-      let onlyActive = response?.results?.filter((item) => item.is_active);
-      let arr = onlyActive?.map((item) => ({
-        label: item.bank_name,
-        value: item.id,
-      }));
 
-      console.log(arr);
-
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        sector: arr,
-      }));
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
   const updateData = async (data) => {
     try {
       const response = await updateBankMaster(data).unwrap();
@@ -231,7 +221,6 @@ function AddEditFormBankMaster() {
   };
 
   useEffect(() => {
-    getSectorList();
     if (details?.id) {
       regionOnChange({ value: details.region?.id });
       let obj = {
@@ -293,6 +282,31 @@ function AddEditFormBankMaster() {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              {/* for the sector code */}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Sector
+                    </Text>
+                    <CustomSelector
+                      name="sector"
+                      label=""
+                      options={selectBoxOptions.sector}
+                      selectedValue={selectBoxOptions.sector?.find(
+                        (opt) => opt.label === details?.sector
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
@@ -321,7 +335,7 @@ function AddEditFormBankMaster() {
                     <ReactCustomSelect
                       name="region"
                       label=""
-                      isLoading={getRegionMasterApiIsLoading}
+                      isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.regions || []}
                       selectedValue={
                         selectBoxOptions?.regions?.filter(
@@ -371,30 +385,7 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
-              {/* for the sector code */}
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Sector
-                    </Text>
-                    <CustomSelector
-                      name="sector"
-                      label=""
-                      options={selectBoxOptions.sector}
-                      selectedValue={selectBoxOptions.sector?.find(
-                        (opt) => opt.label === details?.sector
-                      )}
-                      isClearable={false}
-                      selectType={"value"}
-                      style={{
-                        mb: 1,
-                        mt: 1,
-                      }}
-                    />
-                  </Box>
-                </MotionSlideUp>
-              </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -430,6 +421,86 @@ function AddEditFormBankMaster() {
                         mt: 1,
                       }}
                       isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Rate
+                    </Text>
+                    <CustomInput
+                      name="rate"
+                      placeholder="Rate"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Agreement Start Date
+                    </Text>
+                    <CustomInput
+                      name="agreement_start_date"
+                      placeholder="Agreement Start Date"
+                      type="date"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Agreement End Date
+                    </Text>
+                    <CustomInput
+                      name="agreement_end_date"
+                      placeholder="Agreement End Date"
+                      type="date"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Upload agreement
+                    </Text>
+                    <CustomFileInput
+                      name={"upload_agreement"}
+                      placeholder="Agreement upload"
+                      label=""
+                      type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
                     />
                   </Box>
                 </MotionSlideUp>

@@ -91,83 +91,7 @@ const AddEditFormArea = () => {
       toasterAlert(error);
     }
   };
-  // get all district data
-  // const getAllDistrict = async () => {
-  //   try {
-  //     const response = await getDistrictMaster().unwrap();
 
-  //     setSelectBoxOptions((prev) => ({ ...prev, district: arr }));
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-  // //API of all zone data
-  // const getAllZone = async () => {
-  //   try {
-  //     const response = await getZoneMaster().unwrap();
-
-  //     console.log("Success:", response);
-  //     console.log(details);
-  //     // setCommodityTypeMaster();
-  //     let arr = response?.results.map((item) => ({
-  //       label: item.zone_name,
-  //       value: item.id,
-  //     }));
-  //     console.log(arr);
-
-  //     setAddEditFormFieldsList(
-  //       addEditFormFields.map((field) => {
-  //         if (field.type === "select") {
-  //           return {
-  //             ...field,
-  //             options: arr,
-  //           };
-  //         } else {
-  //           return field;
-  //         }
-  //       })
-  //     );
-  //     console.log(arr);
-  //     setSelectBoxOptions((prev) => ({
-  //       ...prev,
-  //       zones: arr,
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
-  // // All state Call
-  // const getAllStateMaster = async () => {
-  //   try {
-  //     const response = await getStateMaster().unwrap();
-  //     console.log("response ", response);
-  //     let arr = response?.results.map((item) => ({
-  //       label: item.state_name,
-  //       value: item.id,
-  //     }));
-
-  //     console.log(arr);
-
-  //     setAddEditFormFieldsList(
-  //       addEditFormFields.map((field) => {
-  //         if (field.type === "select") {
-  //           return {
-  //             ...field,
-  //             options: arr,
-  //           };
-  //         } else {
-  //           return field;
-  //         }
-  //       })
-  //     );
-  //     setSelectBoxOptions((prev) => ({
-  //       ...prev,
-  //       states: arr,
-  //     }));
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // };
   const updateData = async (data) => {
     try {
       const response = await updateAreaMaster(data).unwrap();
@@ -197,13 +121,30 @@ const AddEditFormArea = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
-      }));
+        }));
+      if (details?.district?.substate?.state?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.region?.region_name,
+              value: details?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -238,15 +179,29 @@ const AddEditFormArea = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+      if (details?.district?.substate?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.district?.substate?.state?.state_name,
+              value: details?.district?.substate?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -280,15 +235,29 @@ const AddEditFormArea = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        substate: response?.substate
-          ?.filter((item) => item.substate_name !== "All - Zone")
-          .map(({ substate_name, id }) => ({
-            label: substate_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.substate
+        ?.filter((item) => item.substate_name !== "All - Zone")
+        .map(({ substate_name, id }) => ({
+          label: substate_name,
+          value: id,
+        }));
+      if (details?.district?.substate?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          substate: [
+            ...arr,
+            {
+              label: details?.district?.substate?.substate_name,
+              value: details?.district?.substate?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          substate: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -320,15 +289,29 @@ const AddEditFormArea = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        districts: response?.district
-          ?.filter((item) => item.district_name !== "All - District")
-          .map(({ district_name, id }) => ({
-            label: district_name,
-            value: id,
-          })),
-      }));
+      const arr = response?.district
+        ?.filter((item) => item.district_name !== "All - District")
+        .map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        }));
+      if (details?.district?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          districts: [
+            ...arr,
+            {
+              label: details?.district?.district_name,
+              value: details?.district?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          districts: arr,
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -353,10 +336,23 @@ const AddEditFormArea = () => {
 
       console.log(arr);
 
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        earthquack: arr,
-      }));
+      if (details?.earthquake_zone_type?.is_active) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          earthquack: arr,
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          earthquack: [
+            ...arr,
+            {
+              label: details?.earthquake_zone_type?.earthquake_zone_type,
+              value: details?.earthquake_zone_type.id,
+            },
+          ],
+        }));
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -372,7 +368,8 @@ const AddEditFormArea = () => {
       zoneOnChange({ value: details.district?.substate?.id });
       districtOnChange({ value: details.district?.id });
       let obj = {
-        earthquake_zone_type: details.earthquake_zone_type.earthquake_zone_type,
+        earthquake_zone_type:
+          details?.earthquake_zone_type?.earthquake_zone_type,
         district_name: details.district?.id,
         substate: details.district?.substate?.id,
         region: details.district?.substate?.state?.region.id,
