@@ -127,17 +127,14 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  // hiring_proposal_id: yup.string().required("Hiring proposal id is required"),
-  warehouse_owner_name: yup
-    .string()
-    .required("WareHouse owner name is required"),
+  // hiring_proposal_id: yup.string().trim().required("Hiring proposal id is required"),
+  warehouse_owner_name: yup.string().trim().required("WareHouse owner name is required"),
   warehouse_owner_contact_no: yup
     .string()
+    .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-  warehouse_owner_address: yup
-    .string()
-    .required("WareHouse owner address is required"),
+  warehouse_owner_address: yup.string().trim().required("WareHouse owner address is required"),
   rent_amount: yup.number().required("Rent amount is required"),
   revenue_sharing_ratio: yup.number().required("Revenue sharing  is required"),
   //   is_active: yup.string(),

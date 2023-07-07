@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetDistrictMasterMutation,
-} from "../../features/master-api-slice";
+} from "../../features/master-api-slice"; 
 import HandleError from "../../services/handleError";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";

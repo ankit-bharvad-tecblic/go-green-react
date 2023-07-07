@@ -20,7 +20,7 @@ const filterFields = [
   {
     "Zone Name": "substate_name",
     isActiveFilter: false,
-    label: "sub State Name",
+    label: "Sub State Name",
     name: "substate_name",
     placeholder: "Sub State Name",
     type: "text",
@@ -87,9 +87,9 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  substate_name: yup.string().required("Zone name is required"),
-  state: yup.string().required("State name is required"),
-  region: yup.string().required("Region name  is required"),
+  substate_name: yup.string().trim().required("Zone name is required"),
+  state: yup.string().trim().required("State name is required"),
+  region: yup.string().trim().required("Region name  is required"),
   is_active: yup.string(),
 });
 

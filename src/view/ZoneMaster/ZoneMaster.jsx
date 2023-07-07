@@ -30,7 +30,7 @@ const ZoneMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    excelDownload: "Zone",
+    excelDownload: "SubState",
   });
 
   const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =

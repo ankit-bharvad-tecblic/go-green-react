@@ -676,13 +676,16 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   warehouse_type: yup.number().required("warehouse type is required"),
   warehouse_subtype: yup.number().required("warehouse sub type is required"),
-  warehouse_name: yup.string().required("warehouse name is required"),
+  warehouse_name: yup.string().trim().required("warehouse name is required"),
   region: yup.number().required("region is required"),
   state: yup.number().required("state is required"),
-  // warehouse_type: yup.string().required("Zone ID is required"),
+  // warehouse_type: yup.string().trim().required("Zone ID is required"),
   district: yup.number().required("district is required"),
   area: yup.number().required("area  is required"),
-  warehouse_address: yup.string().required("warehouse address is required"),
+  warehouse_address: yup
+    .string()
+    .trim()
+    .required("warehouse address is required"),
   warehouse_pincode: yup.number().required("warehouse pincode is required"),
   no_of_chambers: yup.number().required("no of chambers  is required"),
   standard_capacity: yup.number().required("standard capacity is required"),
@@ -704,6 +707,7 @@ const schema = yup.object().shape({
     .required("supervisor night shift is required"),
   security_guard_day_shift: yup
     .string()
+    .trim()
     .required("security guard day shift is required"),
   security_guard_night_shift: yup
     .number()
@@ -711,13 +715,14 @@ const schema = yup.object().shape({
   expected_commodity: yup.number().required("expected commodity  is required"),
   commodity_inward_type: yup
     .string()
+    .trim()
     .required("commodity inward type is required"),
   prestack_commodity: yup.number().required("prestack commodity  is required"),
   prestack_commodity_qty: yup
     .number()
     .required("prestack commodity qty is required"),
   banker_id: yup.number().required("banker id  is required"),
-  // bank_name: yup.string().required("Funding Required is required"),
+  // bank_name: yup.string().trim().required("Funding Required is required"),
   rent: yup.number().required("rent  is required"),
   gg_revenue_ratio: yup.number().required("gg revenue ratio  is required"),
   security_deposit_month: yup
@@ -725,15 +730,15 @@ const schema = yup.object().shape({
     .required("security deposit month  is required"),
   advance_rent: yup.number().required("advance rent  is required"),
   advance_rent_month: yup.date().required("advance rent month  is required"),
-  // warehouse_type: yup.string().required("GST type is required"),
-  // warehouse_type: yup.string().required("CommencementDate type is required"),
-  // warehouse_type: yup.string().required("AgreementPeriodMonth type is required"),
+  // warehouse_type: yup.string().trim().required("GST type is required"),
+  // warehouse_type: yup.string().trim().required("CommencementDate type is required"),
+  // warehouse_type: yup.string().trim().required("AgreementPeriodMonth type is required"),
   notice_period_month: yup.date().required("notice period month  is required"),
-  remarks: yup.string().required("remarks  is required"),
+  remarks: yup.string().trim().required("remarks  is required"),
   l1_user: yup.number().required("l1 user  is required"),
   l2_user: yup.number().required("l2 user  is required"),
-  // warehouse_type: yup.string().required("DocumentID type is required"),
-  // warehouse_type: yup.string().required("InspectionAssignedTo type is required"),
+  // warehouse_type: yup.string().trim().required("DocumentID type is required"),
+  // warehouse_type: yup.string().trim().required("InspectionAssignedTo type is required"),
 
   active: yup.string(),
 });

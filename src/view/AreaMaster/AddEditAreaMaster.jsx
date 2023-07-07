@@ -9,7 +9,7 @@ import { addEditFormFields, schema } from "./fields";
 import {
   useUpdateAreaMasterMutation,
   useAddAreaMasterMutation,
-  useGetAreaMasterMutation,
+  useGetAreaMasterMutation, 
   useGetDistrictMasterMutation,
   useGetZoneMasterMutation,
   useGetStateMasterMutation,
@@ -540,7 +540,7 @@ const AddEditFormArea = () => {
                 </Box>
               </MotionSlideUp>{" "}
               {/* This one for Earthquack zone id  */}
-              <Box>
+              {/* <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
                     <Text textAlign="right" w="550px">
@@ -564,7 +564,7 @@ const AddEditFormArea = () => {
                     />
                   </Box>
                 </MotionSlideUp>
-              </Box>
+              </Box> */}
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
@@ -595,6 +595,32 @@ const AddEditFormArea = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
+
+<Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Earthquack Zone
+                    </Text>
+                    <CustomSelector
+                      name="earthquake_zone_type"
+                      label=""
+                      options={selectBoxOptions.earthquack}
+                      selectedValue={selectBoxOptions.earthquack?.find(
+                        (opt) =>
+                          opt.label ===
+                          details?.earthquake_zone_type.earthquake_zone_type
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <Box gap="4" display={{ base: "flex" }} alignItems="center">
                   <Text textAlign="right" w="550px">

@@ -26,8 +26,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import generateFormField from "../Elements/GenerateFormField";
 
 const schema = yup.object().shape({
-  InputFeild: yup.string().required("please fill the field"),
-  radioOption: yup.string().required("Please select an option"),
+  InputFeild: yup.string().trim().required("please fill the field"),
+  radioOption: yup.string().trim().required("Please select an option"),
 });
 
 const Index = () => {
@@ -56,7 +56,7 @@ const Index = () => {
     let filters = [];
     for (let key in data) {
       if (data[key]) {
-        filters.push(`filter=${key}&${key}=${data[key]}`);
+        filters.push(`filter=${key}&${key}=${data[key].trim()}`);
       }
     }
     let filterString = filters.join("&");

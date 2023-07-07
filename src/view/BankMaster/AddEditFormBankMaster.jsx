@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import generateFormField from "../../components/Elements/GenerateFormField";
 import {
-  useAddBankMasterMutation,
+  useAddBankMasterMutation, 
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
   useUpdateBankMasterMutation,
@@ -81,6 +81,10 @@ function AddEditFormBankMaster() {
     }
   };
 
+  const options = [
+    { value: "private sector ", label: "private sector " },
+    { value: "public sector   ", label: "public sector  " },
+  ];
   const getAllStateMaster = async () => {
     try {
       const response = await getStateMaster().unwrap();
@@ -381,7 +385,7 @@ function AddEditFormBankMaster() {
                     <CustomSelector
                       name="sector"
                       label=""
-                      options={selectBoxOptions.sector}
+                      options={options}
                       selectedValue={selectBoxOptions.sector?.find(
                         (opt) => opt.label === details?.sector
                       )}

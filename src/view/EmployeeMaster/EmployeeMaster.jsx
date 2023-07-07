@@ -9,7 +9,7 @@ import {
 import { BiEditAlt } from "react-icons/bi";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import { setUpFilterFields } from "../../features/filter.slice";
+import { setUpFilterFields } from "../../features/filter.slice"; 
 import { API } from "../../constants/api.constants";
 import { filterFields } from "./fields";
 import { useNavigate } from "react-router-dom";

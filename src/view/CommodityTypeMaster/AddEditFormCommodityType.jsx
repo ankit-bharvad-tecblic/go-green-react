@@ -20,6 +20,8 @@ import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomSelector from "../../components/Elements/CustomSelector";
 
 const AddEditFormCommodityType = () => {
   const location = useLocation();
@@ -78,7 +80,13 @@ const AddEditFormCommodityType = () => {
       toasterAlert(error);
     }
   };
-
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    PrimarycommodityType: [],
+  });
+  const options = [
+    { value: " Agriculture ", label: "Agriculture  " },
+    { value: "Non Agriculture    ", label: " Non Agriculture  " },
+  ];
   const getCommodityType = async () => {
     try {
       const response = await getCommodityTypeMaster().unwrap();
@@ -162,6 +170,29 @@ const AddEditFormCommodityType = () => {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Primary commodity type
+                    </Text>
+                    <CustomSelector
+                      name="primary_comodity_key"
+                      label=""
+                      options={options}
+                      selectedValue={selectBoxOptions.PrimarycommodityType?.find(
+                        (opt) => opt.label === details?.primary_comodity_key
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>

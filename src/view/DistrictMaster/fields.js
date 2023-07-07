@@ -93,11 +93,11 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  district_name: yup.string().required("District  is required"),
-  region: yup.string().required("Region name is required"),
-  state: yup.string().required("State name is required"),
+  district_name: yup.string().trim().required("District  is required"),
+  region: yup.string().trim().required("Region name is required"),
+  state: yup.string().trim().required("State name is required"),
   is_active: yup.string(),
-  substate: yup.string().required("Sub State name  is required"),
+  substate: yup.string().trim().required("Sub State name  is required"),
 });
 
 export { filterFields, addEditFormFields, schema };

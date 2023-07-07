@@ -30,6 +30,7 @@ function InsuranceCompanyMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    // excelDownload: "InsuranceCompany",
   });
 
   const [
@@ -95,13 +96,33 @@ function InsuranceCompanyMaster() {
       cell: (info) => info.getValue(),
       header: "company name",
     }),
+    columnHelper.accessor("region.region_name", {
+      cell: (info) => info.getValue(),
+      header: "REGION ",
+    }),
+    columnHelper.accessor("state.state_name", {
+      cell: (info) => info.getValue(),
+      header: "STATE ",
+    }),
     columnHelper.accessor("insurance_company_address", {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
     }),
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: " Creation Date",
+    }),
+    columnHelper.accessor("last_update_date", {
+      cell: (info) => info.getValue(),
+      header: " Last Updated Date",
+    }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -123,7 +144,11 @@ function InsuranceCompanyMaster() {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

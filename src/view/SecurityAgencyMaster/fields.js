@@ -214,19 +214,24 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   security_agency_name: yup
     .string()
+    .trim()
     .required("Security Agency name is required"),
-  region__region_name: yup.string().required("Region name  is required"),
-  state__state_name: yup.string().required("State name  is required"),
-  district__district_name: yup.string().required("District name  is required"),
-  area__area_name: yup.string().required("Area name  is required"),
-  address: yup.string().required("Address name  is required"),
+  region__region_name: yup.string().trim().required("Region name  is required"),
+  state__state_name: yup.string().trim().required("State name  is required"),
+  district__district_name: yup
+    .string()
+    .trim()
+    .required("District name  is required"),
+  area__area_name: yup.string().trim().required("Area name  is required"),
+  address: yup.string().trim().required("Address name  is required"),
   pincode: yup.number().required("pincode   is required"),
   contact_no: yup
     .string()
+    .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
   service_cost: yup.number().required("service_cost  is required"),
-  remarks: yup.string().required("remarks is required"),
+  remarks: yup.string().trim().required("remarks is required"),
   is_active: yup.string(),
 });
 

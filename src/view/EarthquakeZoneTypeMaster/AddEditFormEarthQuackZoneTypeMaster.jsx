@@ -150,7 +150,7 @@ const AddEditFormEarthQuackZoneTypeMaster = () => {
       },
     ];
     dispatch(setBreadCrumb(breadcrumbArray));
-  }, [details]);
+  }, [details]); 
 
   useEffect(() => {
     return () => {

@@ -159,7 +159,7 @@ const schema = yup.object().shape({
   igst_perc: yup.number().required("IGST percentage is required"),
   sgst_perc: yup.number().required("SGST percentage is required"),
   cgst_perc: yup.number().required("CGSt percentage is required"),
-  description: yup.string().required("Description is required"),
+  description: yup.string().trim().required("Description is required"),
   is_active: yup.string(),
 });
 
