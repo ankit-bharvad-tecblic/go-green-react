@@ -185,6 +185,30 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    // Insurance POlicy MAster Add edit Update Start
+    getInsurancePolicyMaster: builder.mutation({
+      query: (params) => ({
+        url: API.DASHBOARD.INSURANCE_POLICY_MASTER,
+        method: "GET",
+        params: params,
+      }),
+    }),
+    addInsurancePolicyMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.INSURANCE_POLICY_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateInsurancePolicyMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.INSURANCE_POLICY_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    // Insurance Policy Master Add Edit update Master End
+
     getRegionMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.REGION_MASTER,
@@ -820,6 +844,12 @@ export const {
   useAddInsuranceCompanyMasterMutation,
   // Api mutation for Insurance variety ends
 
+  //Api mutation for Insurance Policy Mutation Start
+  useGetInsurancePolicyMasterMutation,
+  useAddInsurancePolicyMasterMutation,
+  useUpdateInsurancePolicyMasterMutation,
+
+  // Api mutation for Insurance Policy Mutation End
   //Apis mutation for region master starts
   useGetRegionMasterMutation,
   useAddRegionMasterMutation,

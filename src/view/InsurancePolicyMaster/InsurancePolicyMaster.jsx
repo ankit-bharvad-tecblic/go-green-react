@@ -1,26 +1,35 @@
-import React, { useMemo } from "react";
-import { createColumnHelper } from "@tanstack/react-table";
-import FunctionalTable from "../../components/Tables/FunctionalTable";
-import { useEffect, useState } from "react";
+import { Box, Button, Flex, Switch, Text, useToast } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import generateFormField from "../../components/Elements/GenerateFormField";
+import { addEditFormFields, filterFields, schema } from "./fields";
 import {
   useActiveDeActiveMutation,
+  useAddInsuranceCompanyMasterMutation,
   useGetInsuranceCompanyMasterMutation,
+  useGetInsurancePolicyMasterMutation,
+  useUpdateInsuranceCompanyMasterMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
+import { showToastByStatusCode } from "../../services/showToastByStatusCode";
+import { motion } from "framer-motion";
+import { MotionScaleIn, MotionSlideUp, slideUp } from "../../utils/animation";
 import { useDispatch, useSelector } from "react-redux";
-import { BiEditAlt } from "react-icons/bi";
+import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { createColumnHelper } from "@tanstack/react-table";
+import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { setUpFilterFields } from "../../features/filter.slice";
-import { API } from "../../constants/api.constants";
-import { filterFields } from "./fields";
-import { useNavigate } from "react-router-dom";
+import { BiEditAlt } from "react-icons/bi";
 
-function InsuranceCompanyMaster() {
+const InsurancePolicyMaster = () => {
   const dispatch = useDispatch();
   const filterQuery = useSelector(
     (state) => state.dataTableFiltersReducer.filterQuery
   );
   const navigate = useNavigate();
-  console.log("InsuranceCompanyMaster", filterQuery);
+  console.log("Insurance Policy Master", filterQuery);
   const columnHelper = createColumnHelper();
   const [filter, setFilter] = useState({
     // filter: [],
@@ -33,9 +42,9 @@ function InsuranceCompanyMaster() {
   });
 
   const [
-    getInsuranceCompanyMaster,
-    { isLoading: getInsuranceCompanyMasterApiIsLoading },
-  ] = useGetInsuranceCompanyMasterMutation();
+    getInsurancePolicyMaster,
+    { isLoading: getInsurancePolicyMasterApiIsLoading },
+  ] = useGetInsurancePolicyMasterMutation();
   const [activeDeActive, { isLoading: activeDeActiveApiIsLoading }] =
     useActiveDeActiveMutation();
 
@@ -91,14 +100,27 @@ function InsuranceCompanyMaster() {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("insurance_company_name", {
+    columnHelper.accessor("", {
       cell: (info) => info.getValue(),
-      header: "company name",
+      header: "Insurance company",
     }),
-    columnHelper.accessor("insurance_company_address", {
+    columnHelper.accessor("", {
       cell: (info) => info.getValue(),
-      header: "ADDRESS",
+      header: "Insurance policy number",
     }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "Insurance type",
+    }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "policy start date",
+    }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "policy end date",
+    }),
+
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => (
@@ -160,18 +182,15 @@ function InsuranceCompanyMaster() {
 
   let paramString = "";
   const addForm = () => {
-    navigate(`/manage-insurance/add/insurance-company-master/`);
+    navigate(`/manage-insurance/add/insurance-policy-master/`);
   };
   const editForm = (info) => {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(
-      `/manage-insurance/edit/insurance-company-master/${editedFormId}`,
-      {
-        state: { details: info.row.original },
-      }
-    );
+    navigate(`/manage-insurance/edit/insurance-policy-master/${editedFormId}`, {
+      state: { details: info.row.original },
+    });
   };
 
   const getData = async () => {
@@ -193,7 +212,7 @@ function InsuranceCompanyMaster() {
 
     try {
       let query = filterQuery ? `${paramString}&${filterQuery}` : paramString;
-      const response = await getInsuranceCompanyMaster(query).unwrap();
+      const response = await getInsurancePolicyMaster(query).unwrap();
       console.log("Success:", response);
       setData(response?.results || []);
       setFilter((old) => ({
@@ -221,11 +240,10 @@ function InsuranceCompanyMaster() {
         setFilter={setFilter}
         columns={columns}
         data={data}
-        loading={getInsuranceCompanyMasterApiIsLoading}
+        loading={getInsurancePolicyMasterApiIsLoading}
         addForm={() => addForm()}
       />
     </div>
   );
-}
-
-export default InsuranceCompanyMaster;
+};
+export default InsurancePolicyMaster;

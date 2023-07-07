@@ -18,7 +18,7 @@ const filterFields = [
     type: "text",
   },
   {
-    "SUBSTATE": "district__substate__substate_name",
+    SUBSTATE: "district__substate__substate_name",
     isActiveFilter: false,
     label: "Sub State",
     name: "district__substate__substate_name",
@@ -60,11 +60,11 @@ const filterFields = [
     multi: false,
     options: [
       {
-        label: "Active",
+        label: "Block",
         value: "True",
       },
       {
-        label: "DeActive",
+        label: "UnBlock",
         value: "False",
       },
     ],

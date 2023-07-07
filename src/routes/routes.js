@@ -68,6 +68,8 @@ import AddEditClientMaster from "../view/ClientMaster/AddEditClientMaster";
 import WareHouseOwnerMaster from "../view/WareHouseOwnerMaster/WareHouseOwnerMaster";
 import AddEditWareHouseOwnerMaster from "../view/WareHouseOwnerMaster/AddEditWareHouseOwnerMaster";
 import AddEditHsnMaster from "../view/HsnMaster/AddEditHsnMaster";
+import InsurancePolicyMaster from "../view/InsurancePolicyMaster/InsurancePolicyMaster";
+import AddEditInsurancePolicy from "../view/InsurancePolicyMaster/AddEditInsurancePolicy";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 // const isAuth =
@@ -922,6 +924,42 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Insurance Company Master"}>
                 <AddEditFormInsuranceCompanyMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "insurance-policy-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Policy Master"}>
+                <InsurancePolicyMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/insurance-policy-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Policy Master"}>
+                <AddEditInsurancePolicy />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/insurance-policy-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Insurance Policy Master"}>
+                <AddEditInsurancePolicy />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

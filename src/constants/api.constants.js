@@ -14,6 +14,7 @@ export const API = {
     EARTHQUAKE_ZONE_TYPE_MASTER: "/warehouse/earthquake_zone_type/",
     EARTHQUAKE_ZONE_ACTIVE: "/warehouse/earthquake/",
     INSURANCE_COMPANY_MASTER: "/business_flow/insurance/",
+    INSURANCE_POLICY_MASTER: "/business_flow/insurance/",
     REGION_MASTER: "/warehouse/region/",
     COMMODITY_TYPE_MASTER: "/warehouse/commodity_type/",
     COMMODITY_GRADE: "/warehouse/commodity_grade/",
