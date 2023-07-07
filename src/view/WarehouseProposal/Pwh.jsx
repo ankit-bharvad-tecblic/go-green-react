@@ -2141,6 +2141,7 @@ const Pwh = () => {
                                     >
                                       <Checkbox
                                         colorScheme="green"
+                                        borderColor="gray.300"
                                         //defaultChecked
                                       >
                                         Hire new supervisor
@@ -2210,6 +2211,7 @@ const Pwh = () => {
                                     >
                                       <Checkbox
                                         colorScheme="green"
+                                        borderColor="gray.300"
                                         //defaultChecked
                                       >
                                         Hire new supervisor
@@ -2280,6 +2282,7 @@ const Pwh = () => {
                                     >
                                       <Checkbox
                                         colorScheme="green"
+                                        borderColor="gray.300"
                                         //defaultChecked
                                       >
                                         Hire new security guard
@@ -2351,6 +2354,7 @@ const Pwh = () => {
                                     >
                                       <Checkbox
                                         colorScheme="green"
+                                        borderColor="gray.300"
                                         //defaultChecked
                                       >
                                         Hire new security guard
