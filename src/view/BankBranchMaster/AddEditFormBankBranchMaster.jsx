@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomFileInput from "../../components/Elements/CustomFileInput";
 
 function AddEditFormBankBranchMaster() {
   const navigate = useNavigate();
@@ -707,6 +708,159 @@ function AddEditFormBankBranchMaster() {
                         mt: 1,
                       }}
                       isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              {/* For the authoraization 1 person start */}
+              <Box mt={4}>
+                {/* New fields */}
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Text fontWeight={"semibold"} textAlign="right" w="50%">
+                    Authorise person - 1
+                  </Text>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Name
+                    </Text>
+                    <CustomInput
+                      name="authorise_person_1_name"
+                      placeholder="Enter user name"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Contact No
+                    </Text>
+                    <CustomInput
+                      name=""
+                      placeholder="Contact no"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Email Id
+                    </Text>
+                    <CustomInput
+                      name=""
+                      placeholder="Email ID"
+                      type="email"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Signature Upload
+                    </Text>
+                    <CustomFileInput
+                      name="authorise_person_1_contact"
+                      placeholder="Signature Upload"
+                      type="file"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              {/* For the authoraization 2 person start */}
+              <Box mt={4}>
+                {/* New fields */}
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Text fontWeight={"semibold"} textAlign="right" w="50%">
+                    Authorise person - 2
+                  </Text>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Name
+                    </Text>
+                    <CustomInput
+                      name="authorise_person_1_name"
+                      placeholder="Enter user name"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Contact No
+                    </Text>
+                    <CustomInput
+                      name=""
+                      placeholder="Contact no"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Email Id
+                    </Text>
+                    <CustomInput
+                      name=""
+                      placeholder="Email ID"
+                      type="email"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+                <MotionSlideUp duration={0.2 * 2} delay={0.1 * 2}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Signature Upload
+                    </Text>
+                    <CustomFileInput
+                      name=""
+                      placeholder="Signature Upload"
+                      type="file"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
                     />
                   </Box>
                 </MotionSlideUp>

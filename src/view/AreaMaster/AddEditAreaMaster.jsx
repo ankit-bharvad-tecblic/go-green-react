@@ -51,7 +51,7 @@ const AddEditFormArea = () => {
     states: [],
   });
 
-  const details = location.state?.details;
+  let details = location.state?.details;
   console.log("details ---> ", details);
 
   const onSubmit = (data) => {
@@ -65,9 +65,14 @@ const AddEditFormArea = () => {
   // for clear data in form
   const clearForm = () => {
     const defaultValues = methods.getValues();
+    console.log(defaultValues);
     Object.keys(defaultValues).forEach((key) => {
       methods.setValue(key, "");
     });
+
+    details = {};
+
+    console.log(details);
   };
 
   const [getEarthQuakeZoneTypeMaster] =
@@ -604,11 +609,11 @@ const AddEditFormArea = () => {
                     name="is_active"
                     // type="switch"
                     label=""
-                    isChecked={details?.is_active}
                     style={{
                       mb: 1,
                       mt: 1,
                     }}
+                    isChecked={details?.is_active}
                   />
                 </Box>
               </MotionSlideUp>

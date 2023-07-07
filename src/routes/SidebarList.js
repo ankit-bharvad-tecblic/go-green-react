@@ -47,6 +47,7 @@ import HsnMaster from "../view/HsnMaster/HsnMaster";
 import WarehouseProposal from "../view/WarehouseProposal/WarehouseProposal";
 import ClientMaster from "../view/ClientMaster/ClientMaster";
 import WareHouseOwnerMaster from "../view/WareHouseOwnerMaster/WareHouseOwnerMaster";
+import InsurancePolicyMaster from "../view/InsurancePolicyMaster/InsurancePolicyMaster";
 //
 
 const SidebarList = [
@@ -195,6 +196,13 @@ const SidebarList = [
             icon: <HomeIcon color="inherit" />,
             component: EarthquakeZoneTypeMaster,
           },
+          // {
+          //   path: "/manage-insurance/insurance-policy-master",
+          //   name: "Insurance Policy Master",
+          //   secondaryNavbar: true,
+          //   icon: <HomeIcon color="inherit" />,
+          //   component: InsurancePolicyMaster,
+          // },
         ],
       },
       {
