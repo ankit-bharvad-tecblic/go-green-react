@@ -28,7 +28,9 @@ const SecurityGuardMaster = () => {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
 
   const [
@@ -106,14 +108,15 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("security_guard_name", {
-      cell: (info) => info.getValue(),
-      header: "NAME",
-    }),
     columnHelper.accessor("security_agency_id.security_agency_name", {
       cell: (info) => info.getValue(),
       header: "AGENCY NAME",
     }),
+    columnHelper.accessor("security_guard_name", {
+      cell: (info) => info.getValue(),
+      header: "NAME",
+    }),
+
     columnHelper.accessor("region.region_name", {
       cell: (info) => info.getValue(),
       header: "REGION NAME",
@@ -122,21 +125,34 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
+    columnHelper.accessor("state.substate_name", {
+      cell: (info) => info.getValue(),
+      header: "SUB STATE NAME",
+    }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
+    }),
+    columnHelper.accessor("area.area_name", {
+      cell: (info) => info.getValue(),
+      header: "AREA NAME",
     }),
     columnHelper.accessor("address_of_security_guard", {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
     }),
+    columnHelper.accessor("pin_code", {
+      cell: (info) => info.getValue(),
+      header: "PIN CODE",
+    }),
     columnHelper.accessor("aadhar_of_security_guard", {
       cell: (info) => info.getValue(),
-      header: "AADHAR",
+      header: "AADHAR CARD ID",
     }),
+
     columnHelper.accessor("dob_of_security_guard", {
       cell: (info) => info.getValue(),
-      header: "BIRTH DATE",
+      header: "DATE OF BIRTH ",
     }),
     columnHelper.accessor("contact_number", {
       cell: (info) => info.getValue(),
@@ -146,13 +162,37 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "ALTERNATE CONTACT NUMBER",
     }),
-    columnHelper.accessor("experience_as_security_guard", {
+    columnHelper.accessor("on_boarding_date", {
       cell: (info) => info.getValue(),
-      header: "EXPERIENCE AS SECURITY GUARD",
+      header: "ON BOARDING DATE",
+    }),
+    columnHelper.accessor("on_boarding_date", {
+      cell: (info) => info.getValue(),
+      header: "DEBOARDING DATE",
+    }),
+    columnHelper.accessor("shift_available", {
+      cell: (info) => info.getValue(),
+      header: "SHIFT AVAILABLE",
+    }),
+    columnHelper.accessor("guard_salary", {
+      cell: (info) => info.getValue(),
+      header: "GUARD SALARY",
+    }),
+    columnHelper.accessor("created_date", {
+      cell: (info) => info.getValue(),
+      header: "CREATION DATE",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "LAST UPDATED DATE",
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -174,7 +214,11 @@ const SecurityGuardMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

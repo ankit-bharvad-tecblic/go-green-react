@@ -190,19 +190,19 @@ const SidebarList = [
             component: InsuranceCompanyMaster,
           },
           {
+            path: "/manage-insurance/insurance-policy-master",
+            name: "Insurance Policy Master",
+            secondaryNavbar: true,
+            icon: <HomeIcon color="inherit" />,
+            component: InsurancePolicyMaster,
+          },
+          {
             path: "/manage-insurance/earthquake-zone-type-master",
             name: "Earthquake Zone Type Master",
             secondaryNavbar: true,
             icon: <HomeIcon color="inherit" />,
             component: EarthquakeZoneTypeMaster,
           },
-          // {
-          //   path: "/manage-insurance/insurance-policy-master",
-          //   name: "Insurance Policy Master",
-          //   secondaryNavbar: true,
-          //   icon: <HomeIcon color="inherit" />,
-          //   component: InsurancePolicyMaster,
-          // },
         ],
       },
       {
@@ -236,12 +236,12 @@ const SidebarList = [
             secondaryNavbar: true,
             component: CommodityGrade,
           },
-          // {
-          //   path: "/commodity-master/commodity-bag-master",
-          //   name: "Commodity Bag Master",
-          //   secondaryNavbar: true,
-          //   component: CommodityBagMaster,
-          // },
+          {
+            path: "/commodity-master/commodity-bag-master",
+            name: "Commodity Bag Master",
+            secondaryNavbar: true,
+            component: CommodityBagMaster,
+          },
           {
             path: "/commodity-master/hsn-master",
             name: "HSN Master",

@@ -120,6 +120,10 @@ const SecurityAgencyMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
+    columnHelper.accessor("state.substate_name", {
+      cell: (info) => info.getValue(),
+      header: "SUB STATE NAME",
+    }),
     columnHelper.accessor("district.district_name", {
       cell: (info) => info.getValue(),
       header: "DISTRICT NAME",
@@ -136,9 +140,13 @@ const SecurityAgencyMaster = () => {
       cell: (info) => info.getValue(),
       header: "PINCODE",
     }),
-    columnHelper.accessor("contact_no", {
+    columnHelper.accessor("contact_person_name", {
       cell: (info) => info.getValue(),
-      header: "CONTACT NO.",
+      header: "CONTACT PERSON NAME",
+    }),
+    columnHelper.accessor("agency_contact_no", {
+      cell: (info) => info.getValue(),
+      header: "AGENCY CONTACT NO.",
     }),
     columnHelper.accessor("agency_contract_start_date", {
       cell: (info) => info.getValue(),
@@ -158,7 +166,11 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -180,7 +192,11 @@ const SecurityAgencyMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

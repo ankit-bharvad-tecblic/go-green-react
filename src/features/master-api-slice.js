@@ -684,6 +684,8 @@ export const masterApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     // Bank Cm Location Add Update Edit End
+
+    //  Commodity bag master add edit update starts
     getCommodityBagMaster: builder.mutation({
       query: (params) => ({
         url: API.DASHBOARD.COMMODITY_BAG_MASTER,
@@ -691,6 +693,21 @@ export const masterApiSlice = apiSlice.injectEndpoints({
         params: params,
       }),
     }),
+    addCommodityBagMaster: builder.mutation({
+      query: (data) => ({
+        url: API.DASHBOARD.COMMODITY_BAG_MASTER,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    updateCommodityBagMaster: builder.mutation({
+      query: (data) => ({
+        url: `${API.DASHBOARD.COMMODITY_BAG_MASTER}${data.id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    //Commodity bag master add edit update end
 
     getHsnMaster: builder.mutation({
       query: (params) => ({
@@ -887,7 +904,12 @@ export const {
   useGetHiringProposalMasterMutation,
   useAddHiringProposalMasterMutation,
   useUpdateHiringProposalMasterMutation,
+
+  //Commodity bag master mutation start
   useGetCommodityBagMasterMutation,
+  useAddCommodityBagMasterMutation,
+  useUpdateCommodityBagMasterMutation,
+  // Commodity bag master mutation end
   useGetHsnMasterMutation,
   useAddHsnMasterMutation,
   useUpdateHsnMasterMutation,
