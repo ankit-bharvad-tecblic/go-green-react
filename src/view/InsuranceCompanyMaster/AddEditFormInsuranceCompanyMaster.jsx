@@ -29,11 +29,16 @@ const AddEditFormInsuranceCompanyMaster = () => {
     resolver: yupResolver(schema),
   });
 
+  const { setValue, getValues } = methods;
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     states: [],
   });
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
   const details = location.state?.details;
   console.log("details ---> ", details);
   const onSubmit = (data) => {
@@ -113,6 +118,95 @@ const AddEditFormInsuranceCompanyMaster = () => {
     fetchLocationDrillDown,
     { isLoading: fetchLocationDrillDownApiIsLoading },
   ] = useFetchLocationDrillDownMutation();
+
+  const getRegionMasterList = async () => {
+    try {
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        }));
+
+      if (details?.region?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: [
+            ...arr,
+            {
+              label: details?.region?.region_name,
+              value: details?.region?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          regions: arr,
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("region", val?.value, {
+      shouldValidate: true,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: val?.value,
+    }));
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+
+      if (details?.state?.is_active === false) {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: [
+            ...arr,
+            {
+              label: details?.state?.state_name,
+              value: details?.state?.id,
+            },
+          ],
+        }));
+      } else {
+        setSelectBoxOptions((prev) => ({
+          ...prev,
+          states: arr,
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("state", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
   const updateData = async (data) => {
     try {
       const response = await updateInsuranceCompanyMaster(data).unwrap();
