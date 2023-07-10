@@ -1772,7 +1772,13 @@ const Pwh = () => {
   });
 
   const append_new_bank_details = () => {
-    if (bankDetail.bank !== "" && bankDetail.branch !== "") {
+    if (
+      bankDetail.bank !== "" &&
+      bankDetail.branch !== "" &&
+      getValues(`pwh_commodity_bank_details`).filter(
+        (item) => item.branch === bankDetail.branch
+      ).length === 0
+    ) {
       add_new_bank_detail({
         bank: bankDetail.bank,
         branch: bankDetail.branch,
@@ -1788,7 +1794,14 @@ const Pwh = () => {
     } else {
       setBankError({
         bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
-        branch: bankDetail.branch !== "" ? "" : "Branch can not be empty.",
+        branch:
+          bankDetail.branch !== ""
+            ? getValues(`pwh_commodity_bank_details`).filter(
+                (item) => item.branch === bankDetail.branch
+              ).length === 0
+              ? ""
+              : "Branch has been already selected."
+            : "Branch can not be empty.",
       });
     }
   };
@@ -3079,12 +3092,12 @@ const Pwh = () => {
                                       onChange={(val) => {
                                         setBankDetail((old) => ({
                                           bank: val.value,
-                                          branch:"",
+                                          branch: "",
                                         }));
-                                        setBankError((old)=>({
+                                        setBankError((old) => ({
                                           ...old,
-                                          bank:"",
-                                        }))
+                                          bank: "",
+                                        }));
                                       }}
                                       styles={{
                                         control: (base, state) => ({
@@ -3132,10 +3145,10 @@ const Pwh = () => {
                                           branch: val.value,
                                         }));
 
-                                        setBankError((old)=>({
+                                        setBankError((old) => ({
                                           ...old,
-                                          branch:"",
-                                        }))
+                                          branch: "",
+                                        }));
                                       }}
                                       styles={{
                                         control: (base, state) => ({
@@ -5953,7 +5966,7 @@ const Pwh = () => {
                                     Intention Letter
                                   </Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1}>
+                                <GridItem colSpan={2}>
                                   <CustomFileInput
                                     name={
                                       formFieldsName.pwh_clients_details
@@ -5979,7 +5992,7 @@ const Pwh = () => {
                                 <GridItem colSpan={1}>
                                   <Text textAlign="right">Remarks</Text>{" "}
                                 </GridItem>
-                                <GridItem colSpan={1} textAlign={"left"}>
+                                <GridItem colSpan={2} textAlign={"left"}>
                                   <CustomTextArea
                                     name={
                                       formFieldsName.pwh_clients_details.remarks
