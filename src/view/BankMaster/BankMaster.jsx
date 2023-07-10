@@ -113,7 +113,7 @@ function BankMaster() {
       cell: (info) => info.getValue(),
       header: "State",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("bank_sector", {
       cell: (info) => info.getValue(),
       header: "sector",
     }),

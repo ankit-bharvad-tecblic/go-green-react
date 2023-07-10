@@ -268,6 +268,8 @@ function AddEditFormBankMaster() {
         sector: details?.sector,
         bank_address: details?.bank_address,
         is_active: details.is_active,
+        bank_sector: details?.bank_sector,
+        
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -328,13 +330,13 @@ function AddEditFormBankMaster() {
                       Sector
                     </Text>
                     <ReactCustomSelect
-                      name="sector"
+                      name="bank_sector"
                       label=""
                       isLoading={false}
                       options={selectBoxOptions?.sector || []}
                       selectedValue={
                         selectBoxOptions?.sector?.filter(
-                          (item) => item.value === getValues("sector")
+                          (item) => item.value === getValues("bank_sector")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -344,7 +346,7 @@ function AddEditFormBankMaster() {
                         mt: 1,
                       }}
                       handleOnChange={(val) => {
-                        setValue("sector", val.value, { shouldValidate: true });
+                        setValue("bank_sector", val.value, { shouldValidate: true });
                       }}
                     />
                   </Box>
@@ -429,6 +431,7 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -476,7 +479,7 @@ function AddEditFormBankMaster() {
                       Rate
                     </Text>
                     <CustomInput
-                      name="rate"
+                      name="interest_rate"
                       placeholder="Rate"
                       type="number"
                       label=""
@@ -536,17 +539,17 @@ function AddEditFormBankMaster() {
                       Upload agreement
                     </Text>
                     <CustomFileInput
-                      name={"upload_agreement"}
+                      name={"agreement_path"}
                       placeholder="Agreement upload"
                       label=""
                       type=""
                       onChange={(e) => {
                         console.log(e, "file");
-                        setValue("upload_agreement", e, {
+                        setValue("agreement_path", e, {
                           shouldValidate: true,
                         });
                       }}
-                      value={getValues("upload_agreement")}
+                      value={getValues("agreement_path")}
                       style={{
                         mb: 1,
                         mt: 1,
