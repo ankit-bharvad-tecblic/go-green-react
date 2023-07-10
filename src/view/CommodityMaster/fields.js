@@ -55,7 +55,7 @@ const filterFields = [
       },
     ],
   },
-];
+]; 
 
 const addEditFormFields = [
   {
@@ -72,24 +72,24 @@ const addEditFormFields = [
     placeholder: "Commodity Name",
     type: "text",
   },
-  {
-    name: "minimum_bag_size",
-    label: "Minimum Bag Size",
-    placeholder: "Minimum Bag Size",
-    type: "number",
-  },
-  {
-    name: "maximum_bag_size",
-    label: "Maximum Bag Size",
-    placeholder: "Maximum Bag Size",
-    type: "number",
-  },
-  {
-    name: "rent_on_bag",
-    label: "Rent On Bag",
-    placeholder: "Rent On Bag",
-    type: "number",
-  },
+  // {
+  //   name: "minimum_bag_size",
+  //   label: "Minimum Bag Size",
+  //   placeholder: "Minimum Bag Size",
+  //   type: "number",
+  // },
+  // {
+  //   name: "maximum_bag_size",
+  //   label: "Maximum Bag Size",
+  //   placeholder: "Maximum Bag Size",
+  //   type: "number",
+  // },
+  // {
+  //   name: "rent_on_bag",
+  //   label: "Rent On Bag",
+  //   placeholder: "Rent On Bag",
+  //   type: "number",
+  // },
   // {
   //   label: "Active",
   //   name: "active",

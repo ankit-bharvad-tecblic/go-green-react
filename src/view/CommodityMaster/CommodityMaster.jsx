@@ -9,7 +9,7 @@ import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUpFilterFields } from "../../features/filter.slice";
-import { API } from "../../constants/api.constants";
+import { API } from "../../constants/api.constants"; 
 import { useNavigate } from "react-router-dom";
 import { filterFields } from "./fields";
 
