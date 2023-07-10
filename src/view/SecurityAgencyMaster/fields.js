@@ -11,21 +11,29 @@ const filterFields = [
     type: "text",
   },
   {
-    NAME: "region__region_name",
+    NAME: "district__substate__state__region__region_name",
     isActiveFilter: false,
 
     label: "Region",
-    name: "region__region_name",
+    name: "district__substate__state__region__region_name",
     placeholder: "Region",
     type: "text",
   },
   {
-    NAME: "state__state_name",
+    NAME: "district__substate__state__state_name",
     isActiveFilter: false,
 
     label: "State",
-    name: "state__state_name",
+    name: "district__substate__state__state_name",
     placeholder: "State",
+    type: "text",
+  },
+  {
+    SUBSTATE: "district__substate__substate_name",
+    isActiveFilter: false,
+    label: "Sub State",
+    name: "district__substate__substate_name",
+    placeholder: "Sub State",
     type: "text",
   },
   {
@@ -68,9 +76,9 @@ const filterFields = [
     NAME: "contact_no",
     isActiveFilter: false,
 
-    label: "Contact No",
-    name: "contact_no",
-    placeholder: "Contact No",
+    label: "Agency Contact No",
+    name: "agency_contact_no",
+    placeholder: "Agency Contact No",
     type: "number",
   },
   {
@@ -135,36 +143,36 @@ const filterFields = [
   },
 ];
 const addEditFormFields = [
-  {
-    name: "security_agency_name",
-    label: "Name",
-    placeholder: "Name",
-    type: "text",
-  },
-  {
-    name: "region__region_name",
-    label: "Region",
-    placeholder: "Region",
-    type: "text",
-  },
-  {
-    name: "state__state_name",
-    label: "State",
-    placeholder: "State",
-    type: "text",
-  },
-  {
-    name: "district__district_name",
-    label: "District",
-    placeholder: "District",
-    type: "text",
-  },
-  {
-    name: "area__area_name",
-    label: "Area",
-    placeholder: "Area",
-    type: "text",
-  },
+  // {
+  //   name: "security_agency_name",
+  //   label: "Name",
+  //   placeholder: "Name",
+  //   type: "text",
+  // },
+  // {
+  //   name: "region__region_name",
+  //   label: "Region",
+  //   placeholder: "Region",
+  //   type: "text",
+  // },
+  // {
+  //   name: "state__state_name",
+  //   label: "State",
+  //   placeholder: "State",
+  //   type: "text",
+  // },
+  // {
+  //   name: "district__district_name",
+  //   label: "District",
+  //   placeholder: "District",
+  //   type: "text",
+  // },
+  // {
+  //   name: "area__area_name",
+  //   label: "Area",
+  //   placeholder: "Area",
+  //   type: "text",
+  // },
   {
     name: "address",
     label: "Address",
@@ -177,10 +185,30 @@ const addEditFormFields = [
     placeholder: "Pin Code",
     type: "number",
   },
+
   {
-    name: "contact_no",
-    label: "Contact No",
-    placeholder: "Contact No",
+    name: "contact_person_name",
+    label: "Contact Person Name",
+    placeholder: "Contact Person Name",
+    type: "text",
+  },
+  {
+    name: "agency_contact_no",
+    label: "Agency Contact No",
+    placeholder: "Agency Contact No",
+    type: "text",
+  },
+  {
+    name: "agency_contract_start_date",
+    label: "Agreement Start Date",
+    placeholder: "Agreement Start Date",
+    type: "date",
+  },
+
+  {
+    name: "agency_contract_duration",
+    label: "Agreement Duration Month",
+    placeholder: "Agreement Start Month",
     type: "text",
   },
   {
@@ -189,18 +217,18 @@ const addEditFormFields = [
     placeholder: "Service Cost",
     type: "number",
   },
-  {
-    name: "remarks",
-    label: "Remarks",
-    placeholder: "Remarks",
-    type: "text",
-  },
+  // {
+  //   name: "remarks",
+  //   label: "Remarks",
+  //   placeholder: "Remarks",
+  //   type: "text",
+  // },
 
-  {
-    label: "Active",
-    name: "is_active",
-    type: "switch",
-  },
+  // {
+  //   label: "Active",
+  //   name: "is_active",
+  //   type: "switch",
+  // },
   // {
   //   label: "COMMODITY TYPE",
   //   name: "commodity_type",
@@ -216,22 +244,33 @@ const schema = yup.object().shape({
     .string()
     .trim()
     .required("Security Agency name is required"),
-  region__region_name: yup.string().trim().required("Region name  is required"),
-  state__state_name: yup.string().trim().required("State name  is required"),
-  district__district_name: yup
+  region: yup.string().trim().required("Region name  is required"),
+  state: yup.string().trim().required("State name  is required"),
+  district: yup.string().trim().required("District name  is required"),
+  substate: yup.string().trim().required("Sub State name  is required"),
+  agency_contract_start_date: yup
     .string()
     .trim()
-    .required("District name  is required"),
-  area__area_name: yup.string().trim().required("Area name  is required"),
+    .required("Agency contract start date is required"),
+  agency_contract_duration: yup
+    .string()
+    .trim()
+    .required("Agency contract duration is required"),
+  area: yup.string().trim().required("Area name  is required"),
   address: yup.string().trim().required("Address name  is required"),
   pincode: yup.number().required("pincode   is required"),
-  contact_no: yup
+  agency_contact_no: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
+  contact_person_name: yup
+    .string()
+    .trim()
+    .required("contact person name is required"),
   service_cost: yup.number().required("service_cost  is required"),
   remarks: yup.string().trim().required("remarks is required"),
+  upload_agreement: yup.string().required(" Upload agreement is required"),
   is_active: yup.string(),
 });
 

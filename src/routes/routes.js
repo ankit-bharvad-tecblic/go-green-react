@@ -70,6 +70,7 @@ import AddEditWareHouseOwnerMaster from "../view/WareHouseOwnerMaster/AddEditWar
 import AddEditHsnMaster from "../view/HsnMaster/AddEditHsnMaster";
 import InsurancePolicyMaster from "../view/InsurancePolicyMaster/InsurancePolicyMaster";
 import AddEditInsurancePolicy from "../view/InsurancePolicyMaster/AddEditInsurancePolicy";
+import AddEditCommodityBagMaster from "../view/CommodityBagMaster/AddEditCommodityBagMaster";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 // const isAuth =
@@ -1173,6 +1174,30 @@ const routes = [
             <Suspense fallback={<div>Loading...</div>}>
               <Layout variant={headerType} title={"Commodity Bag Master"}>
                 <CommodityBagMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "add/commodity-bag-master",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <AddEditCommodityBagMaster />
+              </Layout>
+            </Suspense>
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "edit/commodity-bag-master/:id",
+        element: (
+          <ProtectedRoutes>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Layout variant={headerType} title={"Commodity variety master"}>
+                <AddEditCommodityBagMaster />
               </Layout>
             </Suspense>
           </ProtectedRoutes>

@@ -109,6 +109,10 @@ function BankBranchMaster() {
       cell: (info) => info.getValue(),
       header: "Discrict ",
     }),
+    columnHelper.accessor("area.area_name", {
+      cell: (info) => info.getValue(),
+      header: "Area ",
+    }),
     columnHelper.accessor("branch_address", {
       cell: (info) => info.getValue(),
       header: "Address",

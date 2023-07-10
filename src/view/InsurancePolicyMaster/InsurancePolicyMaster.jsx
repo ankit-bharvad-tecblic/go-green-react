@@ -101,7 +101,7 @@ const InsurancePolicyMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("insurance_company.insurance_company_name.", {
       cell: (info) => info.getValue(),
       header: "Insurance company",
     }),
@@ -112,6 +112,10 @@ const InsurancePolicyMaster = () => {
     columnHelper.accessor("", {
       cell: (info) => info.getValue(),
       header: "Insurance type",
+    }),
+    columnHelper.accessor("", {
+      cell: (info) => info.getValue(),
+      header: "Insurance Policy Amount",
     }),
     columnHelper.accessor("", {
       cell: (info) => info.getValue(),

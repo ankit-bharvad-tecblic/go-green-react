@@ -94,10 +94,10 @@ function AddEditFormBankMaster() {
     }
   };
 
-  const options = [
-    { value: "private sector ", label: "private sector " },
-    { value: "public sector   ", label: "public sector  " },
-  ];
+  // const options = [
+  //   { value: "private sector ", label: "private sector " },
+  //   { value: "public sector   ", label: "public sector  " },
+  // ];
   const getAllStateMaster = async () => {
     try {
       const response = await getStateMaster().unwrap();

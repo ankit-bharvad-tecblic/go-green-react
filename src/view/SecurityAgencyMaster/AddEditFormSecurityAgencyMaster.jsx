@@ -8,6 +8,7 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
   useAddSecurityAgencyMasterMutation,
+  useGetRegionMasterMutation,
   useGetSecurityAgencyMasterMutation,
   useUpdateSecurityAgencyMasterMutation,
 } from "../../features/master-api-slice";
@@ -15,6 +16,12 @@ import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomInput from "../../components/Elements/CustomInput";
+import CustomFileInput from "../../components/Elements/CustomFileInput";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
+import CustomTextArea from "../../components/Elements/CustomTextArea";
 const AddEditFormSecurityAgencyMaster = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +30,21 @@ const AddEditFormSecurityAgencyMaster = () => {
     resolver: yupResolver(schema),
   });
 
-  const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
+  const { setValue, getValues } = methods;
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
+
+  const [addEditFormFieldsList, setAddEditFormFieldsList] =
+    useState(addEditFormFields);
+
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    // earthQuack: [],
+    regions: [],
+    substate: [],
+    districts: [],
+    states: [],
+    areas: [],
+  });
 
   const details = location.state?.details;
   console.log("details ---> ", details);
@@ -113,21 +134,239 @@ const AddEditFormSecurityAgencyMaster = () => {
     }
   };
 
+  // Region State  Zone District Area  onChange drill down api start //
+
+  // location drill down api hook
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
+
+  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
+    useGetRegionMasterMutation();
+
+  const getRegionMasterList = async () => {
+    try {
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: response?.region?.map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("region", val?.value, {
+      shouldValidate: true,
+    });
+    setValue("state", null, {
+      shouldValidate: false,
+    });
+
+    setValue("substate", null, {
+      shouldValidate: false,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: val?.value,
+    }));
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state
+          ?.filter((item) => item.state_name !== "All - State")
+          .map(({ state_name, id }) => ({
+            label: state_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("state", val?.value, {
+      shouldValidate: true,
+    });
+
+    setValue("substate", null, {
+      shouldValidate: false,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        substate: response?.substate
+          ?.filter((item) => item.substate_name !== "All - Zone")
+          .map(({ substate_name, id }) => ({
+            label: substate_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("substate", val?.value, {
+      shouldValidate: true,
+    });
+
+    setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    setValue("area", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: response?.district
+          ?.filter((item) => item.district_name !== "All - District")
+          .map(({ district_name, id }) => ({
+            label: district_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue("district", val?.value, {
+      shouldValidate: true,
+    });
+
+    setValue("area", null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: locationDrillDownState.substate,
+      district: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: locationDrillDownState.substate,
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: response?.area
+          ?.filter((item) => item.area_name !== "All - District")
+          .map(({ area_name, id }) => ({
+            label: area_name,
+            value: id,
+          })),
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const areaOnChange = (val) => {
+    setValue("area", val?.value, {
+      shouldValidate: true,
+    });
+  };
+
   useEffect(() => {
     getSecurityAgency();
 
     if (details?.id) {
+      regionOnChange({ value: details.district?.substate?.state?.region?.id });
+      stateOnChange({ value: details.district?.substate?.state?.id });
+      zoneOnChange({ value: details.district?.substate?.id });
+      districtOnChange({ value: details.district?.id });
+      areaOnChange({ value: details.area?.id });
       let obj = {
         security_agency_name: details.security_agency_name,
-        region__region_name: details?.region.region_name,
-        state__state_name: details.state.state_name,
-        district__district_name: details.district.district_name,
-        area__area_name: details.area.area_name,
+        district_name: details.district?.id,
+        substate: details.district?.substate?.id,
+        region: details.district?.substate?.state?.region.id,
+        state: details.district?.substate?.state.id,
+        area: details.dustrict?.id,
         address: details.address,
         pincode: details.pincode,
-        contact_no: details.contact_no,
+        agency_contact_no: details.agency_contact_no,
         service_cost: details.service_cost,
-
+        contact_person_name: details.contact_person_name,
         remarks: details.remarks,
 
         active: details.active,
@@ -156,21 +395,181 @@ const AddEditFormSecurityAgencyMaster = () => {
     dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
   useEffect(() => {
+    getRegionMasterList();
     return () => {
       dispatch(setBreadCrumb([]));
     };
   }, []);
   return (
-    <Box
-      bg="white"
-      borderRadius={10}
-      p="10"
-       
-    >
+    <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Security agency Name
+                    </Text>
+                    <CustomInput
+                      name="security_agency_name"
+                      placeholder="Security agency Name"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              {/* All the state, subState,region,district,area master html code stat from here */}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Region
+                    </Text>
+                    <ReactCustomSelect
+                      name="region"
+                      label=""
+                      isLoading={getRegionMasterApiIsLoading}
+                      options={selectBoxOptions?.regions || []}
+                      selectedValue={
+                        selectBoxOptions?.regions?.filter(
+                          (item) => item.value === getValues("region")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      State
+                    </Text>
+                    <ReactCustomSelect
+                      name="state"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.states || []}
+                      selectedValue={
+                        selectBoxOptions?.states?.filter(
+                          (item) => item.value === getValues("state")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        stateOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Sub State
+                    </Text>
+                    <ReactCustomSelect
+                      name="substate"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.substate || []}
+                      selectedValue={
+                        selectBoxOptions?.substate?.filter(
+                          (item) => item.value === getValues("substate")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        zoneOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      District
+                    </Text>{" "}
+                    <ReactCustomSelect
+                      name="district"
+                      label=""
+                      isLoading={fetchLocationDrillDownApiIsLoading}
+                      options={selectBoxOptions?.districts || []}
+                      selectedValue={
+                        selectBoxOptions?.districts?.filter(
+                          (item) => item.value === getValues("district")
+                        )[0] || {}
+                      }
+                      isClearable={false}
+                      selectType="label"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        districtOnChange(val);
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>{" "}
+              </Box>
+              <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                  <Text textAlign="right" w="550px">
+                    Area
+                  </Text>{" "}
+                  <ReactCustomSelect
+                    name="area"
+                    label=""
+                    isLoading={fetchLocationDrillDownApiIsLoading}
+                    options={selectBoxOptions?.areas || []}
+                    selectedValue={
+                      selectBoxOptions?.areas?.filter(
+                        (item) => item.value === getValues("area")
+                      )[0] || {}
+                    }
+                    isClearable={false}
+                    selectType="label"
+                    style={{
+                      mb: 1,
+                      mt: 1,
+                    }}
+                    handleOnChange={(val) => {
+                      areaOnChange(val);
+                    }}
+                  />
+                </Box>
+              </MotionSlideUp>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
                   <MotionSlideUp key={i} duration={0.2 * i} delay={0.1 * i}>
@@ -198,6 +597,68 @@ const AddEditFormSecurityAgencyMaster = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Upload agreement
+                    </Text>
+                    <CustomFileInput
+                      name={"upload_agreement"}
+                      placeholder="Agreement upload"
+                      label=""
+                      type=""
+                      onChange={(e) => {
+                        console.log(e, "file");
+                        setValue("upload_agreement", e, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      value={getValues("upload_agreement")}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+                <Box>
+                  <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                    <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                      <Text textAlign="right" w="550px">
+                        Remarks
+                      </Text>
+                      <CustomTextArea
+                        name="remarks"
+                        placeholder=" Remarks"
+                        type="text"
+                        label=""
+                        style={{
+                          mb: 1,
+                          mt: 1,
+                        }}
+                      />
+                    </Box>
+                  </MotionSlideUp>
+                </Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Active
+                    </Text>
+                    <CustomSwitch
+                      name="is_active"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
             </Box>
             <Box
               display="flex"

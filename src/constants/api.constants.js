@@ -71,6 +71,6 @@ export const API = {
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",
-    FILE_UPLOAD:"/operational_flow/vaibhav_upload/"
+    FILE_UPLOAD: "/operational_flow/vaibhav_upload/",
   },
 };
