@@ -343,7 +343,7 @@ const schema = Yup.object().shape({
   agreement_period_month: Yup.number()
     .required("Agreement period (Month) is required")
     .typeError("Agreement period is required")
-    .min(11, "Agreement period (Month) must be greater than or equal to 11")
+    // .min(11, "Agreement period (Month) must be greater than or equal to 11")
     .test(
       "agreementPeriodValid",
       "Agreement period must not be less than Lock In Period",
@@ -652,6 +652,7 @@ const Pwh = () => {
       is_factory_permise: "false",
       lock_in_period: "true",
       is_funding_required: "false",
+      agreement_period_month: 11,
       pwh_commodity_bank_details: [{ bank: "", branch: "" }],
       pwh_commercial_multipal_details: [
         {
@@ -742,7 +743,6 @@ const Pwh = () => {
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       console.log("watch --> ", value, name, type);
-      // handleExpiryDateChange(value);
     });
 
     return () => {
@@ -916,10 +916,17 @@ const Pwh = () => {
 
   const fetchMinMaxAvg = async (areaId) => {
     try {
-      const response = await minMaxAvg(areaId).unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setMinMaxAvgState(response?.data);
+      if (areaId) {
+        const response = await minMaxAvg(areaId).unwrap();
+        console.log("Success:", response);
+        if (response.status === 200) {
+          setMinMaxAvgState(response?.data);
+        }
+      } else {
+        toasterAlert({
+          message: "Select area",
+          status: 440,
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -1109,7 +1116,7 @@ const Pwh = () => {
       state: getValues(
         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
       ),
-      zone: val?.value,
+      substate: val?.value,
     };
 
     try {
@@ -1158,7 +1165,7 @@ const Pwh = () => {
       state: getValues(
         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
       ),
-      zone: getValues(
+      substate: getValues(
         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
       ),
       district: val?.value,
@@ -1431,7 +1438,7 @@ const Pwh = () => {
 
     const query = {
       ...locationDrillDownState,
-      zone: val?.value,
+      substate: val?.value,
     };
 
     try {
@@ -1705,16 +1712,43 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={3}>
-                                  <CustomInput
+                                  {/* <CustomInput
+                                    name={
+                                      formFieldsName.pwh_warehouse_details
+                                        .warehouse_name
+                                    }
+                                    placeholder="Warehouse Name"
+                                    type="textarea"
+                                    label=""
+                                    style={{ w: commonStyle.w }}
+                                  /> */}
+
+                                  <CustomTextArea
                                     name={
                                       formFieldsName.pwh_warehouse_details
                                         .warehouse_name
                                     }
                                     placeholder="Warehouse Name"
                                     type="text"
+                                    rowLength={3}
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.pwh_warehouse_details
+                                        .warehouse_name
+                                    )}
                                     style={{ w: commonStyle.w }}
+                                    onChange={(val) => {
+                                      setValue(
+                                        formFieldsName.pwh_warehouse_details
+                                          .warehouse_name,
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
                                   />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.warehouse_name?.message}
+                                  </Box>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -3187,6 +3221,10 @@ const Pwh = () => {
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
+                                  <Text>
+                                    {/* {   getValues("covered_area") *
+                                      getValues("rent")} */}
+                                  </Text>
                                   <CustomInput
                                     name={
                                       formFieldsName.pwh_commercial_details.rent
@@ -3194,11 +3232,10 @@ const Pwh = () => {
                                     placeholder="Rent (per/sq ft/month)"
                                     type="text"
                                     label=""
-                                    // inputValue={getValues(
-                                    //   formFieldsName.pwh_commercial_details
-                                    //     .agreement_period
-                                    // )}
-
+                                    // inputValue={
+                                    //   getValues("covered_area") *
+                                    //   getValues("rent")
+                                    // }
                                     onChange={(val) => {
                                       let areaId = getValues("area");
 
@@ -4131,6 +4168,7 @@ const Pwh = () => {
                                     }
                                     placeholder="Excel upload"
                                     label=""
+                                    onChange={(e) => console.log(e)}
                                     type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                     style={{ w: "90%" }}
                                   />
@@ -5046,6 +5084,7 @@ const Pwh = () => {
                                       formFieldsName.pwh_clients_details
                                         .intention_letter
                                     }
+                                    onChange={(e) => console.log(e)}
                                     placeholder="Excel upload"
                                     label=""
                                     type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
