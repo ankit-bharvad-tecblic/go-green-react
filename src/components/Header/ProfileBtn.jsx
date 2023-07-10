@@ -17,6 +17,7 @@ import logo from "../Icons/logo.svg";
 import profile_dumy_icon from "../Icons/profile_dumy_icon.svg";
 
 import { commonService } from "../../services/common.service";
+import { localStorageService } from "../../services/localStorge.service";
 
 function ProfileBtn() {
   return (
@@ -60,7 +61,8 @@ function ProfileBtn() {
                   </Flex>
                   <Box>
                     <Text fontSize="16px" color="gray.800" fontWeight="600">
-                      Johnathan Joy
+                      {localStorageService.get("GG_ADMIN")?.userDetails
+                        ?.employee_name || "Johnathan Joy"}
                     </Text>
                     <Text
                       fontSize="14px"
@@ -68,7 +70,8 @@ function ProfileBtn() {
                       mt="-5px"
                       fontWeight="400"
                     >
-                      jonathan@gmail.com{" "}
+                      {localStorageService.get("GG_ADMIN")?.userDetails
+                        ?.email || "jonathan@gmail.com"}
                     </Text>
                   </Box>
                 </Flex>
@@ -90,7 +93,7 @@ function ProfileBtn() {
                     alignItems="center"
                     cursor="pointer"
                   >
-                    <RiGroupLine stroke="secondary.500" />
+                    <RiGroupLine stroke="secondary.500" size="24" />
                   </Flex>
                   <Box>
                     <Text fontSize="16px" color="black" fontWeight="600">
@@ -118,7 +121,7 @@ function ProfileBtn() {
                     alignItems="center"
                     cursor="pointer"
                   >
-                    <Image size="30" width={24} height={24} src={logo} />
+                    <IoLogOutOutline size="24" />
                   </Flex>
                   <Box zIndex={10000}>
                     <Text fontSize="16px" color="black" fontWeight="600">
