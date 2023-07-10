@@ -84,8 +84,8 @@ const AddEditFormCommodityType = () => {
     PrimarycommodityType: [],
   });
   const options = [
-    { value: " Agriculture ", label: "Agriculture  " },
-    { value: "Non Agriculture    ", label: " Non Agriculture  " },
+    { value: " agri ", label: "agri  " },
+    { value: " non_agri    ", label: "  non_agri  " },
   ];
   const getCommodityType = async () => {
     try {
@@ -94,7 +94,7 @@ const AddEditFormCommodityType = () => {
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.primay_commodity_type,
+        label: type.primary_commodity_name,
         value: type.id,
       }));
       console.log(arr);
@@ -133,6 +133,7 @@ const AddEditFormCommodityType = () => {
     getCommodityType();
     if (details?.id) {
       let obj = {
+        primary_commodity_name: details.primary_commodity_name,
         commodity_type: details.commodity_type,
         description: details.description,
         is_active: details.active,
@@ -177,11 +178,11 @@ const AddEditFormCommodityType = () => {
                       Primary commodity type
                     </Text>
                     <CustomSelector
-                      name="primary_comodity_key"
+                      name="primary_commodity_name"
                       label=""
                       options={options}
                       selectedValue={selectBoxOptions.PrimarycommodityType?.find(
-                        (opt) => opt.label === details?.primary_comodity_key
+                        (opt) => opt.label === details?.primary_commodity_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -218,7 +219,7 @@ const AddEditFormCommodityType = () => {
                           item.type === "select" &&
                           item?.options?.find(
                             (opt) =>
-                              opt.label === details?.primay_commodity_type
+                              opt.label === details?.primary_commodity_name
                           ),
                         selectType: "value",
                         isClearable: false,

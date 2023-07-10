@@ -13,7 +13,7 @@ import generateFormField from "../../components/Elements/GenerateFormField";
 import { addEditFormFields, schema } from "./fields";
 import {
   useAddEarthQuakeZoneTypeMasterMutation,
-  useGetEarthQuakeZoneTypeMasterMutation,
+  useGetEarthQuakeZoneTypeMasterMutation, 
   useUpdateEarthQuakeZoneTypeMasterMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";

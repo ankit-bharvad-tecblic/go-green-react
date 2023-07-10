@@ -30,6 +30,7 @@ const CommodityVariety = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "CommodityVariety",
   });
 
   const [
@@ -96,7 +97,11 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("commodity_id.commodity_name", {
       cell: (info) => info.getValue(),
-      header: "Commodity Id",
+      header: "Commodity Name",
+    }),
+    columnHelper.accessor("commodity_type.commodity_type", {
+      cell: (info) => info.getValue(),
+      header: "Commodity Type",
     }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
@@ -104,24 +109,25 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("hsn_code", {
       cell: (info) => info.getValue(),
-      header: "HSn code",
+      header: "Hsn code",
     }),
-    columnHelper.accessor("fumigation_required", {
-      header: "Fumigation required",
-      cell: (info) => (
-        <Box>
-          <Switch
-            size="md"
-            colorScheme="whatsapp"
-            isReadOnly
-            isChecked={info.getValue()}
-          />
-        </Box>
-      ),
-    }),
+
     columnHelper.accessor("fumigation_day", {
       cell: (info) => info.getValue(),
       header: " Fumigation Days",
+    }),
+
+    columnHelper.accessor("fed", {
+      cell: (info) => info.getValue(),
+      header: "Final expiry date",
+    }),
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date ",
+    }),
+    columnHelper.accessor("last_updated_date", {
+      cell: (info) => info.getValue(),
+      header: "Last Updated Date ",
     }),
     columnHelper.accessor("lab_testing_required", {
       // cell: (info) => info.getValue(),
@@ -137,17 +143,18 @@ const CommodityVariety = () => {
         </Box>
       ),
     }),
-    columnHelper.accessor("fed", {
-      cell: (info) => info.getValue(),
-      header: "Final expiry date",
-    }),
-    columnHelper.accessor("creation_date", {
-      cell: (info) => info.getValue(),
-      header: "Creation Date ",
-    }),
-    columnHelper.accessor("last_updated_date", {
-      cell: (info) => info.getValue(),
-      header: "Last Updated Date ",
+    columnHelper.accessor("fumigation_required", {
+      header: "Fumigation required",
+      cell: (info) => (
+        <Box>
+          <Switch
+            size="md"
+            colorScheme="whatsapp"
+            isReadOnly
+            isChecked={info.getValue()}
+          />
+        </Box>
+      ),
     }),
     columnHelper.accessor("is_block", {
       // cell: (info) => info.getValue(),
@@ -165,7 +172,11 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -187,7 +198,11 @@ const CommodityVariety = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

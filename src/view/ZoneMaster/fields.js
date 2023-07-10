@@ -8,7 +8,7 @@ const filterFields = [
     name: "region__region_name",
     placeholder: "Region ",
     type: "text",
-  },
+  },  
   {
     " State": "state__state_name",
     isActiveFilter: false,

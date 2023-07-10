@@ -16,12 +16,17 @@ import {
   useGetCommodityMasterMutation,
   useGetCommodityTypeMasterMutation,
   useGetCommodityVarietyMutation,
+  useGetHsnMasterMutation,
   useUpdateCommodityVarietyMutation,
 } from "../../features/master-api-slice";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { MotionSlideUp } from "../../utils/animation";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
+import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomInput from "../../components/Elements/CustomInput";
+import CustomSwitch from "../../components/Elements/CustomSwitch";
+import CustomSelector from "../../components/Elements/CustomSelector";
 
 const AddEditFormCommodityVariety = () => {
   const location = useLocation();
@@ -30,11 +35,17 @@ const AddEditFormCommodityVariety = () => {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
+
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
   const details = location.state?.details;
   console.log("details ---> ", details);
+
+  const [selectBoxOptions, setSelectBoxOptions] = useState({
+    hsnCode: [],
+    commodityType: [],
+    commodityName: [],
+  });
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -51,13 +62,11 @@ const AddEditFormCommodityVariety = () => {
       methods.setValue(key, "");
     });
   };
-  const [
-    getCommodityMaster,
-    { isLoading: getCommodityTypeMasterApiIsLoading },
-  ] = useGetCommodityMasterMutation();
-  const [getCommodityVariety, { isLoading: getCommodityVarietyApiIsLoading }] =
-    useGetCommodityVarietyMutation();
+  const [getCommodityMaster] = useGetCommodityMasterMutation();
+  const [getHsnMaster] = useGetHsnMasterMutation();
+  const [getCommodityTypeMaster] = useGetCommodityTypeMasterMutation();
 
+  const { setValue, getValues } = methods;
   const [addCommodityVariety, { isLoading: addCommodityVarietyApiIsLoading }] =
     useAddCommodityVarietyMutation();
 
@@ -79,7 +88,7 @@ const AddEditFormCommodityVariety = () => {
     }
   };
 
-  const getCommodityType = async () => {
+  const getAllCommodity = async () => {
     try {
       const response = await getCommodityMaster().unwrap();
 
@@ -91,18 +100,52 @@ const AddEditFormCommodityVariety = () => {
       }));
       console.log(arr);
 
-      setAddEditFormFieldsList(
-        addEditFormFields.map((field) => {
-          if (field.type === "select") {
-            return {
-              ...field,
-              options: arr,
-            };
-          } else {
-            return field;
-          }
-        })
-      );
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        commodityName: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getHsnMasters = async () => {
+    try {
+      const response = await getHsnMaster().unwrap();
+      console.log("response ", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+
+      let arr = onlyActive?.map((item) => ({
+        label: item.hsn_code,
+        value: item.id,
+      }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        hsnCode: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getCommodityType = async () => {
+    try {
+      const response = await getCommodityTypeMaster().unwrap();
+
+      console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
+        label: item.commodity_type,
+        value: item.id,
+      }));
+      console.log(arr);
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        commodityType: arr,
+      }));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -123,6 +166,8 @@ const AddEditFormCommodityVariety = () => {
 
   useEffect(() => {
     getCommodityType();
+    getHsnMasters();
+    getAllCommodity();
     if (details?.id) {
       console.log(details);
       let obj = {
@@ -130,6 +175,7 @@ const AddEditFormCommodityVariety = () => {
         description: details.description,
         hsn_code: details.hsn_code,
         commodity_id: details.commodity_id.id,
+        commodity_type: details.commodity_type,
         fumigation_required: details.fumigation_required,
         fumigation_day: details.fumigation_day,
         lab_testing_required: details.lab_testing_required,
@@ -192,20 +238,241 @@ const AddEditFormCommodityVariety = () => {
                           mb: 1,
                           mt: 1,
                         },
-
-                        selectedValue:
-                          item.type === "select" &&
-                          item?.options?.find((opt) => {
-                            console.log("opt", opt);
-                            console.log("details", details);
-                            return opt.value === details?.commodity_id.id;
-                          }),
-                        selectType: "value",
-                        isClearable: false,
                       })}
                     </Box>
                   </MotionSlideUp>
                 ))}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Commodity Type
+                    </Text>
+                    <CustomSelector
+                      name="commodity_type"
+                      label=""
+                      options={selectBoxOptions.commodityType}
+                      selectedValue={selectBoxOptions.commodityType.find(
+                        (opt) =>
+                          opt.label === details?.commodity_type.commodity_type
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Commodity Name
+                    </Text>
+                    <CustomSelector
+                      name="commodity_id"
+                      label=""
+                      options={selectBoxOptions.commodityName}
+                      selectedValue={selectBoxOptions.commodityName.find(
+                        (opt) => opt.label === details?.commodity_id
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Commodity Variety
+                    </Text>
+                    <CustomInput
+                      name="commodity_variety"
+                      placeholder="  Commodity Variety"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Discription
+                    </Text>
+                    <CustomInput
+                      name="description"
+                      placeholder=" Discription"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Final Expiry Date
+                    </Text>
+                    <CustomInput
+                      name="fed"
+                      placeholder=" Final Expiry Date"
+                      type="date"
+                      min={new Date().toISOString().split("T")[0]}
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Fumigation Day
+                    </Text>
+                    <CustomInput
+                      name="fumigation_day"
+                      placeholder="  Fumigation Day"
+                      type="number"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      HSN Code
+                    </Text>
+                    <CustomSelector
+                      name="hsn_code"
+                      label=""
+                      options={selectBoxOptions.hsnCode}
+                      selectedValue={selectBoxOptions.hsnCode.find(
+                        (opt) => opt.label === details?.hsn_code
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Fumigation Required
+                    </Text>
+                    <CustomSwitch
+                      name="fumigation_required"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.fumigation_required}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Lab Testing Required
+                    </Text>
+                    <CustomSwitch
+                      name="lab_testing_required"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.lab_testing_required}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Block
+                    </Text>
+                    <CustomSwitch
+                      name="is_block"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.is_block}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Active
+                    </Text>
+                    <CustomSwitch
+                      name="is_active"
+                      // type="switch"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      isChecked={details?.is_active}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
             </Box>
 
             <Box
