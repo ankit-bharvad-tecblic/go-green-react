@@ -48,7 +48,7 @@ const filterFields = [
     multi: false,
     options: [
       {
-        label: "ACTIVE",
+        label: "Active",
         value: "True",
       },
       {
@@ -96,8 +96,8 @@ const schema = yup.object().shape({
   warehouse_type_name: yup
     .string()
     .trim()
-    .required("WareHouse type name is required"),
-  description: yup.string().trim().required("description is required"),
+    .required("Warehouse type name is required"),
+  description: yup.string().trim().required("Description is required"),
   is_active: yup.string(),
 });
 

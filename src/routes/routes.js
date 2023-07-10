@@ -1184,7 +1184,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity variety master"}>
+              <Layout variant={headerType} title={"Commodity Bag master"}>
                 <AddEditCommodityBagMaster />
               </Layout>
             </Suspense>
@@ -1196,7 +1196,7 @@ const routes = [
         element: (
           <ProtectedRoutes>
             <Suspense fallback={<div>Loading...</div>}>
-              <Layout variant={headerType} title={"Commodity variety master"}>
+              <Layout variant={headerType} title={"Commodity Bag master"}>
                 <AddEditCommodityBagMaster />
               </Layout>
             </Suspense>
