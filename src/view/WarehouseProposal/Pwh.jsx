@@ -75,6 +75,8 @@ import {
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { calculateExpiryDate } from "../../utils/calculateDates";
 import moment from "moment";
+import { BiEditAlt } from "react-icons/bi";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const reactSelectStyle = {
   menu: (base) => ({
@@ -128,6 +130,14 @@ const commonStyle = {
     w: "90%",
   },
 };
+
+const tableStyle = {
+  idWidth: "100px",
+  generalPadding: "8px 16px",
+  actionWidth: "150px",
+};
+
+const mobileNumberRegex = /^\d{10}$/;
 
 const formFieldsName = {
   pwh_warehouse_details: {
@@ -272,12 +282,17 @@ const schema = Yup.object().shape({
   commodity_inward_type: Yup.string().required(
     "Commodity inward type is required"
   ),
-  prestack_commodity: Yup.string()
-    .trim()
-    .required("Pre stack commodity is required"),
-  prestack_commodity_qty: Yup.string().required(
-    "Pre stack commodity quantity is required"
-  ),
+  prestack_commodity: Yup.string().when("commodity_inward_type", {
+    is: (value) => value === "PS",
+    then: () => Yup.string().trim().required("Pre stack commodity is required"),
+    otherwise: () => Yup.string(),
+  }),
+  prestack_commodity_qty: Yup.number().when("commodity_inward_type", {
+    is: (value) => value === "PS",
+    then: () =>
+      Yup.string().required("Pre stack commodity quantity is required"),
+    otherwise: () => Yup.string(),
+  }),
   is_funding_required: Yup.string().required("Funding required is required"),
   // bank details dynamic field
   pwh_commodity_bank_details: Yup.array().of(
@@ -653,15 +668,15 @@ const Pwh = () => {
       lock_in_period: "true",
       is_funding_required: "false",
       agreement_period_month: 11,
-      pwh_commodity_bank_details: [{ bank: "", branch: "" }],
-      pwh_commercial_multipal_details: [
-        {
-          owner_name: "",
-          mobile_no: "",
-          address: "",
-          rent: "",
-        },
-      ],
+      // pwh_commodity_bank_details: [{ bank: "", branch: "" }],
+      // pwh_commercial_multipal_details: [
+      //   {
+      //     owner_name: "",
+      //     mobile_no: "",
+      //     address: "",
+      //     rent: "",
+      //   },
+      // ],
       client_list: [client_details_obj],
     },
   });
@@ -703,22 +718,6 @@ const Pwh = () => {
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
     name: "client_list",
   });
-
-  const append_new_bank_details = () => {
-    add_new_bank_detail({
-      bank: "",
-      branch: "",
-    });
-  };
-
-  const append_new_commercial_detail = () => {
-    pwh_commercial_multipal_add_new_detail({
-      owner_name: "",
-      mobile_no: "",
-      address: "",
-      rent: "",
-    });
-  };
 
   const append_client_list = () => {
     add_client_list(client_details_obj);
@@ -1560,9 +1559,10 @@ const Pwh = () => {
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          branch: response?.results.map(({ branch_name, id }) => ({
+          branch: response?.results.map(({ branch_name, id, bank }) => ({
             label: branch_name,
             value: id,
+            bank: bank,
           })),
         }));
       }
@@ -1636,6 +1636,206 @@ const Pwh = () => {
   };
 
   // Region State  Zone District Area  onChange drill down api end //
+
+  // Owner Detail Functions start //
+
+  const [ownerDetail, setOwnerDetail] = useState({
+    name: "",
+    mobile: "",
+    address: "",
+    rent: "",
+  });
+
+  const [ownerError, setOwnerError] = useState({
+    name: "",
+    mobile: "",
+    address: "",
+    rent: "",
+  });
+
+  const append_new_commercial_detail = () => {
+    if (
+      ownerDetail.name !== "" &&
+      ownerDetail.mobile !== "" &&
+      ownerDetail.address !== "" &&
+      ownerDetail.rent !== "" &&
+      mobileNumberRegex.test(ownerDetail.mobile)
+    ) {
+      pwh_commercial_multipal_add_new_detail({
+        owner_name: ownerDetail.name,
+        mobile_no: ownerDetail.mobile,
+        address: ownerDetail.address,
+        rent: ownerDetail.rent,
+      });
+      setOwnerDetail({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
+      setOwnerError({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
+    } else {
+      setOwnerError({
+        name: ownerDetail.name !== "" ? "" : "Name can not be empty.",
+        mobile:
+          ownerDetail.mobile !== ""
+            ? mobileNumberRegex.test(ownerDetail.mobile)
+              ? ""
+              : "Mobile must be 10 digits long."
+            : "Mobile can not be empty.",
+        address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
+        rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
+      });
+    }
+  };
+
+  const [updateOwnerFlag, setUpdateOwnerFlag] = useState(null);
+
+  const updateOwnerFlagFunction = (data, id) => {
+    setUpdateOwnerFlag(id);
+    setOwnerDetail({
+      name: data.owner_name,
+      mobile: data.mobile_no,
+      address: data.address,
+      rent: data.rent,
+    });
+  };
+
+  const UpdateCommercialDetail = () => {
+    if (
+      ownerDetail.name !== "" &&
+      ownerDetail.mobile !== "" &&
+      ownerDetail.address !== "" &&
+      ownerDetail.rent !== "" &&
+      mobileNumberRegex.test(ownerDetail.mobile)
+    ) {
+      const tempArr = getValues(`pwh_commercial_multipal_details`);
+      setValue(
+        `pwh_commercial_multipal_details`,
+        [
+          ...tempArr.slice(0, updateOwnerFlag),
+          {
+            owner_name: ownerDetail.name,
+            mobile_no: ownerDetail.mobile,
+            address: ownerDetail.address,
+            rent: ownerDetail.rent,
+          },
+          ...tempArr.slice(updateOwnerFlag + 1),
+        ],
+        { shouldValidate: true }
+      );
+      setOwnerDetail({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
+      setUpdateOwnerFlag(null);
+      setOwnerError({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
+    } else {
+      setOwnerError({
+        name: ownerDetail.name !== "" ? "" : "Name can not be empty.",
+        mobile:
+          ownerDetail.mobile !== ""
+            ? mobileNumberRegex.test(ownerDetail.mobile)
+              ? ""
+              : "Mobile must be 10 digits long."
+            : "Mobile can not be empty.",
+        address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
+        rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
+      });
+    }
+  };
+
+  // Owner Detail Functions end //
+
+  // Bank Detail Functions start //
+
+  const [bankDetail, setBankDetail] = useState({
+    bank: "",
+    branch: "",
+  });
+
+  const [bankError, setBankError] = useState({
+    bank: "",
+    branch: "",
+  });
+
+  const append_new_bank_details = () => {
+    if (bankDetail.bank !== "" && bankDetail.branch !== "") {
+      add_new_bank_detail({
+        bank: bankDetail.bank,
+        branch: bankDetail.branch,
+      });
+      setBankDetail({
+        bank: "",
+        branch: "",
+      });
+      setBankError({
+        bank: "",
+        branch: "",
+      });
+    } else {
+      setBankError({
+        bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
+        branch: bankDetail.branch !== "" ? "" : "Branch can not be empty.",
+      });
+    }
+  };
+
+  const [updateBankFlag, setUpdateBankFlag] = useState(null);
+
+  const updateBankFlagFunction = (data, id) => {
+    setUpdateBankFlag(id);
+    setBankDetail({
+      bank: data.bank,
+      branch: data.branch,
+    });
+  };
+
+  const UpdateBankDetail = () => {
+    if (bankDetail.bank !== "" && bankDetail.branch !== "") {
+      const tempArr = getValues(`pwh_commodity_bank_details`);
+      setValue(
+        `pwh_commodity_bank_details`,
+        [
+          ...tempArr.slice(0, updateBankFlag),
+          {
+            bank: bankDetail.bank,
+            branch: bankDetail.branch,
+          },
+          ...tempArr.slice(updateBankFlag + 1),
+        ],
+        { shouldValidate: true }
+      );
+      setBankDetail({
+        bank: "",
+        branch: "",
+      });
+      setUpdateBankFlag(null);
+      setBankError({
+        bank: "",
+        branch: "",
+      });
+    } else {
+      setBankError({
+        bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
+        branch: bankDetail.branch !== "" ? "" : "Branch can not be empty.",
+      });
+    }
+  };
+
+  // Bank Detail Functions end //
 
   useEffect(() => {
     getRegionMasterList();
@@ -2705,77 +2905,89 @@ const Pwh = () => {
                               </GridItem>
                             </Grid>
                           </Box>
-                          {/* ================ Pre-Stack Commodity ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={8}
-                            >
-                              <GridItem colSpan={1}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={3}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity
-                                  }
-                                  label=""
-                                  options={
-                                    selectBoxOptions?.commodityMasterOpt || []
-                                  }
-                                  selectedValue={selected?.preStackCommodity}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) => {
-                                    setSelected((prev) => ({
-                                      ...prev,
-                                      preStackCommodity: val,
-                                    }));
-                                    setValue(
-                                      formFieldsName.pwh_commodity_details
-                                        .pre_stack_commodity,
-                                      val?.value,
-                                      { shouldValidate: true }
-                                    );
-                                  }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={8}
-                            >
-                              <GridItem colSpan={1}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity Quantity(MT)
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={3}>
-                                <CustomInput
-                                  name={
-                                    formFieldsName.pwh_commodity_details
-                                      .pre_stack_commodity_quantity
-                                  }
-                                  placeholder="Pre-Stack Commodity Quantity(MT)"
-                                  type="number"
-                                  label=""
-                                  style={{ w: commonStyle.w }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
+                          {getValues(
+                            formFieldsName.pwh_commodity_details
+                              .commodity_inward_type
+                          ) === "PS" ? (
+                            <>
+                              {/* ================ Pre-Stack Commodity ================= */}
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  templateColumns="repeat(4, 1fr)"
+                                  alignItems="center"
+                                  gap={8}
+                                >
+                                  <GridItem colSpan={1}>
+                                    <Text textAlign="right">
+                                      Pre-Stack Commodity
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={3}>
+                                    <ReactCustomSelect
+                                      name={
+                                        formFieldsName.pwh_commodity_details
+                                          .pre_stack_commodity
+                                      }
+                                      label=""
+                                      options={
+                                        selectBoxOptions?.commodityMasterOpt ||
+                                        []
+                                      }
+                                      selectedValue={
+                                        selected?.preStackCommodity
+                                      }
+                                      isClearable={false}
+                                      selectType="label"
+                                      isLoading={false}
+                                      style={{ w: commonStyle.w }}
+                                      handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          preStackCommodity: val,
+                                        }));
+                                        setValue(
+                                          formFieldsName.pwh_commodity_details
+                                            .pre_stack_commodity,
+                                          val?.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                              {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  templateColumns="repeat(4, 1fr)"
+                                  alignItems="center"
+                                  gap={8}
+                                >
+                                  <GridItem colSpan={1}>
+                                    <Text textAlign="right">
+                                      Pre-Stack Commodity Quantity(MT)
+                                    </Text>{" "}
+                                  </GridItem>
+                                  <GridItem colSpan={3}>
+                                    <CustomInput
+                                      name={
+                                        formFieldsName.pwh_commodity_details
+                                          .pre_stack_commodity_quantity
+                                      }
+                                      placeholder="Pre-Stack Commodity Quantity(MT)"
+                                      type="number"
+                                      label=""
+                                      style={{ w: commonStyle.w }}
+                                    />
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                            </>
+                          ) : (
+                            <></>
+                          )}
                           {/* ================ Funding required ================= */}
                           <Box mt={commonStyle.mt}>
                             <Grid
@@ -2832,218 +3044,492 @@ const Pwh = () => {
                           {getValues(
                             formFieldsName.pwh_commodity_details
                               .funding_required
-                          ) == "true" ? (
-                            <Box mt="4" bgColor={"#DBFFF5"} p="4">
-                              <Heading as="h5" fontSize="lg">
-                                Bank Details
-                              </Heading>
-
-                              {bank_details_fields &&
-                                bank_details_fields.map((item, index) => (
-                                  <Box
-                                    bgColor={"#DBFFF5"}
-                                    key={item.id}
-                                    mt={commonStyle.mt}
-                                    p="4"
-                                  >
-                                    <Flex
-                                      //padding="20px"
-                                      borderRadius="10px"
-                                      gap="3"
-                                      alignItems="center"
-                                      justifyContent="space-between"
+                          ) === "true" ? (
+                            <>
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  templateColumns="repeat(12, 1fr)"
+                                  alignItems="start"
+                                  gap={4}
+                                  bgColor={"#DBFFF5"}
+                                  padding="20px"
+                                  borderRadius="10px"
+                                >
+                                  <GridItem colSpan={12}>
+                                    <Heading
+                                      as="h5"
+                                      fontSize="lg"
+                                      textAlign="left"
                                     >
-                                      <Box
-                                        display="flex"
-                                        gap="4"
-                                        alignItems="center"
+                                      Bank Details
+                                    </Heading>
+                                  </GridItem>
+                                  <GridItem colSpan={3}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Bank
+                                    </Text>
+                                    <ReactSelect
+                                      options={selectBoxOptions?.banks || []}
+                                      value={
+                                        selectBoxOptions?.banks?.filter(
+                                          (item) =>
+                                            item.value === bankDetail.bank
+                                        )[0] || {}
+                                      }
+                                      onChange={(val) => {
+                                        setBankDetail((old) => ({
+                                          bank: val.value,
+                                          branch:"",
+                                        }));
+                                        setBankError((old)=>({
+                                          ...old,
+                                          bank:"",
+                                        }))
+                                      }}
+                                      styles={{
+                                        control: (base, state) => ({
+                                          ...base,
+                                          backgroundColor: "#fff",
+                                          borderRadius: "6px",
+                                          borderColor: bankError.bank
+                                            ? "red"
+                                            : "#c3c3c3",
+
+                                          padding: "1px",
+                                          textAlign: "left",
+                                        }),
+                                        ...reactSelectStyle,
+                                      }}
+                                    />
+                                    <Text
+                                      color="red"
+                                      fontSize="14px"
+                                      textAlign="left"
+                                    >
+                                      {bankError.bank}
+                                    </Text>
+                                  </GridItem>
+                                  <GridItem colSpan={3}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Branch
+                                    </Text>
+                                    <ReactSelect
+                                      options={
+                                        selectBoxOptions?.branch?.filter(
+                                          (item) =>
+                                            item?.bank?.id === bankDetail.bank
+                                        ) || []
+                                      }
+                                      value={
+                                        selectBoxOptions?.branch?.filter(
+                                          (item) =>
+                                            item.value === bankDetail.branch
+                                        )[0] || {}
+                                      }
+                                      onChange={(val) => {
+                                        setBankDetail((old) => ({
+                                          ...old,
+                                          branch: val.value,
+                                        }));
+
+                                        setBankError((old)=>({
+                                          ...old,
+                                          branch:"",
+                                        }))
+                                      }}
+                                      styles={{
+                                        control: (base, state) => ({
+                                          ...base,
+                                          backgroundColor: "#fff",
+                                          borderRadius: "6px",
+                                          borderColor: bankError.branch
+                                            ? "red"
+                                            : "#c3c3c3",
+
+                                          padding: "1px",
+                                          textAlign: "left",
+                                        }),
+                                        ...reactSelectStyle,
+                                      }}
+                                    />
+                                    <Text
+                                      color="red"
+                                      fontSize="14px"
+                                      textAlign="left"
+                                    >
+                                      {bankError.branch}
+                                    </Text>
+                                  </GridItem>
+                                  <GridItem
+                                    colSpan={6}
+                                    alignSelf="end"
+                                    textAlign="right"
+                                  >
+                                    <Button
+                                      type="button"
+                                      //w="full"
+                                      backgroundColor={"primary.700"}
+                                      _hover={{
+                                        backgroundColor: "primary.700",
+                                      }}
+                                      color={"white"}
+                                      borderRadius={"full"}
+                                      px={"10"}
+                                      onClick={
+                                        () => {
+                                          updateBankFlag !== null
+                                            ? UpdateBankDetail()
+                                            : append_new_bank_details();
+                                          console.log("here in bank");
+                                        }
+                                        // saveAsDraftData("PWH_COMMERCIAL_DETAILS")
+                                      }
+                                    >
+                                      {/* {console.log(
+                                    updateOwnerFlag ? "got" : "not got",
+                                    "here"
+                                  )} */}
+                                      {updateBankFlag !== null ? "Edit" : "Add"}
+                                    </Button>
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+                              <Box mt={commonStyle.mt} overflow={"auto"}>
+                                <table width="100%">
+                                  <thead style={{ background: "#DBFFF5" }}>
+                                    <tr>
+                                      <th
+                                        width={tableStyle.idWidth}
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
                                       >
-                                        {/* =============== SR No============= */}
-                                        <Box w="50px">
-                                          <Text
-                                            mb="0"
-                                            fontWeight="bold"
-                                            textAlign="left"
-                                          >
-                                            {" "}
-                                            Sr No{" "}
-                                          </Text>{" "}
-                                          <Box
-                                            textAlign="center"
-                                            border="1px"
-                                            p="2"
-                                            borderColor="gray.10"
-                                            borderRadius="6"
-                                          >
-                                            {index + 1}
-                                          </Box>
-                                        </Box>
-
-                                        {/* =============== Bank Name ============= */}
-                                        <Box w="210px">
-                                          <Text
-                                            fontWeight="bold"
-                                            textAlign="left"
-                                          >
-                                            Bank Name
-                                          </Text>{" "}
-                                          <Box>
-                                            <ReactSelect
-                                              options={
-                                                selectBoxOptions?.banks || []
-                                              }
-                                              name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`}
-                                              value={
-                                                selectBoxOptions?.banks?.filter(
-                                                  (item) =>
-                                                    item.value ===
-                                                    getValues(
-                                                      `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`
-                                                    )
-                                                )[0] || {}
-                                              }
-                                              onChange={(val) => {
-                                                console.log("val: " + val);
-
-                                                setValue(
-                                                  `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`,
-                                                  val?.value,
-                                                  { shouldValidate: true }
-                                                );
-                                                return val;
-                                              }}
-                                              styles={{
-                                                control: (base, state) => ({
-                                                  ...base,
-                                                  backgroundColor: "#fff",
-                                                  borderRadius: "6px",
-                                                  borderColor: errors
-                                                    ?.pwh_commodity_bank_details?.[
-                                                    index
-                                                  ]?.bank?.message
-                                                    ? "red"
-                                                    : "#c3c3c3",
-
-                                                  padding: "1px",
-                                                }),
-                                                ...reactSelectStyle,
-                                              }}
-                                            />
-                                            <Text color="red">
-                                              {errors &&
-                                                errors
-                                                  ?.pwh_commodity_bank_details?.[
-                                                  index
-                                                ]?.bank?.message}
-                                            </Text>
-                                          </Box>
-                                        </Box>
-
-                                        {/* =============== Branch Name ============= */}
-                                        <Box w="210px">
-                                          <Text
-                                            fontWeight="bold"
-                                            textAlign="left"
-                                          >
-                                            Branch Name
-                                          </Text>{" "}
-                                          <Box>
-                                            <ReactSelect
-                                              options={
-                                                selectBoxOptions?.branch || []
-                                              }
-                                              name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`}
-                                              value={
-                                                selectBoxOptions?.branch?.filter(
-                                                  (item) =>
-                                                    item.value ===
-                                                    getValues(
-                                                      `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`
-                                                    )
-                                                )[0] || {}
-                                              }
-                                              onChange={(val) => {
-                                                console.log("val: " + val);
-                                                setValue(
-                                                  `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`,
-                                                  val?.value,
-                                                  { shouldValidate: true }
-                                                );
-                                                return val;
-                                              }}
-                                              styles={{
-                                                control: (base, state) => ({
-                                                  ...base,
-                                                  backgroundColor: "#fff",
-                                                  borderRadius: "6px",
-                                                  borderColor: errors
-                                                    ?.pwh_commodity_bank_details?.[
-                                                    index
-                                                  ]?.branch?.message
-                                                    ? "red"
-                                                    : "#c3c3c3",
-
-                                                  padding: "1px",
-                                                }),
-                                                ...reactSelectStyle,
-                                              }}
-                                            />
-                                            <Text color="red">
-                                              {errors &&
-                                                errors
-                                                  ?.pwh_commodity_bank_details?.[
-                                                  index
-                                                ]?.q?.message}
-                                            </Text>
-                                          </Box>
-                                        </Box>
-                                      </Box>
-
-                                      {/* =============== Add / Delete ============= */}
-                                      <Box w="180px">
-                                        <Box
-                                          mt="7"
-                                          display="flex"
-                                          alignItems="center"
-                                          justifyContent="flex-end"
-                                          gap="2"
-                                        >
-                                          <Button
-                                            borderColor="gray.10"
-                                            borderRadius="6"
-                                            bg="primary.700"
-                                            color="white"
-                                            fontWeight="bold"
-                                            _hover={{}}
-                                            onClick={() => {
-                                              append_new_bank_details();
+                                        No.
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Bank Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Branch Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                        width={tableStyle.actionWidth}
+                                      >
+                                        Action
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {getValues(`pwh_commodity_bank_details`)
+                                      ?.length > 0 ? (
+                                      bank_details_fields.map((item, index) => (
+                                        <tr>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                              textAlign: "center",
                                             }}
                                           >
-                                            +
-                                          </Button>
-
-                                          <Button
-                                            borderColor="gray.10"
-                                            borderRadius="6"
-                                            bg="red"
-                                            color="white"
-                                            fontWeight="bold"
-                                            _hover={{}}
-                                            isDisabled={
-                                              bank_details_fields?.length === 1
-                                            }
-                                            onClick={() =>
-                                              remove_bank_detail(index)
-                                            }
+                                            {index + 1}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
                                           >
-                                            -
-                                          </Button>
+                                            {selectBoxOptions?.banks?.filter(
+                                              (old) => old.value === item.bank
+                                            )[0]?.label || item.bank}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            {selectBoxOptions?.branch?.filter(
+                                              (old) => old.value === item.branch
+                                            )[0]?.label || item.branch}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            <Flex
+                                              gap="20px"
+                                              justifyContent="center"
+                                            >
+                                              <Box color={"primary.700"}>
+                                                <BiEditAlt
+                                                  // color="#A6CE39"
+                                                  fontSize="26px"
+                                                  cursor="pointer"
+                                                  onClick={() => {
+                                                    updateBankFlagFunction(
+                                                      item,
+                                                      index
+                                                    );
+                                                  }}
+                                                />
+                                              </Box>
+                                              <Box color="red">
+                                                <AiOutlineDelete
+                                                  cursor="pointer"
+                                                  fontSize="26px"
+                                                  onClick={() => {
+                                                    remove_bank_detail(index);
+                                                  }}
+                                                />
+                                              </Box>
+                                            </Flex>
+                                          </td>
+                                        </tr>
+                                      ))
+                                    ) : (
+                                      <tr>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                            textAlign: "center",
+                                          }}
+                                          colSpan={4}
+                                        >
+                                          No Data Added
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </Box>
+
+                              <Box>
+                                {/* <Heading as="h5" fontSize="lg">
+                                  Bank Details
+                                </Heading>
+
+                                {bank_details_fields &&
+                                  bank_details_fields.map((item, index) => (
+                                    <Box
+                                      bgColor={"#DBFFF5"}
+                                      key={item.id}
+                                      mt={commonStyle.mt}
+                                      p="4"
+                                    >
+                                      <Flex
+                                        //padding="20px"
+                                        borderRadius="10px"
+                                        gap="3"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                      >
+                                        <Box
+                                          display="flex"
+                                          gap="4"
+                                          alignItems="center"
+                                        >
+                                          =============== SR No=============
+                                          <Box w="50px">
+                                            <Text
+                                              mb="0"
+                                              fontWeight="bold"
+                                              textAlign="left"
+                                            >
+                                              {" "}
+                                              Sr No{" "}
+                                            </Text>{" "}
+                                            <Box
+                                              textAlign="center"
+                                              border="1px"
+                                              p="2"
+                                              borderColor="gray.10"
+                                              borderRadius="6"
+                                            >
+                                              {index + 1}
+                                            </Box>
+                                          </Box>
+
+                                          =============== Bank Name =============
+                                          <Box w="210px">
+                                            <Text
+                                              fontWeight="bold"
+                                              textAlign="left"
+                                            >
+                                              Bank Name
+                                            </Text>{" "}
+                                            <Box>
+                                              <ReactSelect
+                                                options={
+                                                  selectBoxOptions?.banks || []
+                                                }
+                                                name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`}
+                                                value={
+                                                  selectBoxOptions?.banks?.filter(
+                                                    (item) =>
+                                                      item.value ===
+                                                      getValues(
+                                                        `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`
+                                                      )
+                                                  )[0] || {}
+                                                }
+                                                onChange={(val) => {
+                                                  console.log("val: " + val);
+
+                                                  setValue(
+                                                    `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.bank}`,
+                                                    val?.value,
+                                                    { shouldValidate: true }
+                                                  );
+                                                  return val;
+                                                }}
+                                                styles={{
+                                                  control: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: "#fff",
+                                                    borderRadius: "6px",
+                                                    borderColor: errors
+                                                      ?.pwh_commodity_bank_details?.[
+                                                      index
+                                                    ]?.bank?.message
+                                                      ? "red"
+                                                      : "#c3c3c3",
+
+                                                    padding: "1px",
+                                                  }),
+                                                  ...reactSelectStyle,
+                                                }}
+                                              />
+                                              <Text color="red">
+                                                {errors &&
+                                                  errors
+                                                    ?.pwh_commodity_bank_details?.[
+                                                    index
+                                                  ]?.bank?.message}
+                                              </Text>
+                                            </Box>
+                                          </Box>
+
+                                          =============== Branch Name =============
+                                          <Box w="210px">
+                                            <Text
+                                              fontWeight="bold"
+                                              textAlign="left"
+                                            >
+                                              Branch Name
+                                            </Text>{" "}
+                                            <Box>
+                                              <ReactSelect
+                                                options={
+                                                  selectBoxOptions?.branch || []
+                                                }
+                                                name={`pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`}
+                                                value={
+                                                  selectBoxOptions?.branch?.filter(
+                                                    (item) =>
+                                                      item.value ===
+                                                      getValues(
+                                                        `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`
+                                                      )
+                                                  )[0] || {}
+                                                }
+                                                onChange={(val) => {
+                                                  console.log("val: " + val);
+                                                  setValue(
+                                                    `pwh_commodity_bank_details.${index}.${formFieldsName.pwh_commodity_details.bank_details_fields.branch}`,
+                                                    val?.value,
+                                                    { shouldValidate: true }
+                                                  );
+                                                  return val;
+                                                }}
+                                                styles={{
+                                                  control: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: "#fff",
+                                                    borderRadius: "6px",
+                                                    borderColor: errors
+                                                      ?.pwh_commodity_bank_details?.[
+                                                      index
+                                                    ]?.branch?.message
+                                                      ? "red"
+                                                      : "#c3c3c3",
+
+                                                    padding: "1px",
+                                                  }),
+                                                  ...reactSelectStyle,
+                                                }}
+                                              />
+                                              <Text color="red">
+                                                {errors &&
+                                                  errors
+                                                    ?.pwh_commodity_bank_details?.[
+                                                    index
+                                                  ]?.q?.message}
+                                              </Text>
+                                            </Box>
+                                          </Box>
                                         </Box>
-                                      </Box>
-                                    </Flex>
-                                  </Box>
-                                ))}
-                            </Box>
+
+                                        =============== Add / Delete =============
+                                        <Box w="180px">
+                                          <Box
+                                            mt="7"
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="flex-end"
+                                            gap="2"
+                                          >
+                                            <Button
+                                              borderColor="gray.10"
+                                              borderRadius="6"
+                                              bg="primary.700"
+                                              color="white"
+                                              fontWeight="bold"
+                                              _hover={{}}
+                                              onClick={() => {
+                                                append_new_bank_details();
+                                              }}
+                                            >
+                                              +
+                                            </Button>
+
+                                            <Button
+                                              borderColor="gray.10"
+                                              borderRadius="6"
+                                              bg="red"
+                                              color="white"
+                                              fontWeight="bold"
+                                              _hover={{}}
+                                              isDisabled={
+                                                bank_details_fields?.length ===
+                                                1
+                                              }
+                                              onClick={() =>
+                                                remove_bank_detail(index)
+                                              }
+                                            >
+                                              -
+                                            </Button>
+                                          </Box>
+                                        </Box>
+                                      </Flex>
+                                    </Box>
+                                  ))} */}
+                              </Box>
+                            </>
                           ) : (
                             <> </>
                           )}
@@ -3298,9 +3784,398 @@ const Pwh = () => {
 
                           {/* {/ ================ Owner Name Mobile No Address ================= /} */}
 
-                          <Box bgColor={"#DBFFF5"}>
+                          <Box mt={commonStyle.mt}>
+                            <Grid
+                              textAlign="right"
+                              templateColumns="repeat(12, 1fr)"
+                              alignItems="start"
+                              gap={4}
+                              bgColor={"#DBFFF5"}
+                              padding="20px"
+                              borderRadius="10px"
+                            >
+                              <GridItem colSpan={12}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Warehouse Owner details
+                                </Text>
+                              </GridItem>
+                              <GridItem colSpan={2}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Owner Name
+                                </Text>
+                                <Input
+                                  value={ownerDetail.name}
+                                  type="text"
+                                  onChange={(e) => {
+                                    setOwnerDetail((old) => ({
+                                      ...old,
+                                      name: e.target.value,
+                                    }));
+                                    setOwnerError((old) => ({
+                                      ...old,
+                                      name: "",
+                                    }));
+                                  }}
+                                  height="33px"
+                                  border="1px"
+                                  borderColor={
+                                    ownerError.name ? "red" : "gray.10"
+                                  }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Owner Name"}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.name}
+                                </Text>
+                              </GridItem>
+                              <GridItem colSpan={2}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Mobile No.
+                                </Text>
+                                <Input
+                                  type="number"
+                                  value={ownerDetail.mobile}
+                                  onChange={(e) => {
+                                    setOwnerDetail((old) => ({
+                                      ...old,
+                                      mobile: e.target.value,
+                                    }));
+                                    console.log(e);
+                                    setOwnerError((old) => ({
+                                      ...old,
+                                      mobile: "",
+                                    }));
+                                  }}
+                                  height="33px"
+                                  border="1px"
+                                  borderColor={
+                                    ownerError.mobile ? "red" : "gray.10"
+                                  }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Mobile No"}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.mobile}
+                                </Text>
+                              </GridItem>
+                              <GridItem colSpan={4}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Address
+                                </Text>
+                                <Textarea
+                                  value={ownerDetail.address}
+                                  onChange={(e) => {
+                                    setOwnerDetail((old) => ({
+                                      ...old,
+                                      address: e.target.value,
+                                    }));
+                                    console.log(e);
+                                    setOwnerError((old) => ({
+                                      ...old,
+                                      address: "",
+                                    }));
+                                  }}
+                                  rows={1}
+                                  border="1px"
+                                  borderColor={
+                                    ownerError.address ? "red" : "gray.10"
+                                  }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  px={{ base: "4" }}
+                                  py={{ base: "5px" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Address"}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.address}
+                                </Text>
+                              </GridItem>{" "}
+                              <GridItem colSpan={2}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Rent
+                                </Text>
+                                <Input
+                                  type="number"
+                                  value={ownerDetail.rent}
+                                  onChange={(e) => {
+                                    setOwnerDetail((old) => ({
+                                      ...old,
+                                      rent: e.target.value,
+                                    }));
+                                    console.log(e);
+                                    setOwnerError((old) => ({
+                                      ...old,
+                                      rent: "",
+                                    }));
+                                  }}
+                                  height="33px"
+                                  border="1px"
+                                  borderColor={
+                                    ownerError.rent ? "red" : "gray.10"
+                                  }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Rent"}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.rent}
+                                </Text>
+                              </GridItem>
+                              <GridItem colSpan={2} alignSelf="end">
+                                <Button
+                                  type="button"
+                                  //w="full"
+                                  backgroundColor={"primary.700"}
+                                  _hover={{ backgroundColor: "primary.700" }}
+                                  color={"white"}
+                                  borderRadius={"full"}
+                                  px={"10"}
+                                  onClick={
+                                    () => {
+                                      updateOwnerFlag !== null
+                                        ? UpdateCommercialDetail()
+                                        : append_new_commercial_detail();
+                                      console.log("here in owner");
+                                    }
+                                    // saveAsDraftData("PWH_COMMERCIAL_DETAILS")
+                                  }
+                                >
+                                  {/* {console.log(
+                                    updateOwnerFlag ? "got" : "not got",
+                                    "here"
+                                  )} */}
+                                  {updateOwnerFlag !== null ? "Edit" : "Add"}
+                                </Button>
+                              </GridItem>
+                            </Grid>
+                          </Box>
+                          <Box mt={commonStyle.mt} overflow={"auto"}>
+                            <table width="100%">
+                              <thead style={{ background: "#DBFFF5" }}>
+                                <tr>
+                                  <th
+                                    width={tableStyle.idWidth}
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    No.
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Owner Name
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Mobile No.
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Address
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Rent
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                    width={tableStyle.actionWidth}
+                                  >
+                                    Action
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {getValues(`pwh_commercial_multipal_details`)
+                                  ?.length > 0 ? (
+                                  pwh_commercial_multipal_details_fields.map(
+                                    (item, index) => (
+                                      <tr>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                            textAlign: "center",
+                                          }}
+                                        >
+                                          {index + 1}
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                          }}
+                                        >
+                                          {item.owner_name}
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                          }}
+                                        >
+                                          {item.mobile_no}
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                          }}
+                                        >
+                                          {item.address}
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                          }}
+                                        >
+                                          {item.rent}
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                          }}
+                                        >
+                                          <Flex
+                                            gap="20px"
+                                            justifyContent="center"
+                                          >
+                                            <Box color={"primary.700"}>
+                                              <BiEditAlt
+                                                // color="#A6CE39"
+                                                fontSize="26px"
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                  updateOwnerFlagFunction(
+                                                    item,
+                                                    index
+                                                  );
+                                                }}
+                                              />
+                                            </Box>
+                                            <Box color="red">
+                                              <AiOutlineDelete
+                                                cursor="pointer"
+                                                fontSize="26px"
+                                                onClick={() => {
+                                                  pwh_commercial_multipal_detail_remove(
+                                                    index
+                                                  );
+                                                }}
+                                              />
+                                            </Box>
+                                          </Flex>
+                                        </td>
+                                      </tr>
+                                    )
+                                  )
+                                ) : (
+                                  <tr>
+                                    <td
+                                      style={{
+                                        padding: tableStyle.generalPadding,
+                                        textAlign: "center",
+                                      }}
+                                      colSpan={6}
+                                    >
+                                      No Data Added
+                                    </td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </Box>
+
+                          <Box>
                             {/* only header fields */}
-                            <Flex
+                            {/* <Flex
                               bgColor={"#DBFFF5"}
                               pt="4"
                               px="4"
@@ -3340,8 +4215,8 @@ const Pwh = () => {
                               </Box>
 
                               <Box w="180px"></Box>
-                            </Flex>
-                            {pwh_commercial_multipal_details_fields &&
+                            </Flex> */}
+                            {/* {pwh_commercial_multipal_details_fields &&
                               pwh_commercial_multipal_details_fields.map(
                                 (item, index) => (
                                   <Box bgColor={"#DBFFF5"} key={item.id}>
@@ -3353,7 +4228,7 @@ const Pwh = () => {
                                       gap="3"
                                       alignItems="center"
                                     >
-                                      {/* =============== SR No============= */}
+                                      =============== SR No=============
                                       <Box w="50px">
                                         <Box
                                           textAlign="center"
@@ -3366,7 +4241,7 @@ const Pwh = () => {
                                         </Box>
                                       </Box>
 
-                                      {/* =============== Owner Name ============= */}
+                                      =============== Owner Name =============
                                       <Box w="170px">
                                         <FormControl
                                           isInvalid={
@@ -3376,7 +4251,7 @@ const Pwh = () => {
                                             ]?.owner_name?.message
                                           }
                                         >
-                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <FormLabel>{label}</FormLabel>
                                           <Box>
                                             <Input
                                               type="text"
@@ -3418,7 +4293,7 @@ const Pwh = () => {
                                         </FormControl>
                                       </Box>
 
-                                      {/* =============== Mobile No ============= */}
+                                      =============== Mobile No =============
                                       <Box w="180px">
                                         <FormControl
                                           isInvalid={
@@ -3428,7 +4303,7 @@ const Pwh = () => {
                                             ]?.mobile_no?.message
                                           }
                                         >
-                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <FormLabel>{label}</FormLabel>
                                           <Box>
                                             <Input
                                               type="text"
@@ -3470,7 +4345,7 @@ const Pwh = () => {
                                         </FormControl>
                                       </Box>
 
-                                      {/* =============== Address ============= */}
+                                      =============== Address =============
                                       <Box w="270px">
                                         <FormControl
                                           isInvalid={
@@ -3480,7 +4355,7 @@ const Pwh = () => {
                                             ]?.address?.message
                                           }
                                         >
-                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <FormLabel>{label}</FormLabel>
                                           <Box>
                                             <Input
                                               type="text"
@@ -3522,7 +4397,7 @@ const Pwh = () => {
                                         </FormControl>
                                       </Box>
 
-                                      {/* =============== Rent ============= */}
+                                      =============== Rent =============
 
                                       <Box w="160px">
                                         <FormControl
@@ -3533,7 +4408,7 @@ const Pwh = () => {
                                             ]?.rent?.message
                                           }
                                         >
-                                          {/* <FormLabel>{label}</FormLabel> */}
+                                          <FormLabel>{label}</FormLabel>
                                           <Box>
                                             <Input
                                               type="number"
@@ -3575,7 +4450,7 @@ const Pwh = () => {
                                         </FormControl>
                                       </Box>
 
-                                      {/* =============== Add / Delete ============= */}
+                                      =============== Add / Delete =============
                                       <Box w="180px">
                                         <Box
                                           // mt="7"
@@ -3622,7 +4497,7 @@ const Pwh = () => {
                                     </Flex>
                                   </Box>
                                 )
-                              )}
+                              )} */}
                           </Box>
 
                           <Box

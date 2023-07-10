@@ -23,7 +23,7 @@ code {
 /* width */
 ::-webkit-scrollbar {
   width: 4px;
-  height : 6px;
+  height: 6px;
   cursor: pointer;
 }
 
@@ -52,7 +52,7 @@ code {
 th:has(#update_col) {
   position: sticky;
   right: 0px;
-  top:0px;
+  top: 0px;
   z-index: 3;
   background: white;
 }
@@ -61,6 +61,12 @@ td:has(#update_row) {
   position: sticky;
   right: 0px;
   background: White;
+}
+
+table,
+th,
+td {
+  border: 1px solid #c3c3c3;
 }
 
 /* th:has(#active_col) {
