@@ -247,4 +247,5 @@ const InsurancePolicyMaster = () => {
     </div>
   );
 };
+
 export default InsurancePolicyMaster;

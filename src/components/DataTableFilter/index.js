@@ -53,10 +53,21 @@ const Index = () => {
   const onSubmit = (data) => {
     console.log("data==>", data);
 
+    // let filters = [];
+    // for (let key in data) {
+    //   if (data[key]) {
+    //     filters.push(`filter=${key}&${key}=${data[key]?.trim()}`);
+    //   }
+    // }
+
     let filters = [];
     for (let key in data) {
       if (data[key]) {
-        filters.push(`filter=${key}&${key}=${data[key].trim()}`);
+        let value = data[key];
+        if (typeof value === "string") {
+          value = value.trim();
+        }
+        filters.push(`filter=${key}&${key}=${value}`);
       }
     }
     let filterString = filters.join("&");
