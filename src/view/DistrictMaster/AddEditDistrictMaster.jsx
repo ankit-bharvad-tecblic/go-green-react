@@ -125,7 +125,8 @@ const AddEditFormDistrictMaster = () => {
           label: region_name,
           value: id,
         }));
-      if (details.substate?.state?.region?.is_active === false) {
+
+      if (details?.substate?.state?.region?.is_active === false) {
         setSelectBoxOptions((prev) => ({
           ...prev,
           regions: [
@@ -452,7 +453,7 @@ const AddEditFormDistrictMaster = () => {
                         mb: 1,
                         mt: 1,
                       }}
-                       isChecked={details?.is_active}
+                      isChecked={details?.is_active}
                     />
                   </Box>
                 </MotionSlideUp>

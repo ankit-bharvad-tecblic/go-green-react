@@ -2,13 +2,13 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    " Region": "region__region_name",
+    " Region": "state__region__region_name",
     isActiveFilter: false,
     label: "Region ",
-    name: "region__region_name",
+    name: "state__region__region_name",
     placeholder: "Region ",
     type: "text",
-  },  
+  },
   {
     " State": "state__state_name",
     isActiveFilter: false,
