@@ -1202,47 +1202,35 @@ const Wms = () => {
   // fourth accordion function start
 
   // client list drill down api start
+  const [clientList, setClientList] = useState({
+    clientType: "",
+    name: "",
+    mobile: "",
+    region: "",
+    state: "",
+    substate: "",
+    district: "",
+    area: "",
+    address: "",
+    charges: "",
+    billing: "",
+  });
+
+  const [clientDripDown, setClientDripDown] = useState([
+    { states: {}, substate: {}, district: {}, area: {} },
+  ]);
+
   const regionOnClientChange = async (val, index) => {
+    setClientList((old) => ({
+      ...old,
+      region: val?.value,
+      state: "",
+      substate: "",
+      district: "",
+      area: "",
+    }));
+
     console.log("value --> ", val);
-    setValue(
-      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`,
-      val?.value,
-      {
-        shouldValidate: true,
-      }
-    );
-
-    setValue(
-      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
-
-    setValue(
-      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
-
-    setValue(
-      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
-
-    setValue(
-      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
 
     const query = {
       region: val?.value,
@@ -1450,20 +1438,6 @@ const Wms = () => {
       }
     );
   };
-
-  const [clientList, setClientList] = useState({
-    clientType: "",
-    name: "",
-    mobile: "",
-    region: "",
-    state: "",
-    substate: "",
-    district: "",
-    area: "",
-    address: "",
-    charges: "",
-    billing: "",
-  });
 
   // fourth accordion function end
 
