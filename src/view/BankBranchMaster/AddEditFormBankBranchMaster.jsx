@@ -417,7 +417,7 @@ function AddEditFormBankBranchMaster() {
       toasterAlert(error);
     }
   };
-  
+
   useEffect(() => {
     // getAllStateMaster();
     getRegionMasterList();
@@ -434,11 +434,21 @@ function AddEditFormBankBranchMaster() {
         district: details.district.district_name,
         pincode: details.pincode,
         is_active: details.is_active,
+        branch_contact_detail: details.branch_contact_detail,
       };
       console.log("details", details);
 
       Object.keys(obj).forEach(function (key) {
-        methods.setValue(key, obj[key], { shouldValidate: true });
+        if (key === "branch_contact_detail") {
+          const contactDetails = obj[key] || []; // Default to an empty array if undefined
+          methods.setValue(
+            key,
+            contactDetails.map((item) => ({ ...item })),
+            { shouldValidate: true }
+          );
+        } else {
+          methods.setValue(key, obj[key], { shouldValidate: true });
+        }
       });
     }
     const breadcrumbArray = [
@@ -726,7 +736,7 @@ function AddEditFormBankBranchMaster() {
                       Name
                     </Text>
                     <CustomInput
-                      name="authorise_person_1_name"
+                      name="branch_contact_detail[0].authorized_name"
                       placeholder="Enter user name"
                       type="text"
                       label=""
@@ -744,7 +754,7 @@ function AddEditFormBankBranchMaster() {
                       Contact No
                     </Text>
                     <CustomInput
-                      name=""
+                      name="branch_contact_detail[0].authorized_mobile_no"
                       placeholder="Contact no"
                       type="text"
                       label=""
@@ -761,7 +771,7 @@ function AddEditFormBankBranchMaster() {
                       Email Id
                     </Text>
                     <CustomInput
-                      name=""
+                      name="branch_contact_detail[0].authorized_email_id"
                       placeholder="Email ID"
                       type="email"
                       label=""
@@ -778,10 +788,23 @@ function AddEditFormBankBranchMaster() {
                       Signature Upload
                     </Text>
                     <CustomFileInput
-                      name="authorise_person_1_contact"
+                      name="branch_contact_detail[0].signature_upload"
                       placeholder="Signature Upload"
                       type="file"
                       label=""
+                      onChange={(e) => {
+                        console.log(e, "file");
+                        setValue(
+                          "branch_contact_detail[0].signature_upload",
+                          e,
+                          {
+                            shouldValidate: true,
+                          }
+                        );
+                      }}
+                      value={getValues(
+                        "branch_contact_detail[0].signature_upload"
+                      )}
                       style={{
                         mb: 1,
                         mt: 1,
@@ -802,7 +825,7 @@ function AddEditFormBankBranchMaster() {
                       Name
                     </Text>
                     <CustomInput
-                      name="authorise_person_1_name"
+                      name="branch_contact_detail[1].authorized_name"
                       placeholder="Enter user name"
                       type="text"
                       label=""
@@ -820,9 +843,9 @@ function AddEditFormBankBranchMaster() {
                       Contact No
                     </Text>
                     <CustomInput
-                      name=""
+                      name="branch_contact_detail[1].authorized_mobile_no"
                       placeholder="Contact no"
-                      type="number"
+                      type="text"
                       label=""
                       style={{
                         mb: 1,
@@ -837,7 +860,7 @@ function AddEditFormBankBranchMaster() {
                       Email Id
                     </Text>
                     <CustomInput
-                      name=""
+                      name="branch_contact_detail[1].authorized_email_id"
                       placeholder="Email ID"
                       type="email"
                       label=""
@@ -854,10 +877,22 @@ function AddEditFormBankBranchMaster() {
                       Signature Upload
                     </Text>
                     <CustomFileInput
-                      name=""
+                      name="branch_contact_detail[1].signature_upload"
                       placeholder="Signature Upload"
                       type="file"
-                      label=""
+                      onChange={(e) => {
+                        console.log(e, "file");
+                        setValue(
+                          "branch_contact_detail[1].signature_upload",
+                          e,
+                          {
+                            shouldValidate: true,
+                          }
+                        );
+                      }}
+                      value={getValues(
+                        "branch_contact_detail[1].signature_upload"
+                      )}
                       style={{
                         mb: 1,
                         mt: 1,
@@ -923,9 +958,14 @@ const toasterAlert = (obj) => {
 
     Object.keys(errorData).forEach((key) => {
       const messages = errorData[key];
-      messages.forEach((message) => {
-        errorMessage += `${key} : ${message} \n`;
-      });
+      if (Array.isArray(messages)) {
+        // Check if messages is an array
+        messages.forEach((message) => {
+          errorMessage += `${key} : ${message} \n`;
+        });
+      } else {
+        errorMessage += `${key} : ${messages} \n`;
+      }
     });
     showToastByStatusCode(status, errorMessage);
     return false;

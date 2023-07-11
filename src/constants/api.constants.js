@@ -54,7 +54,7 @@ export const API = {
     WAREHOUSE_SUB_TYPE_MASTER_ACTIVE: "",
     USER_MASTER_ACTIVE: "",
     BANK_CM_LOCATION_MASTER: "/business_flow/bank_cm_location/",
-    COMMODITY_BAG_MASTER: "",
+    COMMODITY_BAG_MASTER: "/warehouse/commodity_type/",
     HSN_MASTER: "/warehouse/hsn/",
     WAREHOUSE_OWNER_MASTER: "/warehouse/HiringProposalWarehouseOwnerDetails/",
     EXCEL_DOWNLOAD_MASTER: "excel_download",

@@ -32,6 +32,7 @@ const WarehouseTypeMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "WarehouseType",
   });
 
   const [
@@ -111,7 +112,7 @@ const WarehouseTypeMaster = () => {
 
     columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
-      header: "Created date",
+      header: "Creation Date",
     }),
 
     columnHelper.accessor("last_updated_date", {
@@ -121,7 +122,11 @@ const WarehouseTypeMaster = () => {
 
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -143,7 +148,11 @@ const WarehouseTypeMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

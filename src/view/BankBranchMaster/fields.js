@@ -142,10 +142,31 @@ const schema = yup.object().shape({
   region: yup.string().trim().required("Region name is required"),
   state: yup.string().trim().required("State name is required"),
   district: yup.string().trim().required("District name is required"),
-  branch_address: yup.string().trim().required("Branch address name is required"),
+  branch_address: yup
+    .string()
+    .trim()
+    .required("Branch address name is required"),
   pincode: yup.number().required("Pincode is required"),
   is_active: yup.string(),
   // commodity_type: yup.string().trim().required("Commodity type is required"),
+  branch_contact_detail: yup.array().of(
+    yup.object().shape({
+      authorized_name: yup.string().trim().required("Name is required"),
+      authorized_mobile_no: yup
+        .string()
+        .trim()
+        .required("Contact No is required"),
+      authorized_email_id: yup
+        .string()
+        .trim()
+        .email("Invalid email")
+        .required("Email ID is required"),
+      signature_upload: yup
+        .string()
+        .trim()
+        .required("Signature Upload is required"),
+    })
+  ),
 });
 
 export { filterFields, addEditFormFields, schema };

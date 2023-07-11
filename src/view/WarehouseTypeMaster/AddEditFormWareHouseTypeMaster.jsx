@@ -114,7 +114,7 @@ function AddEditFormWareHouseTypeMaster() {
       let obj = {
         warehouse_type_name: details.warehouse_type_name,
         description: details.description,
-        active: details.active,
+        is_active: details.is_active,
       };
       console.log("details", details);
 
@@ -168,7 +168,7 @@ function AddEditFormWareHouseTypeMaster() {
                               details?.commodity_type?.commodity_type
                           ),
                         selectType: "label",
-                        isChecked: details?.active,
+                        isChecked: details?.is_active,
                         isClearable: false,
                         style: { mb: 1, mt: 1 },
                       })}
