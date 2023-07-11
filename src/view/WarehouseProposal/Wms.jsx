@@ -133,8 +133,8 @@ const formFieldsName = {
     is_funding_required: "is_funding_required",
     bank_details: {
       //not found
-      bank_name: "bank_name", //not found
-      branch_name: "branch_name", //not found
+      bank: "bank", //not found
+      branch: "branch", //not found
     },
   },
   wms_commercial_details: {
@@ -248,8 +248,8 @@ const schema = yup.object().shape({
     then: () =>
       yup.array().of(
         yup.object().shape({
-          bank_name: yup.string().trim().required("Bank name is required"),
-          branch_name: yup.string().trim().required("Branch name is required"),
+          bank: yup.string().trim().required("Bank name is required"),
+          branch: yup.string().trim().required("Branch name is required"),
         })
       ),
     otherwise: () => yup.array(),
@@ -787,7 +787,7 @@ const Wms = () => {
 
   // hire api end
 
-  // first accordion function start
+  // first accordion function end
 
   // second accordion function start
 
@@ -1199,6 +1199,8 @@ const Wms = () => {
 
   // third accordion function end
 
+  // fourth accordion function start
+
   // client list drill down api start
   const regionOnClientChange = async (val, index) => {
     console.log("value --> ", val);
@@ -1448,6 +1450,22 @@ const Wms = () => {
       }
     );
   };
+
+  const [clientList, setClientList] = useState({
+    clientType: "",
+    name: "",
+    mobile: "",
+    region: "",
+    state: "",
+    substate: "",
+    district: "",
+    area: "",
+    address: "",
+    charges: "",
+    billing: "",
+  });
+
+  // fourth accordion function end
 
   // client list drill down api end
 

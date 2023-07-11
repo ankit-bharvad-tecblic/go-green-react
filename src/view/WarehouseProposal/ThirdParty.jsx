@@ -93,8 +93,8 @@ const formFieldsName = {
     cc_banker: "cc_banker", //not found
     bank_details: {
       //not found
-      bank_name: "bank_name", //not found
-      branch_name: "branch_name", //not found
+      bank: "bank", //not found
+      branch: "branch", //not found
     },
   },
   tp_commercial_details: {
@@ -185,8 +185,8 @@ const schema = yup.object().shape({
   cc_banker: yup.string() /*.required("CC Banker required is required")*/,
   bank_details: yup.array().of(
     yup.object().shape({
-      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
-      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
+      bank: yup.string().trim() /*.required("Bank name is required")*/,
+      branch: yup.string().trim() /*.required("Branch name is required")*/,
     })
   ),
   cm_proposal_business_form: yup.string(),
@@ -2326,7 +2326,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2340,7 +2340,7 @@ const ThirdParty = () => {
                                         Client Name{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_name}`}
                                         placeholder="client name"
                                         type="text"
                                         label=""
@@ -2354,7 +2354,7 @@ const ThirdParty = () => {
                                         Mobile Number{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.mobile_number}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.mobile_number}`}
                                         placeholder="mobile number"
                                         type="text"
                                         label=""
@@ -2365,7 +2365,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Region</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.region}`}
                                         label=""
                                         options={[
                                           {
@@ -2392,7 +2392,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.region}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2403,7 +2403,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">State </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.state}`}
                                         label=""
                                         options={[
                                           {
@@ -2430,7 +2430,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.state}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2441,7 +2441,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Zone </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.zone}`}
                                         label=""
                                         options={[
                                           {
@@ -2468,7 +2468,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.zone}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2479,7 +2479,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">District </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.district}`}
                                         label=""
                                         options={[
                                           {
@@ -2506,7 +2506,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.district}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2517,7 +2517,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Area </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.area}`}
                                         label=""
                                         options={[
                                           {
@@ -2544,7 +2544,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.area}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2555,7 +2555,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left"> Address </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.address}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.address}`}
                                         placeholder="address"
                                         type="text"
                                         label=""
@@ -2568,7 +2568,7 @@ const ThirdParty = () => {
                                         Client known to GGWPL official
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`}
                                         label=""
                                         options={[
                                           {
@@ -2595,7 +2595,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2608,7 +2608,7 @@ const ThirdParty = () => {
                                         Client Sourced by
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`}
                                         label=""
                                         options={[
                                           {
@@ -2635,7 +2635,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2646,7 +2646,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Bank Name</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2673,7 +2673,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2684,7 +2684,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Branch Name</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2711,7 +2711,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2724,7 +2724,7 @@ const ThirdParty = () => {
                                         Employee Name
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2751,7 +2751,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2877,7 +2877,7 @@ const ThirdParty = () => {
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
-                                  style={{ w:"100%"}}
+                                  style={{ w: "100%" }}
                                   handleOnChange={(val) => {
                                     console.log(
                                       "selectedOption @@@@@@@@@@@------> ",
