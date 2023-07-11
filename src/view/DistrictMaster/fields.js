@@ -56,7 +56,7 @@ const filterFields = [
     isActiveFilter: false,
     label: "Active",
     name: "is_active",
-    placeholder: "Active",
+    placeholder: "Active", 
     type: "select",
     multi: false,
     options: [

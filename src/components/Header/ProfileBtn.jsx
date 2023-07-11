@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
   Text,
 } from "@chakra-ui/react";
-import ReactIcon from "../../assets/Images/reactIcon.svg";
+
 import React from "react";
 import { RiGroupLine } from "react-icons/ri";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -18,8 +18,13 @@ import profile_dumy_icon from "../Icons/profile_dumy_icon.svg";
 
 import { commonService } from "../../services/common.service";
 import { localStorageService } from "../../services/localStorge.service";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProfileBtn() {
+  const handleChangePassword = () => {
+    window.location.href = "/change-password";
+  };
+
   return (
     <>
       <Box position="relative">
@@ -83,6 +88,7 @@ function ProfileBtn() {
                   borderBottom="1px"
                   borderColor="gray.100"
                   cursor="pointer"
+                  onClick={handleChangePassword}
                 >
                   <Flex
                     height="40px"
