@@ -41,6 +41,7 @@ const CustomMultiSelector = ({ name, label, options, rules }) => {
               placeholder={label}
               isMulti
               isClearable
+              className="basic-multi-select"
               value={options.filter((option) =>
                 selectedValue.includes(option.value)
               )}
@@ -68,6 +69,7 @@ const CustomMultiSelector = ({ name, label, options, rules }) => {
                     color: "green",
                   },
                   display: "flex",
+
                   justifyContent: "space-between",
                   paddingRight: "10px",
                 }),

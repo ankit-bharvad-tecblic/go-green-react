@@ -425,30 +425,40 @@ function AddEditFormBankBranchMaster() {
     getBankBranch();
     getBankMasterList();
     if (details?.id) {
+      regionOnChange({ value: details?.region?.id });
+      stateOnChange({ value: details.state?.id });
+      zoneOnChange({ value: details.district?.substate?.id });
+      districtOnChange({ value: details.district?.id });
       let obj = {
         branch_name: details.branch_name,
         bank: details?.bank.bank_name,
-        region: details.region.region_name,
-        state: details.state.state_name,
+        region: details?.region?.id,
+        state: details?.state?.id,
+        substate: details.substate?.id,
+        area: details.area?.id,
         branch_address: details.branch_address,
-        district: details.district.district_name,
+        district: details?.district?.id,
         pincode: details.pincode,
         is_active: details.is_active,
         branch_contact_detail: details.branch_contact_detail,
       };
       console.log("details", details);
 
+      //   Object.keys(obj).forEach(function (key) {
+      //     if (key === "branch_contact_detail") {
+      //       const contactDetails = obj[key] || []; // Default to an empty array if undefined
+      //       methods.setValue(
+      //         key,
+      //         contactDetails.map((item) => ({ ...item })),
+      //         { shouldValidate: true }
+      //       );
+      //     } else {
+      //       methods.setValue(key, obj[key], { shouldValidate: true });
+      //     }
+      //   });
+      // }
       Object.keys(obj).forEach(function (key) {
-        if (key === "branch_contact_detail") {
-          const contactDetails = obj[key] || []; // Default to an empty array if undefined
-          methods.setValue(
-            key,
-            contactDetails.map((item) => ({ ...item })),
-            { shouldValidate: true }
-          );
-        } else {
-          methods.setValue(key, obj[key], { shouldValidate: true });
-        }
+        methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
     const breadcrumbArray = [
@@ -727,6 +737,7 @@ function AddEditFormBankBranchMaster() {
               {/* For the authoraization 1 person start */}
               <Box mt={4}>
                 {/* New fields */}
+                {console.log(getValues("branch_contact_detail"), "here")}
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Text fontWeight={"semibold"} textAlign="right" w="50%">
                     Authorise person - 1

@@ -237,6 +237,7 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   email: yup.string().trim().required("Email is required"),
   employee_name: yup.string().trim().required("Employee name is required"),
+
   phone: yup
     .string()
     .trim()
@@ -249,4 +250,12 @@ const schema = yup.object().shape({
   is_active: yup.string(),
 });
 
-export { filterFields, addEditFormFields, schema };
+const tableschema = yup.object().shape({
+  region: yup.string().trim().required("Region name is required"),
+  state: yup.string().trim().required("State name is required"),
+  substate: yup.string().trim().required("Sub State name  is required"),
+  district: yup.string().trim().required("District name is required"),
+  area: yup.string().trim().required("Area name is required"),
+});
+
+export { filterFields, addEditFormFields, schema, tableschema };

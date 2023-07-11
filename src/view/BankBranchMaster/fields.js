@@ -141,7 +141,9 @@ const schema = yup.object().shape({
   bank: yup.string().trim().required("Bank is required"),
   region: yup.string().trim().required("Region name is required"),
   state: yup.string().trim().required("State name is required"),
+  substate: yup.string().trim().required("Sub State name  is required"),
   district: yup.string().trim().required("District name is required"),
+  area: yup.string().trim().required("Area name is required"),
   branch_address: yup
     .string()
     .trim()
