@@ -18,6 +18,7 @@ const ReactCustomSelect = ({
   selectedValue,
   isClearable,
   selectType,
+  selectDisable,
   isMultipleSelect,
   style,
   handleOnChange,
@@ -75,6 +76,7 @@ const ReactCustomSelect = ({
               isLoading={isLoading}
               value={selectedVal}
               onChange={handleSelectChange}
+              isDisabled={selectDisable || false}
               styles={{
                 control: (base, state) => ({
                   ...base,

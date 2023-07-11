@@ -31,15 +31,28 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
   useGetAreaMasterMutation,
+  useGetBankBranchMasterMutation,
+  useGetBankMasterMutation,
+  useGetCommodityMasterMutation,
   useGetDistrictMasterMutation,
   useGetRegionMasterMutation,
   useGetStateMasterMutation,
   useGetZoneMasterMutation,
 } from "../../features/master-api-slice";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
+import ReactSelect from "react-select";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
-import { useSaveAsDraftMutation } from "../../features/warehouse-proposal.slice";
+import {
+  useFetchLocationDrillDownMutation,
+  useGetSecurityGuardDayShiftMutation,
+  useGetSecurityGuardNightShiftMutation,
+  useGetSupervisorDayShiftMutation,
+  useGetSupervisorNightShiftMutation,
+  useSaveAsDraftMutation,
+} from "../../features/warehouse-proposal.slice";
+import { AiOutlineDelete } from "react-icons/ai";
+import { BiEditAlt } from "react-icons/bi";
 
 const commonStyle = {
   mt: 2,
@@ -59,7 +72,7 @@ const formFieldsName = {
     warehouse_name: "warehouse_name",
     region: "region",
     state: "state",
-    zone: "zone",
+    substate: "substate",
     district: "district",
     area: "area",
     warehouse_address: "warehouse_address",
@@ -80,8 +93,8 @@ const formFieldsName = {
     cc_banker: "cc_banker", //not found
     bank_details: {
       //not found
-      bank_name: "bank_name", //not found
-      branch_name: "branch_name", //not found
+      bank: "bank", //not found
+      branch: "branch", //not found
     },
   },
   tp_commercial_details: {
@@ -111,11 +124,33 @@ const formFieldsName = {
   },
 };
 
+const tableStyle = {
+  idWidth: "100px",
+  generalPadding: "8px 16px",
+  actionWidth: "150px",
+};
+
+const reactSelectStyle = {
+  menu: (base) => ({
+    ...base,
+    // backgroundColor: "#A6CE39",
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#A6CE39" : "white",
+    color: state.isFocused ? "green" : "black",
+    "&:hover": {
+      //  backgroundColor: "#C2DE8C",
+      color: "black",
+    },
+  }),
+};
+
 const schema = yup.object().shape({
   warehouse_name: yup.string().required("Warehouse name is required"),
   region: yup.string().required("Region name is required"),
   state: yup.string().required("State name is required"),
-  zone: yup.string().required("Zone name is required"),
+  substate: yup.string().required("Sub State name is required"),
   district: yup.string().required("District name is required"),
   area: yup.string().required("Area name is required"),
   warehouse_address: yup.string().required("Warehouse address is required"),
@@ -150,8 +185,8 @@ const schema = yup.object().shape({
   cc_banker: yup.string() /*.required("CC Banker required is required")*/,
   bank_details: yup.array().of(
     yup.object().shape({
-      bank_name: yup.string().trim() /*.required("Bank name is required")*/,
-      branch_name: yup.string().trim() /*.required("Branch name is required")*/,
+      bank: yup.string().trim() /*.required("Bank name is required")*/,
+      branch: yup.string().trim() /*.required("Branch name is required")*/,
     })
   ),
   cm_proposal_business_form: yup.string(),
@@ -183,12 +218,18 @@ const schema = yup.object().shape({
 const ThirdParty = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
+    community: [],
+    banks: [],
+    branch: [],
   });
+
+  const [selected, setSelected] = useState({});
+
+  const [locationDrillDownState, setLocationDrillDownState] = useState({});
 
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      bank_details: [{ bank_name: "", branch_name: "" }],
       client_list: [
         {
           client_type: "",
@@ -211,26 +252,6 @@ const ThirdParty = () => {
   });
 
   const { setValue, getValues } = methods;
-
-  const {
-    fields: bank_details_fields,
-    append: add_new_bank_detail,
-    remove: remove_bank_detail,
-  } = useFieldArray({
-    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "bank_details",
-  });
-
-  const append_new_bank_details = () => {
-    add_new_bank_detail({
-      bank_name: "",
-      branch_name: "",
-    });
-  };
-
-  useEffect(() => {
-    console.log("bank_details_fields --> ", bank_details_fields);
-  }, [bank_details_fields]);
 
   const {
     fields: client_list,
@@ -264,34 +285,394 @@ const ThirdParty = () => {
     console.log("client_list --> ", client_list);
   }, [client_list]);
 
-  const onSubmit = (data) => {
-    console.log("data==>", data);
-  };
+  // first accordion function start
 
-  const [getRegionMaster, { isLoading: getRegionMasterApiIsLoading }] =
-    useGetRegionMasterMutation();
+  // Region State  Zone District Area  onChange drill down api start //
 
-  const [getStateMaster, { isLoading: getStateApiIsLoading }] =
-    useGetStateMasterMutation();
-
-  const [getZoneMaster, { isLoading: getZoneApiIsLoading }] =
-    useGetZoneMasterMutation();
-
-  const [getDistrictMaster, { isLoading: getDistrictApiIsLoading }] =
-    useGetDistrictMasterMutation();
-
-  const [getAreaMaster, { isLoading: getAreaMasterApiIsLoading }] =
-    useGetAreaMasterMutation();
+  const [
+    fetchLocationDrillDown,
+    { isLoading: fetchLocationDrillDownApiIsLoading },
+  ] = useFetchLocationDrillDownMutation();
 
   const getRegionMasterList = async () => {
     try {
-      const response = await getRegionMaster().unwrap();
+      const response = await fetchLocationDrillDown().unwrap();
+      console.log("getRegionMasterList:", response);
+
+      const arr = response?.region
+        ?.filter((item) => item.region_name !== "ALL - Region")
+        .map(({ region_name, id }) => ({
+          label: region_name,
+          value: id,
+        }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const regionOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.tp_warehouse_details.region, val?.value, {
+      shouldValidate: true,
+    });
+    setSelected((prev) => ({ ...prev, region: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      state: {},
+      substate: {},
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.tp_warehouse_details.state, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.substate, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: val?.value,
+    }));
+
+    const query = {
+      region: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      const arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        states: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const stateOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.tp_warehouse_details.state, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, state: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      substate: {},
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.tp_warehouse_details.substate, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: prev.region,
+      state: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      const arr = response?.substate
+        ?.filter((item) => item.substate_name !== "All - Zone")
+        .map(({ substate_name, id }) => ({
+          label: substate_name,
+          value: id,
+        }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        substate: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const zoneOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.tp_warehouse_details.substate, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, substate: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      district: {},
+      area: {},
+    }));
+
+    setValue(formFieldsName.tp_warehouse_details.district, null, {
+      shouldValidate: false,
+    });
+
+    setValue(formFieldsName.tp_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: prev.region,
+      state: prev.state,
+      substate: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.value,
+      substate: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      const arr = response?.district
+        ?.filter((item) => item.district_name !== "All - District")
+        .map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const districtOnChange = async (val) => {
+    console.log("value --> ", val);
+    setValue(formFieldsName.tp_warehouse_details.district, val?.value, {
+      shouldValidate: true,
+    });
+
+    setSelected((prev) => ({ ...prev, district: val }));
+    // on change  to null
+    setSelected((prev) => ({
+      ...prev,
+      area: {},
+    }));
+
+    setValue(formFieldsName.tp_warehouse_details.area, null, {
+      shouldValidate: false,
+    });
+
+    setLocationDrillDownState((prev) => ({
+      region: prev.region,
+      state: prev.state,
+      substate: prev.substate,
+      district: val?.value,
+    }));
+
+    const query = {
+      region: locationDrillDownState.region,
+      state: locationDrillDownState.state,
+      substate: locationDrillDownState.substate,
+      district: val?.value,
+    };
+
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+
+      const arr = response?.area
+        ?.filter((item) => item.area_name !== "All - Area")
+        .map(({ area_name, id }) => ({
+          label: area_name,
+          value: id,
+        }));
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const areaOnChange = (val) => {
+    setSelected((prev) => ({ ...prev, area: val }));
+    setValue(formFieldsName.tp_warehouse_details.area, val?.value, {
+      shouldValidate: true,
+    });
+  };
+
+  // Region State  Zone District Area  onChange drill down api end //
+
+  // hire api start
+
+  const [
+    getSupervisorDayShift,
+    { isLoading: getSupervisorDayShiftApiIsLoading },
+  ] = useGetSupervisorDayShiftMutation();
+
+  const [
+    getSupervisorNightShift,
+    { isLoading: getSupervisorNightShiftApiIsLoading },
+  ] = useGetSupervisorNightShiftMutation();
+
+  const [
+    getSecurityGuardDayShift,
+    { isLoading: getSecurityGuardDayShiftApiIsLoading },
+  ] = useGetSecurityGuardDayShiftMutation();
+
+  const [
+    getSecurityGuardNightShift,
+    { isLoading: getSecurityGuardNightShiftApiIsLoading },
+  ] = useGetSecurityGuardNightShiftMutation();
+
+  const fetchSupervisorDayShift = async () => {
+    try {
+      const response = await getSupervisorDayShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorDayShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSupervisorNightShift = async () => {
+    try {
+      const response = await getSupervisorNightShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        superVisorNightShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSecurityGuardDayShift = async () => {
+    try {
+      const response = await getSecurityGuardDayShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardDayShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchSecurityGuardNightShift = async () => {
+    try {
+      const response = await getSecurityGuardNightShift().unwrap();
+      console.log("Success:", response);
+
+      const optionsArray = Object.entries(response?.data).map(
+        ([key, value]) => ({
+          value: key,
+          label: key,
+          count: value,
+        })
+      );
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        securityGuardNightShiftOpt: optionsArray,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  // hire api end
+
+  // first accordion function end
+
+  // second accordion function start
+
+  const [getCommodityMaster, { isLoading: getCommodityMasterApiIsLoading }] =
+    useGetCommodityMasterMutation();
+
+  const getCommodityMasterList = async () => {
+    try {
+      const response = await getCommodityMaster().unwrap();
       console.log("Success:", response);
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          regions: response?.results.map(({ region_name, id }) => ({
-            label: region_name,
+          community: response?.results.map(({ commodity_name, id }) => ({
+            label: commodity_name,
             value: id,
           })),
         }));
@@ -301,15 +682,18 @@ const ThirdParty = () => {
     }
   };
 
-  const getStateList = async () => {
+  const [getBankMaster, { isLoading: getBankMasterApiIsLoading }] =
+    useGetBankMasterMutation();
+
+  const getBankMasterList = async () => {
     try {
-      const response = await getStateMaster().unwrap();
+      const response = await getBankMaster().unwrap();
       console.log("Success:", response);
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          states: response?.results.map(({ state_name, id }) => ({
-            label: state_name,
+          banks: response?.results.map(({ bank_name, id }) => ({
+            label: bank_name,
             value: id,
           })),
         }));
@@ -319,16 +703,20 @@ const ThirdParty = () => {
     }
   };
 
-  const getZonesList = async () => {
+  const [getBankBranchMaster, { isLoading: getBankBranchMasterApiIsLoading }] =
+    useGetBankBranchMasterMutation();
+
+  const getBranchMasterList = async () => {
     try {
-      const response = await getZoneMaster().unwrap();
+      const response = await getBankBranchMaster().unwrap();
       console.log("Success:", response);
       if (response.status === 200) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          zones: response?.results.map(({ zone_name, id }) => ({
-            label: zone_name,
+          branch: response?.results.map(({ branch_name, bank, id }) => ({
+            label: branch_name,
             value: id,
+            bank: bank,
           })),
         }));
       }
@@ -337,40 +725,121 @@ const ThirdParty = () => {
     }
   };
 
-  const getDistrictMasterList = async () => {
-    try {
-      const response = await getDistrictMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          districts: response?.results.map(({ district_name, id }) => ({
-            label: district_name,
-            value: id,
-          })),
-        }));
-      }
-    } catch (error) {
-      console.error("Error:", error);
+  // bank add logic start
+
+  const {
+    fields: bank_details_fields,
+    append: add_new_bank_detail,
+    remove: remove_bank_detail,
+  } = useFieldArray({
+    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "bank_details",
+  });
+
+  const [bankDetail, setBankDetail] = useState({
+    bank: "",
+    branch: "",
+  });
+
+  const [bankError, setBankError] = useState({
+    bank: "",
+    branch: "",
+  });
+
+  const BankErrorFunction = () => {
+    setBankError({
+      bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
+      branch:
+        bankDetail.branch !== ""
+          ? getValues(`bank_details`).filter(
+              (item) => item.branch === bankDetail.branch
+            ).length === 0
+            ? ""
+            : "Branch has been already selected."
+          : "Branch can not be empty.",
+    });
+  };
+
+  const append_new_bank_details = () => {
+    if (
+      bankDetail.bank !== "" &&
+      bankDetail.branch !== "" &&
+      getValues(`bank_details`).filter(
+        (item) => item.branch === bankDetail.branch
+      ).length === 0
+    ) {
+      add_new_bank_detail({
+        bank: bankDetail.bank,
+        branch: bankDetail.branch,
+      });
+      setBankDetail({
+        bank: "",
+        branch: "",
+      });
+      setBankError({
+        bank: "",
+        branch: "",
+      });
+    } else {
+      BankErrorFunction();
     }
   };
 
-  const getAreaMasterList = async () => {
-    try {
-      const response = await getAreaMaster().unwrap();
-      console.log("Success:", response);
-      if (response.status === 200) {
-        setSelectBoxOptions((prev) => ({
-          ...prev,
-          areas: response?.results.map(({ area_name, id }) => ({
-            label: area_name,
-            value: id,
-          })),
-        }));
-      }
-    } catch (error) {
-      console.error("Error:", error);
+  const [updateBankFlag, setUpdateBankFlag] = useState(null);
+
+  const updateBankFlagFunction = (data, id) => {
+    setUpdateBankFlag(id);
+    setBankDetail({
+      bank: data.bank,
+      branch: data.branch,
+    });
+    setBankError({
+      bank: "",
+      branch: "",
+    });
+  };
+
+  const UpdateBankDetail = () => {
+    if (
+      bankDetail.bank !== "" &&
+      bankDetail.branch !== "" &&
+      getValues(`bank_details`)
+        .filter((item, index) => index !== updateBankFlag)
+        .filter((item) => item.branch === bankDetail.branch).length === 0
+    ) {
+      const tempArr = getValues(`bank_details`);
+      setValue(
+        `bank_details`,
+        [
+          ...tempArr.slice(0, updateBankFlag),
+          {
+            bank: bankDetail.bank,
+            branch: bankDetail.branch,
+          },
+          ...tempArr.slice(updateBankFlag + 1),
+        ],
+        { shouldValidate: true }
+      );
+      setBankDetail({
+        bank: "",
+        branch: "",
+      });
+      setUpdateBankFlag(null);
+      setBankError({
+        bank: "",
+        branch: "",
+      });
+    } else {
+      BankErrorFunction();
     }
+  };
+
+  // bank add logic end
+
+  // second accordion function end
+
+  const onSubmit = (data) => {
+    console.log("data==>", data);
   };
 
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
@@ -379,7 +848,7 @@ const ThirdParty = () => {
   const saveAsDraftData = async (type) => {
     try {
       let data = {};
-      
+
       if (type === "TP_WAREHOUSE_DETAILS") {
         data = {
           is_draft: true,
@@ -442,10 +911,13 @@ const ThirdParty = () => {
 
   useEffect(() => {
     getRegionMasterList();
-    getStateList();
-    getZonesList();
-    getDistrictMasterList();
-    getAreaMasterList();
+    fetchSupervisorDayShift();
+    fetchSupervisorNightShift();
+    fetchSecurityGuardDayShift();
+    fetchSecurityGuardNightShift();
+    getCommodityMasterList();
+    getBankMasterList();
+    getBranchMasterList();
   }, []);
 
   return (
@@ -486,32 +958,23 @@ const ThirdParty = () => {
                           mt="3"
                           pb={4}
                         >
-                          <Box
-                            //border="1px"
-                            w={{
-                              base: "100%",
-                              sm: "100%",
-                              md: "100%",
-                              lg: "100%",
-                              xl: "90%",
-                            }}
-                          >
+                          <Box>
                             {/* --------------  Warehouse Name -------------- */}
                             <Box>
                               <Grid
                                 textAlign="right"
-                                alignItems="center"
+                                alignItems="start"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   {" "}
                                   <Text textAlign="right">
                                     Warehouse Name
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  <CustomInput
+                                  <CustomTextArea
                                     name={
                                       formFieldsName.tp_warehouse_details
                                         .warehouse_name
@@ -519,22 +982,20 @@ const ThirdParty = () => {
                                     placeholder="Warehouse Name"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* -------------- Region -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">Region</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
@@ -543,23 +1004,16 @@ const ThirdParty = () => {
                                       formFieldsName.tp_warehouse_details.region
                                     }
                                     label=""
-                                    isLoading={getRegionMasterApiIsLoading}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     options={selectBoxOptions?.regions || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.region}
                                     isClearable={false}
                                     selectType="label"
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.tp_warehouse_details
-                                          .region,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      regionOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -573,75 +1027,58 @@ const ThirdParty = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">State</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.tp_warehouse_details.state
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.state}
                                     isClearable={false}
                                     selectType="label"
-                                    style={{ w: commonStyle.w }}
-                                    isLoading={getStateApiIsLoading}
+                                    style={{ w: "100%" }}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.tp_warehouse_details
-                                          .state,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      stateOnChange(val);
                                     }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
-                            {/* -------------- Zone -------------- */}
+                            {/* -------------- Sub State -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">Zone</Text>{" "}
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">Sub State</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   <ReactCustomSelect
                                     name={
-                                      formFieldsName.tp_warehouse_details.zone
+                                      formFieldsName.tp_warehouse_details
+                                        .substate
                                     }
                                     label=""
-                                    options={selectBoxOptions?.zones || []}
-                                    selectedValue={{}}
+                                    options={selectBoxOptions?.substate || []}
+                                    selectedValue={selected?.substate}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getZoneApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.tp_warehouse_details
-                                          .zone,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      zoneOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -649,18 +1086,16 @@ const ThirdParty = () => {
                             </Box>
                             {/* -------------- District -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">District</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.tp_warehouse_details
@@ -668,22 +1103,15 @@ const ThirdParty = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.district}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getDistrictApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.tp_warehouse_details
-                                          .district,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      districtOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -691,41 +1119,31 @@ const ThirdParty = () => {
                             </Box>
                             {/* -------------- Area -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">Area</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.tp_warehouse_details.area
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
-                                    selectedValue={{}}
+                                    selectedValue={selected?.area}
                                     isClearable={false}
                                     selectType="label"
-                                    isLoading={getAreaMasterApiIsLoading}
-                                    style={{ w: commonStyle.w }}
+                                    isLoading={
+                                      fetchLocationDrillDownApiIsLoading
+                                    }
+                                    style={{ w: "100%" }}
                                     handleOnChange={(val) => {
-                                      console.log(
-                                        "selectedOption @@@@@@@@@@@------> ",
-                                        val
-                                      );
-                                      setValue(
-                                        formFieldsName.tp_warehouse_details
-                                          .area,
-                                        val.value,
-                                        { shouldValidate: true }
-                                      );
+                                      areaOnChange(val);
                                     }}
                                   />
                                 </GridItem>
@@ -733,21 +1151,18 @@ const ThirdParty = () => {
                             </Box>
                             {/* -------------- Warehouse address -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
-                                alignItems="center"
+                                alignItems="start"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Warehouse Address
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <CustomTextArea
                                     name={
                                       formFieldsName.tp_warehouse_details
@@ -756,22 +1171,20 @@ const ThirdParty = () => {
                                     placeholder="Warehouse Address"
                                     type="textarea"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* --------------  Pin Code -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">Pin Code</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
@@ -783,25 +1196,21 @@ const ThirdParty = () => {
                                     placeholder="Pin Code"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* -------------- No of chamber -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
-                                  <Text textAlign="right">
-                                    No Of Chambers
-                                  </Text>{" "}
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">No Of Chambers</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
                                   <CustomInput
@@ -812,7 +1221,7 @@ const ThirdParty = () => {
                                     placeholder="Pin Code"
                                     type="text"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
@@ -825,8 +1234,7 @@ const ThirdParty = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
-                                  {" "}
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Warehouse In Factory Premises
                                   </Text>{" "}
@@ -859,7 +1267,7 @@ const ThirdParty = () => {
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     No. Of warehouse in Area
                                   </Text>{" "}
@@ -873,21 +1281,20 @@ const ThirdParty = () => {
                                     placeholder="Pin Code"
                                     type="number"
                                     label=""
-                                    style={{ w: commonStyle.w }}
+                                    style={{ w: "100%" }}
                                   />
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* -------------- supervisor_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For day Shift
                                   </Text>{" "}
@@ -904,22 +1311,26 @@ const ThirdParty = () => {
                                           .supervisor_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.superVisorDay}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      isLoading={
+                                        getSupervisorDayShiftApiIsLoading
+                                      }
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.tp_warehouse_details
                                             .supervisor_day_shift,
@@ -928,35 +1339,35 @@ const ThirdParty = () => {
                                         );
                                       }}
                                     />
-                                    <Text
-                                      color="primary.700"
-                                      fontWeight="bold"
-                                      textAlign="right"
-                                      textDecoration="underline"
-                                      cursor="pointer"
-                                    >
-                                      Hire new supervisor
-                                    </Text>{" "}
                                   </Box>
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <Text
+                                    color="primary.700"
+                                    fontWeight="bold"
+                                    textAlign="left"
+                                    textDecoration="underline"
+                                    cursor="pointer"
+                                  >
+                                    Hire new supervisor
+                                  </Text>{" "}
                                 </GridItem>
                               </Grid>
                             </Box>
                             {/* -------------- supervisor_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Supervisor For night Shift
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <Box
                                     display="flex"
                                     alignItems="center"
@@ -968,22 +1379,26 @@ const ThirdParty = () => {
                                           .supervisor_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.superVisorNightShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected.superVisorNight}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      isLoading={
+                                        getSupervisorNightShiftApiIsLoading
+                                      }
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          superVisorNight: val,
+                                        }));
                                         setValue(
                                           formFieldsName.tp_warehouse_details
                                             .supervisor_night_shift,
@@ -992,10 +1407,14 @@ const ThirdParty = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
@@ -1007,20 +1426,18 @@ const ThirdParty = () => {
                             </Box>
                             {/* -------------- security_guard_day_shift -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For day shift
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <Box
                                     display="flex"
                                     alignItems="center"
@@ -1032,22 +1449,26 @@ const ThirdParty = () => {
                                           .security_guard_day_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardDayShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={selected?.securityGuardDay}
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      isLoading={
+                                        getSecurityGuardDayShiftApiIsLoading
+                                      }
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
                                         );
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardDay: val,
+                                        }));
                                         setValue(
                                           formFieldsName.tp_warehouse_details
                                             .security_guard_day_shift,
@@ -1056,10 +1477,14 @@ const ThirdParty = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
                                     >
@@ -1071,20 +1496,18 @@ const ThirdParty = () => {
                             </Box>
                             {/* -------------- security_guard_night_shift -------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
                                 templateColumns="repeat(4, 1fr)"
                                 gap={4}
                               >
-                                <GridItem colSpan={2}>
+                                <GridItem colSpan={1}>
                                   <Text textAlign="right">
                                     Security Guard For night shift
                                   </Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
                                   <Box
                                     display="flex"
                                     alignItems="center"
@@ -1096,18 +1519,24 @@ const ThirdParty = () => {
                                           .security_guard_night_shift
                                       }
                                       label=""
-                                      options={[
-                                        {
-                                          label: "1",
-                                          value: 1,
-                                        },
-                                      ]}
-                                      selectedValue={{}}
+                                      options={
+                                        selectBoxOptions?.securityGuardNightShiftOpt ||
+                                        []
+                                      }
+                                      selectedValue={
+                                        selected?.securityGuardNight
+                                      }
                                       isClearable={false}
                                       selectType="label"
-                                      isLoading={false}
-                                      style={{ w: commonStyle.w }}
+                                      isLoading={
+                                        getSecurityGuardNightShiftApiIsLoading
+                                      }
+                                      style={{ w: "100%" }}
                                       handleOnChange={(val) => {
+                                        setSelected((prev) => ({
+                                          ...prev,
+                                          securityGuardNight: val,
+                                        }));
                                         console.log(
                                           "selectedOption @@@@@@@@@@@------> ",
                                           val
@@ -1120,12 +1549,17 @@ const ThirdParty = () => {
                                         );
                                       }}
                                     />
+                                  </Box>
+                                </GridItem>
+                                <GridItem colSpan={1}>
+                                  <Box>
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
-                                      textAlign="right"
+                                      textAlign="left"
                                       textDecoration="underline"
                                       cursor="pointer"
+                                      sx={{ textWrap: "nowrap" }}
                                     >
                                       Hire new security guard
                                     </Text>{" "}
@@ -1188,408 +1622,522 @@ const ThirdParty = () => {
                         </AccordionButton>
 
                         <AccordionPanel bg="white" mt="5" pb={4}>
-                          {/* ================ Expected Commodity Name ================= */}
                           <Box>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Expected Commodity Name
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .expected_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "1",
-                                      value: 1,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) => {
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    );
-                                    setValue(
+                            {/* ================ Expected Commodity Name ================= */}
+                            <Box>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">
+                                    Expected Commodity Name
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
                                       formFieldsName.tp_commodity_details
-                                        .expected_commodity,
-                                      val.value,
-                                      { shouldValidate: true }
-                                    );
-                                  }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Commodity Inward Type ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Commodity Inward Type
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .commodity_inward_type
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) => {
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    );
-                                    setValue(
+                                        .expected_commodity
+                                    }
+                                    label=""
+                                    options={selectBoxOptions?.community || []}
+                                    selectedValue={selected.expectedCommodity}
+                                    isClearable={false}
+                                    isMultipleSelect={true}
+                                    isLoading={getCommodityMasterApiIsLoading}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        expectedCommodity: val,
+                                      }));
+                                      setValue(
+                                        formFieldsName.tp_commodity_details
+                                          .expected_commodity,
+                                        val,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+                            {/* ================ Commodity Inward Type ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">
+                                    Commodity Inward Type
+                                  </Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
                                       formFieldsName.tp_commodity_details
-                                        .commodity_inward_type,
-                                      val.value,
-                                      { shouldValidate: true }
-                                    );
-                                  }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Pre-Stack Commodity ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .prestack_commodity
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) => {
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    );
-                                    setValue(
+                                        .commodity_inward_type
+                                    }
+                                    label=""
+                                    options={[
+                                      {
+                                        label: "Fresh Stock",
+                                        value: "FS",
+                                      },
+                                      {
+                                        label: "Pre-Stacked",
+                                        value: "PS",
+                                      },
+                                      {
+                                        label: "Take Over",
+                                        value: "TO",
+                                      },
+                                    ]}
+                                    selectedValue={selected.commodityInwardType}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        commodityInwardType: val,
+                                      }));
+                                      setValue(
+                                        formFieldsName.tp_commodity_details
+                                          .commodity_inward_type,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
+
+                            {getValues(
+                              formFieldsName.tp_commodity_details
+                                .commodity_inward_type
+                            ) === "PS" ? (
+                              <>
+                                {/* ================ Pre-Stack Commodity ================= */}
+                                <Box mt={commonStyle.mt}>
+                                  <Grid
+                                    textAlign="right"
+                                    templateColumns="repeat(4, 1fr)"
+                                    alignItems="center"
+                                    gap={4}
+                                  >
+                                    <GridItem colSpan={1}>
+                                      <Text textAlign="right">
+                                        Pre-Stack Commodity
+                                      </Text>{" "}
+                                    </GridItem>
+                                    <GridItem colSpan={2}>
+                                      <ReactCustomSelect
+                                        name={
+                                          formFieldsName.tp_commodity_details
+                                            .prestack_commodity
+                                        }
+                                        label=""
+                                        options={
+                                          selectBoxOptions?.community || []
+                                        }
+                                        selectedValue={
+                                          selected.prestackCommodity
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={
+                                          getCommodityMasterApiIsLoading
+                                        }
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setSelected((prev) => ({
+                                            ...prev,
+                                            prestackCommodity: val,
+                                          }));
+                                          setValue(
+                                            formFieldsName.tp_commodity_details
+                                              .prestack_commodity,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                  </Grid>
+                                </Box>
+                                {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
+                                <Box mt={commonStyle.mt}>
+                                  <Grid
+                                    textAlign="right"
+                                    templateColumns="repeat(4, 1fr)"
+                                    alignItems="center"
+                                    gap={4}
+                                  >
+                                    <GridItem colSpan={1}>
+                                      <Text textAlign="right">
+                                        Pre-Stack Commodity Quantity(MT)
+                                      </Text>{" "}
+                                    </GridItem>
+                                    <GridItem colSpan={2}>
+                                      <CustomInput
+                                        name={
+                                          formFieldsName.tp_commodity_details
+                                            .prestack_commodity_qty
+                                        }
+                                        placeholder="Pre-Stack Commodity Quantity(MT)"
+                                        type="number"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                  </Grid>
+                                </Box>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                            {/* ================ Cc-Banker Commodity ================= */}
+                            <Box mt={commonStyle.mt}>
+                              <Grid
+                                textAlign="right"
+                                templateColumns="repeat(4, 1fr)"
+                                alignItems="center"
+                                gap={4}
+                              >
+                                <GridItem colSpan={1}>
+                                  <Text textAlign="right">CC Banker</Text>{" "}
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                  <ReactCustomSelect
+                                    name={
                                       formFieldsName.tp_commodity_details
-                                        .prestack_commodity,
-                                      val.value,
-                                      { shouldValidate: true }
-                                    );
-                                  }}
-                                />
-                              </GridItem>
-                            </Grid>
+                                        .cc_banker
+                                    }
+                                    label=""
+                                    options={[
+                                      {
+                                        label: "Fresh Stock",
+                                        value: 1,
+                                      },
+                                      {
+                                        label: "Pre-stock",
+                                        value: 2,
+                                      },
+                                      {
+                                        label: "Take over",
+                                        value: 3,
+                                      },
+                                    ]}
+                                    selectedValue={{}}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      );
+                                      setValue(
+                                        formFieldsName.tp_commodity_details
+                                          .cc_banker,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
+                                  />
+                                </GridItem>
+                              </Grid>
+                            </Box>
                           </Box>
-                          {/* ================ Pre-Stack Commodity Quantity(MT) ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">
-                                  Pre-Stack Commodity Quantity(MT)
-                                </Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <CustomInput
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .prestack_commodity_qty
-                                  }
-                                  placeholder="Pre-Stack Commodity Quantity(MT)"
-                                  type="number"
-                                  label=""
-                                  style={{ w: commonStyle.w }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
-                          {/* ================ Cc-Banker Commodity ================= */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(4, 1fr)"
-                              alignItems="center"
-                              gap={4}
-                            >
-                              <GridItem colSpan={2}>
-                                <Text textAlign="right">CC Banker</Text>{" "}
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <ReactCustomSelect
-                                  name={
-                                    formFieldsName.tp_commodity_details
-                                      .cc_banker
-                                  }
-                                  label=""
-                                  options={[
-                                    {
-                                      label: "Fresh Stock",
-                                      value: 1,
-                                    },
-                                    {
-                                      label: "Pre-stock",
-                                      value: 2,
-                                    },
-                                    {
-                                      label: "Take over",
-                                      value: 3,
-                                    },
-                                  ]}
-                                  selectedValue={{}}
-                                  isClearable={false}
-                                  selectType="label"
-                                  isLoading={false}
-                                  style={{ w: commonStyle.w }}
-                                  handleOnChange={(val) => {
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    );
-                                    setValue(
-                                      formFieldsName.tp_commodity_details
-                                        .cc_banker,
-                                      val.value,
-                                      { shouldValidate: true }
-                                    );
-                                  }}
-                                />
-                              </GridItem>
-                            </Grid>
-                          </Box>
+
                           {/* ================ Bank Details ================= */}
+
                           <Box mt={commonStyle.mt}>
                             <Grid
-                              textAlign="right"
                               templateColumns="repeat(12, 1fr)"
-                              alignItems="center"
+                              alignItems="start"
                               gap={4}
                               bgColor={"#DBFFF5"}
                               padding="20px"
                               borderRadius="10px"
                             >
                               <GridItem colSpan={12}>
-                                <Text textAlign="left">Bank Details</Text>{" "}
+                                <Heading as="h5" fontSize="lg" textAlign="left">
+                                  Bank Details
+                                </Heading>
                               </GridItem>
-                              {bank_details_fields &&
-                                bank_details_fields.map((item, index) => (
-                                  <>
-                                    <GridItem colSpan={1}>
-                                      <Text textAlign="left"> Sr No </Text>{" "}
-                                      <Box
-                                        textAlign="center"
-                                        border="1px"
-                                        p="2"
-                                        borderColor="gray.10"
-                                        borderRadius="6"
-                                      >
-                                        {index + 1}
-                                      </Box>
-                                    </GridItem>
-                                    {/* =============== Bank Name ============= */}
-                                    <GridItem colSpan={3}>
-                                      <Text textAlign="left">Bank Name</Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.bank_name}`}
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        // selectedValue={{value:bank_details_fields[index].bank_name}}
-                                        // selectedValue={{
-                                        //   label: "Fresh Stock",
-                                        //   value: 1,
-                                        // }}
-                                        // selectedValue={
-                                        //   [
-                                        //     {
-                                        //       label: "Fresh Stock",
-                                        //       value: 1,
-                                        //     },
-                                        //     {
-                                        //       label: "Pre-stock",
-                                        //       value: 2,
-                                        //     },
-                                        //     {
-                                        //       label: "Take over",
-                                        //       value: 3,
-                                        //     },
-                                        //   ].filter(
-                                        //     (d) =>
-                                        //       d.value === item[index].bank_name
-                                        //   )[0]
-                                        // }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.bank_name}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                      />
-                                    </GridItem>
-                                    {/* =============== Branch Name ============= */}
-                                    <GridItem colSpan={2}>
-                                      <Text textAlign="left">Branch Name </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.branch_name}`}
-                                        label=""
-                                        options={[
-                                          {
-                                            label: "Fresh Stock",
-                                            value: 1,
-                                          },
-                                          {
-                                            label: "Pre-stock",
-                                            value: 2,
-                                          },
-                                          {
-                                            label: "Take over",
-                                            value: 3,
-                                          },
-                                        ]}
-                                        selectedValue={
-                                          {
-                                            // value: `bank_details.${index}.${formFieldsName.wms_commodity_details.bank_details.branch_name}`,
-                                          }
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          console.log(
-                                            "selectedOption @@@@@@@@@@@------> ",
-                                            val
-                                          );
-                                          setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_commodity_details.bank_details.branch_name}`,
-                                            val.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                      />
-                                    </GridItem>
-                                    {/* =============== Add / Delete ============= */}
-                                    <GridItem colSpan={6}>
-                                      <Flex
-                                        gap="10px"
-                                        justifyContent="end"
-                                        alignItems="center"
-                                      >
-                                        <MdAddBox
-                                          color="#A6CE39"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            append_new_bank_details();
-                                          }}
-                                        />
-                                        <MdIndeterminateCheckBox
-                                          color="#FF4444"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            if (
-                                              bank_details_fields?.length > 1
-                                            ) {
-                                              remove_bank_detail(index);
-                                            }
-                                          }}
-                                        />
-                                      </Flex>
-                                    </GridItem>
-                                  </>
-                                ))}
+                              <GridItem colSpan={4}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Bank
+                                </Text>
+                                <ReactSelect
+                                  options={selectBoxOptions?.banks || []}
+                                  value={
+                                    selectBoxOptions?.banks?.filter(
+                                      (item) => item.value === bankDetail.bank
+                                    )[0] || {}
+                                  }
+                                  isLoading={getBankMasterApiIsLoading}
+                                  onChange={(val) => {
+                                    setBankDetail((old) => ({
+                                      bank: val.value,
+                                      branch: "",
+                                    }));
+                                    setBankError((old) => ({
+                                      ...old,
+                                      bank: "",
+                                    }));
+                                  }}
+                                  styles={{
+                                    control: (base, state) => ({
+                                      ...base,
+                                      backgroundColor: "#fff",
+                                      borderRadius: "6px",
+                                      borderColor: bankError.bank
+                                        ? "red"
+                                        : "#c3c3c3",
+
+                                      padding: "1px",
+                                      textAlign: "left",
+                                    }),
+                                    ...reactSelectStyle,
+                                  }}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {bankError.bank}
+                                </Text>
+                              </GridItem>
+                              <GridItem colSpan={4}>
+                                <Text fontWeight="bold" textAlign="left">
+                                  Branch
+                                </Text>
+                                <ReactSelect
+                                  options={
+                                    selectBoxOptions?.branch?.filter(
+                                      (item) =>
+                                        item?.bank?.id === bankDetail.bank
+                                    ) || []
+                                  }
+                                  isLoading={getBankBranchMasterApiIsLoading}
+                                  value={
+                                    selectBoxOptions?.branch?.filter(
+                                      (item) => item.value === bankDetail.branch
+                                    )[0] || {}
+                                  }
+                                  onChange={(val) => {
+                                    setBankDetail((old) => ({
+                                      ...old,
+                                      branch: val.value,
+                                    }));
+
+                                    setBankError((old) => ({
+                                      ...old,
+                                      branch: "",
+                                    }));
+                                  }}
+                                  styles={{
+                                    control: (base, state) => ({
+                                      ...base,
+                                      backgroundColor: "#fff",
+                                      borderRadius: "6px",
+                                      borderColor: bankError.branch
+                                        ? "red"
+                                        : "#c3c3c3",
+
+                                      padding: "1px",
+                                      textAlign: "left",
+                                    }),
+                                    ...reactSelectStyle,
+                                  }}
+                                />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {bankError.branch}
+                                </Text>
+                              </GridItem>
+                              <GridItem
+                                colSpan={4}
+                                alignSelf="end"
+                                textAlign="right"
+                              >
+                                <Button
+                                  type="button"
+                                  //w="full"
+                                  backgroundColor={"primary.700"}
+                                  _hover={{
+                                    backgroundColor: "primary.700",
+                                  }}
+                                  color={"white"}
+                                  borderRadius={"full"}
+                                  px={"10"}
+                                  onClick={
+                                    () => {
+                                      updateBankFlag !== null
+                                        ? UpdateBankDetail()
+                                        : append_new_bank_details();
+                                      console.log("here in bank");
+                                    }
+                                    // saveAsDraftData("PWH_COMMERCIAL_DETAILS")
+                                  }
+                                >
+                                  {/* {console.log(
+                                    updateOwnerFlag ? "got" : "not got",
+                                    "here"
+                                  )} */}
+                                  {updateBankFlag !== null ? "Edit" : "Add"}
+                                </Button>
+                              </GridItem>
                             </Grid>
                           </Box>
+                          <Box mt={commonStyle.mt} overflow={"auto"}>
+                            <table width="100%">
+                              <thead style={{ background: "#DBFFF5" }}>
+                                <tr>
+                                  <th
+                                    width={tableStyle.idWidth}
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    No.
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Bank Name
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                  >
+                                    Branch Name
+                                  </th>
+                                  <th
+                                    style={{
+                                      padding: tableStyle.generalPadding,
+                                    }}
+                                    width={tableStyle.actionWidth}
+                                  >
+                                    Action
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {getValues(`bank_details`)?.length > 0 ? (
+                                  bank_details_fields.map((item, index) => (
+                                    <tr>
+                                      <td
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                          textAlign: "center",
+                                        }}
+                                      >
+                                        {index + 1}
+                                      </td>
+                                      <td
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        {selectBoxOptions?.banks?.filter(
+                                          (old) => old.value === item.bank
+                                        )[0]?.label || item.bank}
+                                      </td>
+                                      <td
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        {selectBoxOptions?.branch?.filter(
+                                          (old) => old.value === item.branch
+                                        )[0]?.label || item.branch}
+                                      </td>
+                                      <td
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        <Flex
+                                          gap="20px"
+                                          justifyContent="center"
+                                        >
+                                          <Box color={"primary.700"}>
+                                            <BiEditAlt
+                                              // color="#A6CE39"
+                                              fontSize="26px"
+                                              cursor="pointer"
+                                              onClick={() => {
+                                                updateBankFlagFunction(
+                                                  item,
+                                                  index
+                                                );
+                                              }}
+                                            />
+                                          </Box>
+                                          <Box color="red">
+                                            <AiOutlineDelete
+                                              cursor="pointer"
+                                              fontSize="26px"
+                                              onClick={() => {
+                                                if (updateBankFlag === null) {
+                                                  remove_bank_detail(index);
+                                                }
+                                              }}
+                                            />
+                                          </Box>
+                                        </Flex>
+                                      </td>
+                                    </tr>
+                                  ))
+                                ) : (
+                                  <tr>
+                                    <td
+                                      style={{
+                                        padding: tableStyle.generalPadding,
+                                        textAlign: "center",
+                                      }}
+                                      colSpan={4}
+                                    >
+                                      No Data Added
+                                    </td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </Box>
+
                           <Box
                             display="flex"
                             justifyContent="flex-end"
@@ -1651,7 +2199,7 @@ const ThirdParty = () => {
                               alignItems="center"
                               gap={4}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   CM proposal business form
                                 </Text>{" "}
@@ -1665,7 +2213,7 @@ const ThirdParty = () => {
                                   placeholder="Excel upload"
                                   label=""
                                   type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                  style={{ w: commonStyle.w }}
+                                  style={{ w: "100%" }}
                                 />
                               </GridItem>
                             </Grid>
@@ -1778,7 +2326,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_type}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -1792,7 +2340,7 @@ const ThirdParty = () => {
                                         Client Name{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_name}`}
                                         placeholder="client name"
                                         type="text"
                                         label=""
@@ -1806,7 +2354,7 @@ const ThirdParty = () => {
                                         Mobile Number{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.mobile_number}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.mobile_number}`}
                                         placeholder="mobile number"
                                         type="text"
                                         label=""
@@ -1817,7 +2365,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Region</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.region}`}
                                         label=""
                                         options={[
                                           {
@@ -1844,7 +2392,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.region}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.region}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -1855,7 +2403,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">State </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.state}`}
                                         label=""
                                         options={[
                                           {
@@ -1882,7 +2430,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.state}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.state}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -1893,7 +2441,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Zone </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.zone}`}
                                         label=""
                                         options={[
                                           {
@@ -1920,7 +2468,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.zone}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.zone}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -1931,7 +2479,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">District </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.district}`}
                                         label=""
                                         options={[
                                           {
@@ -1958,7 +2506,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.district}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.district}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -1969,7 +2517,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Area </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.area}`}
                                         label=""
                                         options={[
                                           {
@@ -1996,7 +2544,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.area}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.area}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2007,7 +2555,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left"> Address </Text>{" "}
                                       <CustomInput
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.address}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.address}`}
                                         placeholder="address"
                                         type="text"
                                         label=""
@@ -2020,7 +2568,7 @@ const ThirdParty = () => {
                                         Client known to GGWPL official
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`}
                                         label=""
                                         options={[
                                           {
@@ -2047,7 +2595,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_known_to_ggwpl_official}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2060,7 +2608,7 @@ const ThirdParty = () => {
                                         Client Sourced by
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`}
                                         label=""
                                         options={[
                                           {
@@ -2087,7 +2635,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.client_sourced_by}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2098,7 +2646,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Bank Name</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2125,7 +2673,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.bank_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2136,7 +2684,7 @@ const ThirdParty = () => {
                                     <GridItem>
                                       <Text textAlign="left">Branch Name</Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2163,7 +2711,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.branch_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2176,7 +2724,7 @@ const ThirdParty = () => {
                                         Employee Name
                                       </Text>{" "}
                                       <ReactCustomSelect
-                                        name={`bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`}
+                                        name={`client_list.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`}
                                         label=""
                                         options={[
                                           {
@@ -2203,7 +2751,7 @@ const ThirdParty = () => {
                                             val
                                           );
                                           setValue(
-                                            `bank_details.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`,
+                                            `client_list.${index}.${formFieldsName.tp_clients_details.client_list.employee_name}`,
                                             val.value,
                                             { shouldValidate: true }
                                           );
@@ -2250,7 +2798,7 @@ const ThirdParty = () => {
                               alignItems="center"
                               gap={4}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">Intention Letter</Text>{" "}
                               </GridItem>
                               <GridItem colSpan={2}>
@@ -2262,7 +2810,7 @@ const ThirdParty = () => {
                                   placeholder="Excel upload"
                                   label=""
                                   type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                  style={{ w: commonStyle.w }}
+                                  style={{ w: "100%" }}
                                 />
                               </GridItem>
                             </Grid>
@@ -2275,12 +2823,12 @@ const ThirdParty = () => {
                               alignItems="start"
                               gap={4}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">Remarks</Text>{" "}
                               </GridItem>
                               <GridItem colSpan={2} textAlign={"left"}>
                                 <Textarea
-                                  width={commonStyle.w}
+                                  width={"100%"}
                                   name={
                                     formFieldsName.tp_clients_details.remarks
                                   }
@@ -2299,7 +2847,7 @@ const ThirdParty = () => {
                               alignItems="center"
                               gap={4}
                             >
-                              <GridItem colSpan={2}>
+                              <GridItem colSpan={1}>
                                 <Text textAlign="right">
                                   Assign Inspection to
                                 </Text>{" "}
@@ -2329,7 +2877,7 @@ const ThirdParty = () => {
                                   isClearable={false}
                                   selectType="label"
                                   isLoading={false}
-                                  style={{ w: commonStyle.w }}
+                                  style={{ w: "100%" }}
                                   handleOnChange={(val) => {
                                     console.log(
                                       "selectedOption @@@@@@@@@@@------> ",
@@ -2346,6 +2894,7 @@ const ThirdParty = () => {
                               </GridItem>
                             </Grid>
                           </Box>
+
                           <Box
                             display="flex"
                             justifyContent="flex-end"
