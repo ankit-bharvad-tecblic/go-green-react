@@ -42,7 +42,7 @@ function CustomFileInput({
       console.log(response, "file");
       if (response?.status === 200) {
         onChange(
-          response?.data?.vaibhav_file_path.split("/media/docs/")[1] || ""
+          response?.data?.vaibhav_file_path || ""
         );
       }
     }
@@ -93,7 +93,7 @@ function CustomFileInput({
                   {addBankMasterApiIsLoading
                     ? "Loading ..."
                     : value
-                    ? value
+                    ? value.split("/media/docs/")[1]
                     : placeholder
                     ? placeholder
                     : "File Upload"}{" "}
