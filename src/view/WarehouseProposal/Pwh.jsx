@@ -1863,6 +1863,10 @@ const Pwh = () => {
 
   // Bank Detail Functions end //
 
+  //client Detail Function start //
+
+  //client Detail Function end //
+
   useEffect(() => {
     getRegionMasterList();
     fetchSupervisorDayShift();
@@ -5150,7 +5154,9 @@ const Pwh = () => {
                               <GridItem
                                 colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
                               >
-                                <Text textAlign="left">Client List</Text>{" "}
+                                <Heading as="h5" fontSize="lg" textAlign="left">
+                                  Client Details
+                                </Heading>
                               </GridItem>
 
                               {client_list &&
@@ -5921,7 +5927,6 @@ const Pwh = () => {
                                   </>
                                 ))}
                             </Grid>
-                            ;
                           </Box>
 
                           {/* show client table start */}
