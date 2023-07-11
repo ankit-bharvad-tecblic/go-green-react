@@ -19,6 +19,7 @@ function generateFormField(obj) {
     isChecked,
     style,
     max,
+    min,
   } = obj;
   const formatDate = (value) => {
     // const formattedDate = moment(value, "YYYY-MM-DD").format("MMMM D, YYYY");
@@ -68,6 +69,7 @@ function generateFormField(obj) {
           style={style}
           formatDate={formatDate}
           max={max}
+          min={min}
         />
       );
     case "date-from-to":

@@ -17,7 +17,7 @@ const filterFields = [
     label: "Creation Date",
     name: "creation_date",
     placeholder: "Creation Date",
-    type: "date",
+    type: "date", 
     max: new Date().toISOString().split("T")[0],
   },
   {

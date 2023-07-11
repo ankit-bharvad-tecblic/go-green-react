@@ -100,15 +100,15 @@ const HsnMaster = () => {
     }),
     columnHelper.accessor("igst_perc", {
       cell: (info) => info.getValue(),
-      header: " IGST Percentage",
+      header: " IGST%",
     }),
     columnHelper.accessor("sgst_perc", {
       cell: (info) => info.getValue(),
-      header: "SGST Percentage",
+      header: "SGST%",
     }),
     columnHelper.accessor("cgst_perc", {
       cell: (info) => info.getValue(),
-      header: "CGST Percentage",
+      header: "CGST%",
     }),
     columnHelper.accessor("description", {
       cell: (info) => info.getValue(),
@@ -124,7 +124,11 @@ const HsnMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -146,7 +150,11 @@ const HsnMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

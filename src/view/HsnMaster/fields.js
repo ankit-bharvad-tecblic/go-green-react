@@ -11,30 +11,30 @@ const filterFields = [
     type: "number",
   },
   {
-    "IGST Percentage": "igst_perc",
+    "IGST%": "igst_perc",
     isActiveFilter: false,
 
-    label: "IGST Percentage",
+    label: "IGST% ",
     name: "igst_perc",
-    placeholder: "IGST Percentage",
+    placeholder: "IGST% ",
     type: "number",
   },
   {
-    "SGST Percentage": "sgst_perc",
+    "SGST% ": "sgst_perc",
     isActiveFilter: false,
 
-    label: "SGST Percentage",
+    label: "SGST% ",
     name: "sgst_perc",
-    placeholder: "SGST Percentage",
+    placeholder: "SGST% ",
     type: "number",
   },
   {
-    "CGST Percentage": "cgst_perc",
+    "CGST% ": "cgst_perc",
     isActiveFilter: false,
 
-    label: "CGST Percentage",
+    label: "CGST% ",
     name: "cgst_perc",
-    placeholder: "CGST Percentage",
+    placeholder: "CGST% ",
     type: "number",
   },
 
@@ -95,20 +95,20 @@ const addEditFormFields = [
   },
   {
     name: "igst_perc",
-    label: "IGST Percentage",
-    placeholder: "IGST Percentage",
+    label: "IGST%",
+    placeholder: "IGST%",
     type: "number",
   },
   {
     name: "sgst_perc",
-    label: "SGST Percentage",
-    placeholder: "SGST Percentage",
+    label: "SGST%",
+    placeholder: "SGST%",
     type: "number",
   },
   {
     name: "cgst_perc",
-    label: "CGST Percentage",
-    placeholder: "CGST Percentage",
+    label: "CGST%",
+    placeholder: "CGST%",
     type: "number",
   },
   {
@@ -156,9 +156,9 @@ const schema = yup.object().shape({
     .min(1000, "HSN code must be at least 4 digits")
     .max(99999999, "HSN code cannot exceed 8 digits")
     .required("HSN code is required"),
-  igst_perc: yup.number().required("IGST percentage is required"),
-  sgst_perc: yup.number().required("SGST percentage is required"),
-  cgst_perc: yup.number().required("CGSt percentage is required"),
+  igst_perc: yup.number().required("IGST % is required"),
+  sgst_perc: yup.number().required("SGST % is required"),
+  cgst_perc: yup.number().required("CGSt % is required"),
   description: yup.string().trim().required("Description is required"),
   is_active: yup.string(),
 });

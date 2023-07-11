@@ -517,6 +517,12 @@ function FunctionalTable({
                                 ).format("LL")
                               : " - "}
                           </Text>
+                        ) : cell.column.id === "fed" ? (
+                          <Text>
+                            {cell.row.original.fed
+                              ? moment(cell.row.original.fed).format("LL")
+                              : " - "}
+                          </Text>
                         ) : cell.column.id === "updated_at" ? (
                           <Text>
                             {cell.row.original.updated_at

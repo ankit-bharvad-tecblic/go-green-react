@@ -2,7 +2,7 @@ import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
-import {
+import { 
   useActiveDeActiveMutation,
   useGetBankBranchMasterMutation,
 } from "../../features/master-api-slice";

@@ -19,6 +19,7 @@ function CustomInput({
   InputDisabled,
   onChange,
   max,
+  min,
 }) {
   const {
     control,
@@ -58,6 +59,7 @@ function CustomInput({
                   boxShadow: "none",
                 }}
                 max={max}
+                min={min}
                 isDisabled={InputDisabled || false}
                 p={{ base: "4" }}
                 fontWeight={{ base: "normal" }}
@@ -85,6 +87,7 @@ function CustomInput({
                   boxShadow: "none",
                 }}
                 max={max}
+                min={min}
                 p={{ base: "4" }}
                 fontWeight={{ base: "normal" }}
                 fontStyle={"normal"}

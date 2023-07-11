@@ -98,7 +98,7 @@ const CommodityType = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("primary_commodity_name", {
       cell: (info) => info.getValue(),
       header: "PRIMARY COMMODITY TYPE",
     }),

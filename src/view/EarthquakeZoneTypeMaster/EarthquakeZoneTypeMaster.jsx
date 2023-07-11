@@ -4,7 +4,7 @@ import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
-  useGetEarthQuakeZoneTypeMasterMutation, 
+  useGetEarthQuakeZoneTypeMasterMutation,
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
@@ -121,7 +121,11 @@ function EarthquakeZoneTypeMaster() {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -144,7 +148,11 @@ function EarthquakeZoneTypeMaster() {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
