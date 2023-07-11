@@ -94,14 +94,23 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "FULL NAME",
     }),
-    columnHelper.accessor("phone", {
+    columnHelper.accessor("email", {
       cell: (info) => info.getValue(),
-      header: "CONTACT NO",
+      header: "USER NAME (EMAIL)",
     }),
     columnHelper.accessor("address", {
       cell: (info) => info.getValue(),
       header: "Address ",
     }),
+    columnHelper.accessor("Pin Code", {
+      cell: (info) => info.getValue(),
+      header: " Pin Code ",
+    }),
+    columnHelper.accessor("phone", {
+      cell: (info) => info.getValue(),
+      header: "CONTACT NO",
+    }),
+
     // columnHelper.accessor("region_id.region_name", {
     //   cell: (info) => info.getValue(),
     //   header: "Region",
@@ -123,14 +132,6 @@ const UserMaster = () => {
     //   header: "Area ",
     // }),
 
-    columnHelper.accessor("Pin Code", {
-      cell: (info) => info.getValue(),
-      header: " Pin Code ",
-    }),
-    columnHelper.accessor("email", {
-      cell: (info) => info.getValue(),
-      header: "USER EMAIL",
-    }),
     columnHelper.accessor("user_role", {
       header: "ROLE",
       cell: (info) => {
@@ -161,7 +162,11 @@ const UserMaster = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -183,7 +188,11 @@ const UserMaster = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
