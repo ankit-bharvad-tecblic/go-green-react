@@ -1817,7 +1817,13 @@ const Pwh = () => {
   };
 
   const UpdateBankDetail = () => {
-    if (bankDetail.bank !== "" && bankDetail.branch !== "") {
+    if (
+      bankDetail.bank !== "" &&
+      bankDetail.branch !== "" &&
+      getValues(`pwh_commodity_bank_details`).filter(
+        (item) => item.branch === bankDetail.branch
+      ).length === 0
+    ) {
       const tempArr = getValues(`pwh_commodity_bank_details`);
       setValue(
         `pwh_commodity_bank_details`,
@@ -1843,7 +1849,14 @@ const Pwh = () => {
     } else {
       setBankError({
         bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
-        branch: bankDetail.branch !== "" ? "" : "Branch can not be empty.",
+        branch:
+          bankDetail.branch !== ""
+            ? getValues(`pwh_commodity_bank_details`).filter(
+                (item) => item.branch === bankDetail.branch
+              ).length === 0
+              ? ""
+              : "Branch has been already selected."
+            : "Branch can not be empty.",
       });
     }
   };
