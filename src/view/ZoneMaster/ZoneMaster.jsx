@@ -36,7 +36,7 @@ const ZoneMaster = () => {
   const [getZoneMaster, { isLoading: getZoneMasterApiIsLoading }] =
     useGetZoneMasterMutation();
 
-  const [activeDeActive] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation(); 
 
   const toast = useToast();
 

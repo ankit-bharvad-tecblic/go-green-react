@@ -136,7 +136,7 @@ const tableStyle = {
   generalPadding: "8px 16px",
   actionWidth: "150px",
 };
-
+// t
 const mobileNumberRegex = /^\d{10}$/;
 
 const formFieldsName = {
@@ -226,6 +226,130 @@ const formFieldsName = {
     remarks: "remarks",
   },
 };
+
+const client_schema = Yup.object().shape({
+  client_type: Yup.string().trim().required("Client type name is required"),
+  client_name: Yup.string().trim().required("Client name is required"),
+  mobile_number: Yup.string().trim().required("Mobile number is required"),
+  region: Yup.string().trim().required("Region is required"),
+  state: Yup.string().trim().required("State is required"),
+  substate: Yup.string().trim().required("Substate is required"),
+  district: Yup.string().trim().required("District is required"),
+  area: Yup.string().trim().required("Area is required"),
+  address: Yup.string().trim().required("Address is required"),
+  // Start dynamic fields when client_type === "Corporate"
+
+  storage_charges: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.number()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("Storage charges is required"),
+    otherwise: () => Yup.number(),
+  }),
+
+  reservation_qty: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.number()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("Reservation qty is required"),
+    otherwise: () => Yup.number(),
+  }),
+
+  reservation_start_date: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.date()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("Reservation start date is required")
+        .test("isValidDate", "Invalid reservation start date", (value) => {
+          return value instanceof Date && !isNaN(value);
+        }),
+    otherwise: () => Yup.date(),
+  }),
+
+  reservation_end_date: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.date()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("Reservation end date is required")
+        .test("isValidDate", "Invalid reservation end date", (value) => {
+          return value instanceof Date && !isNaN(value);
+        }),
+    otherwise: () => Yup.date(),
+  }),
+
+  reservation_period_month: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.number()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("PReservation period month is required"),
+    otherwise: () => Yup.number(),
+  }),
+
+  reservation_billing_cycle: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () => Yup.string().required("Reservation billing cycle is required"),
+    otherwise: () => Yup.string(),
+  }),
+
+  post_reservation_billing_cycle: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.string().required("Post reservation billing cycle is required"),
+    otherwise: () => Yup.string(),
+  }),
+
+  post_reservation_storage_charges: Yup.string().when("client_type", {
+    is: (value) => value === "Corporate",
+    then: () =>
+      Yup.number()
+        .nullable()
+        .transform((value, originalValue) => {
+          if (originalValue === "") {
+            return null;
+          }
+          return value;
+        })
+        .required("Post reservation storage charges is required"),
+    otherwise: () => Yup.number(),
+  }),
+
+  // End dynamic fields when client_type === "Corporate"
+});
 
 const schema = Yup.object().shape({
   warehouse_name: Yup.string().trim().required("Warehouse name is required"),
@@ -383,267 +507,10 @@ const schema = Yup.object().shape({
   // ),
   your_project: Yup.string(),
 
-  // PWH CLIENTS DETAILS schema start here
-  // client_list: Yup.array().of(
-  //   Yup.object().shape({
-  //     client_type: Yup.string().required("client type name is required"),
-  //     client_name: Yup.string().trim().required("Client name  is required"),
-  //     mobile_number: Yup.string().trim().required("Mobile number is required"),
-  //     region: Yup.string().trim().required("Region is required"),
-  //     state: Yup.string().trim().required("State is required"),
-  //     zone: Yup.string().trim().required("Zone is required"),
-  //     district: Yup.string().trim().required("District is required"),
-  //     area: Yup.string().trim().required("Area is required"),
-  //     address: Yup.string().trim().required("Address is required"),
-
-  //     // Start dynamic's fields when show only client type === corporate
-  //     storage_charges: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.number()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("Storage charges is required"),
-  //       otherwise: () => Yup.number(),
-  //     }),
-
-  //     reservation_qty: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.number()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("Reservation qty is required"),
-  //       otherwise: () => Yup.number(),
-  //     }),
-
-  //     reservation_start_date: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.date()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("Reservation start date is required")
-  //           .test("isValidDate", "Invalid reservation start date", (value) => {
-  //             return value instanceof Date && !isNaN(value);
-  //           }),
-  //       otherwise: () => Yup.date(),
-  //     }),
-
-  //     reservation_end_date: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.date()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("Reservation end date is required")
-  //           .test("isValidDate", "Invalid reservation end date", (value) => {
-  //             return value instanceof Date && !isNaN(value);
-  //           }),
-  //       otherwise: () => Yup.date(),
-  //     }),
-
-  //     reservation_period_month: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.number()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("PReservation period month is required"),
-  //       otherwise: () => Yup.number(),
-  //     }),
-
-  //     reservation_billing_cycle: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.string().required("Reservation billing cycle is required"),
-  //       otherwise: () => Yup.string(),
-  //     }),
-
-  //     post_reservation_billing_cycle: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.string().required("Post reservation billing cycle is required"),
-  //       otherwise: () => Yup.string(),
-  //     }),
-
-  //     post_reservation_storage_charges: Yup.string().when("client_type", {
-  //       is: (value) => value === "Corporate",
-  //       then: () =>
-  //         Yup.number()
-  //           .nullable()
-  //           .transform((value, originalValue) => {
-  //             if (originalValue === "") {
-  //               return null;
-  //             }
-  //             return value;
-  //           })
-  //           .required("Post reservation storage charges is required"),
-  //       otherwise: () => Yup.number(),
-  //     }),
-
-  //     // end dynamic's fields when show only client type === corporate
-  //   })
-  // ),
-
-  // new for testing schema
-
-  client_list: Yup.array().of(
-    Yup.object().shape({
-      client_type: Yup.string().trim().required("Client type name is required"),
-      client_name: Yup.string().trim().required("Client name is required"),
-      mobile_number: Yup.string().trim().required("Mobile number is required"),
-      region: Yup.string().trim().required("Region is required"),
-      state: Yup.string().trim().required("State is required"),
-      substate: Yup.string().trim().required("Substate is required"),
-      district: Yup.string().trim().required("District is required"),
-      area: Yup.string().trim().required("Area is required"),
-      address: Yup.string().trim().required("Address is required"),
-      // Start dynamic fields when client_type === "Corporate"
-
-      storage_charges: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.number()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("Storage charges is required"),
-        otherwise: () => Yup.number(),
-      }),
-
-      reservation_qty: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.number()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("Reservation qty is required"),
-        otherwise: () => Yup.number(),
-      }),
-
-      reservation_start_date: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.date()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("Reservation start date is required")
-            .test("isValidDate", "Invalid reservation start date", (value) => {
-              return value instanceof Date && !isNaN(value);
-            }),
-        otherwise: () => Yup.date(),
-      }),
-
-      reservation_end_date: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.date()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("Reservation end date is required")
-            .test("isValidDate", "Invalid reservation end date", (value) => {
-              return value instanceof Date && !isNaN(value);
-            }),
-        otherwise: () => Yup.date(),
-      }),
-
-      reservation_period_month: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.number()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("PReservation period month is required"),
-        otherwise: () => Yup.number(),
-      }),
-
-      reservation_billing_cycle: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.string().required("Reservation billing cycle is required"),
-        otherwise: () => Yup.string(),
-      }),
-
-      post_reservation_billing_cycle: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.string().required("Post reservation billing cycle is required"),
-        otherwise: () => Yup.string(),
-      }),
-
-      post_reservation_storage_charges: Yup.string().when("client_type", {
-        is: (value) => value === "Corporate",
-        then: () =>
-          Yup.number()
-            .nullable()
-            .transform((value, originalValue) => {
-              if (originalValue === "") {
-                return null;
-              }
-              return value;
-            })
-            .required("Post reservation storage charges is required"),
-        otherwise: () => Yup.number(),
-      }),
-
-      // End dynamic fields when client_type === "Corporate"
-    })
-  ),
-
-  intention_letter: Yup.string()
-    .trim()
-    .required("Intention letter is required"),
-  remarks: Yup.string().trim().required("remarks is required"),
+  intention_letter: Yup.string().trim(),
+  // .required("Intention letter is required"),
+  remarks: Yup.string().trim(),
+  //.required("remarks is required"),
 });
 
 const Pwh = () => {
@@ -651,11 +518,17 @@ const Pwh = () => {
     regions: [],
   });
 
+  const [clientSelectBoxOptions, setClientSelectBoxOptions] = useState({
+    regions: [],
+  });
+
   const [pbpmList, setPbpmList] = useState([]);
   const [selected, setSelected] = useState({});
   const [minMaxAvgState, setMinMaxAvgState] = useState({});
+  const [client_data_list, setClient_data_list] = useState([]);
 
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
+  const [selectedClientOpt, setSelectedClientOpt] = useState({});
 
   const [clientLocationDrillDownState, setClientLocationDrillDownState] =
     useState([{ states: [], zones: [], districts: [], areas: [] }]);
@@ -677,9 +550,54 @@ const Pwh = () => {
       //     rent: "",
       //   },
       // ],
-      client_list: [client_details_obj],
+      // client_list: [client_details_obj],
     },
   });
+
+  const client_form_methods = useForm({
+    //resolver: yupResolver(validationSchema),
+    resolver: yupResolver(client_schema),
+  });
+
+  const submitClients = (data) => {
+    console.log(data);
+
+    setClient_data_list((prev) => [
+      ...prev,
+      {
+        ...data,
+        region: selectedClientOpt?.region,
+        state: selectedClientOpt?.state,
+        substate: selectedClientOpt?.substate,
+        district: selectedClientOpt?.district,
+        area: selectedClientOpt?.area,
+      },
+    ]);
+
+    client_form_methods.reset({
+      client_name: "",
+      client_type: "",
+      mobile_number: "",
+      region: "",
+      state: "",
+      substate: "",
+      district: "",
+      area: "",
+      address: "",
+    });
+
+    setSelectedClientOpt({
+      region: null,
+      state: null,
+      substate: null,
+      district: null,
+      area: null,
+    });
+  };
+
+  useEffect(() => {
+    console.log(client_data_list);
+  }, [client_data_list]);
 
   const {
     setValue,
@@ -690,7 +608,10 @@ const Pwh = () => {
   } = methods;
 
   console.log("errors !!!!!!! ", errors);
-
+  console.log(
+    "client_form_methods errrors",
+    client_form_methods.formState.errors
+  );
   // const { methods.control, methods.register } = useForm();
   const {
     fields: bank_details_fields,
@@ -710,17 +631,17 @@ const Pwh = () => {
     name: "pwh_commercial_multipal_details",
   });
 
-  const {
-    fields: client_list,
-    append: add_client_list,
-    remove: remove_client_list,
-  } = useFieldArray({
-    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "client_list",
-  });
+  // const {
+  //   fields: client_list,
+  //   append: add_client_list,
+  //   remove: remove_client_list,
+  // } = useFieldArray({
+  //   control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+  //   name: "client_list",
+  // });
 
   const append_client_list = () => {
-    add_client_list(client_details_obj);
+    //add_client_list(client_details_obj);
   };
 
   const handleExpiryDateChange = (value) => {
@@ -813,12 +734,20 @@ const Pwh = () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
       console.log("getRegionMasterList:", response);
-      setSelectBoxOptions((prev) => ({
-        ...prev,
-        regions: response?.region?.map(({ region_name, id }) => ({
+      let list =
+        response?.region?.map(({ region_name, id }) => ({
           label: region_name,
           value: id,
-        })),
+        })) || [];
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: list,
+      }));
+
+      setClientSelectBoxOptions((prev) => ({
+        ...prev,
+        regions: list,
       }));
     } catch (error) {
       console.error("Error:", error);
@@ -951,48 +880,42 @@ const Pwh = () => {
     }
   };
 
+  const save_clients_details = (data) => {
+    console.log(data);
+  };
+
   // client list drill down api start
-  const regionOnClientChange = async (val, index) => {
+  const regionOnClientChange = async (val) => {
     console.log("value --> ", val);
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`,
-      val?.value,
-      {
-        shouldValidate: true,
-      }
-    );
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("region", val?.value, {
+      shouldValidate: true,
+    });
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      region: val,
+      state: null,
+      substate: null,
+      district: null,
+      area: null,
+    }));
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("state", null, {
+      shouldValidate: false,
+    });
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("substate", null, {
+      shouldValidate: false,
+    });
+
+    client_form_methods.setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    client_form_methods.setValue("area", null, {
+      shouldValidate: false,
+    });
 
     const query = {
       region: val?.value,
@@ -1002,62 +925,53 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientLocationDrillDownState[index];
-
-      location.states = response?.state?.map(({ state_name, id }) => ({
-        label: state_name,
-        value: id,
+      setClientSelectBoxOptions((prev) => ({
+        ...prev,
+        states: response?.state?.map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        })),
       }));
 
-      setClientLocationDrillDownState((item) => [
-        ...item.slice(0, index),
-        location,
-        ...item.slice(index + 1),
-      ]);
+      // setClientLocationDrillDownState((item) => [
+      //   ...item.slice(0, index),
+      //   location,
+      //   ...item.slice(index + 1),
+      // ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const stateOnClientChange = async (val, index) => {
+  const stateOnClientChange = async (val) => {
     console.log("value --> ", val);
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`,
-      val?.value,
-      {
-        shouldValidate: false,
-      }
-    );
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      state: val,
+      substate: null,
+      district: null,
+      area: null,
+    }));
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("state", val?.value, {
+      shouldValidate: false,
+    });
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("substate", null, {
+      shouldValidate: false,
+    });
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    client_form_methods.setValue("area", null, {
+      shouldValidate: false,
+    });
 
     const query = {
-      region: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
-      ),
+      region: client_form_methods.getValues("region"),
       state: val?.value,
     };
 
@@ -1065,56 +979,43 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientLocationDrillDownState[index];
-
-      location.zones = response?.substate?.map(({ substate_name, id }) => ({
-        label: substate_name,
-        value: id,
+      setClientSelectBoxOptions((prev) => ({
+        ...prev,
+        zones: response?.substate?.map(({ substate_name, id }) => ({
+          label: substate_name,
+          value: id,
+        })),
       }));
-
-      setClientLocationDrillDownState((item) => [
-        ...item.slice(0, index),
-        location,
-        ...item.slice(index + 1),
-      ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const zoneOnClientChange = async (val, index) => {
+  const zoneOnClientChange = async (val) => {
     console.log("value --> ", val);
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`,
-      val?.value,
-      {
-        shouldValidate: false,
-      }
-    );
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      substate: val,
+      district: null,
+      area: null,
+    }));
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("substate", val?.value, {
+      shouldValidate: false,
+    });
+
+    client_form_methods.setValue("district", null, {
+      shouldValidate: false,
+    });
+
+    client_form_methods.setValue("area", null, {
+      shouldValidate: false,
+    });
 
     const query = {
-      region: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
-      ),
-      state: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
-      ),
+      region: client_form_methods.getValues("region"),
+      state: client_form_methods.getValues("state"),
       substate: val?.value,
     };
 
@@ -1122,51 +1023,38 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientLocationDrillDownState[index];
-
-      location.districts = response?.district?.map(({ district_name, id }) => ({
-        label: district_name,
-        value: id,
+      setClientSelectBoxOptions((prev) => ({
+        ...prev,
+        districts: response?.district?.map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        })),
       }));
-
-      setClientLocationDrillDownState((item) => [
-        ...item.slice(0, index),
-        location,
-        ...item.slice(index + 1),
-      ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const districtOnClientChange = async (val, index) => {
+  const districtOnClientChange = async (val) => {
     console.log("value --> ", val);
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`,
-      val?.value,
-      {
-        shouldValidate: false,
-      }
-    );
+    client_form_methods.setValue("district", val?.value, {
+      shouldValidate: false,
+    });
 
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
-      null,
-      {
-        shouldValidate: false,
-      }
-    );
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      district: val,
+      area: null,
+    }));
+
+    client_form_methods.setValue("area", null, {
+      shouldValidate: false,
+    });
 
     const query = {
-      region: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
-      ),
-      state: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
-      ),
-      substate: getValues(
-        `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
-      ),
+      region: client_form_methods.getValues("region"),
+      state: client_form_methods.getValues("state"),
+      substate: client_form_methods.getValues("subtype_name"),
       district: val?.value,
     };
 
@@ -1174,31 +1062,26 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientLocationDrillDownState[index];
-
-      location.areas = response?.area?.map(({ area_name, id }) => ({
-        label: area_name,
-        value: id,
+      setClientSelectBoxOptions((prev) => ({
+        ...prev,
+        areas: response?.area?.map(({ area_name, id }) => ({
+          label: area_name,
+          value: id,
+        })),
       }));
-
-      setClientLocationDrillDownState((item) => [
-        ...item.slice(0, index),
-        location,
-        ...item.slice(index + 1),
-      ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const areaOnClientChange = (val, index) => {
-    setValue(
-      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`,
-      val?.value,
-      {
-        shouldValidate: false,
-      }
-    );
+  const areaOnClientChange = (val) => {
+    client_form_methods.setValue("area", val?.value, {
+      shouldValidate: false,
+    });
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      area: val,
+    }));
   };
 
   const saveAsDraftData = async (type) => {
@@ -1885,15 +1768,15 @@ const Pwh = () => {
   }, []);
 
   return (
-    <Box bg="gray.50" p="0">
+    <Box bg="gray.50" p="0" position="relative">
       {/* <Box p="2">
         <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
       </Box> */}
 
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box mt="10">
-            <Accordion allowMultiple>
+      <Box mt="10">
+        <Accordion allowMultiple>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
               {/* ================ PWH WAREHOUSE DETAILS ================= */}
               <MotionSlideUp duration={0.2 * 0.5} delay={0.1 * 0.5}>
                 <AccordionItem>
@@ -3836,6 +3719,7 @@ const Pwh = () => {
                                 <Input
                                   value={ownerDetail.name}
                                   type="text"
+                                  name=""
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
                                       ...old,
@@ -5112,7 +4996,36 @@ const Pwh = () => {
                 </AccordionItem>
               </MotionSlideUp>
 
-              {/* ================ PWH CLIENTS DETAILS ================= */}
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                mt="10"
+                px="0"
+                position={{ base: "absolute" }}
+                bottom={-20}
+                right="0"
+              >
+                <Button
+                  type="submit"
+                  //w="full"
+                  backgroundColor={"primary.700"}
+                  _hover={{ backgroundColor: "primary.700" }}
+                  color={"white"}
+                  borderRadius={"full"}
+                  isLoading={false}
+                  my={"4"}
+                  px={"10"}
+                >
+                  Submit
+                </Button>
+              </Box>
+            </form>
+          </FormProvider>
+          {/* ================ PWH CLIENTS DETAILS ================= */}
+          {/* <form onSubmit={methods.handleSubmit(save_clients_details)}> */}
+
+          <FormProvider {...client_form_methods}>
+            <form onSubmit={client_form_methods.handleSubmit(submitClients)}>
               <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                 <AccordionItem mt="4">
                   {({ isExpanded }) => (
@@ -5159,812 +5072,701 @@ const Pwh = () => {
                                 </Heading>
                               </GridItem>
 
-                              {client_list &&
-                                client_list.map((item, index) => (
-                                  <>
-                                    {/* Client Type */}
-                                    <GridItem>
-                                      <Text textAlign="left">Client Type</Text>{" "}
-                                      <FormControl
-                                        isInvalid={
-                                          errors?.client_list?.[index]
-                                            ?.client_type?.message
+                              <>
+                                {/* Client Type */}
+                                <GridItem>
+                                  <Text textAlign="left">Client Type</Text>{" "}
+                                  <FormControl
+                                    isInvalid={errors?.client_type?.message}
+                                  >
+                                    <ReactSelect
+                                      options={[
+                                        {
+                                          label: "Corporate",
+                                          value: "Corporate",
+                                        },
+                                        {
+                                          label: "Retail",
+                                          value: "Retail",
+                                        },
+                                      ]}
+                                      name="client_type"
+                                      value={
+                                        [
+                                          {
+                                            label: "Corporate",
+                                            value: "Corporate",
+                                          },
+                                          {
+                                            label: "Retail",
+                                            value: "Retail",
+                                          },
+                                        ]?.filter(
+                                          (item) =>
+                                            item.value ==
+                                            client_form_methods.getValues(
+                                              "client_type"
+                                            )
+                                        )[0] || {
+                                          label: "Retail",
+                                          value: "Retail",
                                         }
-                                      >
-                                        <ReactSelect
+                                      }
+                                      isClearable={false}
+                                      isLoading={false}
+                                      onChange={(val) => {
+                                        console.log(
+                                          "selectedOption @@@@@@@@@@@------> ",
+                                          val
+                                        );
+                                        client_form_methods.setValue(
+                                          "client_type",
+                                          val.value,
+                                          {
+                                            shouldValidate: true,
+                                          }
+                                        );
+                                      }}
+                                      styles={{
+                                        control: (base, state) => ({
+                                          ...base,
+                                          backgroundColor: "#fff",
+                                          borderRadius: "6px",
+                                          borderColor: errors?.client_type
+                                            ?.message
+                                            ? "red"
+                                            : "#c3c3c3",
+
+                                          padding: "1px",
+                                        }),
+                                        ...reactSelectStyle,
+                                      }}
+                                    />
+                                    <FormErrorMessage>
+                                      {errors?.client_type?.message}
+                                    </FormErrorMessage>
+                                  </FormControl>
+                                </GridItem>
+
+                                {/* client_name */}
+                                <GridItem>
+                                  <FormControl isInvalid={true}>
+                                    <Text textAlign="left"> Client Name </Text>{" "}
+                                    <CustomInput
+                                      name={"client_name"}
+                                      placeholder="client name"
+                                      inputValue={client_form_methods.getValues(
+                                        "client_name"
+                                      )}
+                                      onChange={(val) => {
+                                        client_form_methods.setValue(
+                                          "client_name",
+                                          val.target.value,
+                                          { shouldValidate: true }
+                                        );
+                                      }}
+                                      type="text"
+                                      label=""
+                                      style={{ w: "100%" }}
+                                    />
+                                  </FormControl>
+
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.client_name?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* Mobile Number */}
+                                <GridItem>
+                                  <Text textAlign="left"> Mobile Number </Text>{" "}
+                                  <CustomInput
+                                    name="mobile_number"
+                                    placeholder="Mobile number"
+                                    type="text"
+                                    label=""
+                                    inputValue={client_form_methods.getValues(
+                                      "mobile_number"
+                                    )}
+                                    onChange={(val) => {
+                                      client_form_methods.setValue(
+                                        "mobile_number",
+                                        val.target.value,
+                                        { shouldValidate: true }
+                                      );
+                                    }}
+                                    style={{ w: "100%" }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.mobile_number?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* Region */}
+                                <GridItem>
+                                  <Text textAlign="left">Region</Text>{" "}
+                                  <ReactCustomSelect
+                                    name="region"
+                                    label=""
+                                    options={
+                                      clientSelectBoxOptions?.regions || []
+                                    }
+                                    selectedValue={selectedClientOpt?.region}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      regionOnClientChange(val);
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.region?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* State */}
+                                <GridItem>
+                                  <Text textAlign="left">State </Text>{" "}
+                                  <ReactCustomSelect
+                                    name="state"
+                                    label=""
+                                    options={
+                                      clientSelectBoxOptions?.states || {}
+                                    }
+                                    selectedValue={selectedClientOpt?.state}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      stateOnClientChange(val);
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.state?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* Zone  SubState*/}
+                                <GridItem>
+                                  <Text textAlign="left">SubState </Text>{" "}
+                                  <ReactCustomSelect
+                                    name="substate"
+                                    label=""
+                                    options={
+                                      clientSelectBoxOptions?.zones || {}
+                                    }
+                                    selectedValue={selectedClientOpt?.substate}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      console.log(val);
+                                      zoneOnClientChange(val);
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.substate?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* District */}
+                                <GridItem>
+                                  <Text textAlign="left">District </Text>{" "}
+                                  <ReactCustomSelect
+                                    name="district"
+                                    label=""
+                                    options={
+                                      clientSelectBoxOptions?.districts || {}
+                                    }
+                                    selectedValue={selectedClientOpt?.district}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      districtOnClientChange(val);
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.district?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* Area */}
+                                <GridItem>
+                                  <Text textAlign="left">Area </Text>{" "}
+                                  <ReactCustomSelect
+                                    name="area"
+                                    label=""
+                                    options={
+                                      clientSelectBoxOptions?.areas || {}
+                                    }
+                                    selectedValue={selectedClientOpt?.area}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      areaOnClientChange(val);
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.area?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {/* Address */}
+                                <GridItem colSpan={{ base: 1, sm: 2 }}>
+                                  <Text textAlign="left"> Address </Text>{" "}
+                                  <CustomTextArea
+                                    name="address"
+                                    placeholder="address"
+                                    type="text"
+                                    rowLength={1}
+                                    label=""
+                                    style={{ w: "100%" }}
+                                    inputValue={client_form_methods.getValues(
+                                      "address"
+                                    )}
+                                    onChange={(val) => {
+                                      client_form_methods.setValue(
+                                        "address",
+                                        val.target.value,
+                                        {
+                                          shouldValidate: true,
+                                        }
+                                      );
+                                    }}
+                                  />
+                                  <Box mx="1" color="red" textAlign="left">
+                                    {errors?.address?.message}
+                                  </Box>
+                                </GridItem>
+
+                                {client_form_methods.getValues(
+                                  "client_type"
+                                ) === "Corporate" && (
+                                  <>
+                                    {/* first set daynamic fields */}
+
+                                    <GridItem
+                                      //border="1px"
+                                      gap="4"
+                                      colSpan={{
+                                        base: 1,
+                                        sm: 2,
+                                        md: 3,
+                                        lg: 4,
+                                      }}
+                                      display="flex"
+                                      overscrollBehaviorX={true}
+                                    >
+                                      {/* Storage charges */}
+
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Storage charges
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="storage_charges"
+                                          placeholder="Storage charges"
+                                          type="number"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {errors?.storage_charges?.message}
+                                        </Box>
+                                      </GridItem>
+
+                                      {/* Reservation qty (Bales, MT) */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Reservation qty (Bales, MT)
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="reservation_qty"
+                                          placeholder="Reservation Qty (Bales, MT)"
+                                          type="number"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {errors?.reservation_qty?.message}
+                                        </Box>
+                                      </GridItem>
+
+                                      {/* Reservation Start Date */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          Reservation Start Date
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="reservation_start_date"
+                                          placeholder="Reservation Start Date"
+                                          type="date"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {
+                                            errors?.reservation_start_date
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
+
+                                      {/* Reservation End Date */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Reservation End Date{" "}
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="reservation_end_date"
+                                          placeholder="Reservation End Date"
+                                          type="date"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {
+                                            errors?.reservation_end_date
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
+                                    </GridItem>
+
+                                    {/* second set daynamic fields */}
+
+                                    <GridItem
+                                      //border="1px"
+                                      gap="4"
+                                      colSpan={{
+                                        base: 1,
+                                        sm: 2,
+                                        md: 3,
+                                        lg: 4,
+                                      }}
+                                      display="flex"
+                                      overscrollBehaviorX={true}
+                                    >
+                                      {/* Reservation Period(Month) */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Reservation Period(Month)
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="reservation_period_month"
+                                          placeholder="Reservation Period(Month)"
+                                          type="number"
+                                          label=""
+                                          style={{ w: "100%" }}
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {
+                                            errors?.reservation_period_month
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
+
+                                      {/* Reservation billing cycle */}
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Reservation billing cycle
+                                        </Text>{" "}
+                                        <ReactCustomSelect
+                                          name="reservation_billing_cycle"
+                                          label=""
                                           options={[
                                             {
-                                              label: "Corporate",
-                                              value: "Corporate",
+                                              label: "Daily",
+                                              value: "Daily",
                                             },
                                             {
-                                              label: "Retail",
-                                              value: "Retail",
+                                              label: "Weekly",
+                                              value: "Weekly",
+                                            },
+                                            {
+                                              label: "Fortnighty",
+                                              value: "Fortnighty",
+                                            },
+                                            {
+                                              label: "Monthly",
+                                              value: "Monthly",
                                             },
                                           ]}
-                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`}
-                                          value={
+                                          selectedValue={
                                             [
                                               {
-                                                label: "Corporate",
-                                                value: "Corporate",
+                                                label: "Daily",
+                                                value: "Daily",
                                               },
                                               {
-                                                label: "Retail",
-                                                value: "Retail",
+                                                label: "Weekly",
+                                                value: "Weekly",
+                                              },
+                                              {
+                                                label: "Fortnighty",
+                                                value: "Fortnighty",
+                                              },
+                                              {
+                                                label: "Monthly",
+                                                value: "Monthly",
                                               },
                                             ]?.filter(
                                               (item) =>
-                                                item.value ==
-                                                getValues(
-                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
+                                                item.value ===
+                                                client_form_methods.getValues(
+                                                  "reservation_billing_cycle"
                                                 )
-                                            )[0] || {
-                                              label: "Retail",
-                                              value: "Retail",
-                                            }
+                                            )[0] || {}
                                           }
                                           isClearable={false}
+                                          selectType="label"
                                           isLoading={false}
-                                          onChange={(val) => {
+                                          style={{ w: "100%" }}
+                                          handleOnChange={(val) => {
                                             console.log(
                                               "selectedOption @@@@@@@@@@@------> ",
                                               val
                                             );
-                                            setValue(
-                                              `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`,
+                                            client_form_methods.setValue(
+                                              "reservation_billing_cycle",
                                               val.value,
                                               { shouldValidate: true }
                                             );
                                           }}
-                                          styles={{
-                                            control: (base, state) => ({
-                                              ...base,
-                                              backgroundColor: "#fff",
-                                              borderRadius: "6px",
-                                              borderColor: errors
-                                                ?.client_list?.[index]
-                                                ?.client_type?.message
-                                                ? "red"
-                                                : "#c3c3c3",
-
-                                              padding: "1px",
-                                            }),
-                                            ...reactSelectStyle,
-                                          }}
                                         />
-                                        {!errors ? (
-                                          <FormHelperText>
-                                            Enter the email you'd like to
-                                            receive the newsletter on.
-                                          </FormHelperText>
-                                        ) : (
-                                          <FormErrorMessage>
-                                            Email is required.
-                                          </FormErrorMessage>
-                                        )}
-                                      </FormControl>
-                                    </GridItem>
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {
+                                            errors?.reservation_billing_cycle
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
 
-                                    {/* client_name */}
-                                    <GridItem>
-                                      <FormControl isInvalid={true}>
+                                      {/* Post Reservation billing cycle */}
+                                      <GridItem colSpan={3}>
                                         <Text textAlign="left">
                                           {" "}
-                                          Client Name{" "}
+                                          Post Reservation billing cycle
                                         </Text>{" "}
-                                        <CustomInput
-                                          name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`}
-                                          placeholder="client name"
-                                          inputValue={getValues(
-                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`
-                                          )}
-                                          onChange={(val) => {
-                                            setValue(
-                                              `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`,
-                                              val.target.value,
+                                        <ReactCustomSelect
+                                          name="post_reservation_billing_cycle"
+                                          label=""
+                                          options={[
+                                            {
+                                              label: "Daily",
+                                              value: "Daily",
+                                            },
+                                            {
+                                              label: "Weekly",
+                                              value: "Weekly",
+                                            },
+                                            {
+                                              label: "Fortnighty",
+                                              value: "Fortnighty",
+                                            },
+                                            {
+                                              label: "Monthly",
+                                              value: "Monthly",
+                                            },
+                                          ]}
+                                          selectedValue={
+                                            [
+                                              {
+                                                label: "Daily",
+                                                value: "Daily",
+                                              },
+                                              {
+                                                label: "Weekly",
+                                                value: "Weekly",
+                                              },
+                                              {
+                                                label: "Fortnighty",
+                                                value: "Fortnighty",
+                                              },
+                                              {
+                                                label: "Monthly",
+                                                value: "Monthly",
+                                              },
+                                            ]?.filter(
+                                              (item) =>
+                                                item.value ===
+                                                client_form_methods.getValues(
+                                                  "post_reservation_billing_cycle"
+                                                )
+                                            )[0] || {}
+                                          }
+                                          isClearable={false}
+                                          selectType="label"
+                                          isLoading={false}
+                                          style={{ w: "100%" }}
+                                          handleOnChange={(val) => {
+                                            console.log(
+                                              "selectedOption @@@@@@@@@@@------> ",
+                                              val
+                                            );
+                                            client_form_methods.setValue(
+                                              "post_reservation_billing_cycle",
+                                              val.value,
                                               { shouldValidate: true }
                                             );
                                           }}
-                                          type="text"
+                                        />
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
+                                        >
+                                          {
+                                            errors
+                                              ?.post_reservation_billing_cycle
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
+
+                                      {/* Post Reservation Storage charges */}
+
+                                      <GridItem colSpan={3}>
+                                        <Text textAlign="left">
+                                          {" "}
+                                          Post Reservation Storage charges
+                                        </Text>{" "}
+                                        <CustomInput
+                                          name="post_reservation_storage_charges"
+                                          placeholder="Post Reservation Storage charges"
+                                          type="number"
                                           label=""
                                           style={{ w: "100%" }}
                                         />
-                                      </FormControl>
-
-                                      {/* <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]
-                                            ?.client_name?.message
-                                        }
-                                      </Box> */}
-                                    </GridItem>
-
-                                    {/* Mobile Number */}
-                                    <GridItem>
-                                      <Text textAlign="left">
-                                        {" "}
-                                        Mobile Number{" "}
-                                      </Text>{" "}
-                                      <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`}
-                                        placeholder="mobile number"
-                                        type="text"
-                                        label=""
-                                        inputValue={getValues(
-                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`
-                                        )}
-                                        onChange={(val) => {
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`,
-                                            val.target.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                        style={{ w: "100%" }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]
-                                            ?.mobile_number?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* Region */}
-                                    <GridItem>
-                                      <Text textAlign="left">Region</Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`}
-                                        label=""
-                                        options={
-                                          selectBoxOptions?.regions || []
-                                        }
-                                        selectedValue={
-                                          selectBoxOptions?.regions?.filter(
-                                            (item) =>
-                                              item.value ===
-                                              getValues(
-                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
-                                              )
-                                          )[0] || {}
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          regionOnClientChange(val, index);
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.region
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* State */}
-                                    <GridItem>
-                                      <Text textAlign="left">State </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`}
-                                        label=""
-                                        options={
-                                          clientLocationDrillDownState?.[index]
-                                            ?.states || {}
-                                        }
-                                        selectedValue={
-                                          clientLocationDrillDownState[
-                                            index
-                                          ]?.states?.filter(
-                                            (item) =>
-                                              item.value ===
-                                              getValues(
-                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
-                                              )
-                                          )[0] || {}
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          stateOnClientChange(val, index);
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.state
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* Zone  SubState*/}
-                                    <GridItem>
-                                      <Text textAlign="left">SubState </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`}
-                                        label=""
-                                        options={
-                                          clientLocationDrillDownState?.[index]
-                                            ?.zones || {}
-                                        }
-                                        selectedValue={
-                                          clientLocationDrillDownState[
-                                            index
-                                          ]?.zones?.filter(
-                                            (item) =>
-                                              item.value ===
-                                              getValues(
-                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
-                                              )
-                                          )[0] || {}
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          console.log(val);
-                                          zoneOnClientChange(val, index);
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.substate
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* District */}
-                                    <GridItem>
-                                      <Text textAlign="left">District </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`}
-                                        label=""
-                                        options={
-                                          clientLocationDrillDownState?.[index]
-                                            ?.districts || {}
-                                        }
-                                        selectedValue={
-                                          clientLocationDrillDownState[
-                                            index
-                                          ]?.districts?.filter(
-                                            (item) =>
-                                              item.value ===
-                                              getValues(
-                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`
-                                              )
-                                          )[0] || {}
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          districtOnClientChange(val, index);
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.district
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* Area */}
-                                    <GridItem>
-                                      <Text textAlign="left">Area </Text>{" "}
-                                      <ReactCustomSelect
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`}
-                                        label=""
-                                        options={
-                                          clientLocationDrillDownState?.[index]
-                                            ?.areas || {}
-                                        }
-                                        selectedValue={
-                                          clientLocationDrillDownState[
-                                            index
-                                          ]?.areas?.filter(
-                                            (item) =>
-                                              item.value ===
-                                              getValues(
-                                                `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`
-                                              )
-                                          )[0] || {}
-                                        }
-                                        isClearable={false}
-                                        selectType="label"
-                                        isLoading={false}
-                                        style={{ w: "100%" }}
-                                        handleOnChange={(val) => {
-                                          areaOnClientChange(val, index);
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.area
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {/* Address */}
-                                    <GridItem colSpan={{ base: 1, sm: 2 }}>
-                                      <Text textAlign="left"> Address </Text>{" "}
-                                      <CustomTextArea
-                                        name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`}
-                                        placeholder="address"
-                                        type="text"
-                                        rowLength={1}
-                                        label=""
-                                        style={{ w: "100%" }}
-                                        inputValue={getValues(
-                                          `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`
-                                        )}
-                                        onChange={(val) => {
-                                          setValue(
-                                            `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`,
-                                            val.target.value,
-                                            { shouldValidate: true }
-                                          );
-                                        }}
-                                      />
-                                      <Box mx="1" color="red" textAlign="left">
-                                        {
-                                          errors?.client_list?.[index]?.address
-                                            ?.message
-                                        }
-                                      </Box>
-                                    </GridItem>
-
-                                    {getValues(
-                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
-                                    ) === "Corporate" && (
-                                      <>
-                                        {/* first set daynamic fields */}
-
-                                        <GridItem
-                                          //border="1px"
-                                          gap="4"
-                                          colSpan={{
-                                            base: 1,
-                                            sm: 2,
-                                            md: 3,
-                                            lg: 4,
-                                          }}
-                                          display="flex"
-                                          overscrollBehaviorX={true}
+                                        <Box
+                                          mx="1"
+                                          color="red"
+                                          textAlign="left"
                                         >
-                                          {/* Storage charges */}
-
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Storage charges
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.storage_charges}`}
-                                              placeholder="Storage charges"
-                                              type="number"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.storage_charges?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Reservation qty (Bales, MT) */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Reservation qty (Bales, MT)
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_qty}`}
-                                              placeholder="Reservation Qty (Bales, MT)"
-                                              type="number"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.reservation_qty?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Reservation Start Date */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              Reservation Start Date
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_start_date}`}
-                                              placeholder="Reservation Start Date"
-                                              type="date"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.reservation_start_date
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Reservation End Date */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Reservation End Date{" "}
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_end_date}`}
-                                              placeholder="Reservation End Date"
-                                              type="date"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.reservation_end_date
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-                                        </GridItem>
-
-                                        {/* second set daynamic fields */}
-
-                                        <GridItem
-                                          //border="1px"
-                                          gap="4"
-                                          colSpan={{
-                                            base: 1,
-                                            sm: 2,
-                                            md: 3,
-                                            lg: 4,
-                                          }}
-                                          display="flex"
-                                          overscrollBehaviorX={true}
-                                        >
-                                          {/* Reservation Period(Month) */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Reservation Period(Month)
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_period_month}`}
-                                              placeholder="Reservation Period(Month)"
-                                              type="number"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.reservation_period_month
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Reservation billing cycle */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Reservation billing cycle
-                                            </Text>{" "}
-                                            <ReactCustomSelect
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`}
-                                              label=""
-                                              options={[
-                                                {
-                                                  label: "Daily",
-                                                  value: "Daily",
-                                                },
-                                                {
-                                                  label: "Weekly",
-                                                  value: "Weekly",
-                                                },
-                                                {
-                                                  label: "Fortnighty",
-                                                  value: "Fortnighty",
-                                                },
-                                                {
-                                                  label: "Monthly",
-                                                  value: "Monthly",
-                                                },
-                                              ]}
-                                              selectedValue={
-                                                [
-                                                  {
-                                                    label: "Daily",
-                                                    value: "Daily",
-                                                  },
-                                                  {
-                                                    label: "Weekly",
-                                                    value: "Weekly",
-                                                  },
-                                                  {
-                                                    label: "Fortnighty",
-                                                    value: "Fortnighty",
-                                                  },
-                                                  {
-                                                    label: "Monthly",
-                                                    value: "Monthly",
-                                                  },
-                                                ]?.filter(
-                                                  (item) =>
-                                                    item.value ===
-                                                    getValues(
-                                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`
-                                                    )
-                                                )[0] || {}
-                                              }
-                                              isClearable={false}
-                                              selectType="label"
-                                              isLoading={false}
-                                              style={{ w: "100%" }}
-                                              handleOnChange={(val) => {
-                                                console.log(
-                                                  "selectedOption @@@@@@@@@@@------> ",
-                                                  val
-                                                );
-                                                setValue(
-                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`,
-                                                  val.value,
-                                                  { shouldValidate: true }
-                                                );
-                                              }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.reservation_billing_cycle
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Post Reservation billing cycle */}
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Post Reservation billing cycle
-                                            </Text>{" "}
-                                            <ReactCustomSelect
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`}
-                                              label=""
-                                              options={[
-                                                {
-                                                  label: "Daily",
-                                                  value: "Daily",
-                                                },
-                                                {
-                                                  label: "Weekly",
-                                                  value: "Weekly",
-                                                },
-                                                {
-                                                  label: "Fortnighty",
-                                                  value: "Fortnighty",
-                                                },
-                                                {
-                                                  label: "Monthly",
-                                                  value: "Monthly",
-                                                },
-                                              ]}
-                                              selectedValue={
-                                                [
-                                                  {
-                                                    label: "Daily",
-                                                    value: "Daily",
-                                                  },
-                                                  {
-                                                    label: "Weekly",
-                                                    value: "Weekly",
-                                                  },
-                                                  {
-                                                    label: "Fortnighty",
-                                                    value: "Fortnighty",
-                                                  },
-                                                  {
-                                                    label: "Monthly",
-                                                    value: "Monthly",
-                                                  },
-                                                ]?.filter(
-                                                  (item) =>
-                                                    item.value ===
-                                                    getValues(
-                                                      `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`
-                                                    )
-                                                )[0] || {}
-                                              }
-                                              isClearable={false}
-                                              selectType="label"
-                                              isLoading={false}
-                                              style={{ w: "100%" }}
-                                              handleOnChange={(val) => {
-                                                console.log(
-                                                  "selectedOption @@@@@@@@@@@------> ",
-                                                  val
-                                                );
-                                                setValue(
-                                                  `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`,
-                                                  val.value,
-                                                  { shouldValidate: true }
-                                                );
-                                              }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.post_reservation_billing_cycle
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-
-                                          {/* Post Reservation Storage charges */}
-
-                                          <GridItem colSpan={3}>
-                                            <Text textAlign="left">
-                                              {" "}
-                                              Post Reservation Storage charges
-                                            </Text>{" "}
-                                            <CustomInput
-                                              name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_storage_charges}`}
-                                              placeholder="Post Reservation Storage charges"
-                                              type="number"
-                                              label=""
-                                              style={{ w: "100%" }}
-                                            />
-                                            <Box
-                                              mx="1"
-                                              color="red"
-                                              textAlign="left"
-                                            >
-                                              {
-                                                errors?.client_list?.[index]
-                                                  ?.post_reservation_storage_charges
-                                                  ?.message
-                                              }
-                                            </Box>
-                                          </GridItem>
-                                        </GridItem>
-                                      </>
-                                    )}
-
-                                    {/* ----------------- Add Remove button -----------  */}
-                                    <GridItem
-                                      colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
-                                    >
-                                      <Flex
-                                        gap="10px"
-                                        justifyContent="end"
-                                        alignItems="center"
-                                      >
-                                        <MdAddBox
-                                          color="#A6CE39"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            append_client_list();
-                                            setClientLocationDrillDownState(
-                                              (item) => [
-                                                ...item,
-                                                {
-                                                  states: [],
-                                                  zones: [],
-                                                  districts: [],
-                                                  areas: [],
-                                                },
-                                              ]
-                                            );
-                                          }}
-                                        />
-                                        <MdIndeterminateCheckBox
-                                          color="#FF4444"
-                                          fontSize="45px"
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            if (client_list?.length > 1) {
-                                              remove_client_list(index);
-                                              setClientLocationDrillDownState(
-                                                (item) => [
-                                                  ...item.slice(0, index),
-                                                  ...item.slice(index + 1),
-                                                ]
-                                              );
-                                            }
-                                          }}
-                                        />
-                                      </Flex>
+                                          {
+                                            errors
+                                              ?.post_reservation_storage_charges
+                                              ?.message
+                                          }
+                                        </Box>
+                                      </GridItem>
                                     </GridItem>
                                   </>
-                                ))}
+                                )}
+
+                                {/* ----------------- Add Remove button -----------  */}
+                                <GridItem
+                                  colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                                >
+                                  <Flex
+                                    gap="10px"
+                                    justifyContent="end"
+                                    alignItems="center"
+                                  >
+                                    <Button
+                                      bg="#A6CE39"
+                                      _hover={{}}
+                                      color="white"
+                                      type="submit"
+                                    >
+                                      ADD
+                                    </Button>
+                                  </Flex>
+                                </GridItem>
+                              </>
                             </Grid>
+
+                            {/* <Clients_details_form /> */}
                           </Box>
 
                           {/* show client table start */}
-                          {/* <TableContainer mt="4">
+                          <TableContainer mt="4">
                             <Table variant="striped" colorScheme="teal">
                               <Thead>
                                 <Tr>
-                                  <Th>To convert</Th>
-                                  <Th>into</Th>
-                                  <Th isNumeric>multiply by</Th>
+                                  <Th>Client Type</Th>
+                                  <Th>Client Name</Th>
+                                  <Th>Mobile Number</Th>
+                                  <Th>Region</Th>
+                                  <Th>State</Th>
+                                  <Th>SubState</Th>
+                                  <Th>District</Th>
+                                  <Th>Area</Th>
+                                  <Th>Address</Th>
+                                  <Th>Action</Th>
                                 </Tr>
                               </Thead>
                               <Tbody>
-                                <Tr>
-                                  <Td>inches</Td>
-                                  <Td>millimetres (mm)</Td>
-                                  <Td isNumeric>25.4</Td>
-                                </Tr>
-                                <Tr>
-                                  <Td>feet</Td>
-                                  <Td>centimetres (cm)</Td>
-                                  <Td isNumeric>30.48</Td>
-                                </Tr>
-                                <Tr>
-                                  <Td>yards</Td>
-                                  <Td>metres (m)</Td>
-                                  <Td isNumeric>0.91444</Td>
-                                </Tr>
+                                {client_data_list &&
+                                  client_data_list.map((item, i) => (
+                                    <Tr key={`client_${i}`}>
+                                      <Td>{item.client_type}</Td>
+                                      <Td>{item.client_name}</Td>
+                                      <Td>{item.mobile_number}</Td>
+                                      <Td>{item.region.label}</Td>
+                                      <Td>{item.state.label}</Td>
+                                      <Td>{item.substate.label}</Td>
+                                      <Td>{item.district.label}</Td>
+                                      <Td>{item.area.label}</Td>
+                                      <Td>{item.address}</Td>
+                                      <Td>
+                                        <Box
+                                          display="flex"
+                                          alignItems="center"
+                                          gap="3"
+                                        >
+                                          <Text
+                                            color="#A6CE39"
+                                            fontWeight="bold"
+                                          >
+                                            Edit
+                                          </Text>
+                                          <Text color="red" fontWeight="bold">
+                                            Delete
+                                          </Text>
+                                        </Box>
+                                      </Td>
+                                    </Tr>
+                                  ))}
                               </Tbody>
-                              <Tfoot>
-                                <Tr>
-                                  <Th>To convert</Th>
-                                  <Th>into</Th>
-                                  <Th isNumeric>multiply by</Th>
-                                </Tr>
-                              </Tfoot>
                             </Table>
-                          </TableContainer> */}
+                          </TableContainer>
                           {/* show client table end */}
 
                           <Box></Box>
@@ -6053,26 +5855,11 @@ const Pwh = () => {
                   )}
                 </AccordionItem>
               </MotionSlideUp>
-            </Accordion>
-          </Box>
-
-          <Box display="flex" justifyContent="flex-end" mt="10" px="0">
-            <Button
-              type="submit"
-              //w="full"
-              backgroundColor={"primary.700"}
-              _hover={{ backgroundColor: "primary.700" }}
-              color={"white"}
-              borderRadius={"full"}
-              isLoading={false}
-              my={"4"}
-              px={"10"}
-            >
-              Submit
-            </Button>
-          </Box>
-        </form>
-      </FormProvider>
+            </form>
+          </FormProvider>
+          {/* </form> */}
+        </Accordion>
+      </Box>
     </Box>
   );
 };
@@ -6099,120 +5886,774 @@ const toasterAlert = (obj) => {
   }
   showToastByStatusCode(status, msg);
 };
-
 // ==========================================
 
-// client_list: Yup.array().of(
-//   Yup.object().shape({
-//     client_type: Yup.string().required("Client type name is required"),
-//     client_name: Yup.string().trim().required("Client name is required"),
-//     mobile_number: Yup.string().trim().required("Mobile number is required"),
-//     region: Yup.string().trim().required("Region is required"),
-//     state: Yup.string().trim().required("State is required"),
-//     zone: Yup.string().trim().required("Zone is required"),
-//     district: Yup.string().trim().required("District is required"),
-//     area: Yup.string().trim().required("Area is required"),
-//     address: Yup.string().trim().required("Address is required"),
+/// old client details code
 
-//     // Start dynamic fields when client_type === "Corporate"
-
-//     dynamicFields: Yup.object().when("client_type", {
-//       is: "Corporate",
-//       then: Yup.object().shape({
-//         storage_charges: Yup.number()
-//           .nullable()
-//           .required("Storage charges is required"),
-//         reservation_qty: Yup.number()
-//           .nullable()
-//           .required("Reservation qty is required"),
-//         reservation_start_date: Yup.date()
-//           .nullable()
-//           .required("Reservation start date is required")
-//           .test("isValidDate", "Invalid reservation start date", (value) => {
-//             return value instanceof Date && !isNaN(value);
-//           }),
-//         reservation_end_date: Yup.date()
-//           .nullable()
-//           .required("Reservation end date is required")
-//           .test("isValidDate", "Invalid reservation end date", (value) => {
-//             return value instanceof Date && !isNaN(value);
-//           }),
-//         reservation_period_month: Yup.number()
-//           .nullable()
-//           .required("Reservation period month is required"),
-//         reservation_billing_cycle: Yup.string().required(
-//           "Reservation billing cycle is required"
-//         ),
-//         post_reservation_billing_cycle: Yup.string().required(
-//           "Post reservation billing cycle is required"
-//         ),
-//         post_reservation_storage_charges: Yup.number()
-//           .nullable()
-//           .required("Post reservation storage charges is required"),
-//       }),
-//       otherwise: Yup.object().shape({
-//         // Define optional fields when client_type is not "Corporate"
-//       }),
-//     }),
-
-//     // End dynamic fields when client_type === "Corporate"
-//   })
-// ),
-
-// client_list: Yup.array().of(
-//   Yup.object().shape({
-//     client_type: Yup.string().trim().required("Client type name is required"),
-//     client_name: Yup.string().trim().required("Client name is required"),
-//     mobile_number: Yup.string().trim().required("Mobile number is required"),
-//     region: Yup.string().trim().required("Region is required"),
-//     state: Yup.string().trim().required("State is required"),
-//     zone: Yup.string().trim().required("Zone is required"),
-//     district: Yup.string().trim().required("District is required"),
-//     area: Yup.string().trim().required("Area is required"),
-//     address: Yup.string().trim().required("Address is required"),
-//     // Start dynamic fields when client_type === "Corporate"
-//     dynamicFields: Yup.object().when("client_type", {
-//       is: "Corporate",
-//       then: Yup.object().shape({
-//         storage_charges: Yup.number()
-//           .nullable()
-//           .required("Storage charges is required"),
-//         reservation_qty: Yup.number()
-//           .nullable()
-//           .required("Reservation qty is required"),
-//         reservation_start_date: Yup.date()
-//           .nullable()
-//           .required("Reservation start date is required")
-//           .test(
-//             "isValidDate",
-//             "Invalid reservation start date",
-//             (value) => {
-//               return value instanceof Date && !isNaN(value);
+// {client_list &&
+//   [].map((item, index) => (
+//     <>
+//       {/* Client Type */}
+//       <GridItem>
+//         <Text textAlign="left">Client Type</Text>{" "}
+//         <FormControl
+//           isInvalid={
+//             errors?.client_list?.[index]
+//               ?.client_type?.message
+//           }
+//         >
+//           <ReactSelect
+//             options={[
+//               {
+//                 label: "Corporate",
+//                 value: "Corporate",
+//               },
+//               {
+//                 label: "Retail",
+//                 value: "Retail",
+//               },
+//             ]}
+//             name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`}
+//             value={
+//               [
+//                 {
+//                   label: "Corporate",
+//                   value: "Corporate",
+//                 },
+//                 {
+//                   label: "Retail",
+//                   value: "Retail",
+//                 },
+//               ]?.filter(
+//                 (item) =>
+//                   item.value ==
+//                   getValues(
+//                     `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
+//                   )
+//               )[0] || {
+//                 label: "Retail",
+//                 value: "Retail",
+//               }
 //             }
-//           ),
-//         reservation_end_date: Yup.date()
-//           .nullable()
-//           .required("Reservation end date is required")
-//           .test("isValidDate", "Invalid reservation end date", (value) => {
-//             return value instanceof Date && !isNaN(value);
-//           }),
-//         reservation_period_month: Yup.number()
-//           .nullable()
-//           .required("Reservation period month is required"),
-//         reservation_billing_cycle: Yup.string().required(
-//           "Reservation billing cycle is required"
-//         ),
-//         post_reservation_billing_cycle: Yup.string().required(
-//           "Post reservation billing cycle is required"
-//         ),
-//         post_reservation_storage_charges: Yup.number()
-//           .nullable()
-//           .required("Post reservation storage charges is required"),
-//       }),
-//       otherwise: Yup.object().shape({
-//         // Define optional fields when client_type is not "Corporate"
-//       }),
-//     }),
-//     // End dynamic fields when client_type === "Corporate"
-//   })
-// ),
+//             isClearable={false}
+//             isLoading={false}
+//             onChange={(val) => {
+//               console.log(
+//                 "selectedOption @@@@@@@@@@@------> ",
+//                 val
+//               );
+//               setValue(
+//                 `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`,
+//                 val.value,
+//                 { shouldValidate: true }
+//               );
+//             }}
+//             styles={{
+//               control: (base, state) => ({
+//                 ...base,
+//                 backgroundColor: "#fff",
+//                 borderRadius: "6px",
+//                 borderColor: errors?.client_list?.[
+//                   index
+//                 ]?.client_type?.message
+//                   ? "red"
+//                   : "#c3c3c3",
+
+//                 padding: "1px",
+//               }),
+//               ...reactSelectStyle,
+//             }}
+//           />
+//           {!errors ? (
+//             <FormHelperText>
+//               Enter the email you'd like to receive
+//               the newsletter on.
+//             </FormHelperText>
+//           ) : (
+//             <FormErrorMessage>
+//               Email is required.
+//             </FormErrorMessage>
+//           )}
+//         </FormControl>
+//       </GridItem>
+
+//       {/* client_name */}
+//       <GridItem>
+//         <FormControl isInvalid={true}>
+//           <Text textAlign="left">
+//             {" "}
+//             Client Name{" "}
+//           </Text>{" "}
+//           <CustomInput
+//             name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`}
+//             placeholder="client name"
+//             inputValue={getValues(
+//               `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`
+//             )}
+//             onChange={(val) => {
+//               setValue(
+//                 `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_name}`,
+//                 val.target.value,
+//                 { shouldValidate: true }
+//               );
+//             }}
+//             type="text"
+//             label=""
+//             style={{ w: "100%" }}
+//           />
+//         </FormControl>
+
+//         {/* <Box mx="1" color="red" textAlign="left">
+//               {
+//                 errors?.client_list?.[index]
+//                   ?.client_name?.message
+//               }
+//             </Box> */}
+//       </GridItem>
+
+//       {/* Mobile Number */}
+//       <GridItem>
+//         <Text textAlign="left">
+//           {" "}
+//           Mobile Number{" "}
+//         </Text>{" "}
+//         <CustomInput
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`}
+//           placeholder="mobile number"
+//           type="text"
+//           label=""
+//           inputValue={getValues(
+//             `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`
+//           )}
+//           onChange={(val) => {
+//             setValue(
+//               `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.mobile_number}`,
+//               val.target.value,
+//               { shouldValidate: true }
+//             );
+//           }}
+//           style={{ w: "100%" }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]
+//               ?.mobile_number?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* Region */}
+//       <GridItem>
+//         <Text textAlign="left">Region</Text>{" "}
+//         <ReactCustomSelect
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`}
+//           label=""
+//           options={selectBoxOptions?.regions || []}
+//           selectedValue={
+//             selectBoxOptions?.regions?.filter(
+//               (item) =>
+//                 item.value ===
+//                 getValues(
+//                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.region}`
+//                 )
+//             )[0] || {}
+//           }
+//           isClearable={false}
+//           selectType="label"
+//           isLoading={false}
+//           style={{ w: "100%" }}
+//           handleOnChange={(val) => {
+//             regionOnClientChange(val, index);
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.region
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* State */}
+//       <GridItem>
+//         <Text textAlign="left">State </Text>{" "}
+//         <ReactCustomSelect
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`}
+//           label=""
+//           options={
+//             clientLocationDrillDownState?.[index]
+//               ?.states || {}
+//           }
+//           selectedValue={
+//             clientLocationDrillDownState[
+//               index
+//             ]?.states?.filter(
+//               (item) =>
+//                 item.value ===
+//                 getValues(
+//                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.state}`
+//                 )
+//             )[0] || {}
+//           }
+//           isClearable={false}
+//           selectType="label"
+//           isLoading={false}
+//           style={{ w: "100%" }}
+//           handleOnChange={(val) => {
+//             stateOnClientChange(val, index);
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.state
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* Zone  SubState*/}
+//       <GridItem>
+//         <Text textAlign="left">SubState </Text>{" "}
+//         <ReactCustomSelect
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`}
+//           label=""
+//           options={
+//             clientLocationDrillDownState?.[index]
+//               ?.zones || {}
+//           }
+//           selectedValue={
+//             clientLocationDrillDownState[
+//               index
+//             ]?.zones?.filter(
+//               (item) =>
+//                 item.value ===
+//                 getValues(
+//                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.zone}`
+//                 )
+//             )[0] || {}
+//           }
+//           isClearable={false}
+//           selectType="label"
+//           isLoading={false}
+//           style={{ w: "100%" }}
+//           handleOnChange={(val) => {
+//             console.log(val);
+//             zoneOnClientChange(val, index);
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.substate
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* District */}
+//       <GridItem>
+//         <Text textAlign="left">District </Text>{" "}
+//         <ReactCustomSelect
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`}
+//           label=""
+//           options={
+//             clientLocationDrillDownState?.[index]
+//               ?.districts || {}
+//           }
+//           selectedValue={
+//             clientLocationDrillDownState[
+//               index
+//             ]?.districts?.filter(
+//               (item) =>
+//                 item.value ===
+//                 getValues(
+//                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.district}`
+//                 )
+//             )[0] || {}
+//           }
+//           isClearable={false}
+//           selectType="label"
+//           isLoading={false}
+//           style={{ w: "100%" }}
+//           handleOnChange={(val) => {
+//             districtOnClientChange(val, index);
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.district
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* Area */}
+//       <GridItem>
+//         <Text textAlign="left">Area </Text>{" "}
+//         <ReactCustomSelect
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`}
+//           label=""
+//           options={
+//             clientLocationDrillDownState?.[index]
+//               ?.areas || {}
+//           }
+//           selectedValue={
+//             clientLocationDrillDownState[
+//               index
+//             ]?.areas?.filter(
+//               (item) =>
+//                 item.value ===
+//                 getValues(
+//                   `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.area}`
+//                 )
+//             )[0] || {}
+//           }
+//           isClearable={false}
+//           selectType="label"
+//           isLoading={false}
+//           style={{ w: "100%" }}
+//           handleOnChange={(val) => {
+//             areaOnClientChange(val, index);
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.area
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {/* Address */}
+//       <GridItem colSpan={{ base: 1, sm: 2 }}>
+//         <Text textAlign="left"> Address </Text>{" "}
+//         <CustomTextArea
+//           name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`}
+//           placeholder="address"
+//           type="text"
+//           rowLength={1}
+//           label=""
+//           style={{ w: "100%" }}
+//           inputValue={getValues(
+//             `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`
+//           )}
+//           onChange={(val) => {
+//             setValue(
+//               `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.address}`,
+//               val.target.value,
+//               { shouldValidate: true }
+//             );
+//           }}
+//         />
+//         <Box mx="1" color="red" textAlign="left">
+//           {
+//             errors?.client_list?.[index]?.address
+//               ?.message
+//           }
+//         </Box>
+//       </GridItem>
+
+//       {getValues(
+//         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.client_type}`
+//       ) === "Corporate" && (
+//         <>
+//           {/* first set daynamic fields */}
+
+//           <GridItem
+//             //border="1px"
+//             gap="4"
+//             colSpan={{
+//               base: 1,
+//               sm: 2,
+//               md: 3,
+//               lg: 4,
+//             }}
+//             display="flex"
+//             overscrollBehaviorX={true}
+//           >
+//             {/* Storage charges */}
+
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Storage charges
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.storage_charges}`}
+//                 placeholder="Storage charges"
+//                 type="number"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.storage_charges?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Reservation qty (Bales, MT) */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Reservation qty (Bales, MT)
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_qty}`}
+//                 placeholder="Reservation Qty (Bales, MT)"
+//                 type="number"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.reservation_qty?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Reservation Start Date */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 Reservation Start Date
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_start_date}`}
+//                 placeholder="Reservation Start Date"
+//                 type="date"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.reservation_start_date
+//                     ?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Reservation End Date */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Reservation End Date{" "}
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_end_date}`}
+//                 placeholder="Reservation End Date"
+//                 type="date"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.reservation_end_date?.message
+//                 }
+//               </Box>
+//             </GridItem>
+//           </GridItem>
+
+//           {/* second set daynamic fields */}
+
+//           <GridItem
+//             //border="1px"
+//             gap="4"
+//             colSpan={{
+//               base: 1,
+//               sm: 2,
+//               md: 3,
+//               lg: 4,
+//             }}
+//             display="flex"
+//             overscrollBehaviorX={true}
+//           >
+//             {/* Reservation Period(Month) */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Reservation Period(Month)
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_period_month}`}
+//                 placeholder="Reservation Period(Month)"
+//                 type="number"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.reservation_period_month
+//                     ?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Reservation billing cycle */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Reservation billing cycle
+//               </Text>{" "}
+//               <ReactCustomSelect
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`}
+//                 label=""
+//                 options={[
+//                   {
+//                     label: "Daily",
+//                     value: "Daily",
+//                   },
+//                   {
+//                     label: "Weekly",
+//                     value: "Weekly",
+//                   },
+//                   {
+//                     label: "Fortnighty",
+//                     value: "Fortnighty",
+//                   },
+//                   {
+//                     label: "Monthly",
+//                     value: "Monthly",
+//                   },
+//                 ]}
+//                 selectedValue={
+//                   [
+//                     {
+//                       label: "Daily",
+//                       value: "Daily",
+//                     },
+//                     {
+//                       label: "Weekly",
+//                       value: "Weekly",
+//                     },
+//                     {
+//                       label: "Fortnighty",
+//                       value: "Fortnighty",
+//                     },
+//                     {
+//                       label: "Monthly",
+//                       value: "Monthly",
+//                     },
+//                   ]?.filter(
+//                     (item) =>
+//                       item.value ===
+//                       getValues(
+//                         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`
+//                       )
+//                   )[0] || {}
+//                 }
+//                 isClearable={false}
+//                 selectType="label"
+//                 isLoading={false}
+//                 style={{ w: "100%" }}
+//                 handleOnChange={(val) => {
+//                   console.log(
+//                     "selectedOption @@@@@@@@@@@------> ",
+//                     val
+//                   );
+//                   setValue(
+//                     `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.reservation_billing_cycle}`,
+//                     val.value,
+//                     { shouldValidate: true }
+//                   );
+//                 }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.reservation_billing_cycle
+//                     ?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Post Reservation billing cycle */}
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Post Reservation billing cycle
+//               </Text>{" "}
+//               <ReactCustomSelect
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`}
+//                 label=""
+//                 options={[
+//                   {
+//                     label: "Daily",
+//                     value: "Daily",
+//                   },
+//                   {
+//                     label: "Weekly",
+//                     value: "Weekly",
+//                   },
+//                   {
+//                     label: "Fortnighty",
+//                     value: "Fortnighty",
+//                   },
+//                   {
+//                     label: "Monthly",
+//                     value: "Monthly",
+//                   },
+//                 ]}
+//                 selectedValue={
+//                   [
+//                     {
+//                       label: "Daily",
+//                       value: "Daily",
+//                     },
+//                     {
+//                       label: "Weekly",
+//                       value: "Weekly",
+//                     },
+//                     {
+//                       label: "Fortnighty",
+//                       value: "Fortnighty",
+//                     },
+//                     {
+//                       label: "Monthly",
+//                       value: "Monthly",
+//                     },
+//                   ]?.filter(
+//                     (item) =>
+//                       item.value ===
+//                       getValues(
+//                         `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`
+//                       )
+//                   )[0] || {}
+//                 }
+//                 isClearable={false}
+//                 selectType="label"
+//                 isLoading={false}
+//                 style={{ w: "100%" }}
+//                 handleOnChange={(val) => {
+//                   console.log(
+//                     "selectedOption @@@@@@@@@@@------> ",
+//                     val
+//                   );
+//                   setValue(
+//                     `client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_billing_cycle}`,
+//                     val.value,
+//                     { shouldValidate: true }
+//                   );
+//                 }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.post_reservation_billing_cycle
+//                     ?.message
+//                 }
+//               </Box>
+//             </GridItem>
+
+//             {/* Post Reservation Storage charges */}
+
+//             <GridItem colSpan={3}>
+//               <Text textAlign="left">
+//                 {" "}
+//                 Post Reservation Storage charges
+//               </Text>{" "}
+//               <CustomInput
+//                 name={`client_list.${index}.${formFieldsName.pwh_clients_details.client_list.post_reservation_storage_charges}`}
+//                 placeholder="Post Reservation Storage charges"
+//                 type="number"
+//                 label=""
+//                 style={{ w: "100%" }}
+//               />
+//               <Box
+//                 mx="1"
+//                 color="red"
+//                 textAlign="left"
+//               >
+//                 {
+//                   errors?.client_list?.[index]
+//                     ?.post_reservation_storage_charges
+//                     ?.message
+//                 }
+//               </Box>
+//             </GridItem>
+//           </GridItem>
+//         </>
+//       )}
+
+//       {/* ----------------- Add Remove button -----------  */}
+//       <GridItem
+//         colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+//       >
+//         <Flex
+//           gap="10px"
+//           justifyContent="end"
+//           alignItems="center"
+//         >
+//           <Button type="submit">
+//             <MdAddBox
+//               color="#A6CE39"
+//               fontSize="45px"
+//               cursor={"pointer"}
+//               onClick={() => {
+//                 append_client_list();
+//                 setClientLocationDrillDownState(
+//                   (item) => [
+//                     ...item,
+//                     {
+//                       states: [],
+//                       zones: [],
+//                       districts: [],
+//                       areas: [],
+//                     },
+//                   ]
+//                 );
+//               }}
+//             />
+//           </Button>
+
+//           <MdIndeterminateCheckBox
+//             color="#FF4444"
+//             fontSize="45px"
+//             cursor={"pointer"}
+//             onClick={() => {
+//               if (client_list?.length > 1) {
+//                 remove_client_list(index);
+//                 setClientLocationDrillDownState(
+//                   (item) => [
+//                     ...item.slice(0, index),
+//                     ...item.slice(index + 1),
+//                   ]
+//                 );
+//               }
+//             }}
+//           />
+//         </Flex>
+//       </GridItem>
+//     </>
+//   ))}

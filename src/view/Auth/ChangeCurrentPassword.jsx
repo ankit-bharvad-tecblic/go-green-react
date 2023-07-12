@@ -1,13 +1,10 @@
 import {
   Box,
   Button,
- 
   FormControl,
   FormLabel,
- 
   Input,
   Text,
- 
   InputRightElement,
   InputGroup,
   Heading,
@@ -18,9 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
-
 import { Controller, useForm } from "react-hook-form";
-
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -48,7 +43,7 @@ const schema = yup.object().shape({
     .oneOf([yup.ref("newpassword")], "Passwords must match"),
 });
 
-const ChangePassword = () => {
+function ChangeCurrentPassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
@@ -78,33 +73,34 @@ const ChangePassword = () => {
     { error: changePasswordApiErr, isLoading: changePasswordApiIsLoading },
   ] = useChangePasswordMutation();
 
-  const onSubmit = async (data) => {
-    console.log(data); // Handle form submission here
-    let obj = {
-      newpassword: data.newpassword,
-      confirmpassword: data.confirmpassword,
-      id,
-      token,
-    };
+  // const onSubmit = async (data) => {
+  //   console.log(data); // Handle form submission here
+  //   let obj = {
+  //     newpassword: data.newpassword,
+  //     confirmpassword: data.confirmpassword,
+  //     id,
+  //     token,
+  //   };
 
-    try {
-      const res = await changePassword(obj).unwrap();
-      console.log("change password api res ---> ", res);
-      if (res.status === 200) {
-        toast({
-          title: "Success",
-          description: res.message,
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          position: "top-right",
-        });
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   try {
+  //     const res = await changePassword(obj).unwrap();
+  //     console.log("change password api res ---> ", res);
+  //     if (res.status === 200) {
+  //       toast({
+  //         title: "Success",
+  //         description: res.message,
+  //         status: "success",
+  //         duration: 9000,
+  //         isClosable: true,
+  //         position: "top-right",
+  //       });
+  //       navigate("/login");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  const onSubmit = () => {};
 
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
@@ -114,21 +110,21 @@ const ChangePassword = () => {
     setShowNewPassword(!showNewPassword);
   };
 
-  useEffect(() => {
-    console.log("changePasswordApiErr ===> ", changePasswordApiErr);
-    const err = changePasswordApiErr?.data?.Error?.[0];
-    setShowMsg({
-      msg: err,
-      status: 400,
-    });
-  }, [changePasswordApiErr]);
-  console.log("erors --> ", errors);
+  // useEffect(() => {
+  //   console.log("changePasswordApiErr ===> ", changePasswordApiErr);
+  //   const err = changePasswordApiErr?.data?.Error?.[0];
+  //   setShowMsg({
+  //     msg: err,
+  //     status: 400,
+  //   });
+  // }, [changePasswordApiErr]);
+  // console.log("erors --> ", errors);
 
-  useEffect(() => {
-    if (!id && !token) {
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!id && !token) {
+  //     navigate("/login");
+  //   }
+  // }, []);
 
   return (
     <AuthLayout>
@@ -143,9 +139,9 @@ const ChangePassword = () => {
           Change Password
         </Heading>
         {/* <Text my="6" textColor={"gray.400"}>
-          Enter your user account's verified email address and we will send you
-          a password reset link.
-        </Text> */}
+      Enter your user account's verified email address and we will send you
+      a password reset link.
+    </Text> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl mb={4} isInvalid={errors.newpassword}>
             <FormLabel textColor={"gray.500"}>New Password</FormLabel>
@@ -237,8 +233,8 @@ const ChangePassword = () => {
               The password length should be at least 8 characters.
             </ListItem>
             {/* <ListItem>
-              The password length should be Max 10 characters.
-            </ListItem> */}
+          The password length should be Max 10 characters.
+        </ListItem> */}
             <ListItem>
               The password should contain at least one uppercase letter.
             </ListItem>
@@ -254,6 +250,6 @@ const ChangePassword = () => {
       </Box>
     </AuthLayout>
   );
-};
+}
 
-export default ChangePassword;
+export default ChangeCurrentPassword;

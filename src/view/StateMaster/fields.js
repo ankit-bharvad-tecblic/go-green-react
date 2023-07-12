@@ -165,8 +165,11 @@ const schema = yup.object().shape({
   gstn: yup
     .string()
     .trim()
-    .test("gst", "Invalid GST Number", (value) => gstNumber(value))
-    .required("Invalid GSTN number"),
+    // .test("gst", "Invalid GST Number", (value) => gstNumber(value))
+    .test("gst", "Invalid GST Number", (value) =>
+      gstNumber(value.toUpperCase())
+    )
+    .required("GSTN is required"),
 
   nav_code: yup.string().trim().required("Nav code is required"),
   state_india_office_addr: yup

@@ -222,10 +222,7 @@ const CommodityVariety = () => {
     dispatch(setUpFilterFields({ fields: filterFields }));
   };
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 

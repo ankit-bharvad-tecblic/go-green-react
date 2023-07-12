@@ -1,11 +1,9 @@
 import {
   Box,
   Button,
-  Center,
   Checkbox,
   Flex,
   FormControl,
-  FormLabel,
   Image,
   Input,
   Text,
@@ -13,9 +11,7 @@ import {
   InputRightElement,
   InputGroup,
   useToast,
-  InputLeftElement,
   Stack,
-  Heading,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Auth_Pages_IMG from "../../assets/Images/Authentication_Pages_IMG.svg";
@@ -29,7 +25,8 @@ import * as yup from "yup";
 import { useLoginMutation } from "../../features/auth/loginApiSlice";
 import { localStorageService } from "../../services/localStorge.service";
 import { Link } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+
+import { AES, enc } from "crypto-js";
 
 // import { HiOutlineUser } from "react-icons/hi";
 // import AccessWebcamWithLocation from "../../components/AccessWebcamWithLocation/AccessWebcamWithLocation";
@@ -57,12 +54,14 @@ function Login() {
     resolver: yupResolver(schema),
   });
 
-  const [login, { error: loginApiErr, isLoading: loginApiIsLoading }] =
-    useLoginMutation();
+  const [login, { isLoading: loginApiIsLoading }] = useLoginMutation();
+  const [rememberMe, setRememberMe] = useState(false);
+  const [encryptedPassword, setEncryptedPassword] = useState("");
 
   const onSubmit = (data) => {
     console.log(data); // Handle form submission
-    onLogin({ ...data, fcm_token: "test" });
+
+    onLogin({ ...data, fcm_token: "test", rememberMe });
   };
 
   const handleTogglePassword = () => {
@@ -77,8 +76,19 @@ function Login() {
       console.log("credentials ", credentials);
       const res = await login(credentials).unwrap();
       console.log("login api res ---> ", res);
+
       if (res.status === 200 && res.data.is_superuser) {
         localStorageService.set("GG_ADMIN", { userDetails: res.data });
+
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+          localStorage.setItem("email", credentials.email);
+          localStorage.setItem("password", credentials.password);
+        } else {
+          localStorage.removeItem("rememberMe");
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+        }
         window.location.href = "/";
       } else {
         setErrorMsg({
@@ -149,6 +159,11 @@ function Login() {
                 borderRadius={6}
                 placeholder="Email"
                 borderColor="gray.600"
+                defaultValue={
+                  localStorage.getItem("rememberMe") === "true"
+                    ? localStorage.getItem("email")
+                    : ""
+                }
                 {...register("email")}
               />
               <FormErrorMessage>
@@ -174,6 +189,11 @@ function Login() {
                   p="6"
                   //   borderColor={errors.password ? "red" : "Boxborder"}
                   borderColor="gray.600"
+                  defaultValue={
+                    localStorage.getItem("rememberMe") === "true"
+                      ? localStorage.getItem("password")
+                      : ""
+                  }
                   {...register("password")}
                 />
 
@@ -218,7 +238,13 @@ function Login() {
 
             <Flex justifyContent="space-between">
               <Stack spacing={5} direction="row">
-                <Checkbox>Remember me</Checkbox>
+                <Checkbox
+                  borderColor="gray.300"
+                  colorScheme="green"
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                >
+                  Remember me
+                </Checkbox>
               </Stack>
               <Box>
                 <Text color="primary.700">

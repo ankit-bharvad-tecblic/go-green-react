@@ -1,11 +1,11 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetStateMasterMutation,
 } from "../../features/master-api-slice";
-import { Box, Flex, Switch, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
 import { BiEditAlt } from "react-icons/bi";
 import { setUpFilterFields } from "../../features/filter.slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,15 +32,10 @@ const StateMaster = () => {
     excelDownload: "State",
   });
 
-  const [
-    getStateMaster,
-    { error: getStateMasterApiErr, isLoading: getStateMasterApiIsLoading },
-  ] = useGetStateMasterMutation();
+  const [getStateMaster, { isLoading: getStateMasterApiIsLoading }] =
+    useGetStateMasterMutation();
 
-  const [
-    activeDeActive,
-    { error: activeDeActiveApiErr, isLoading: activeDeActiveApiIsLoading },
-  ] = useActiveDeActiveMutation();
+  const [activeDeActive] = useActiveDeActiveMutation();
 
   const toast = useToast();
 

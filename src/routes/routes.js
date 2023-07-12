@@ -71,6 +71,7 @@ import AddEditHsnMaster from "../view/HsnMaster/AddEditHsnMaster";
 import InsurancePolicyMaster from "../view/InsurancePolicyMaster/InsurancePolicyMaster";
 import AddEditInsurancePolicy from "../view/InsurancePolicyMaster/AddEditInsurancePolicy";
 import AddEditCommodityBagMaster from "../view/CommodityBagMaster/AddEditCommodityBagMaster";
+import ChangeCurrentPassword from "../view/Auth/ChangeCurrentPassword";
 
 const isAuth = localStorageService.get("GG_ADMIN")?.userDetails?.token.access;
 // const isAuth =
@@ -115,6 +116,16 @@ const routes = [
           <ForgotPassword />
         </Suspense>
       </GuestRoute>
+    ),
+  },
+  {
+    path: "/change-current-password",
+    element: (
+      <ProtectedRoutes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ChangeCurrentPassword />
+        </Suspense>
+      </ProtectedRoutes>
     ),
   },
   {
