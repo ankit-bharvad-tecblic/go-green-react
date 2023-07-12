@@ -14,7 +14,7 @@ import { addEditFormFields, schema } from "./fields";
 import { MotionSlideUp } from "../../utils/animation";
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 
-import CustomSelector from "../../components/Elements/CustomSelector"; 
+import CustomSelector from "../../components/Elements/CustomSelector";
 import CustomSwitch from "../../components/Elements/CustomSwitch";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
@@ -269,7 +269,6 @@ function AddEditFormBankMaster() {
         bank_address: details?.bank_address,
         is_active: details.is_active,
         bank_sector: details?.bank_sector,
-        
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -346,7 +345,9 @@ function AddEditFormBankMaster() {
                         mt: 1,
                       }}
                       handleOnChange={(val) => {
-                        setValue("bank_sector", val.value, { shouldValidate: true });
+                        setValue("bank_sector", val.value, {
+                          shouldValidate: true,
+                        });
                       }}
                     />
                   </Box>
@@ -576,6 +577,7 @@ function AddEditFormBankMaster() {
                 borderRadius={"full"}
                 my={"4"}
                 px={"10"}
+                // onClick={clearForm}
                 onClick={clearForm}
               >
                 Clear

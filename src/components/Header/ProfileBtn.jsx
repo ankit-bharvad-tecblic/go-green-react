@@ -22,7 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 function ProfileBtn() {
   const handleChangePassword = () => {
-    window.location.href = "/change-password";
+    window.location.href = "/change-current-password";
   };
 
   return (

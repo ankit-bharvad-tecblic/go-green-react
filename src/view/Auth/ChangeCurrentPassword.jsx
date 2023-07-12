@@ -26,6 +26,8 @@ import { useChangePasswordMutation } from "../../features/auth/loginApiSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
+  confirmpassword: yup.string().trim().required("Current Password is required"),
+
   newpassword: yup
     .string()
     .trim()
@@ -51,6 +53,7 @@ function ChangeCurrentPassword() {
   const [showMsg, setShowMsg] = useState({ msg: "", status: "" });
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const {
     handleSubmit,
     control,
@@ -110,6 +113,10 @@ function ChangeCurrentPassword() {
     setShowNewPassword(!showNewPassword);
   };
 
+  const toggleCurrentPasswordVisibility = () => {
+    setShowCurrentPassword(!showCurrentPassword);
+  };
+
   // useEffect(() => {
   //   console.log("changePasswordApiErr ===> ", changePasswordApiErr);
   //   const err = changePasswordApiErr?.data?.Error?.[0];
@@ -143,6 +150,39 @@ function ChangeCurrentPassword() {
       a password reset link.
     </Text> */}
         <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl mb={4} isInvalid={errors.currentpassword}>
+            <FormLabel textColor={"gray.500"}>Current Password</FormLabel>
+            <InputGroup>
+              <Controller
+                control={control}
+                name="currentpassword"
+                render={({ field }) => (
+                  <Input
+                    p="6"
+                    borderColor="gray.600"
+                    type={showCurrentPassword ? "text" : "password"}
+                    {...field}
+                  />
+                )}
+              />
+              <InputRightElement>
+                <IconButton
+                  icon={showCurrentPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  onClick={toggleCurrentPasswordVisibility}
+                  variant="ghost"
+                  size="sm"
+                  mt={2}
+                  aria-label={
+                    showCurrentPassword ? "Hide password" : "Show password"
+                  }
+                />
+              </InputRightElement>
+            </InputGroup>
+
+            {errors.currentpassword && (
+              <Text color="red">{errors.currentpassword.message}</Text>
+            )}
+          </FormControl>
           <FormControl mb={4} isInvalid={errors.newpassword}>
             <FormLabel textColor={"gray.500"}>New Password</FormLabel>
             <InputGroup>
@@ -152,6 +192,7 @@ function ChangeCurrentPassword() {
                 render={({ field }) => (
                   <Input
                     p="6"
+                    borderColor="gray.600"
                     type={showNewPassword ? "text" : "password"}
                     {...field}
                   />
@@ -184,6 +225,7 @@ function ChangeCurrentPassword() {
                 render={({ field }) => (
                   <Input
                     p="6"
+                    borderColor="gray.600"
                     type={showConfirmPassword ? "text" : "password"}
                     {...field}
                   />

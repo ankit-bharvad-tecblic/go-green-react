@@ -58,8 +58,40 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [encryptedPassword, setEncryptedPassword] = useState("");
 
+  const encryptPassword = (password) => {
+    const encrypted = AES.encrypt(password, "secret-key").toString();
+    return encrypted;
+  };
+
+  const decryptPassword = (encryptedPassword) => {
+    try {
+      if (!encryptedPassword) {
+        return null; // Return null if the encrypted password is empty
+      }
+      const decrypted = AES.decrypt(encryptedPassword, "secret-key").toString(
+        enc.Utf8
+      );
+      return decrypted;
+    } catch (error) {
+      console.error("Error decrypting password:", error);
+      return null;
+    }
+  };
+
   const onSubmit = (data) => {
     console.log(data); // Handle form submission
+    const encryptedPassword = encryptPassword(data.password);
+    // setEncryptedPassword(encryptedPassword);
+    console.log("encryptedPassword", encryptedPassword);
+    if (rememberMe) {
+      localStorage.setItem("rememberMe", "true");
+      localStorage.setItem("email", data.email);
+      localStorage.setItem("password", encryptedPassword);
+    } else {
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+    }
 
     onLogin({ ...data, fcm_token: "test", rememberMe });
   };
@@ -70,6 +102,9 @@ function Login() {
 
   const onLogin = async (credentials) => {
     try {
+      const storedEncryptedPassword = localStorage.getItem("password");
+      let dcy = decryptPassword(storedEncryptedPassword);
+
       setErrorMsg({
         msg: "",
       });
@@ -80,15 +115,15 @@ function Login() {
       if (res.status === 200 && res.data.is_superuser) {
         localStorageService.set("GG_ADMIN", { userDetails: res.data });
 
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-          localStorage.setItem("email", credentials.email);
-          localStorage.setItem("password", credentials.password);
-        } else {
-          localStorage.removeItem("rememberMe");
-          localStorage.removeItem("email");
-          localStorage.removeItem("password");
-        }
+        // if (rememberMe) {
+        //   localStorage.setItem("rememberMe", "true");
+        //   localStorage.setItem("email", credentials.email);
+        //   localStorage.setItem("password", encryptedPassword);
+        // } else {
+        //   localStorage.removeItem("rememberMe");
+        //   localStorage.removeItem("email");
+        //   localStorage.removeItem("password");
+        // }
         window.location.href = "/";
       } else {
         setErrorMsg({
@@ -191,7 +226,7 @@ function Login() {
                   borderColor="gray.600"
                   defaultValue={
                     localStorage.getItem("rememberMe") === "true"
-                      ? localStorage.getItem("password")
+                      ? decryptPassword(localStorage.getItem("password"))
                       : ""
                   }
                   {...register("password")}
@@ -242,6 +277,7 @@ function Login() {
                   borderColor="gray.300"
                   colorScheme="green"
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  defaultChecked={rememberMe}
                 >
                   Remember me
                 </Checkbox>
