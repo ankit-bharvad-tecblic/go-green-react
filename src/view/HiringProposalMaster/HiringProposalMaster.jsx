@@ -27,7 +27,9 @@ function HiringProposalMaster() {
     // search: null,
     page: 1,
     totalPage: 1,
-    limit: 25, totalFilter:0 , total:0
+    limit: 25,
+    totalFilter: 0,
+    total: 0,
   });
 
   const [
@@ -289,7 +291,11 @@ function HiringProposalMaster() {
 
     columnHelper.accessor("active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -311,7 +317,11 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
@@ -342,9 +352,13 @@ function HiringProposalMaster() {
     console.log("info --> ", info);
     let editedFormId = info.row.original.id;
 
-    navigate(`/edit/hiring-proposal-master/${editedFormId}`, {
-      state: { details: info.row.original },
+    navigate(`/warehouse-proposal`, {
+      state: { details: info.row.original.id, formType: "PWH" },
     });
+
+    // navigate(`/edit/hiring-proposal-master/${editedFormId}`, {
+    //   state: { details: info.row.original },
+    // });
   };
 
   const getHiringProposal = async () => {
@@ -373,8 +387,8 @@ function HiringProposalMaster() {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old.limit),
-total: response?.total_data,
-totalFilter: response?.total
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
