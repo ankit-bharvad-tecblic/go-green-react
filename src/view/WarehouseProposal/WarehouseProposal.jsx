@@ -9,6 +9,7 @@ import Pwh from "./Pwh.jsx";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Wms from "./Wms";
 import ThirdParty from "./ThirdParty";
+import WmsRent from "./WmsRent";
 
 const commonStyle = {
   mt: 2,
@@ -123,6 +124,8 @@ const WarehouseProposal = () => {
             <Wms />
           ) : hiringProposal.type.value === "third" ? (
             <ThirdParty />
+          ) : hiringProposal.type.value === "rent" ? (
+            <WmsRent />
           ) : (
             <></>
           )}
