@@ -532,6 +532,8 @@ const Pwh = () => {
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
   const [selectedClientOpt, setSelectedClientOpt] = useState({});
 
+  const [formId, setFormId] = useState(null);
+
   const [clientLocationDrillDownState, setClientLocationDrillDownState] =
     useState([{ states: [], zones: [], districts: [], areas: [] }]);
 
@@ -1151,6 +1153,7 @@ const Pwh = () => {
   const saveAsDraftData = async (type) => {
     try {
       let data = {};
+      let id = null;
       if (type === "PWH_WAREHOUSE_DETAILS") {
         data = {
           is_draft: true,
@@ -1222,13 +1225,25 @@ const Pwh = () => {
       if (type === "PWH_CLIENTS_DETAILS") {
         data = {
           is_draft: true,
-          client_list: getValues("client_list"), //not found
+          client_list: client_data_list.map((item, i) => ({
+            ...item,
+            region: item.region.value,
+            state: item.state.value,
+            substate: item.substate.value,
+            district: item.district.value,
+            area: item.area.value,
+          })),
           intention_letter: getValues("intention_letter"), //not found
           remarks: getValues("remarks"), //not found
         };
       }
 
-      const response = await saveAsDraft(data).unwrap();
+      let finalData = {
+        id: id || formId,
+        ...data,
+      };
+
+      const response = await saveAsDraft(finalData).unwrap();
       console.log("saveAsDraftData - Success:", response);
 
       toasterAlert({
@@ -1237,6 +1252,8 @@ const Pwh = () => {
       });
 
       if (response.status === 200) {
+        id = response?.data?.id;
+        setFormId(response?.data?.id);
         console.log("response --> ", response);
       }
     } catch (error) {
