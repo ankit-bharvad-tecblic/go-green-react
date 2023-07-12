@@ -84,8 +84,8 @@ const AddEditFormCommodityType = () => {
     PrimarycommodityType: [],
   });
   const options = [
-    { value: " agri ", label: "agri  " },
-    { value: " non_agri    ", label: "  non_agri  " },
+    { value: "agri", label: "agri" },
+    { value: "non_agri", label: "non_agri" },
   ];
   const getCommodityType = async () => {
     try {
@@ -131,12 +131,13 @@ const AddEditFormCommodityType = () => {
 
   useEffect(() => {
     getCommodityType();
+    console.log(details);
     if (details?.id) {
       let obj = {
         primary_commodity_name: details.primary_commodity_name,
         commodity_type: details.commodity_type,
         description: details.description,
-        is_active: details.active,
+        is_active: details.is_active,
       };
 
       console.log(obj);
