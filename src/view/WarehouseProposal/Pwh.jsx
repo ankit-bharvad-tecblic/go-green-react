@@ -522,6 +522,8 @@ const Pwh = () => {
     regions: [],
   });
 
+  const [editedClientIndex, setEditedClientIndex] = useState(null);
+
   const [pbpmList, setPbpmList] = useState([]);
   const [selected, setSelected] = useState({});
   const [minMaxAvgState, setMinMaxAvgState] = useState({});
@@ -558,46 +560,6 @@ const Pwh = () => {
     //resolver: yupResolver(validationSchema),
     resolver: yupResolver(client_schema),
   });
-
-  const submitClients = (data) => {
-    console.log(data);
-
-    setClient_data_list((prev) => [
-      ...prev,
-      {
-        ...data,
-        region: selectedClientOpt?.region,
-        state: selectedClientOpt?.state,
-        substate: selectedClientOpt?.substate,
-        district: selectedClientOpt?.district,
-        area: selectedClientOpt?.area,
-      },
-    ]);
-
-    client_form_methods.reset({
-      client_name: "",
-      client_type: "",
-      mobile_number: "",
-      region: "",
-      state: "",
-      substate: "",
-      district: "",
-      area: "",
-      address: "",
-    });
-
-    setSelectedClientOpt({
-      region: null,
-      state: null,
-      substate: null,
-      district: null,
-      area: null,
-    });
-  };
-
-  useEffect(() => {
-    console.log(client_data_list);
-  }, [client_data_list]);
 
   const {
     setValue,
@@ -880,11 +842,106 @@ const Pwh = () => {
     }
   };
 
-  const save_clients_details = (data) => {
+  // client list drill down api start
+
+  const submitClients = (data) => {
     console.log(data);
+    console.log("editedClientIndex", editedClientIndex);
+    if (editedClientIndex !== null) {
+      const updatedArrayOfObjects = client_data_list?.map((obj, index) => {
+        if (index === editedClientIndex) {
+          return {
+            ...obj,
+
+            ...data,
+
+            region: selectedClientOpt?.region,
+            state: selectedClientOpt?.state,
+            substate: selectedClientOpt?.substate,
+            district: selectedClientOpt?.district,
+            area: selectedClientOpt?.area,
+          };
+        }
+        return obj;
+      });
+
+      console.log(updatedArrayOfObjects);
+      setClient_data_list(updatedArrayOfObjects);
+    } else {
+      setClient_data_list((prev) => [
+        ...prev,
+        {
+          ...data,
+          region: selectedClientOpt?.region,
+          state: selectedClientOpt?.state,
+          substate: selectedClientOpt?.substate,
+          district: selectedClientOpt?.district,
+          area: selectedClientOpt?.area,
+        },
+      ]);
+    }
+
+    client_form_methods.reset({
+      client_name: "",
+      client_type: "",
+      mobile_number: "",
+      region: "",
+      state: "",
+      substate: "",
+      district: "",
+      area: "",
+      address: "",
+    });
+
+    setSelectedClientOpt({
+      region: null,
+      state: null,
+      substate: null,
+      district: null,
+      area: null,
+    });
   };
 
-  // client list drill down api start
+  const editClientDetails = (item, i) => {
+    setEditedClientIndex(i);
+    console.log("item ", item);
+    setSelectedClientOpt({
+      region: item.region,
+      state: item.state,
+      substate: item.substate,
+      district: item.district,
+      area: item.area,
+    });
+
+    for (const [key, value] of Object.entries(item)) {
+      console.log(key, value);
+      if (
+        key === "region" ||
+        key === "state" ||
+        key === "substate" ||
+        key === "district" ||
+        key === "area"
+      ) {
+        client_form_methods.setValue(key, value.value, {
+          shouldValidate: true,
+        });
+      } else {
+        client_form_methods.setValue(key, value, {
+          shouldValidate: true,
+        });
+      }
+    }
+  };
+
+  const removeClient = (ind) => {
+    // Delete the object at index 1
+    let dataCopy = client_data_list;
+    let list = dataCopy.splice(ind, 1);
+    console.log("Removing client", list);
+    console.log("dataCopy", dataCopy);
+    setClient_data_list([...dataCopy]);
+  };
+
   const regionOnClientChange = async (val) => {
     console.log("value --> ", val);
 
@@ -4546,7 +4603,7 @@ const Pwh = () => {
                             {/* -------------- Advance rent(month) -------------- */}
                             {getValues(
                               formFieldsName.pwh_commercial_details.advance_rent
-                            ) == "true" && (
+                            ) === "true" && (
                               <Box mt="1" w="full">
                                 <Grid
                                   // textAlign="right"
@@ -5103,7 +5160,7 @@ const Pwh = () => {
                                           },
                                         ]?.filter(
                                           (item) =>
-                                            item.value ==
+                                            item.value ===
                                             client_form_methods.getValues(
                                               "client_type"
                                             )
@@ -5705,7 +5762,9 @@ const Pwh = () => {
                                       color="white"
                                       type="submit"
                                     >
-                                      ADD
+                                      {editedClientIndex !== null
+                                        ? "Update"
+                                        : "Add"}
                                     </Button>
                                   </Flex>
                                 </GridItem>
@@ -5730,6 +5789,18 @@ const Pwh = () => {
                                   <Th>Area</Th>
                                   <Th>Address</Th>
                                   <Th>Action</Th>
+                                  {/* {item.client_type === "Corporate" && (
+                                    <>
+                                      <Th>Storage charges</Th>
+                                      <Th>Reservation qty (Bales, MT)</Th>
+                                      <Th>Reservation Start Date</Th>
+                                      <Th>Reservation End Date</Th>
+                                      <Th>Reservation Period(Month)</Th>
+                                      <Th>Reservation billing cycle</Th>
+                                      <Th>Post Reservation billing cycle</Th>
+                                      <Th>Post Reservation Storage charges</Th>
+                                    </>
+                                  )} */}
                                 </Tr>
                               </Thead>
                               <Tbody>
@@ -5745,6 +5816,30 @@ const Pwh = () => {
                                       <Td>{item.district.label}</Td>
                                       <Td>{item.area.label}</Td>
                                       <Td>{item.address}</Td>
+                                      {item.client_type === "Corporate" && (
+                                        <>
+                                          <Td>{item.storage_charges}</Td>
+                                          <Td>{item.reservation_qty}</Td>
+                                          <Td>{item.reservation_start_date}</Td>
+                                          <Td>{item.reservation_end_date}</Td>
+                                          <Td>
+                                            {item.reservation_period_month}
+                                          </Td>
+                                          <Td>
+                                            {item.reservation_billing_cycle}
+                                          </Td>
+                                          <Td>
+                                            {
+                                              item.post_reservation_billing_cycle
+                                            }
+                                          </Td>
+                                          <Td>
+                                            {
+                                              item.post_reservation_storage_charges
+                                            }
+                                          </Td>
+                                        </>
+                                      )}
                                       <Td>
                                         <Box
                                           display="flex"
@@ -5754,10 +5849,19 @@ const Pwh = () => {
                                           <Text
                                             color="#A6CE39"
                                             fontWeight="bold"
+                                            onClick={() => {
+                                              editClientDetails(item, i);
+                                            }}
                                           >
                                             Edit
                                           </Text>
-                                          <Text color="red" fontWeight="bold">
+                                          <Text
+                                            onClick={() => {
+                                              removeClient(i);
+                                            }}
+                                            color="red"
+                                            fontWeight="bold"
+                                          >
                                             Delete
                                           </Text>
                                         </Box>
