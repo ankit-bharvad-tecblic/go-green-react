@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   FormControl,
+  Grid,
   Table,
   TableContainer,
   Tbody,
@@ -39,7 +40,11 @@ import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomTextArea from "../../components/Elements/CustomTextArea";
 function AddEditFormUserMaster() {
+  const [tableData, setTableData] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [isTableVisible, setTableVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -57,17 +62,15 @@ function AddEditFormUserMaster() {
     register,
     formState: { errors },
   } = methods;
+
   const {
-    handleSubmit: handleTableSubmit,
-    register: registerTable,
+    // handleSubmit: handleTableSubmit,
+
     formState: { errors: tableErrors },
   } = tableDataMethods;
 
   const [selectedData, setSelectedData] = useState([]);
   const [sections, setSections] = useState([]);
-  const [tableData, setTableData] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
-  const [isTableVisible, setTableVisible] = useState(false);
 
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
@@ -291,22 +294,22 @@ function AddEditFormUserMaster() {
 
   const regionOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("region", val?.value, {
+    tableDataMethods.setValue("region", val?.value, {
       shouldValidate: true,
     });
-    setValue("state", null, {
+    tableDataMethods.setValue("state", null, {
       shouldValidate: false,
     });
 
-    setValue("substate", null, {
+    tableDataMethods.setValue("substate", null, {
       shouldValidate: false,
     });
 
-    setValue("district", null, {
+    tableDataMethods.setValue("district", null, {
       shouldValidate: false,
     });
 
-    setValue("area", null, {
+    tableDataMethods.setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -338,19 +341,19 @@ function AddEditFormUserMaster() {
 
   const stateOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("state", val?.value, {
+    tableDataMethods.setValue("state", val?.value, {
       shouldValidate: true,
     });
 
-    setValue("substate", null, {
+    tableDataMethods.setValue("substate", null, {
       shouldValidate: false,
     });
 
-    setValue("district", null, {
+    tableDataMethods.setValue("district", null, {
       shouldValidate: false,
     });
 
-    setValue("area", null, {
+    tableDataMethods.setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -384,15 +387,15 @@ function AddEditFormUserMaster() {
 
   const zoneOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("substate", val?.value, {
+    tableDataMethods.setValue("substate", val?.value, {
       shouldValidate: true,
     });
 
-    setValue("district", null, {
+    tableDataMethods.setValue("district", null, {
       shouldValidate: false,
     });
 
-    setValue("area", null, {
+    tableDataMethods.setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -428,11 +431,11 @@ function AddEditFormUserMaster() {
 
   const districtOnChange = async (val) => {
     console.log("value --> ", val);
-    setValue("district", val?.value, {
+    tableDataMethods.setValue("district", val?.value, {
       shouldValidate: true,
     });
 
-    setValue("area", null, {
+    tableDataMethods.setValue("area", null, {
       shouldValidate: false,
     });
 
@@ -469,7 +472,7 @@ function AddEditFormUserMaster() {
   };
 
   const areaOnChange = (val) => {
-    setValue("area", val?.value, {
+    tableDataMethods.setValue("area", val?.value, {
       shouldValidate: true,
     });
   };
@@ -511,31 +514,58 @@ function AddEditFormUserMaster() {
   //     setTableData((prevTableData) => [...prevTableData, formData]);
   //   }
   // };
+  const reset = () => {
+    // Reset all form fields
+    tableDataMethods.setValue("region", "", { shouldDirty: true });
+    tableDataMethods.setValue("state", "", { shouldDirty: true });
+    tableDataMethods.setValue("substate", "", { shouldDirty: true });
+    tableDataMethods.setValue("district", "", { shouldDirty: true });
+    tableDataMethods.setValue("area", "", { shouldDirty: true });
 
+    // Set the edit index to null
+    setEditIndex(null);
+  };
   const handleFormSubmit = () => {
-    // Collect form data
-    const formData = {
-      region: getNameById("regions", getValues("region")),
-      state: getNameById("states", getValues("state")),
-      substate: getNameById("substate", getValues("substate")),
-      district: getNameById("districts", getValues("district")),
-      area: getNameById("areas", getValues("area")),
-    };
-    // setSelectBoxOptions({
-    //   region: null,
-    //   state: null,
-    //   substate: null,
-    //   district: null,
-    //   area: null,
-    // });
+    // Check if all fields are selected
+    const isAllFieldsSelected =
+      tableDataMethods.getValues("region") &&
+      tableDataMethods.getValues("state") &&
+      tableDataMethods.getValues("substate") &&
+      tableDataMethods.getValues("district") &&
+      tableDataMethods.getValues("area");
 
-    console.log(formData, "here");
+    if (isAllFieldsSelected) {
+      // Collect form data
+      const formData = {
+        region: getNameById("regions", tableDataMethods.getValues("region")),
+        state: getNameById("states", tableDataMethods.getValues("state")),
+        substate: getNameById(
+          "substate",
+          tableDataMethods.getValues("substate")
+        ),
+        district: getNameById(
+          "districts",
+          tableDataMethods.getValues("district")
+        ),
+        area: getNameById("areas", tableDataMethods.getValues("area")),
+      };
 
-    // Add new row
-    setTableData((prevTableData) => [...prevTableData, formData]);
+      // Add new row or update existing row
+      if (editIndex !== null) {
+        const updatedTableData = [...tableData];
+        updatedTableData[editIndex] = formData;
+        setTableData(updatedTableData);
+        setEditIndex(null);
+      } else {
+        setTableData((prevTableData) => [...prevTableData, formData]);
+      }
 
-    // Show the table
-    setTableVisible(true);
+      // Show the table
+      setTableVisible(true);
+
+      // Reset the form
+      reset();
+    }
   };
 
   const handleEditRow = (index) => {
@@ -548,11 +578,11 @@ function AddEditFormUserMaster() {
     const districtId = getIdByLabel("districts", rowData.district);
     const areaId = getIdByLabel("areas", rowData.area);
 
-    setValue("region", regionId, { shouldDirty: true });
-    setValue("state", stateId, { shouldDirty: true });
-    setValue("substate", substateId, { shouldDirty: true });
-    setValue("district", districtId, { shouldDirty: true });
-    setValue("area", areaId, { shouldDirty: true });
+    tableDataMethods.setValue("region", regionId, { shouldDirty: true });
+    tableDataMethods.setValue("state", stateId, { shouldDirty: true });
+    tableDataMethods.setValue("substate", substateId, { shouldDirty: true });
+    tableDataMethods.setValue("district", districtId, { shouldDirty: true });
+    tableDataMethods.setValue("area", areaId, { shouldDirty: true });
 
     setEditIndex(index);
   };
@@ -582,21 +612,23 @@ function AddEditFormUserMaster() {
   useEffect(() => {
     setAddEditFormFieldsList(addEditFormFields);
     if (details?.id) {
-      regionOnChange({ value: details?.region?.id });
-      stateOnChange({ value: details.state?.id });
-      zoneOnChange({ value: details.district?.substate?.id });
-      districtOnChange({ value: details.district?.id });
+      // regionOnChange({ value: details?.region?.id });
+      //  stateOnChange({ value: details.state?.id });
+      //  zoneOnChange({ value: details.district?.substate?.id });
+      //  districtOnChange({ value: details.district?.id });
       let obj = {
         email: details.email,
-        first_name: details.first_name,
+        employee_name: details.employee_name,
+        address: details.address,
         phone: details.phone,
-        user_role: details.user_role,
+        user_role: details?.user_role?.map((item) => item.id) || [],
+        pin_code: details?.pin_code,
         region: details?.region?.id,
         state: details?.state?.id,
         substate: details.substate?.id,
         district: details?.district?.id,
         area: details.area?.id,
-        // last_login: details.last_login,
+        last_login: details.last_login,
         is_active: details.is_active,
       };
       console.log("details", details);
@@ -630,6 +662,14 @@ function AddEditFormUserMaster() {
     ];
     dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
+
+  const temp = [{ id: 1 }, { id: 2 }];
+  let tempmap = [2, 4];
+
+  const commonValues = temp
+    .filter((item) => tempmap.includes(item.id))
+    .map((item) => ({ id: item.id }));
+  console.log(commonValues, "here 4");
   useEffect(() => {
     getRegionMasterList();
     return () => {
@@ -668,7 +708,7 @@ function AddEditFormUserMaster() {
                     <Text textAlign="right" w="550px">
                       Address
                     </Text>
-                    <CustomInput
+                    <CustomTextArea
                       name="address"
                       placeholder=" Address"
                       type="text"
@@ -727,14 +767,40 @@ function AddEditFormUserMaster() {
                     <Text textAlign="right" w="550px">
                       Role
                     </Text>
-                    <CustomSelector
+                    {/* {console.log(getValues("user_role"), "here 3")}
+                    {console.log(
+                      selectBoxOptions?.roles?.filter((opt) =>
+                        getValues("user_role").includes(opt.value)
+                      ),
+                      "here 2"
+                    )} */}
+                    <ReactCustomSelect
+                      name="user_role"
+                      label=""
+                      options={selectBoxOptions?.roles || []}
+                      // selectedValue={getValues("user_role")}
+                      selectedValue={selectBoxOptions.roles?.filter((opt) =>
+                        getValues("user_role")?.includes(opt.value)
+                      )}
+                      isClearable={false}
+                      isMultipleSelect={true}
+                      isLoading={false}
+                      style={{ w: "100%" }}
+                      handleOnChange={(val) => {
+                        console.log("selectedOption @@@@@@@@@@@------> ", val);
+                        let temp = val.map((item) => item.value);
+                        console.log(temp, "here");
+                        setValue("user_role", temp, { shouldValidate: true });
+                      }}
+                    />
+                    {/* <CustomSelector
                       isMulti={true}
                       name="user_role"
                       label=""
                       isChecked="details?.active"
                       options={selectBoxOptions.roles}
                       selectedValue={selectBoxOptions.roles?.find(
-                        (opt) => opt.label === details?.user_role
+                        (opt) => opt.label === details?.user_role?.role_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -742,7 +808,7 @@ function AddEditFormUserMaster() {
                         mb: 1,
                         mt: 1,
                       }}
-                    />
+                    /> */}
                   </Box>
                 </MotionSlideUp>
               </Box>
@@ -798,8 +864,8 @@ function AddEditFormUserMaster() {
               mr="6"
               px="0"
               position={"absolute"}
-              bottom={10}
-              right={0}
+              bottom={8}
+              right={10}
             >
               <Button
                 type="button"
@@ -837,14 +903,18 @@ function AddEditFormUserMaster() {
 
       {/* This is form for the state master and all  */}
       <FormProvider {...tableDataMethods}>
-        <form onSubmit={tableDataMethods.handleSubmit(handleTableSubmit)}>
+        <form onSubmit={tableDataMethods.handleSubmit(handleFormSubmit)}>
           {/* This is the start of the area zone state  */}
           <Box m="5">
             <Text fontWeight={"semibold"}>Data Accessibility</Text>
             <Box backgroundColor={"#DBFFF5"}>
-              <Flex p={4} gap={5} flexWrap={"wrap"}>
+              <Grid
+                templateColumns="repeat(auto-fit, minmax(180px, 1fr))"
+                gap={5}
+                p={4}
+              >
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Text w="100px">Region</Text>
+                  <Text>Region</Text>
                   <ReactCustomSelect
                     name="region"
                     label=""
@@ -852,7 +922,8 @@ function AddEditFormUserMaster() {
                     options={selectBoxOptions?.regions || []}
                     selectedValue={
                       selectBoxOptions?.regions?.filter(
-                        (item) => item.value === getValues("region")
+                        (item) =>
+                          item.value === tableDataMethods.getValues("region")
                       )[0] || {}
                     }
                     isClearable={false}
@@ -869,7 +940,7 @@ function AddEditFormUserMaster() {
 
                 <Box>
                   <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                    <Text w="100px">State</Text>
+                    <Text>State</Text>
                     <ReactCustomSelect
                       name="state"
                       label=""
@@ -877,7 +948,8 @@ function AddEditFormUserMaster() {
                       options={selectBoxOptions?.states || []}
                       selectedValue={
                         selectBoxOptions?.states?.filter(
-                          (item) => item.value === getValues("state")
+                          (item) =>
+                            item.value === tableDataMethods.getValues("state")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -894,7 +966,7 @@ function AddEditFormUserMaster() {
                 </Box>
                 <Box>
                   <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                    <Text w="100px">Sub State</Text>
+                    <Text>Sub State</Text>
                     <ReactCustomSelect
                       name="substate"
                       label=""
@@ -902,7 +974,9 @@ function AddEditFormUserMaster() {
                       options={selectBoxOptions?.substate || []}
                       selectedValue={
                         selectBoxOptions?.substate?.filter(
-                          (item) => item.value === getValues("substate")
+                          (item) =>
+                            item.value ===
+                            tableDataMethods.getValues("substate")
                         )[0] || {}
                       }
                       isClearable={false}
@@ -918,7 +992,7 @@ function AddEditFormUserMaster() {
                   </MotionSlideUp>
                 </Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Text w="100px">District</Text>{" "}
+                  <Text>District</Text>{" "}
                   <ReactCustomSelect
                     name="district"
                     label=""
@@ -926,7 +1000,8 @@ function AddEditFormUserMaster() {
                     options={selectBoxOptions?.districts || []}
                     selectedValue={
                       selectBoxOptions?.districts?.filter(
-                        (item) => item.value === getValues("district")
+                        (item) =>
+                          item.value === tableDataMethods.getValues("district")
                       )[0] || {}
                     }
                     isClearable={false}
@@ -942,7 +1017,7 @@ function AddEditFormUserMaster() {
                 </MotionSlideUp>
 
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
-                  <Text w="100px">Area</Text>{" "}
+                  <Text>Area</Text>{" "}
                   <ReactCustomSelect
                     name="area"
                     label=""
@@ -950,7 +1025,8 @@ function AddEditFormUserMaster() {
                     options={selectBoxOptions?.areas || []}
                     selectedValue={
                       selectBoxOptions?.areas?.filter(
-                        (item) => item.value === getValues("area")
+                        (item) =>
+                          item.value === tableDataMethods.getValues("area")
                       )[0] || {}
                     }
                     isClearable={false}
@@ -964,6 +1040,8 @@ function AddEditFormUserMaster() {
                     }}
                   />
                 </MotionSlideUp>
+              </Grid>
+              <Flex justifyContent={"end"} px={5} alignItems={"center"}>
                 <Button
                   type="submit"
                   //w="full"
@@ -976,7 +1054,7 @@ function AddEditFormUserMaster() {
                   }
                   my={"4"}
                   px={"10"}
-                  onClick={handleFormSubmit}
+                  // onClick={handleFormSubmit}
                 >
                   {editIndex !== null ? "Update" : "Add"}
                 </Button>

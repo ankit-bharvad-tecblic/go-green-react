@@ -49,7 +49,7 @@ const filterFields = [
     "LAST UPDATED DATE": "last_updated_date",
     isActiveFilter: false,
     label: "Last Updated Date",
-    name: "created_at",
+    name: "last_updated_date",
     placeholder: "Last Updated Date",
     type: "date",
     max: new Date().toISOString().split("T")[0],
