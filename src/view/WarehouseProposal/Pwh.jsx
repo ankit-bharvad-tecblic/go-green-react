@@ -69,6 +69,7 @@ import {
   useGetSecurityGuardNightShiftMutation,
   useGetSupervisorDayShiftMutation,
   useGetSupervisorNightShiftMutation,
+  useGetWarehouseProposalDetailsMutation,
   useMinMaxAvgMutation,
   useSaveAsDraftMutation,
 } from "../../features/warehouse-proposal.slice";
@@ -144,7 +145,7 @@ const formFieldsName = {
     warehouse_name: "warehouse_name",
     region_name: "region",
     state_name: "state",
-    zone_name: "zone",
+    zone_name: "substate",
     district_name: "district",
     area_name: "area",
     warehouse_address: "warehouse_address",
@@ -513,7 +514,7 @@ const schema = Yup.object().shape({
   //.required("remarks is required"),
 });
 
-const Pwh = () => {
+const Pwh = ({ id }) => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
   });
@@ -533,6 +534,7 @@ const Pwh = () => {
   const [selectedClientOpt, setSelectedClientOpt] = useState({});
 
   const [formId, setFormId] = useState(null);
+  const [formDetails, setFormDetails] = useState({});
 
   const [clientLocationDrillDownState, setClientLocationDrillDownState] =
     useState([{ states: [], zones: [], districts: [], areas: [] }]);
@@ -562,6 +564,103 @@ const Pwh = () => {
     //resolver: yupResolver(validationSchema),
     resolver: yupResolver(client_schema),
   });
+
+  let editedValueState = {};
+
+  const autoFillForm = async () => {
+    console.log("autoFillFormDetails --> ", formDetails);
+    for (const [key, value] of Object.entries(formDetails)) {
+      console.log("key value  -->", key, value);
+
+      setValue(key, value, {
+        shouldValidate: true,
+      });
+
+      if (key === "region") {
+        let obj = selectBoxOptions?.regions.filter(
+          (reg) => reg.value === value
+        )[0];
+        // setValue(key, value, {
+        //   shouldValidate: true,
+        // });
+        // setSelected((prev) => ({
+        //   ...prev,
+        //   region: obj,
+        // }));
+
+        let opt_arr = await regionOnChange(obj);
+        editedValueState = {
+          ...editedValueState,
+          states: opt_arr,
+        };
+      }
+
+      if (key === "state") {
+        console.log("editedValueState?.states -> ", editedValueState?.states);
+        let obj = editedValueState?.states?.filter(
+          (item) => item.value === value
+        )[0];
+
+        // setSelected((prev) => ({
+        //   ...prev,
+        //   state: obj,
+        // }));
+
+        let opt_arr = await stateOnChange(obj);
+        editedValueState = {
+          ...editedValueState,
+          substates: opt_arr,
+        };
+
+        console.log("obj on state change --> ", obj);
+      }
+
+      if (key === "substate") {
+        let obj = editedValueState?.substates?.filter(
+          (item) => item.value === value
+        )[0];
+
+        let opt_arr = await zoneOnChange(obj);
+        editedValueState = {
+          ...editedValueState,
+          districts: opt_arr,
+        };
+      }
+
+      if (key === "district") {
+        let obj = editedValueState?.districts?.filter(
+          (item) => item.value === value
+        )[0];
+
+        let opt_arr = await districtOnChange(obj);
+        editedValueState = {
+          ...editedValueState,
+          areas: opt_arr,
+        };
+      }
+
+      if (key === "area") {
+        let obj = editedValueState?.areas?.filter(
+          (item) => item.value === value
+        )[0];
+
+        areaOnChange(obj);
+      }
+
+      // if (key === "reservation_start_date" || key === "reservation_end_date") {
+      //   client_form_methods.setValue(key, moment(value).format("DD/MM/YYYY"), {
+      //     shouldValidate: true,
+      //   });
+      // }
+    }
+  };
+
+  useEffect(() => {
+    console.log("use effect formDetails --> ", formDetails);
+    if (formDetails) {
+      autoFillForm();
+    }
+  }, [formDetails]);
 
   const {
     setValue,
@@ -693,6 +792,25 @@ const Pwh = () => {
 
   const [getCommodityMaster, { isLoading: getCommodityMasterApiIsLoading }] =
     useGetCommodityMasterMutation();
+
+  // auto fill form
+  const [
+    getWarehouseProposalDetails,
+    { isLoading: getWarehouseProposalDetailsApiIsLoading },
+  ] = useGetWarehouseProposalDetailsMutation();
+
+  const fetchWarehouseProposalDetails = async () => {
+    try {
+      const response = await getWarehouseProposalDetails(id).unwrap();
+      console.log("Success:", response);
+      if (response?.status === 200) {
+        console.log("response?.data --> ", response?.data);
+        setFormDetails(response?.data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const getRegionMasterList = async () => {
     try {
@@ -1160,7 +1278,7 @@ const Pwh = () => {
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
-          zone: getValues("zone"),
+          substate: getValues("substate"),
           district: getValues("district"),
           area: getValues("area"),
           warehouse_address: getValues("warehouse_address"),
@@ -1225,7 +1343,7 @@ const Pwh = () => {
       if (type === "PWH_CLIENTS_DETAILS") {
         data = {
           is_draft: true,
-          client: client_data_list.map((item, i) => ({
+          client: client_data_list.map((item) => ({
             ...item,
             region: item.region.value,
             state: item.state.value,
@@ -1306,14 +1424,16 @@ const Pwh = () => {
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
-
+      let arr = response?.state?.map(({ state_name, id }) => ({
+        label: state_name,
+        value: id,
+      }));
       setSelectBoxOptions((prev) => ({
         ...prev,
-        states: response?.state?.map(({ state_name, id }) => ({
-          label: state_name,
-          value: id,
-        })),
+        states: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1360,13 +1480,17 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.substate?.map(({ substate_name, id }) => ({
+        label: substate_name,
+        value: id,
+      }));
+
       setSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.substate?.map(({ substate_name, id }) => ({
-          label: substate_name,
-          value: id,
-        })),
+        zones: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1408,13 +1532,17 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.district?.map(({ district_name, id }) => ({
+        label: district_name,
+        value: id,
+      }));
+
       setSelectBoxOptions((prev) => ({
         ...prev,
-        districts: response?.district?.map(({ district_name, id }) => ({
-          label: district_name,
-          value: id,
-        })),
+        districts: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1451,13 +1579,17 @@ const Pwh = () => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.area?.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      }));
+
       setSelectBoxOptions((prev) => ({
         ...prev,
-        areas: response?.area?.map(({ area_name, id }) => ({
-          label: area_name,
-          value: id,
-        })),
+        areas: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1841,6 +1973,8 @@ const Pwh = () => {
     fetchCommodityMaster();
     getBankMasterList();
     getBranchMasterList();
+
+    fetchWarehouseProposalDetails();
 
     // getStateList();
     // getZonesList();
@@ -5800,35 +5934,55 @@ const Pwh = () => {
 
                           {/* show client table start */}
                           <TableContainer mt="4">
-                            <Table variant="striped" colorScheme="teal">
-                              <Thead>
-                                <Tr>
-                                  <Th>Client Type</Th>
-                                  <Th>Client Name</Th>
-                                  <Th>Mobile Number</Th>
-                                  <Th>Region</Th>
-                                  <Th>State</Th>
-                                  <Th>SubState</Th>
-                                  <Th>District</Th>
-                                  <Th>Area</Th>
-                                  <Th>Address</Th>
+                            <Table color="#000">
+                              <Thead
+                                bg="#dbfff5"
+                                border="1px"
+                                borderColor="#000"
+                              >
+                                <Tr style={{ color: "#000" }}>
+                                  <Th color="#000">Client Type</Th>
+                                  <Th color="#000">Client Name</Th>
+                                  <Th color="#000">Mobile Number</Th>
+                                  <Th color="#000">Region</Th>
+                                  <Th color="#000">State</Th>
+                                  <Th color="#000">SubState</Th>
+                                  <Th color="#000">District</Th>
+                                  <Th color="#000">Area</Th>
+                                  <Th color="#000">Address</Th>
 
-                                  <Th>Storage charges</Th>
-                                  <Th>Reservation qty (Bales, MT)</Th>
-                                  <Th>Reservation Start Date</Th>
-                                  <Th>Reservation End Date</Th>
-                                  <Th>Reservation Period(Month)</Th>
-                                  <Th>Reservation billing cycle</Th>
-                                  <Th>Post Reservation billing cycle</Th>
-                                  <Th>Post Reservation Storage charges</Th>
+                                  <Th color="#000">Storage charges</Th>
+                                  <Th color="#000">
+                                    Reservation qty (Bales, MT)
+                                  </Th>
+                                  <Th color="#000">Reservation Start Date</Th>
+                                  <Th color="#000">Reservation End Date</Th>
+                                  <Th color="#000">
+                                    Reservation Period(Month)
+                                  </Th>
+                                  <Th color="#000">
+                                    Reservation billing cycle
+                                  </Th>
+                                  <Th color="#000">
+                                    Post Reservation billing cycle
+                                  </Th>
+                                  <Th color="#000">
+                                    Post Reservation Storage charges
+                                  </Th>
 
-                                  <Th>Action</Th>
+                                  <Th color="#000">Action</Th>
                                 </Tr>
                               </Thead>
                               <Tbody>
                                 {client_data_list &&
                                   client_data_list.map((item, i) => (
-                                    <Tr key={`client_${i}`} textAlign="center">
+                                    <Tr
+                                      key={`client_${i}`}
+                                      textAlign="center"
+                                      bg="white"
+                                      border="1px"
+                                      borderColor="#000"
+                                    >
                                       <Td>{item?.client_type} </Td>
                                       <Td>{item?.client_name}</Td>
                                       <Td>{item?.mobile_number}</Td>
@@ -5871,24 +6025,30 @@ const Pwh = () => {
                                           alignItems="center"
                                           gap="3"
                                         >
-                                          <Text
-                                            color="#A6CE39"
-                                            fontWeight="bold"
-                                            onClick={() => {
-                                              editClientDetails(item, i);
-                                            }}
+                                          <Flex
+                                            gap="20px"
+                                            justifyContent="center"
                                           >
-                                            Edit
-                                          </Text>
-                                          <Text
-                                            onClick={() => {
-                                              removeClient(i);
-                                            }}
-                                            color="red"
-                                            fontWeight="bold"
-                                          >
-                                            Delete
-                                          </Text>
+                                            <Box color={"primary.700"}>
+                                              <BiEditAlt
+                                                // color="#A6CE39"
+                                                fontSize="26px"
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                  editClientDetails(item, i);
+                                                }}
+                                              />
+                                            </Box>
+                                            <Box color="red">
+                                              <AiOutlineDelete
+                                                cursor="pointer"
+                                                fontSize="26px"
+                                                onClick={() => {
+                                                  removeClient(i);
+                                                }}
+                                              />
+                                            </Box>
+                                          </Flex>
                                         </Box>
                                       </Td>
                                     </Tr>

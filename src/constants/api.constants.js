@@ -68,6 +68,9 @@ export const API = {
     SECURITY_NIGHT: "/warehouse/night/security",
     PBPM: "/operational_flow/pbpm/pbpm_list/",
     MIN_MAX_AVG: "warehouse/warehousehiring_proposal/",
+    GET_WAREHOUSE_TYPE: "/warehouse/warehouse_type/",
+    GET_WAREHOUSE_SUB_TYPE: "/warehouse/warehouse_sub_type",
+    WAREHOUSE_PROPOSAL_DETAILS: "/warehouse/warehousehiring_proposal/",
   },
   COMMON_API_END_POINTS: {
     LOCATION_DRILL_DOWN: "/warehouse/location/filter",

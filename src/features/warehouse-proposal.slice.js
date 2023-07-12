@@ -56,6 +56,28 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getWarehouseType: builder.mutation({
+      query: (id) => ({
+        url: `${API.WAREHOUSE_PROPOSAL.GET_WAREHOUSE_TYPE}`,
+        method: "GET",
+      }),
+    }),
+    getWarehouseSubType: builder.mutation({
+      query: (id) => ({
+        url: `${API.WAREHOUSE_PROPOSAL.GET_WAREHOUSE_SUB_TYPE}`,
+        method: "GET",
+      }),
+    }),
+
+    getWarehouseProposalDetails: builder.mutation({
+      query: (id) => ({
+        url: `${API.WAREHOUSE_PROPOSAL.WAREHOUSE_PROPOSAL_DETAILS}${id}`,
+        method: "GET",
+      }),
+    }),
+
+    // warehouse/warehousehiring_proposal/420
   }),
 });
 
@@ -70,4 +92,8 @@ export const {
 
   useCalculatePBPMMutation,
   useMinMaxAvgMutation,
+
+  useGetWarehouseTypeMutation,
+  useGetWarehouseSubTypeMutation,
+  useGetWarehouseProposalDetailsMutation,
 } = warehouseProposalApiSlice;

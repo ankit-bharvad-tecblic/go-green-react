@@ -353,7 +353,13 @@ function HiringProposalMaster() {
     let editedFormId = info.row.original.id;
 
     navigate(`/warehouse-proposal`, {
-      state: { details: info.row.original.id, formType: "PWH" },
+      state: {
+        details: {
+          id: info.row.original.id,
+          type: { label: "PWH", value: "pwh" },
+          // type: { label: "WMS", value: "wms" },
+        },
+      },
     });
 
     // navigate(`/edit/hiring-proposal-master/${editedFormId}`, {

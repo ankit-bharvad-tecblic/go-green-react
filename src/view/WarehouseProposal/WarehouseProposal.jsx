@@ -1,5 +1,5 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { MotionSlideUp } from "../../utils/animation";
@@ -9,6 +9,12 @@ import Pwh from "./Pwh.jsx";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Wms from "./Wms";
 import ThirdParty from "./ThirdParty";
+import { useLocation } from "react-router-dom";
+import {
+  useGetWarehouseProposalDetailsMutation,
+  useGetWarehouseSubTypeMutation,
+  useGetWarehouseTypeMutation,
+} from "../../features/warehouse-proposal.slice";
 
 const commonStyle = {
   mt: 2,
@@ -21,6 +27,32 @@ const commonStyle = {
 };
 
 const WarehouseProposal = () => {
+  const [getWarehouseType, { isLoading: getWarehouseTypeApiIsLoading }] =
+    useGetWarehouseTypeMutation();
+
+  const [getWarehouseSubType, { isLoading: getWarehouseSubTypeApiIsLoading }] =
+    useGetWarehouseSubTypeMutation();
+
+  const [
+    getWarehouseProposalDetails,
+    { isLoading: getWarehouseProposalDetailsApiIsLoading },
+  ] = useGetWarehouseProposalDetailsMutation();
+
+  const [formDetails, setFormDetails] = useState([]);
+
+  const [options, setOptions] = useState({
+    warehouseType: [],
+    subType: [],
+  });
+
+  const location = useLocation();
+  const details = location.state?.details;
+
+  console.log("details: ", {
+    id: details?.id,
+    type: details?.type,
+  });
+
   const [hiringProposal, setHiringProposal] = useState({
     type: { label: "PWH ", value: "pwh" },
     subType: { label: "Leased", value: "leased" },
@@ -39,9 +71,75 @@ const WarehouseProposal = () => {
     console.log("data==>", data);
   };
 
+  const fetchWarehouseProposalDetails = async () => {
+    try {
+      const response = await getWarehouseProposalDetails(details?.id).unwrap();
+      console.log("Success:", response);
+      if (response?.status === 200) {
+        setFormDetails(response?.data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchWarehouseType = async () => {
+    try {
+      const response = await getWarehouseType().unwrap();
+      console.log("Success:", response);
+      if (response?.status === 200) {
+        setOptions((prev) => ({
+          ...prev,
+          subType: response?.results?.map((item) => ({
+            label: item.warehouse_type_name,
+            value: item.id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchWetWarehouseSubType = async () => {
+    try {
+      const response = await getWarehouseSubType().unwrap();
+      console.log("Success:", response);
+      if (response.status === 200) {
+        setOptions((prev) => ({
+          ...prev,
+          warehouseType: response?.results?.map((item) => ({
+            label: item.warehouse_subtype,
+            value: item.id,
+          })),
+        }));
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   useEffect(() => {
     console.log("test");
+    setSelected((prev) => ({ ...prev, selectedWarehouse: details?.type }));
+    setHiringProposal((old) => ({ ...old, type: details?.type }));
+
+    if (details?.id) {
+      fetchWarehouseProposalDetails();
+    }
   }, []);
+
+  // useMemo(() => {
+  //   console.log(formDetails);
+  //   autoFillForm();
+  // }, [formDetails]);
+
+  // useEffect(() => {
+  //   console.log("details --> ", details);
+  //   if (details?.id) {
+  //     fetchWarehouseProposalDetails();
+  //   }
+  // }, [details?.detail?.id]);
 
   return (
     <Box bg="gray.50" p="5">
@@ -69,6 +167,7 @@ const WarehouseProposal = () => {
               <ReactCustomSelect
                 name="Select-warehouse-Type"
                 label="Select warehouse Type"
+                // options={options?.warehouseType || []}
                 options={[
                   { label: "PWH ", value: "pwh" },
                   { label: "WMS", value: "wms" },
@@ -93,6 +192,7 @@ const WarehouseProposal = () => {
               <ReactCustomSelect
                 name="Select-warehouse-sub-Type"
                 label="Select warehouse Sub Type"
+                // options={options?.subType || []}
                 options={[
                   { label: "Leased ", value: "leased" },
                   { label: "Sub Leased ", value: "sub-leased" },
@@ -117,11 +217,11 @@ const WarehouseProposal = () => {
         </Box>
 
         <Box mt="2">
-          {hiringProposal.type.value === "pwh" ? (
-            <Pwh />
-          ) : hiringProposal.type.value === "wms" ? (
+          {hiringProposal?.type?.value === "pwh" ? (
+            <Pwh id={details?.id} />
+          ) : hiringProposal?.type?.value === "wms" ? (
             <Wms />
-          ) : hiringProposal.type.value === "third" ? (
+          ) : hiringProposal?.type?.value === "third" ? (
             <ThirdParty />
           ) : (
             <></>
