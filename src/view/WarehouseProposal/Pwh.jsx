@@ -723,9 +723,9 @@ const Pwh = () => {
 
       const optionsArray = Object.entries(response?.data).map(
         ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+          value: key === "employee_name" && value,
+          label: key === "user_id" && value,
+          count: key === "count" && value,
         })
       );
 
@@ -745,9 +745,9 @@ const Pwh = () => {
 
       const optionsArray = Object.entries(response?.data).map(
         ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+          value: key === "employee_name" && value,
+          label: key === "user_id" && value,
+          count: key === "count" && value,
         })
       );
 
@@ -767,9 +767,9 @@ const Pwh = () => {
 
       const optionsArray = Object.entries(response?.data).map(
         ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+          value: key === "employee_name" && value,
+          label: key === "user_id" && value,
+          count: key === "count" && value,
         })
       );
 
@@ -789,9 +789,9 @@ const Pwh = () => {
 
       const optionsArray = Object.entries(response?.data).map(
         ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+          value: key === "employee_name" && value,
+          label: key === "user_id" && value,
+          count: key === "count" && value,
         })
       );
 
@@ -900,6 +900,7 @@ const Pwh = () => {
       district: null,
       area: null,
     });
+    setEditedClientIndex(null);
   };
 
   const editClientDetails = (item, i) => {
@@ -915,6 +916,12 @@ const Pwh = () => {
 
     for (const [key, value] of Object.entries(item)) {
       console.log(key, value);
+
+      if (key === "reservation_start_date" || key === "reservation_end_date") {
+        client_form_methods.setValue(key, moment(value).format("DD/MM/YYYY"), {
+          shouldValidate: true,
+        });
+      }
       if (
         key === "region" ||
         key === "state" ||
@@ -5788,58 +5795,59 @@ const Pwh = () => {
                                   <Th>District</Th>
                                   <Th>Area</Th>
                                   <Th>Address</Th>
+
+                                  <Th>Storage charges</Th>
+                                  <Th>Reservation qty (Bales, MT)</Th>
+                                  <Th>Reservation Start Date</Th>
+                                  <Th>Reservation End Date</Th>
+                                  <Th>Reservation Period(Month)</Th>
+                                  <Th>Reservation billing cycle</Th>
+                                  <Th>Post Reservation billing cycle</Th>
+                                  <Th>Post Reservation Storage charges</Th>
+
                                   <Th>Action</Th>
-                                  {/* {item.client_type === "Corporate" && (
-                                    <>
-                                      <Th>Storage charges</Th>
-                                      <Th>Reservation qty (Bales, MT)</Th>
-                                      <Th>Reservation Start Date</Th>
-                                      <Th>Reservation End Date</Th>
-                                      <Th>Reservation Period(Month)</Th>
-                                      <Th>Reservation billing cycle</Th>
-                                      <Th>Post Reservation billing cycle</Th>
-                                      <Th>Post Reservation Storage charges</Th>
-                                    </>
-                                  )} */}
                                 </Tr>
                               </Thead>
                               <Tbody>
                                 {client_data_list &&
                                   client_data_list.map((item, i) => (
-                                    <Tr key={`client_${i}`}>
-                                      <Td>{item.client_type}</Td>
-                                      <Td>{item.client_name}</Td>
-                                      <Td>{item.mobile_number}</Td>
-                                      <Td>{item.region.label}</Td>
-                                      <Td>{item.state.label}</Td>
-                                      <Td>{item.substate.label}</Td>
-                                      <Td>{item.district.label}</Td>
-                                      <Td>{item.area.label}</Td>
-                                      <Td>{item.address}</Td>
-                                      {item.client_type === "Corporate" && (
-                                        <>
-                                          <Td>{item.storage_charges}</Td>
-                                          <Td>{item.reservation_qty}</Td>
-                                          <Td>{item.reservation_start_date}</Td>
-                                          <Td>{item.reservation_end_date}</Td>
-                                          <Td>
-                                            {item.reservation_period_month}
-                                          </Td>
-                                          <Td>
-                                            {item.reservation_billing_cycle}
-                                          </Td>
-                                          <Td>
-                                            {
-                                              item.post_reservation_billing_cycle
-                                            }
-                                          </Td>
-                                          <Td>
-                                            {
-                                              item.post_reservation_storage_charges
-                                            }
-                                          </Td>
-                                        </>
-                                      )}
+                                    <Tr key={`client_${i}`} textAlign="center">
+                                      <Td>{item?.client_type} </Td>
+                                      <Td>{item?.client_name}</Td>
+                                      <Td>{item?.mobile_number}</Td>
+                                      <Td>{item?.region.label}</Td>
+                                      <Td>{item?.state.label}</Td>
+                                      <Td>{item?.substate.label}</Td>
+                                      <Td>{item?.district.label}</Td>
+                                      <Td>{item?.area.label}</Td>
+                                      <Td>{item?.address}</Td>
+                                      {/* ----------------------------- */}
+                                      <Td>{item?.storage_charges || "-"}</Td>
+                                      <Td>{item?.reservation_qty || "-"}</Td>
+                                      <Td>
+                                        {moment(
+                                          item?.reservation_start_date
+                                        ).format("DD/MM/YYYY") || "-"}{" "}
+                                      </Td>
+                                      <Td>
+                                        {moment(
+                                          item?.reservation_end_date
+                                        ).format("DD/MM/YYYY") || "-"}
+                                      </Td>
+                                      <Td>
+                                        {item?.reservation_period_month || "-"}
+                                      </Td>
+                                      <Td>
+                                        {item?.reservation_billing_cycle || "-"}
+                                      </Td>
+                                      <Td>
+                                        {item?.post_reservation_billing_cycle ||
+                                          "-"}
+                                      </Td>
+                                      <Td>
+                                        {item?.post_reservation_storage_charges ||
+                                          "-"}
+                                      </Td>
                                       <Td>
                                         <Box
                                           display="flex"
