@@ -521,6 +521,14 @@ function AddEditFormUserMaster() {
       district: getNameById("districts", getValues("district")),
       area: getNameById("areas", getValues("area")),
     };
+    // setSelectBoxOptions({
+    //   region: null,
+    //   state: null,
+    //   substate: null,
+    //   district: null,
+    //   area: null,
+    // });
+
     console.log(formData, "here");
 
     // Add new row
@@ -725,7 +733,7 @@ function AddEditFormUserMaster() {
                       label=""
                       isChecked="details?.active"
                       options={selectBoxOptions.roles}
-                      selectedValue={selectBoxOptions.roles.find(
+                      selectedValue={selectBoxOptions.roles?.find(
                         (opt) => opt.label === details?.user_role
                       )}
                       isClearable={false}

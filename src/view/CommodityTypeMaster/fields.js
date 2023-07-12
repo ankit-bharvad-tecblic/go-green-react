@@ -102,7 +102,7 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  primary_comodity_key: yup
+  primary_commodity_name: yup
     .string()
     .required("Primary commodity type is required"),
   description: yup.string().trim().required("Description is required"),
