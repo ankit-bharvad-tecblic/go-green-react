@@ -1225,7 +1225,7 @@ const Pwh = () => {
       if (type === "PWH_CLIENTS_DETAILS") {
         data = {
           is_draft: true,
-          client_list: client_data_list.map((item, i) => ({
+          client: client_data_list.map((item, i) => ({
             ...item,
             region: item.region.value,
             state: item.state.value,
