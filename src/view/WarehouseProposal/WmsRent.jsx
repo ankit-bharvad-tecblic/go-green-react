@@ -102,101 +102,75 @@ const reactSelectStyle = {
   }),
 };
 
-const inputStyle = {
-  height: "40px",
-  backgroundColor: "white",
-  borderRadius: "lg",
-  _placeholder: {
-    color: "gray.300",
-  },
-  _hover: {
-    borderColor: "primary.700",
-    backgroundColor: "primary.200",
-  },
-  _focus: {
-    borderColor: "primary.700",
-    backgroundColor: "primary.200",
-    boxShadow: "none",
-  },
-  p: { base: "4" },
-  fontWeight: { base: "normal" },
-  fontStyle: "normal",
-};
-
 const formFieldsName = {
   wms_warehouse_details: {
-    warehouse_name: "warehouse_name", // done
-    region: "region", //done
-    state: "state", //done
-    substate: "substate", //done
-    district: "district", //done
-    area: "area", //done
-    warehouse_address: "warehouse_address", //done
-    warehouse_pincode: "warehouse_pincode", //done
-    no_of_chambers: "no_of_chambers", //done
-    is_factory_permise: "is_factory_permise", //done
-    standard_capacity: "standard_capacity", // done
-    currrent_capacity: "currrent_capacity", // done
-    currrent_utilised_capacity: "currrent_utilised_capacity", //done
-    lock_in_period: "lock_in_period", //done
-    lock_in_period_month: "lock_in_period_month", //done
-    covered_area: "covered_area", //done
-    supervisor_day_shift: "supervisor_day_shift", //done
-    supervisor_night_shift: "supervisor_night_shift", //done
-    security_guard_day_shift: "security_guard_day_shift", //done
-    security_guard_night_shift: "security_guard_night_shift", //done
+    warehouse_name: "warehouse_name",
+    region: "region",
+    state: "state",
+    substate: "substate",
+    district: "district",
+    area: "area",
+    warehouse_address: "warehouse_address",
+    warehouse_pincode: "warehouse_pincode",
+    no_of_chambers: "no_of_chambers",
+    is_factory_permise: "is_factory_permise",
+    standard_capacity: "standard_capacity",
+    currrent_capacity: "currrent_capacity",
+    currrent_utilised_capacity: "currrent_utilised_capacity",
+    lock_in_period: "lock_in_period",
+    lock_in_period_month: "lock_in_period_month",
+    covered_area: "covered_area",
+    supervisor_day_shift: "supervisor_day_shift",
+    supervisor_night_shift: "supervisor_night_shift",
+    security_guard_day_shift: "security_guard_day_shift",
+    security_guard_night_shift: "security_guard_night_shift",
   },
   wms_commodity_details: {
-    excpected_commodity: "excpected_commodity", //done
-    commodity_inward_type: "commodity_inward_type", //done
-    prestack_commodity: "prestack_commodity", //done
-    prestack_commodity_qty: "prestack_commodity_qty", //done
-    is_funding_required: "is_funding_required", //done
-    bank: {
-      //done
-      bank: "bank", //done
-      branch: "branch", //done
+    expected_commodity: "expected_commodity",
+    commodity_inward_type: "commodity_inward_type",
+    prestack_commodity: "prestack_commodity",
+    prestack_commodity_qty: "prestack_commodity_qty",
+    is_funding_required: "is_funding_required",
+    bank_details: {
+      //not found
+      bank: "bank", //not found
+      branch: "branch", //not found
     },
   },
   wms_commercial_details: {
-    owner: {
-      warehouse_owner_name: "warehouse_owner_name", //done
-      mobile_no: "mobile_no", //done
-      address: "address", //done
-      rent: "rent", //done
-    },
-    lessee: {
-      warehouse_owner_name: "warehouse_owner_name", //done
-      mobile_no: "mobile_no", //done
-      address: "address", //done
-      rent: "rent", //done
+    warehouse_owner_details: {
+      //not found
+      owner_name: "owner_name", //not found
+      mobile_no: "mobile_no", //not found
+      address: "address", //not found
+      rent: "rent", //not found
     },
     // min_rent: "min_rent",
     // max_rent: "max_rent",
     // avg_rent: "avg_rent",
-    rent: "rent", //done
-    total_rent_per_month: "total_rent_per_month", //done
+    rent: "rent",
+    total_rent_per_month: "total_rent_per_month",
     security_deposit_month: "security_deposit_month",
-    security_deposit_amt: "security_deposit_amt", //done
-    advance_rent: "advance_rent", //done
-    advance_rent_month: "advance_rent_month", //done
-    gst: "gst", //done
-    commencement_date: "commencement_date", //done
-    agreement_period_month: "agreement_period_month", //done
-    expiry_date: "expiry_date", //done
-    notice_period_month: "notice_period_month", //done
+    security_deposit_amt: "security_deposit_amt",
+    advance_rent: "advance_rent",
+    advance_rent_month: "advance_rent_month",
+    gst: "gst",
+    commencement_date: "commencement_date",
+    agreement_period_month: "agreement_period_month",
+    expiry_date: "expiry_date",
+    notice_period_month: "notice_period_month",
     wms_charges_according_to_commodity: "wms_charges_according_to_commodity", //not found
-    projected_file_url: "projected_file_url", //done
+    projection_plan_file_path: "projection_plan_file_path",
   },
   wms_clients_details: {
     client_list: {
       //not found
       client_type: "client_type", //not found
       client_name: "client_name", //not found
-      client_contact_no: "client_contact_no", //not found
+      mobile_number: "mobile_number", //not found
       region: "region", //not found
       state: "state", //not found
-      substate: "substate", //not found
+      zone: "zone", //not found
       district: "district", //not found
       area: "area", //not found
       address: "address", //not found
@@ -207,8 +181,8 @@ const formFieldsName = {
       // reservation_start_date: "reservation_start_date", //not found
       // reservation_end_date: "reservation_end_date", //not found
     },
-    intention_letter_url: "intention_letter_url", //done
-    remarks: "remarks", //done
+    intention_letter: "intention_letter", //not found
+    remarks: "remarks", //not found
   },
 };
 
@@ -251,7 +225,7 @@ const schema = yup.object().shape({
   security_guard_night_shift: yup
     .string()
     .required("Security guard for night shift is required"),
-  excpected_commodity: yup
+  expected_commodity: yup
     .array()
     .required("Expected commodity name is required"),
   commodity_inward_type: yup
@@ -269,7 +243,7 @@ const schema = yup.object().shape({
     otherwise: () => yup.string(),
   }),
   is_funding_required: yup.string().required("Funding required is required"),
-  bank: yup.array().when("is_funding_required", {
+  bank_details: yup.array().when("is_funding_required", {
     is: (value) => value === "true",
     then: () =>
       yup.array().of(
@@ -280,17 +254,9 @@ const schema = yup.object().shape({
       ),
     otherwise: () => yup.array(),
   }),
-  owner: yup.array().of(
+  warehouse_owner_details: yup.array().of(
     yup.object().shape({
-      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
-      mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
-      address: yup.string().trim() /*.required("Address is required")*/,
-      rent: yup.string().trim() /*.required("Rent is required")*/,
-    })
-  ),
-  lessee: yup.array().of(
-    yup.object().shape({
-      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
+      owner_name: yup.string().trim() /*.required("Owner name is required")*/,
       mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
       address: yup.string().trim() /*.required("Address is required")*/,
       rent: yup.string().trim() /*.required("Rent is required")*/,
@@ -322,32 +288,32 @@ const schema = yup.object().shape({
   notice_period_month: yup.string().required("Notice period is required"),
   wms_charges_according_to_commodity: yup.array(),
   // .required("WMS Charges according to commodity is required"),
-  projected_file_url: yup.string() /*.required("Your project is required")*/,
+  projection_plan_file_path:
+    yup.string() /*.required("Your project is required")*/,
   client_list: yup.array().of(
     yup.object().shape({
       client_type: yup.string().required("Client type is required"),
       client_name: yup.string().required("Client name is required"),
-      client_contact_no: yup.string().required("Mobile number is required"),
+      mobile_number: yup.string().required("Mobile number is required"),
       region: yup.string().required("Region is required"),
       state: yup.string().required("State is required"),
-      substate: yup.string().required(" Zone is required"),
+      zone: yup.string().required(" Zone is required"),
       district: yup.string().required("District is required"),
       area: yup.string().required("Area is required"),
       address: yup.string().required("Address is required"),
       wms_charges: yup.string().required("wms charges is required"),
       billing_cycle: yup.string().required("billing cycle is required"),
       /*reservation_qty:
-        yup.string().required("reservation qty is required"),
-      reservation_period:
-        yup.string().required("reservation period is required"),
-      reservation_start_date:
-        yup.string().required("reservation start date is required"),
-      reservation_end_date:
-        yup.string().required("reservation end date is required"),*/
+          yup.string().required("reservation qty is required"),
+        reservation_period:
+          yup.string().required("reservation period is required"),
+        reservation_start_date:
+          yup.string().required("reservation start date is required"),
+        reservation_end_date:
+          yup.string().required("reservation end date is required"),*/
     })
   ),
-  intention_letter_url:
-    yup.string() /*.required("Intention letter is required")*/,
+  intention_letter: yup.string() /*.required("Intention letter is required")*/,
   remarks: yup.string() /*.required("remarks is required")*/,
 });
 
@@ -374,7 +340,7 @@ const toasterAlert = (obj) => {
 
 const mobileNumberRegex = /^\d{10}$/;
 
-const Wms = () => {
+const WmsRent = () => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     community: [],
@@ -386,14 +352,68 @@ const Wms = () => {
 
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
 
+  const [clientLocationDrillDownState, setClientLocationDrillDownState] =
+    useState([{ states: [], zones: [], districts: [], areas: [] }]);
+
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      agreement_period_month: 11,
+      client_list: [
+        {
+          client_type: "",
+          client_name: "",
+          mobile_number: "",
+          region: "",
+          state: "",
+          zone: "",
+          district: "",
+          area: "",
+          address: "",
+          wms_charges: "",
+          billing_cycle: "",
+          // reservation_qty: "",
+          // reservation_period: "",
+          // reservation_start_date: "",
+          // reservation_end_date: "",
+        },
+      ],
     },
   });
 
   const { setValue, getValues } = methods;
+
+  const {
+    fields: client_list,
+    append: add_client_list,
+    remove: remove_client_list,
+  } = useFieldArray({
+    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: "client_list",
+  });
+
+  const append_client_list = () => {
+    add_client_list({
+      client_type: "",
+      client_name: "",
+      mobile_number: "",
+      region: "",
+      state: "",
+      zone: "",
+      district: "",
+      area: "",
+      address: "",
+      wms_charges: "",
+      billing_cycle: "",
+      // reservation_qty: "",
+      // reservation_period: "",
+      // reservation_start_date: "",
+      // reservation_end_date: "",
+    });
+  };
+
+  useEffect(() => {
+    console.log("client_list --> ", client_list);
+  }, [client_list]);
 
   // first accordion function start
 
@@ -843,7 +863,7 @@ const Wms = () => {
     remove: remove_bank_detail,
   } = useFieldArray({
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "bank",
+    name: "bank_details",
   });
 
   const [bankDetail, setBankDetail] = useState({
@@ -861,7 +881,7 @@ const Wms = () => {
       bank: bankDetail.bank !== "" ? "" : "Bank can not be empty.",
       branch:
         bankDetail.branch !== ""
-          ? getValues(`bank`).filter(
+          ? getValues(`bank_details`).filter(
               (item) => item.branch === bankDetail.branch
             ).length === 0
             ? ""
@@ -874,8 +894,9 @@ const Wms = () => {
     if (
       bankDetail.bank !== "" &&
       bankDetail.branch !== "" &&
-      getValues(`bank`).filter((item) => item.branch === bankDetail.branch)
-        .length === 0
+      getValues(`bank_details`).filter(
+        (item) => item.branch === bankDetail.branch
+      ).length === 0
     ) {
       add_new_bank_detail({
         bank: bankDetail.bank,
@@ -908,13 +929,13 @@ const Wms = () => {
     if (
       bankDetail.bank !== "" &&
       bankDetail.branch !== "" &&
-      getValues(`bank`)
+      getValues(`bank_details`)
         .filter((item, index) => index !== updateBankFlag)
         .filter((item) => item.branch === bankDetail.branch).length === 0
     ) {
-      const tempArr = getValues(`bank`);
+      const tempArr = getValues(`bank_details`);
       setValue(
-        `bank`,
+        `bank_details`,
         [
           ...tempArr.slice(0, updateBankFlag),
           {
@@ -948,12 +969,12 @@ const Wms = () => {
   // Owner Detail Functions start //
 
   const {
-    fields: owner,
+    fields: warehouse_owner_details,
     append: add_warehouse_owner_detail,
     remove: remove_warehouse_owner_detail,
   } = useFieldArray({
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "owner",
+    name: "warehouse_owner_details",
   });
 
   const [ownerDetail, setOwnerDetail] = useState({
@@ -970,30 +991,6 @@ const Wms = () => {
     rent: "",
   });
 
-  const [updateOwnerFlag, setUpdateOwnerFlag] = useState(null);
-
-  const WarehouseDetailClear = () => {
-    setOwnerDetail({
-      name: "",
-      mobile: "",
-      address: "",
-      rent: "",
-    });
-  };
-
-  const WarehouseErrorClear = (key) => {
-    if (key) {
-      setOwnerError((old) => ({ ...old, [key]: "" }));
-    } else {
-      setOwnerError({
-        name: "",
-        mobile: "",
-        address: "",
-        rent: "",
-      });
-    }
-  };
-
   const WarehouseErrorFunction = () => {
     setOwnerError({
       name: ownerDetail.name !== "" ? "" : "Name can not be empty.",
@@ -1002,7 +999,7 @@ const Wms = () => {
           ? mobileNumberRegex.test(ownerDetail.mobile)
             ? ""
             : "Mobile must be 10 digits long."
-          : "error",
+          : "Mobile can not be empty.",
       address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
       rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
     });
@@ -1017,22 +1014,34 @@ const Wms = () => {
       mobileNumberRegex.test(ownerDetail.mobile)
     ) {
       add_warehouse_owner_detail({
-        warehouse_owner_name: ownerDetail.name,
+        owner_name: ownerDetail.name,
         mobile_no: ownerDetail.mobile,
         address: ownerDetail.address,
         rent: ownerDetail.rent,
       });
-      WarehouseErrorClear();
-      WarehouseDetailClear();
+      setOwnerDetail({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
+      setOwnerError({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
+      });
     } else {
       WarehouseErrorFunction();
     }
   };
 
+  const [updateOwnerFlag, setUpdateOwnerFlag] = useState(null);
+
   const updateOwnerFlagFunction = (data, id) => {
     setUpdateOwnerFlag(id);
     setOwnerDetail({
-      name: data.warehouse_owner_name,
+      name: data.owner_name,
       mobile: data.mobile_no,
       address: data.address,
       rent: data.rent,
@@ -1047,13 +1056,13 @@ const Wms = () => {
       ownerDetail.rent !== "" &&
       mobileNumberRegex.test(ownerDetail.mobile)
     ) {
-      const tempArr = getValues(`owner`);
+      const tempArr = getValues(`warehouse_owner_details`);
       setValue(
-        `owner`,
+        `warehouse_owner_details`,
         [
           ...tempArr.slice(0, updateOwnerFlag),
           {
-            warehouse_owner_name: ownerDetail.name,
+            owner_name: ownerDetail.name,
             mobile_no: ownerDetail.mobile,
             address: ownerDetail.address,
             rent: ownerDetail.rent,
@@ -1062,138 +1071,21 @@ const Wms = () => {
         ],
         { shouldValidate: true }
       );
-      WarehouseErrorClear();
-      setUpdateOwnerFlag(null);
-      WarehouseDetailClear();
-    } else {
-      WarehouseErrorFunction();
-    }
-  };
-
-  // Owner Detail Functions end //
-
-  // Lessee Detail Functions start //
-
-  const {
-    fields: lessee,
-    append: add_lessee_detail,
-    remove: remove_lessee_detail,
-  } = useFieldArray({
-    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "lessee",
-  });
-
-  const [lesseeDetail, setLesseeDetail] = useState({
-    name: "",
-    mobile: "",
-    address: "",
-    rent: "",
-  });
-
-  const [lesseeError, setLesseeError] = useState({
-    name: "",
-    mobile: "",
-    address: "",
-    rent: "",
-  });
-
-  const [updateLesseeFlag, setUpdateLesseeFlag] = useState(null);
-
-  const LesseeDetailClear = () => {
-    setLesseeDetail({
-      name: "",
-      mobile: "",
-      address: "",
-      rent: "",
-    });
-  };
-
-  const LesseeErrorClear = (key) => {
-    if (key) {
-      setLesseeError((old) => ({ ...old, [key]: "" }));
-    } else {
-      setLesseeError({
+      setOwnerDetail({
         name: "",
         mobile: "",
         address: "",
         rent: "",
       });
-    }
-  };
-
-  const LesseeErrorFunction = () => {
-    setLesseeError({
-      name: lesseeDetail.name !== "" ? "" : "Name can not be empty.",
-      mobile:
-        lesseeDetail.mobile !== ""
-          ? mobileNumberRegex.test(lesseeDetail.mobile)
-            ? ""
-            : "Mobile must be 10 digits long."
-          : "error",
-      address: lesseeDetail.address !== "" ? "" : "Address can not be empty.",
-      rent: lesseeDetail.rent !== "" ? "" : "Rent can not be empty.",
-    });
-  };
-
-  const append_new_lessee_details = () => {
-    if (
-      lesseeDetail.name !== "" &&
-      lesseeDetail.mobile !== "" &&
-      lesseeDetail.address !== "" &&
-      lesseeDetail.rent !== "" &&
-      mobileNumberRegex.test(lesseeDetail.mobile)
-    ) {
-      add_lessee_detail({
-        warehouse_owner_name: lesseeDetail.name,
-        mobile_no: lesseeDetail.mobile,
-        address: lesseeDetail.address,
-        rent: lesseeDetail.rent,
+      setUpdateOwnerFlag(null);
+      setOwnerError({
+        name: "",
+        mobile: "",
+        address: "",
+        rent: "",
       });
-      LesseeErrorClear();
-      LesseeDetailClear();
     } else {
-      LesseeErrorFunction();
-    }
-  };
-
-  const updateLesseeFlagFunction = (data, id) => {
-    setUpdateLesseeFlag(id);
-    setLesseeDetail({
-      name: data.warehouse_owner_name,
-      mobile: data.mobile_no,
-      address: data.address,
-      rent: data.rent,
-    });
-  };
-
-  const UpdateLesseeDetail = () => {
-    if (
-      lesseeDetail.name !== "" &&
-      lesseeDetail.mobile !== "" &&
-      lesseeDetail.address !== "" &&
-      lesseeDetail.rent !== "" &&
-      mobileNumberRegex.test(lesseeDetail.mobile)
-    ) {
-      const tempArr = getValues(`lessee`);
-      setValue(
-        `lessee`,
-        [
-          ...tempArr.slice(0, updateLesseeFlag),
-          {
-            warehouse_owner_name: lesseeDetail.name,
-            mobile_no: lesseeDetail.mobile,
-            address: lesseeDetail.address,
-            rent: lesseeDetail.rent,
-          },
-          ...tempArr.slice(updateLesseeFlag + 1),
-        ],
-        { shouldValidate: true }
-      );
-      LesseeErrorClear();
-      setUpdateLesseeFlag(null);
-      LesseeDetailClear();
-    } else {
-      LesseeErrorFunction();
+      WarehouseErrorFunction();
     }
   };
 
@@ -1265,7 +1157,7 @@ const Wms = () => {
       formFieldsName.wms_warehouse_details.covered_area
     );
 
-    let commodity = getValues("excpected_commodity")?.map((item) => item.value);
+    let commodity = getValues("expected_commodity")?.map((item) => item.value);
 
     let obj = {
       commodity: commodity,
@@ -1310,46 +1202,6 @@ const Wms = () => {
   // fourth accordion function start
 
   // client list drill down api start
-
-  const {
-    fields: client_list,
-    append: add_client_list,
-    remove: remove_client_list,
-  } = useFieldArray({
-    control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "client_list",
-  });
-
-  const clientClientType = [
-    {
-      label: "Corporate",
-      value: "Corporate",
-    },
-    {
-      label: "Retail",
-      value: "Retail",
-    },
-  ];
-
-  const clientBillingCycle = [
-    {
-      label: "Daily",
-      value: "Daily",
-    },
-    {
-      label: "Weekly",
-      value: "Weekly",
-    },
-    {
-      label: "Fortnighty",
-      value: "Fortnighty",
-    },
-    {
-      label: "Monthly",
-      value: "Monthly",
-    },
-  ];
-
   const [clientList, setClientList] = useState({
     clientType: "",
     name: "",
@@ -1364,27 +1216,11 @@ const Wms = () => {
     billing: "",
   });
 
-  const [clientError, setClientError] = useState({
-    clientType: "",
-    name: "",
-    mobile: "",
-    region: "",
-    state: "",
-    substate: "",
-    district: "",
-    area: "",
-    address: "",
-    charges: "",
-    billing: "",
-  });
-
   const [clientDripDown, setClientDripDown] = useState([
-    { states: [], substate: [], districts: [], areas: [] },
+    { states: {}, substate: {}, district: {}, area: {} },
   ]);
 
-  const [updateClientList, setUpdateClientList] = useState(null);
-
-  const regionOnClientChange = async (val) => {
+  const regionOnClientChange = async (val, index) => {
     setClientList((old) => ({
       ...old,
       region: val?.value,
@@ -1400,360 +1236,207 @@ const Wms = () => {
       region: val?.value,
     };
 
-    let clientNumber = 0;
-
-    if (updateClientList === null) {
-      clientNumber = clientDripDown.length - 1;
-    } else {
-      clientNumber = updateClientList;
-    }
-
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientDripDown[clientNumber];
+      let location = clientLocationDrillDownState[index];
 
-      location.states =
-        response?.state?.map(({ state_name, id }) => ({
-          label: state_name,
-          value: id,
-        })) || [];
+      location.states = response?.state?.map(({ state_name, id }) => ({
+        label: state_name,
+        value: id,
+      }));
 
-      setClientDripDown((item) => [
-        ...item.slice(0, clientNumber),
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
         location,
-        ...item.slice(clientNumber + 1),
+        ...item.slice(index + 1),
       ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const stateOnClientChange = async (val) => {
-    setClientList((old) => ({
-      ...old,
+  const stateOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
       state: val?.value,
-      substate: "",
-      district: "",
-      area: "",
-    }));
-
-    console.log("value --> ", val);
-
-    const query = {
-      region: clientList.region,
-      state: val?.value,
     };
-
-    let clientNumber = 0;
-
-    if (updateClientList === null) {
-      clientNumber = clientDripDown.length - 1;
-    } else {
-      clientNumber = updateClientList;
-    }
 
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientDripDown[clientNumber];
+      let location = clientLocationDrillDownState[index];
 
-      location.substate =
-        response?.substate?.map(({ substate_name, id }) => ({
-          label: substate_name,
-          value: id,
-        })) || [];
+      location.zones = response?.zone?.map(({ substate_name, id }) => ({
+        label: substate_name,
+        value: id,
+      }));
 
-      setClientDripDown((item) => [
-        ...item.slice(0, clientNumber),
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
         location,
-        ...item.slice(clientNumber + 1),
+        ...item.slice(index + 1),
       ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const zoneOnClientChange = async (val) => {
-    setClientList((old) => ({
-      ...old,
-      substate: val?.value,
-      district: "",
-      area: "",
-    }));
-
+  const zoneOnClientChange = async (val, index) => {
     console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
 
     const query = {
-      region: clientList.region,
-      state: clientList.state,
-      substate: val?.value,
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+      ),
+      zone: val?.value,
     };
-
-    let clientNumber = 0;
-
-    if (updateClientList === null) {
-      clientNumber = clientDripDown.length - 1;
-    } else {
-      clientNumber = updateClientList;
-    }
 
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientDripDown[clientNumber];
+      let location = clientLocationDrillDownState[index];
 
-      location.districts =
-        response?.district?.map(({ district_name, id }) => ({
-          label: district_name,
-          value: id,
-        })) || [];
+      location.districts = response?.district?.map(({ district_name, id }) => ({
+        label: district_name,
+        value: id,
+      }));
 
-      setClientDripDown((item) => [
-        ...item.slice(0, clientNumber),
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
         location,
-        ...item.slice(clientNumber + 1),
+        ...item.slice(index + 1),
       ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const districtOnClientChange = async (val) => {
-    setClientList((old) => ({
-      ...old,
+  const districtOnClientChange = async (val, index) => {
+    console.log("value --> ", val);
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      null,
+      {
+        shouldValidate: false,
+      }
+    );
+
+    const query = {
+      region: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+      ),
+      state: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+      ),
+      zone: getValues(
+        `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`
+      ),
       district: val?.value,
-      area: "",
-    }));
-
-    console.log("value --> ", val);
-
-    const query = {
-      region: clientList.region,
-      state: clientList.state,
-      substate: clientList.substate,
-      district: val?.value,
     };
-
-    let clientNumber = 0;
-
-    if (updateClientList === null) {
-      clientNumber = clientDripDown.length - 1;
-    } else {
-      clientNumber = updateClientList;
-    }
 
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
-      let location = clientDripDown[clientNumber];
+      let location = clientLocationDrillDownState[index];
 
-      location.areas =
-        response?.area?.map(({ area_name, id }) => ({
-          label: area_name,
-          value: id,
-        })) || [];
+      location.areas = response?.area?.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      }));
 
-      setClientDripDown((item) => [
-        ...item.slice(0, clientNumber),
+      setClientLocationDrillDownState((item) => [
+        ...item.slice(0, index),
         location,
-        ...item.slice(clientNumber + 1),
+        ...item.slice(index + 1),
       ]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const areaOnClientChange = (val) => {
-    setClientList((old) => ({
-      ...old,
-      area: val?.value,
-    }));
-  };
-
-  const ClientOnChange = (val, key) => {
-    setClientList((old) => ({ ...old, [key]: val?.target.value }));
-  };
-
-  const ClientSelectOnChange = (val, key) => {
-    setClientList((old) => ({ ...old, [key]: val?.value }));
-  };
-
-  const ClientListClear = () => {
-    setClientList({
-      clientType: "",
-      name: "",
-      mobile: "",
-      region: "",
-      state: "",
-      substate: "",
-      district: "",
-      area: "",
-      address: "",
-      charges: "",
-      billing: "",
-    });
-  };
-
-  const ClientErrorClear = (key) => {
-    if (key) {
-      setClientError((old) => ({ ...old, [key]: "" }));
-    } else {
-      setClientError({
-        clientType: "",
-        name: "",
-        mobile: "",
-        region: "",
-        state: "",
-        substate: "",
-        district: "",
-        area: "",
-        address: "",
-        charges: "",
-        billing: "",
-      });
-    }
-  };
-
-  const ClientErrorStatus = () => {
-    const result =
-      clientList.clientType !== "" &&
-      clientList.name !== "" &&
-      clientList.mobile !== "" &&
-      clientList.region !== "" &&
-      clientList.state !== "" &&
-      clientList.substate !== "" &&
-      clientList.district !== "" &&
-      clientList.area !== "" &&
-      clientList.address !== "" &&
-      clientList.charges !== "" &&
-      clientList.billing !== "" &&
-      mobileNumberRegex.test(clientList.mobile);
-
-    return result;
-  };
-
-  const ClientErrorFunction = () => {
-    setClientError({
-      clientType: clientList.clientType === "" ? "error" : "",
-      name: clientList.name === "" ? "error" : "",
-      mobile:
-        clientList.mobile === ""
-          ? "error"
-          : mobileNumberRegex.test(clientList.mobile)
-          ? ""
-          : "Mobile number should be 10 digits long.",
-      region: clientList.region === "" ? "error" : "",
-      state: clientList.state === "" ? "error" : "",
-      substate: clientList.substate === "" ? "error" : "",
-      district: clientList.district === "" ? "error" : "",
-      area: clientList.area === "" ? "error" : "",
-      address: clientList.address === "" ? "error" : "",
-      charges: clientList.charges === "" ? "error" : "",
-      billing: clientList.billing === "" ? "error" : "",
-    });
-  };
-
-  const append_client_list = () => {
-    if (ClientErrorStatus()) {
-      add_client_list({
-        client_type: clientList.clientType,
-        client_name: clientList.name,
-        client_contact_no: clientList.mobile,
-        region: clientList.region,
-        state: clientList.state,
-        substate: clientList.substate,
-        district: clientList.district,
-        area: clientList.area,
-        address: clientList.address,
-        wms_charges: clientList.charges,
-        billing_cycle: clientList.billing,
-        // reservation_qty: "",
-        // reservation_period: "",
-        // reservation_start_date: "",
-        // reservation_end_date: "",
-      });
-      setClientDripDown((item) => [
-        ...item,
-        {
-          states: [],
-          substate: [],
-          districts: [],
-          areas: [],
-        },
-      ]);
-      ClientListClear();
-      ClientErrorClear();
-    } else {
-      ClientErrorFunction();
-    }
-  };
-
-  const updateClientFunction = (data, id) => {
-    setUpdateClientList(id);
-    setClientList({
-      clientType: data.client_type,
-      name: data.client_name,
-      mobile: data.client_contact_no,
-      region: data.region,
-      state: data.state,
-      substate: data.substate,
-      district: data.district,
-      area: data.area,
-      address: data.address,
-      charges: data.wms_charges,
-      billing: data.billing_cycle,
-    });
-    ClientErrorClear();
-  };
-
-  const UpdateClientListFunction = () => {
-    if (ClientErrorStatus()) {
-      const tempArr = getValues(`client_list`);
-      setValue(
-        `client_list`,
-        [
-          ...tempArr.slice(0, updateClientList),
-          {
-            client_type: clientList.clientType,
-            client_name: clientList.name,
-            client_contact_no: clientList.mobile,
-            region: clientList.region,
-            state: clientList.state,
-            substate: clientList.substate,
-            district: clientList.district,
-            area: clientList.area,
-            address: clientList.address,
-            wms_charges: clientList.charges,
-            billing_cycle: clientList.billing,
-            // reservation_qty: "",
-            // reservation_period: "",
-            // reservation_start_date: "",
-            // reservation_end_date: "",
-          },
-          ...tempArr.slice(updateClientList + 1),
-        ],
-        { shouldValidate: true }
-      );
-      setClientDripDown((item) => [
-        ...item,
-        {
-          states: [],
-          substate: [],
-          districts: [],
-          areas: [],
-        },
-      ]);
-      setUpdateClientList(null);
-      ClientListClear();
-      ClientErrorClear();
-    } else {
-      ClientErrorFunction();
-    }
+  const areaOnClientChange = (val, index) => {
+    setValue(
+      `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`,
+      val?.value,
+      {
+        shouldValidate: false,
+      }
+    );
   };
 
   // fourth accordion function end
@@ -1785,7 +1468,7 @@ const Wms = () => {
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
-          substate: getValues("substate"),
+          zone: getValues("zone"),
           district: getValues("district"),
           area: getValues("area"),
           warehouse_address: getValues("warehouse_address"),
@@ -1808,19 +1491,19 @@ const Wms = () => {
       } else if (type === "WMS_COMMODITY_DETAILS") {
         data = {
           is_draft: true,
-          excpected_commodity: getValues("excpected_commodity"),
+          expected_commodity: getValues("expected_commodity"),
           commodity_inward_type: getValues("commodity_inward_type"),
           prestack_commodity: getValues("prestack_commodity"),
           prestack_commodity_qty: getValues("prestack_commodity_qty"),
           is_funding_required: getValues("is_funding_required"),
-          bank: getValues("bank"),
+          bank_details: bank_details_fields,
         };
 
         console.log("WMS_COMMODITY_DETAILS @@ --> ", data);
       } else if (type === "WMS_COMMERCIAL_DETAILS") {
         data = {
           is_draft: true,
-          owner: getValues("owner"), //done
+          warehouse_owner_details: warehouse_owner_details, //not found
           // min_rent: getValues("min_rent"),
           // max_rent: getValues("max_rent"),
           // avg_rent: getValues("avg_rent"),
@@ -1838,7 +1521,7 @@ const Wms = () => {
           wms_charges_according_to_commodity: getValues(
             "wms_charges_according_to_commodity"
           ), //not found
-          projected_file_url: getValues("projected_file_url"),
+          projection_plan_file_path: getValues("projection_plan_file_path"),
         };
 
         console.log("WMS_COMMERCIAL_DETAILS @@ --> ", data);
@@ -1846,7 +1529,7 @@ const Wms = () => {
         data = {
           is_draft: true,
           client_list: getValues("client_list"), //not found
-          intention_letter_url: getValues("intention_letter_url"), //not found
+          intention_letter: getValues("intention_letter"), //not found
           remarks: getValues("remarks"), //not found
         };
 
@@ -1880,8 +1563,8 @@ const Wms = () => {
   return (
     <Box bg="gray.50" p="0">
       {/* <Box p="2">
-          <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
-        </Box> */}
+            <BreadcrumbCmp BreadcrumbList={BreadcrumbLinks} />
+          </Box> */}
 
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -1900,7 +1583,7 @@ const Wms = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            WMS WAREHOUSE DETAILS
+                            WMS+RENT WAREHOUSE DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -2743,7 +2426,7 @@ const Wms = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            WMS COMMODITY DETAILS
+                            WMS+RENT COMMODITY DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -2771,7 +2454,7 @@ const Wms = () => {
                                   <ReactCustomSelect
                                     name={
                                       formFieldsName.wms_commodity_details
-                                        .excpected_commodity
+                                        .expected_commodity
                                     }
                                     label=""
                                     options={selectBoxOptions?.community || []}
@@ -2791,7 +2474,7 @@ const Wms = () => {
                                       }));
                                       setValue(
                                         formFieldsName.wms_commodity_details
-                                          .excpected_commodity,
+                                          .expected_commodity,
                                         val,
                                         { shouldValidate: true }
                                       );
@@ -2800,7 +2483,6 @@ const Wms = () => {
                                 </GridItem>
                               </Grid>
                             </Box>
-
                             {/* ================ Commodity Inward Type ================= */}
                             <Box mt={commonStyle.mt}>
                               <Grid
@@ -3131,6 +2813,7 @@ const Wms = () => {
                                   >
                                     <Button
                                       type="button"
+                                      //w="full"
                                       backgroundColor={"primary.700"}
                                       _hover={{
                                         backgroundColor: "primary.700",
@@ -3138,13 +2821,20 @@ const Wms = () => {
                                       color={"white"}
                                       borderRadius={"full"}
                                       px={"10"}
-                                      onClick={() => {
-                                        updateBankFlag !== null
-                                          ? UpdateBankDetail()
-                                          : append_new_bank_details();
-                                        console.log("here in bank");
-                                      }}
+                                      onClick={
+                                        () => {
+                                          updateBankFlag !== null
+                                            ? UpdateBankDetail()
+                                            : append_new_bank_details();
+                                          console.log("here in bank");
+                                        }
+                                        // saveAsDraftData("PWH_COMMERCIAL_DETAILS")
+                                      }
                                     >
+                                      {/* {console.log(
+                                      updateOwnerFlag ? "got" : "not got",
+                                      "here"
+                                    )} */}
                                       {updateBankFlag !== null ? "Edit" : "Add"}
                                     </Button>
                                   </GridItem>
@@ -3187,7 +2877,7 @@ const Wms = () => {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {getValues(`bank`)?.length > 0 ? (
+                                    {getValues(`bank_details`)?.length > 0 ? (
                                       bank_details_fields.map((item, index) => (
                                         <tr>
                                           <td
@@ -3279,7 +2969,6 @@ const Wms = () => {
                           ) : (
                             <></>
                           )}
-
                           <Box
                             display="flex"
                             justifyContent="flex-end"
@@ -3288,6 +2977,7 @@ const Wms = () => {
                           >
                             <Button
                               type="button"
+                              //w="full"
                               backgroundColor={"primary.700"}
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
@@ -3322,7 +3012,7 @@ const Wms = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            WMS COMMERCIAL DETAILS
+                            WMS+RENT COMMERCIAL DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -3353,7 +3043,6 @@ const Wms = () => {
                                   Owner Name
                                 </Text>
                                 <Input
-                                  placeholder="Owner Name"
                                   value={ownerDetail.name}
                                   type="text"
                                   onChange={(e) => {
@@ -3366,12 +3055,37 @@ const Wms = () => {
                                       name: "",
                                     }));
                                   }}
-                                  style={inputStyle}
+                                  height="33px"
                                   border="1px"
                                   borderColor={
                                     ownerError.name ? "red" : "gray.10"
                                   }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Owner Name"}
                                 />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.name}
+                                </Text>
                               </GridItem>
                               <GridItem colSpan={2}>
                                 <Text fontWeight="bold" textAlign="left">
@@ -3379,7 +3093,6 @@ const Wms = () => {
                                 </Text>
                                 <Input
                                   type="number"
-                                  placeholder="Mobile No."
                                   value={ownerDetail.mobile}
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
@@ -3392,20 +3105,36 @@ const Wms = () => {
                                       mobile: "",
                                     }));
                                   }}
-                                  style={inputStyle}
+                                  height="33px"
                                   border="1px"
                                   borderColor={
                                     ownerError.mobile ? "red" : "gray.10"
                                   }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
+                                  placeholder={"Mobile No"}
                                 />
                                 <Text
                                   color="red"
                                   fontSize="14px"
                                   textAlign="left"
                                 >
-                                  {ownerError.mobile === "error"
-                                    ? ""
-                                    : ownerError.mobile}
+                                  {ownerError.mobile}
                                 </Text>
                               </GridItem>
                               <GridItem colSpan={4}>
@@ -3425,14 +3154,38 @@ const Wms = () => {
                                       address: "",
                                     }));
                                   }}
-                                  style={inputStyle}
                                   rows={1}
                                   border="1px"
                                   borderColor={
                                     ownerError.address ? "red" : "gray.10"
                                   }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  px={{ base: "4" }}
+                                  py={{ base: "5px" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
                                   placeholder={"Address"}
                                 />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.address}
+                                </Text>
                               </GridItem>{" "}
                               <GridItem colSpan={2}>
                                 <Text fontWeight="bold" textAlign="left">
@@ -3452,17 +3205,42 @@ const Wms = () => {
                                       rent: "",
                                     }));
                                   }}
-                                  style={inputStyle}
+                                  height="33px"
                                   border="1px"
                                   borderColor={
                                     ownerError.rent ? "red" : "gray.10"
                                   }
+                                  backgroundColor={"white"}
+                                  borderRadius={"lg"}
+                                  _placeholder={{
+                                    color: "gray.300",
+                                  }}
+                                  _hover={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                  }}
+                                  _focus={{
+                                    borderColor: "primary.700",
+                                    backgroundColor: "primary.200",
+                                    boxShadow: "none",
+                                  }}
+                                  p={{ base: "4" }}
+                                  fontWeight={{ base: "normal" }}
+                                  fontStyle={"normal"}
                                   placeholder={"Rent"}
                                 />
+                                <Text
+                                  color="red"
+                                  fontSize="14px"
+                                  textAlign="left"
+                                >
+                                  {ownerError.rent}
+                                </Text>
                               </GridItem>
                               <GridItem colSpan={2} alignSelf="end">
                                 <Button
                                   type="button"
+                                  //w="full"
                                   backgroundColor={"primary.700"}
                                   _hover={{ backgroundColor: "primary.700" }}
                                   color={"white"}
@@ -3532,8 +3310,9 @@ const Wms = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {getValues(`owner`)?.length > 0 ? (
-                                  owner.map((item, index) => (
+                                {getValues(`warehouse_owner_details`)?.length >
+                                0 ? (
+                                  warehouse_owner_details.map((item, index) => (
                                     <tr>
                                       <td
                                         style={{
@@ -3548,7 +3327,7 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.warehouse_owner_name}
+                                        {item.owner_name}
                                       </td>
                                       <td
                                         style={{
@@ -3602,299 +3381,6 @@ const Wms = () => {
                                                   remove_warehouse_owner_detail(
                                                     index
                                                   );
-                                                }
-                                              }}
-                                            />
-                                          </Box>
-                                        </Flex>
-                                      </td>
-                                    </tr>
-                                  ))
-                                ) : (
-                                  <tr>
-                                    <td
-                                      style={{
-                                        padding: tableStyle.generalPadding,
-                                        textAlign: "center",
-                                      }}
-                                      colSpan={6}
-                                    >
-                                      No Data Added
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </Box>
-
-                          {/* {/ ================ Lessee details ================= /} */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(12, 1fr)"
-                              alignItems="start"
-                              gap={4}
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                            >
-                              <GridItem colSpan={12}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Lessee details
-                                </Text>
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Lessee Name
-                                </Text>
-                                <Input
-                                  value={lesseeDetail.name}
-                                  placeholder="Lessee Name"
-                                  type="text"
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      name: e.target.value,
-                                    }));
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      name: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.name ? "red" : "gray.10"
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Mobile No.
-                                </Text>
-                                <Input
-                                  type="number"
-                                  placeholder="Mobile No."
-                                  value={lesseeDetail.mobile}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      mobile: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      mobile: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.mobile ? "red" : "gray.10"
-                                  }
-                                />
-                                <Text
-                                  color="red"
-                                  fontSize="14px"
-                                  textAlign="left"
-                                >
-                                  {lesseeError.mobile === "error"
-                                    ? ""
-                                    : lesseeError.mobile}
-                                </Text>
-                              </GridItem>
-                              <GridItem colSpan={4}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Address
-                                </Text>
-                                <Textarea
-                                  value={lesseeDetail.address}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      address: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      address: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  rows={1}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.address ? "red" : "gray.10"
-                                  }
-                                  placeholder={"Address"}
-                                />
-                              </GridItem>{" "}
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Rent
-                                </Text>
-                                <Input
-                                  type="number"
-                                  value={lesseeDetail.rent}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      rent: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      rent: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.rent ? "red" : "gray.10"
-                                  }
-                                  placeholder={"Rent"}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2} alignSelf="end">
-                                <Button
-                                  type="button"
-                                  backgroundColor={"primary.700"}
-                                  _hover={{ backgroundColor: "primary.700" }}
-                                  color={"white"}
-                                  borderRadius={"full"}
-                                  px={"10"}
-                                  onClick={() => {
-                                    updateLesseeFlag !== null
-                                      ? UpdateLesseeDetail()
-                                      : append_new_lessee_details();
-                                    console.log("here in lessee");
-                                  }}
-                                >
-                                  {updateLesseeFlag !== null ? "Edit" : "Add"}
-                                </Button>
-                              </GridItem>
-                            </Grid>
-                          </Box>
-
-                          <Box mt={commonStyle.mt} overflow={"auto"}>
-                            <table width="100%">
-                              <thead style={{ background: "#DBFFF5" }}>
-                                <tr>
-                                  <th
-                                    width={tableStyle.idWidth}
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    No.
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Lessee Name
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Mobile No.
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Address
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Rent
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                    width={tableStyle.actionWidth}
-                                  >
-                                    Action
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {getValues(`lessee`)?.length > 0 ? (
-                                  lessee.map((item, index) => (
-                                    <tr>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                          textAlign: "center",
-                                        }}
-                                      >
-                                        {index + 1}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.warehouse_owner_name}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.mobile_no}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.address}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.rent}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        <Flex
-                                          gap="20px"
-                                          justifyContent="center"
-                                        >
-                                          <Box color={"primary.700"}>
-                                            <BiEditAlt
-                                              // color="#A6CE39"
-                                              fontSize="26px"
-                                              cursor="pointer"
-                                              onClick={() => {
-                                                updateLesseeFlagFunction(
-                                                  item,
-                                                  index
-                                                );
-                                              }}
-                                            />
-                                          </Box>
-                                          <Box color="red">
-                                            <AiOutlineDelete
-                                              cursor="pointer"
-                                              fontSize="26px"
-                                              onClick={() => {
-                                                if (updateLesseeFlag === null) {
-                                                  remove_lessee_detail(index);
                                                 }
                                               }}
                                             />
@@ -4506,19 +3992,14 @@ const Wms = () => {
                                   <CustomFileInput
                                     name={
                                       formFieldsName.wms_commercial_details
-                                        .projected_file_url
+                                        .projection_plan_file_path
                                     }
                                     // placeholder="Warehouse Name"
                                     type="text"
                                     label=""
                                     placeholder="Excel upload"
                                     onChange={(e) => {
-                                      setValue(
-                                        formFieldsName.wms_commercial_details
-                                          .projected_file_url,
-                                        e,
-                                        { shouldValidate: true }
-                                      );
+                                      console.log(e);
                                     }}
                                     style={{
                                       w: "100%",
@@ -4572,7 +4053,7 @@ const Wms = () => {
                             flex="1"
                             textAlign="left"
                           >
-                            WMS CLIENTS DETAILS
+                            WMS+RENT CLIENTS DETAILS
                           </Box>
                           {isExpanded ? (
                             <MinusIcon fontSize="12px" />
@@ -4585,13 +4066,14 @@ const Wms = () => {
                           {/* ================ Client List ================= */}
                           <Box>
                             <Grid
+                              textAlign="right"
                               templateColumns={{
                                 base: "1fr",
                                 sm: "repeat(2, 1fr)",
                                 md: "repeat(3, 1fr)",
                                 lg: "repeat(4, 1fr)",
                               }}
-                              alignItems="start"
+                              alignItems="center"
                               gap={4}
                               bgColor={"#DBFFF5"}
                               padding="20px"
@@ -4600,370 +4082,361 @@ const Wms = () => {
                               <GridItem
                                 colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
                               >
-                                <Heading as="h5" fontSize="lg" textAlign="left">
-                                  Client List
-                                </Heading>
+                                <Text textAlign="left">Client List</Text>{" "}
                               </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">Client Type</Text>{" "}
-                                <ReactSelect
-                                  options={clientClientType}
-                                  placeholder=" Client Type"
-                                  value={
-                                    clientClientType?.filter(
-                                      (item) =>
-                                        item.value === clientList.clientType
-                                    )[0] || {}
-                                  }
-                                  isLoading={false}
-                                  onChange={(val) => {
-                                    ClientSelectOnChange(val, "clientType");
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.clientType
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left"> Client Name </Text>{" "}
-                                <Input
-                                  placeholder="client name"
-                                  value={clientList.name}
-                                  onChange={(val) => {
-                                    ClientOnChange(val, "name");
-                                  }}
-                                  type="text"
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    clientError.name ? "red" : "gray.10"
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left"> Mobile Number </Text>{" "}
-                                <Input
-                                  placeholder="mobile number"
-                                  type="number"
-                                  value={clientList.mobile}
-                                  onChange={(val) => {
-                                    ClientOnChange(val, "mobile");
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    clientError.mobile ? "red" : "gray.10"
-                                  }
-                                />
-                                <Text
-                                  color="red"
-                                  fontSize="14px"
-                                  textAlign="left"
-                                >
-                                  {clientError.mobile === "error"
-                                    ? ""
-                                    : clientError.mobile}
-                                </Text>
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">Region</Text>{" "}
-                                <ReactSelect
-                                  options={selectBoxOptions?.regions || []}
-                                  value={
-                                    selectBoxOptions?.regions?.filter(
-                                      (item) => item.value === clientList.region
-                                    )[0] || {}
-                                  }
-                                  placeholder="Select Region"
-                                  isLoading={fetchLocationDrillDownApiIsLoading}
-                                  onChange={(val) => {
-                                    regionOnClientChange(val);
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.region
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">State </Text>{" "}
-                                <ReactSelect
-                                  options={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.states || {}
-                                      : clientDripDown[updateClientList]
-                                          ?.states || {}
-                                  }
-                                  placeholder="Select State"
-                                  value={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.states?.filter(
-                                          (item) =>
-                                            item.value === clientList.state
-                                        )[0] || {}
-                                      : clientDripDown[
-                                          updateClientList
-                                        ]?.states?.filter(
-                                          (item) =>
-                                            item.value === clientList.state
-                                        )[0] || {}
-                                  }
-                                  isLoading={fetchLocationDrillDownApiIsLoading}
-                                  onChange={(val) => {
-                                    stateOnClientChange(val);
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.state
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">Sub State </Text>{" "}
-                                <ReactSelect
-                                  options={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.substate || {}
-                                      : clientDripDown[updateClientList]
-                                          ?.substate || {}
-                                  }
-                                  placeholder="Select Sub State"
-                                  value={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.substate?.filter(
-                                          (item) =>
-                                            item.value === clientList.substate
-                                        )[0] || {}
-                                      : clientDripDown[
-                                          updateClientList
-                                        ]?.substate?.filter(
-                                          (item) =>
-                                            item.value === clientList.substate
-                                        )[0] || {}
-                                  }
-                                  isLoading={fetchLocationDrillDownApiIsLoading}
-                                  onChange={(val) => {
-                                    zoneOnClientChange(val);
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.substate
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">District </Text>
-                                <ReactSelect
-                                  placeholder="Select District"
-                                  options={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.districts || {}
-                                      : clientDripDown[updateClientList]
-                                          ?.districts || {}
-                                  }
-                                  value={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.districts?.filter(
-                                          (item) =>
-                                            item.value === clientList.district
-                                        )[0] || {}
-                                      : clientDripDown[
-                                          updateClientList
-                                        ]?.districts?.filter(
-                                          (item) =>
-                                            item.value === clientList.district
-                                        )[0] || {}
-                                  }
-                                  isLoading={fetchLocationDrillDownApiIsLoading}
-                                  onChange={(val) => {
-                                    districtOnClientChange(val);
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.district
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">Area </Text>{" "}
-                                <ReactSelect
-                                  placeholder="Select Area"
-                                  options={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.areas || {}
-                                      : clientDripDown[updateClientList]
-                                          ?.areas || {}
-                                  }
-                                  value={
-                                    updateClientList === null
-                                      ? clientDripDown[
-                                          clientDripDown.length - 1
-                                        ]?.areas?.filter(
-                                          (item) =>
-                                            item.value === clientList.area
-                                        )[0] || {}
-                                      : clientDripDown[
-                                          updateClientList
-                                        ]?.areas?.filter(
-                                          (item) =>
-                                            item.value === clientList.area
-                                        )[0] || {}
-                                  }
-                                  isLoading={fetchLocationDrillDownApiIsLoading}
-                                  onChange={(val) => {
-                                    areaOnClientChange(val);
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.area
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={{ base: 1, sm: 2 }}>
-                                <Text textAlign="left"> Address </Text>{" "}
-                                <Textarea
-                                  placeholder="address"
-                                  rows={1}
-                                  value={clientList.address}
-                                  onChange={(val) => {
-                                    ClientOnChange(val, "address");
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    clientError.charges ? "red" : "gray.10"
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left"> WMS Charges </Text>{" "}
-                                <Input
-                                  placeholder="WMS charges"
-                                  type="number"
-                                  value={clientList.charges}
-                                  onChange={(val) => {
-                                    ClientOnChange(val, "charges");
-                                  }}
-                                  border="1px"
-                                  style={inputStyle}
-                                  borderColor={
-                                    clientError.charges ? "red" : "gray.10"
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem>
-                                <Text textAlign="left">Billing cycle </Text>{" "}
-                                <ReactSelect
-                                  placeholder="Billing cycle"
-                                  name="clientCycle"
-                                  label=""
-                                  options={clientBillingCycle}
-                                  value={
-                                    clientBillingCycle?.filter(
-                                      (item) =>
-                                        item.value === clientList.billing
-                                    )[0] || {}
-                                  }
-                                  isLoading={false}
-                                  onChange={(val) => {
-                                    console.log(
-                                      "selectedOption @@@@@@@@@@@------> ",
-                                      val
-                                    );
-                                    ClientSelectOnChange(val, "billing");
-                                  }}
-                                  styles={{
-                                    control: (base, state) => ({
-                                      ...base,
-                                      backgroundColor: "#fff",
-                                      borderRadius: "6px",
-                                      borderColor: clientError.billing
-                                        ? "red"
-                                        : "#c3c3c3",
-
-                                      padding: "1px",
-                                      textAlign: "left",
-                                    }),
-                                    ...reactSelectStyle,
-                                  }}
-                                />
-                              </GridItem>
-                              {/* <GridItem></GridItem>
+                              {client_list &&
+                                client_list.map((item, index) => (
+                                  <>
+                                    <GridItem>
+                                      <Text textAlign="left">Client Type</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Corporate",
+                                            value: "Corporate",
+                                          },
+                                          {
+                                            label: "Retail",
+                                            value: "Retail",
+                                          },
+                                        ]}
+                                        selectedValue={
+                                          [
+                                            {
+                                              label: "Corporate",
+                                              value: "Corporate",
+                                            },
+                                            {
+                                              label: "Retail",
+                                              value: "Retail",
+                                            },
+                                          ]?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_type}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Client Name{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`}
+                                        placeholder="client name"
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.client_name}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        Mobile Number{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`}
+                                        placeholder="mobile number"
+                                        type="text"
+                                        label=""
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.mobile_number}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                        style={{ w: "100%" }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">Region</Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`}
+                                        label=""
+                                        options={
+                                          selectBoxOptions?.regions || []
+                                        }
+                                        selectedValue={
+                                          selectBoxOptions?.regions?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.region}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          regionOnClientChange(val, index);
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">State </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.states || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.states?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.state}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          stateOnClientChange(val, index);
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">Zone </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.zones || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.zones?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.zone}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          zoneOnClientChange(val, index);
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">District </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.districts || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.districts?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.district}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          districtOnClientChange(val, index);
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">Area </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`}
+                                        label=""
+                                        options={
+                                          clientLocationDrillDownState[index]
+                                            ?.areas || {}
+                                        }
+                                        selectedValue={
+                                          clientLocationDrillDownState[
+                                            index
+                                          ]?.areas?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.area}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          areaOnClientChange(val, index);
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem colSpan={{ base: 1, sm: 2 }}>
+                                      <Text textAlign="left"> Address </Text>{" "}
+                                      <CustomTextArea
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`}
+                                        placeholder="address"
+                                        type="text"
+                                        rowLength={1}
+                                        label=""
+                                        style={{ w: "100%" }}
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.address}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        {" "}
+                                        WMS Charges{" "}
+                                      </Text>{" "}
+                                      <CustomInput
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`}
+                                        placeholder="WMS charges"
+                                        type="text"
+                                        label=""
+                                        style={{ w: "100%" }}
+                                        inputValue={getValues(
+                                          `client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`
+                                        )}
+                                        onChange={(val) => {
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.wms_charges}`,
+                                            val.target.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
+                                    <GridItem>
+                                      <Text textAlign="left">
+                                        Billing cycle{" "}
+                                      </Text>{" "}
+                                      <ReactCustomSelect
+                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`}
+                                        label=""
+                                        options={[
+                                          {
+                                            label: "Daily",
+                                            value: "Daily",
+                                          },
+                                          {
+                                            label: "Weekly",
+                                            value: "Weekly",
+                                          },
+                                          {
+                                            label: "Fortnighty",
+                                            value: "Fortnighty",
+                                          },
+                                          {
+                                            label: "Monthly",
+                                            value: "Monthly",
+                                          },
+                                        ]}
+                                        selectedValue={
+                                          [
+                                            {
+                                              label: "Daily",
+                                              value: "Daily",
+                                            },
+                                            {
+                                              label: "Weekly",
+                                              value: "Weekly",
+                                            },
+                                            {
+                                              label: "Fortnighty",
+                                              value: "Fortnighty",
+                                            },
+                                            {
+                                              label: "Monthly",
+                                              value: "Monthly",
+                                            },
+                                          ]?.filter(
+                                            (item) =>
+                                              item.value ===
+                                              getValues(
+                                                `client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`
+                                              )
+                                          )[0] || {}
+                                        }
+                                        isClearable={false}
+                                        selectType="label"
+                                        isLoading={false}
+                                        style={{ w: "100%" }}
+                                        handleOnChange={(val) => {
+                                          console.log(
+                                            "selectedOption @@@@@@@@@@@------> ",
+                                            val
+                                          );
+                                          setValue(
+                                            `client_list.${index}.${formFieldsName.wms_clients_details.client_list.billing_cycle}`,
+                                            val.value,
+                                            { shouldValidate: true }
+                                          );
+                                        }}
+                                      />
+                                    </GridItem>
                                     <GridItem>
                                       <Text textAlign="left">
                                         {" "}
@@ -5014,305 +4487,56 @@ const Wms = () => {
                                         label=""
                                         style={{ w: "100%" }}
                                       />
-                                    </GridItem> */}
-                              <GridItem
-                                colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
-                              >
-                                <Flex
-                                  gap="10px"
-                                  justifyContent="end"
-                                  alignItems="center"
-                                >
-                                  <Button
-                                    type="button"
-                                    //w="full"
-                                    backgroundColor={"primary.700"}
-                                    _hover={{
-                                      backgroundColor: "primary.700",
-                                    }}
-                                    color={"white"}
-                                    borderRadius={"full"}
-                                    px={"10"}
-                                    onClick={() => {
-                                      updateClientList !== null
-                                        ? UpdateClientListFunction()
-                                        : append_client_list();
-                                      console.log("here in client");
-                                    }}
-                                  >
-                                    {updateClientList !== null ? "Edit" : "Add"}
-                                  </Button>
-                                </Flex>
-                              </GridItem>
+                                    </GridItem>
+                                    <GridItem
+                                      colSpan={{ base: 1, sm: 2, md: 3, lg: 4 }}
+                                    >
+                                      <Flex
+                                        gap="10px"
+                                        justifyContent="end"
+                                        alignItems="center"
+                                      >
+                                        <MdAddBox
+                                          color="#A6CE39"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            append_client_list();
+                                            setClientLocationDrillDownState(
+                                              (item) => [
+                                                ...item,
+                                                {
+                                                  states: [],
+                                                  zones: [],
+                                                  districts: [],
+                                                  areas: [],
+                                                },
+                                              ]
+                                            );
+                                          }}
+                                        />
+                                        <MdIndeterminateCheckBox
+                                          color="#FF4444"
+                                          fontSize="45px"
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            if (client_list?.length > 1) {
+                                              remove_client_list(index);
+                                              setClientLocationDrillDownState(
+                                                (item) => [
+                                                  ...item.slice(0, index),
+                                                  ...item.slice(index + 1),
+                                                ]
+                                              );
+                                            }
+                                          }}
+                                        />
+                                      </Flex>
+                                    </GridItem>
+                                  </>
+                                ))}
                             </Grid>
                           </Box>
-
-                          <Box mt={commonStyle.mt} overflow={"auto"}>
-                            <table width="100%">
-                              <thead style={{ background: "#DBFFF5" }}>
-                                <tr>
-                                  <th
-                                    width={tableStyle.idWidth}
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    No.
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Client Type
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Client Name
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Mobile Number
-                                  </th>{" "}
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Region
-                                  </th>{" "}
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    State
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Sub State
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    District
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Area
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Address
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    WMS Charges
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Billing Cycle
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                    width={tableStyle.actionWidth}
-                                  >
-                                    Action
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {getValues(`client_list`)?.length > 0 ? (
-                                  client_list.map((item, index) => (
-                                    <tr>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                          textAlign: "center",
-                                        }}
-                                      >
-                                        {index + 1}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientClientType?.filter(
-                                          (old) =>
-                                            old.value === item.client_type
-                                        )[0]?.label || item.client_type}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.client_name}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.client_contact_no}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {selectBoxOptions?.regions?.filter(
-                                          (old) => old.value === item.region
-                                        )[0]?.label || item.region}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientDripDown[index]?.states?.filter(
-                                          (old) => old.value === item.state
-                                        )[0]?.label || item.state}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientDripDown[
-                                          index
-                                        ]?.substate?.filter(
-                                          (old) => old.value === item.substate
-                                        )[0]?.label || item.substate}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientDripDown[
-                                          index
-                                        ]?.districts?.filter(
-                                          (old) => old.value === item.district
-                                        )[0]?.label || item.district}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientDripDown[index]?.areas?.filter(
-                                          (old) => old.value === item.area
-                                        )[0]?.label || item.area}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.address}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.wms_charges}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {clientBillingCycle?.filter(
-                                          (old) =>
-                                            old.value === item.billing_cycle
-                                        )[0]?.label || item.billing_cycle}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        <Flex
-                                          gap="20px"
-                                          justifyContent="center"
-                                        >
-                                          <Box color={"primary.700"}>
-                                            <BiEditAlt
-                                              // color="#A6CE39"
-                                              fontSize="26px"
-                                              cursor="pointer"
-                                              onClick={() => {
-                                                updateClientFunction(
-                                                  item,
-                                                  index
-                                                );
-                                              }}
-                                            />
-                                          </Box>
-                                          <Box color="red">
-                                            <AiOutlineDelete
-                                              cursor="pointer"
-                                              fontSize="26px"
-                                              onClick={() => {
-                                                if (updateClientList === null) {
-                                                  remove_client_list(index);
-                                                  setClientDripDown((item) => [
-                                                    ...item.slice(0, index),
-                                                    ...item.slice(index + 1),
-                                                  ]);
-                                                }
-                                              }}
-                                            />
-                                          </Box>
-                                        </Flex>
-                                      </td>
-                                    </tr>
-                                  ))
-                                ) : (
-                                  <tr>
-                                    <td
-                                      style={{
-                                        padding: tableStyle.generalPadding,
-                                        textAlign: "center",
-                                      }}
-                                      colSpan={13}
-                                    >
-                                      No Data Added
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </Box>
-
                           <Box>
                             {/* ================ Intention Letter ================= */}
                             <Box mt={commonStyle.mt}>
@@ -5331,17 +4555,12 @@ const Wms = () => {
                                   <CustomFileInput
                                     name={
                                       formFieldsName.wms_clients_details
-                                        .intention_letter_url
+                                        .intention_letter
                                     }
                                     placeholder="Excel upload"
                                     label=""
                                     onChange={(e) => {
-                                      setValue(
-                                        formFieldsName.wms_clients_details
-                                          .intention_letter_url,
-                                        e,
-                                        { shouldValidate: true }
-                                      );
+                                      console.log(e);
                                     }}
                                     type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                     style={{ w: "100%" }}
@@ -5382,6 +4601,7 @@ const Wms = () => {
                           >
                             <Button
                               type="button"
+                              //w="full"
                               backgroundColor={"primary.700"}
                               _hover={{ backgroundColor: "primary.700" }}
                               color={"white"}
@@ -5426,4 +4646,4 @@ const Wms = () => {
   );
 };
 
-export default Wms;
+export default WmsRent;

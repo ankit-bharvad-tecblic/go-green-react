@@ -9,12 +9,16 @@ import Pwh from "./Pwh.jsx";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Wms from "./Wms";
 import ThirdParty from "./ThirdParty";
+<<<<<<< HEAD
 import { useLocation } from "react-router-dom";
 import {
   useGetWarehouseProposalDetailsMutation,
   useGetWarehouseSubTypeMutation,
   useGetWarehouseTypeMutation,
 } from "../../features/warehouse-proposal.slice";
+=======
+import WmsRent from "./WmsRent";
+>>>>>>> gg-aasim-warehouse-form
 
 const commonStyle = {
   mt: 2,
@@ -223,6 +227,8 @@ const WarehouseProposal = () => {
             <Wms />
           ) : hiringProposal?.type?.value === "third" ? (
             <ThirdParty />
+          ) : hiringProposal.type.value === "rent" ? (
+            <WmsRent />
           ) : (
             <></>
           )}
