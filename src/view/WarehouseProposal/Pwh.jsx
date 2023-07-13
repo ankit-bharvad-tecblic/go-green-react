@@ -580,13 +580,6 @@ const Pwh = ({ id }) => {
         let obj = selectBoxOptions?.regions.filter(
           (reg) => reg.value === value
         )[0];
-        // setValue(key, value, {
-        //   shouldValidate: true,
-        // });
-        // setSelected((prev) => ({
-        //   ...prev,
-        //   region: obj,
-        // }));
 
         let opt_arr = await regionOnChange(obj);
         editedValueState = {
@@ -600,11 +593,6 @@ const Pwh = ({ id }) => {
         let obj = editedValueState?.states?.filter(
           (item) => item.value === value
         )[0];
-
-        // setSelected((prev) => ({
-        //   ...prev,
-        //   state: obj,
-        // }));
 
         let opt_arr = await stateOnChange(obj);
         editedValueState = {
