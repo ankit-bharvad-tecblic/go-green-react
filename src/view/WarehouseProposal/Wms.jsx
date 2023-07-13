@@ -160,18 +160,16 @@ const formFieldsName = {
   },
   wms_commercial_details: {
     owner: {
-      //not found
-      owner_name: "owner_name", //not found
-      mobile_no: "mobile_no", //not found
-      address: "address", //not found
-      rent: "rent", //not found
+      warehouse_owner_name: "warehouse_owner_name", //done
+      mobile_no: "mobile_no", //done
+      address: "address", //done
+      rent: "rent", //done
     },
     lessee: {
-      //not found
-      owner_name: "owner_name", //not found
-      mobile_no: "mobile_no", //not found
-      address: "address", //not found
-      rent: "rent", //not found
+      warehouse_owner_name: "warehouse_owner_name", //done
+      mobile_no: "mobile_no", //done
+      address: "address", //done
+      rent: "rent", //done
     },
     // min_rent: "min_rent",
     // max_rent: "max_rent",
@@ -195,10 +193,10 @@ const formFieldsName = {
       //not found
       client_type: "client_type", //not found
       client_name: "client_name", //not found
-      mobile_number: "mobile_number", //not found
+      client_contact_no: "client_contact_no", //not found
       region: "region", //not found
       state: "state", //not found
-      zone: "zone", //not found
+      substate: "substate", //not found
       district: "district", //not found
       area: "area", //not found
       address: "address", //not found
@@ -284,7 +282,7 @@ const schema = yup.object().shape({
   }),
   owner: yup.array().of(
     yup.object().shape({
-      owner_name: yup.string().trim() /*.required("Owner name is required")*/,
+      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
       mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
       address: yup.string().trim() /*.required("Address is required")*/,
       rent: yup.string().trim() /*.required("Rent is required")*/,
@@ -292,7 +290,7 @@ const schema = yup.object().shape({
   ),
   lessee: yup.array().of(
     yup.object().shape({
-      owner_name: yup.string().trim() /*.required("Owner name is required")*/,
+      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
       mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
       address: yup.string().trim() /*.required("Address is required")*/,
       rent: yup.string().trim() /*.required("Rent is required")*/,
@@ -329,10 +327,10 @@ const schema = yup.object().shape({
     yup.object().shape({
       client_type: yup.string().required("Client type is required"),
       client_name: yup.string().required("Client name is required"),
-      mobile_number: yup.string().required("Mobile number is required"),
+      client_contact_no: yup.string().required("Mobile number is required"),
       region: yup.string().required("Region is required"),
       state: yup.string().required("State is required"),
-      zone: yup.string().required(" Zone is required"),
+      substate: yup.string().required(" Zone is required"),
       district: yup.string().required("District is required"),
       area: yup.string().required("Area is required"),
       address: yup.string().required("Address is required"),
@@ -1019,7 +1017,7 @@ const Wms = () => {
       mobileNumberRegex.test(ownerDetail.mobile)
     ) {
       add_warehouse_owner_detail({
-        owner_name: ownerDetail.name,
+        warehouse_owner_name: ownerDetail.name,
         mobile_no: ownerDetail.mobile,
         address: ownerDetail.address,
         rent: ownerDetail.rent,
@@ -1034,7 +1032,7 @@ const Wms = () => {
   const updateOwnerFlagFunction = (data, id) => {
     setUpdateOwnerFlag(id);
     setOwnerDetail({
-      name: data.owner_name,
+      name: data.warehouse_owner_name,
       mobile: data.mobile_no,
       address: data.address,
       rent: data.rent,
@@ -1055,7 +1053,7 @@ const Wms = () => {
         [
           ...tempArr.slice(0, updateOwnerFlag),
           {
-            owner_name: ownerDetail.name,
+            warehouse_owner_name: ownerDetail.name,
             mobile_no: ownerDetail.mobile,
             address: ownerDetail.address,
             rent: ownerDetail.rent,
@@ -1146,7 +1144,7 @@ const Wms = () => {
       mobileNumberRegex.test(lesseeDetail.mobile)
     ) {
       add_lessee_detail({
-        owner_name: lesseeDetail.name,
+        warehouse_owner_name: lesseeDetail.name,
         mobile_no: lesseeDetail.mobile,
         address: lesseeDetail.address,
         rent: lesseeDetail.rent,
@@ -1161,7 +1159,7 @@ const Wms = () => {
   const updateLesseeFlagFunction = (data, id) => {
     setUpdateLesseeFlag(id);
     setLesseeDetail({
-      name: data.owner_name,
+      name: data.warehouse_owner_name,
       mobile: data.mobile_no,
       address: data.address,
       rent: data.rent,
@@ -1182,7 +1180,7 @@ const Wms = () => {
         [
           ...tempArr.slice(0, updateLesseeFlag),
           {
-            owner_name: lesseeDetail.name,
+            warehouse_owner_name: lesseeDetail.name,
             mobile_no: lesseeDetail.mobile,
             address: lesseeDetail.address,
             rent: lesseeDetail.rent,
@@ -1665,7 +1663,7 @@ const Wms = () => {
       add_client_list({
         client_type: clientList.clientType,
         client_name: clientList.name,
-        mobile_number: clientList.mobile,
+        client_contact_no: clientList.mobile,
         region: clientList.region,
         state: clientList.state,
         substate: clientList.substate,
@@ -1700,7 +1698,7 @@ const Wms = () => {
     setClientList({
       clientType: data.client_type,
       name: data.client_name,
-      mobile: data.mobile_number,
+      mobile: data.client_contact_no,
       region: data.region,
       state: data.state,
       substate: data.substate,
@@ -1723,7 +1721,7 @@ const Wms = () => {
           {
             client_type: clientList.clientType,
             client_name: clientList.name,
-            mobile_number: clientList.mobile,
+            client_contact_no: clientList.mobile,
             region: clientList.region,
             state: clientList.state,
             substate: clientList.substate,
@@ -1787,7 +1785,7 @@ const Wms = () => {
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
-          zone: getValues("zone"),
+          substate: getValues("substate"),
           district: getValues("district"),
           area: getValues("area"),
           warehouse_address: getValues("warehouse_address"),
@@ -3355,6 +3353,7 @@ const Wms = () => {
                                   Owner Name
                                 </Text>
                                 <Input
+                                  placeholder="Owner Name"
                                   value={ownerDetail.name}
                                   type="text"
                                   onChange={(e) => {
@@ -3380,6 +3379,7 @@ const Wms = () => {
                                 </Text>
                                 <Input
                                   type="number"
+                                  placeholder="Mobile No."
                                   value={ownerDetail.mobile}
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
@@ -3548,7 +3548,7 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.owner_name}
+                                        {item.warehouse_owner_name}
                                       </td>
                                       <td
                                         style={{
@@ -3843,7 +3843,7 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.owner_name}
+                                        {item.warehouse_owner_name}
                                       </td>
                                       <td
                                         style={{
@@ -3894,9 +3894,7 @@ const Wms = () => {
                                               fontSize="26px"
                                               onClick={() => {
                                                 if (updateLesseeFlag === null) {
-                                                  remove_lessee_detail(
-                                                    index
-                                                  );
+                                                  remove_lessee_detail(index);
                                                 }
                                               }}
                                             />
@@ -5182,7 +5180,7 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.mobile_number}
+                                        {item.client_contact_no}
                                       </td>
                                       <td
                                         style={{

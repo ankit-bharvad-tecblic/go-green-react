@@ -61,7 +61,7 @@ const ReactCustomSelect = ({
   return (
     <FormControl {...style} isInvalid={!!error}>
       <FormLabel>{label}</FormLabel>
-      <Box>
+      <Box zIndex="10">
         <Controller
           control={control}
           name={name}
