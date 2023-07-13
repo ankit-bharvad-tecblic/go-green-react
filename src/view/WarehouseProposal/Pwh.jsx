@@ -95,10 +95,32 @@ const reactSelectStyle = {
   }),
 };
 
+const gstOptions = [
+  {
+    label: "Applicable",
+    value: "APPLICABLE",
+  },
+  {
+    label: "Not applicable",
+    value: "NOT-APPLICABLE",
+  },
+];
+
+const clientTypes = [
+  {
+    label: "Corporate",
+    value: "Corporate",
+  },
+  {
+    label: "Retail",
+    value: "Retail",
+  },
+];
+
 const client_details_obj = {
   client_type: "Retail",
   client_name: "",
-  mobile_number: "",
+  client_contact_no: "",
   region: "",
   state: "",
   zone: "",
@@ -138,7 +160,7 @@ const tableStyle = {
   actionWidth: "150px",
 };
 // t
-const mobileNumberRegex = /^\d{10}$/;
+const mobileNumberRegex = /^\+91\d{10}$/;
 
 const formFieldsName = {
   pwh_warehouse_details: {
@@ -182,10 +204,10 @@ const formFieldsName = {
     total_rent_payable_months: "total_rent_per_month",
 
     pwh_commercial_multipal_details: {
-      owner_name: "owner_name",
-      mobile_no: "mobile_no",
-      address: "address",
-      rent: "rent",
+      warehouse_owner_name: "warehouse_owner_name",
+      warehouse_owner_contact_no: "warehouse_owner_contact_no",
+      warehouse_owner_address: "warehouse_owner_address",
+      rent_amount: "rent_amount",
     },
 
     go_green_revenue_sharing_ratio: "gg_revenue_ratio",
@@ -205,7 +227,7 @@ const formFieldsName = {
     client_list: {
       client_type: "client_type",
       client_name: "client_name",
-      mobile_number: "mobile_number",
+      client_contact_no: "client_contact_no",
       region: "region",
       state: "state",
       zone: "SubState",
@@ -231,13 +253,13 @@ const formFieldsName = {
 const client_schema = Yup.object().shape({
   client_type: Yup.string().trim().required("Client type name is required"),
   client_name: Yup.string().trim().required("Client name is required"),
-  mobile_number: Yup.string().trim().required("Mobile number is required"),
+  client_contact_no: Yup.string().trim().required("Mobile number is required"),
   region: Yup.string().trim().required("Region is required"),
   state: Yup.string().trim().required("State is required"),
   substate: Yup.string().trim().required("Substate is required"),
   district: Yup.string().trim().required("District is required"),
   area: Yup.string().trim().required("Area is required"),
-  address: Yup.string().trim().required("Address is required"),
+  client_address: Yup.string().trim().required("Address is required"),
   // Start dynamic fields when client_type === "Corporate"
 
   storage_charges: Yup.string().when("client_type", {
@@ -440,10 +462,16 @@ const schema = Yup.object().shape({
 
   pwh_commercial_multipal_details: Yup.array().of(
     Yup.object().shape({
-      owner_name: Yup.string().trim().required("Owner name is required"),
-      mobile_no: Yup.string().trim().required("Mobile no is required"),
-      address: Yup.string().trim().required("Address is required"),
-      rent: Yup.number()
+      warehouse_owner_name: Yup.string()
+        .trim()
+        .required("Owner name is required"),
+      warehouse_owner_contact_no: Yup.string()
+        .trim()
+        .required("Mobile no is required"),
+      warehouse_owner_address: Yup.string()
+        .trim()
+        .required("Address is required"),
+      rent_amount: Yup.number()
         .typeError("Rent is required")
         .required("Rent is required"),
     })
@@ -468,9 +496,11 @@ const schema = Yup.object().shape({
   //   .matches(gstNumberValidation(), "Invalid GST number")
   //   .required("GST number is required"),
 
-  gst: Yup.string()
-    .test("gst", "Invalid GST Number", (value) => gstNumber(value))
-    .required("Invalid GST number"),
+  // gst: Yup.string()
+  //   .test("gst", "Invalid GST Number", (value) => gstNumber(value))
+  //   .required("Invalid GST number"),
+
+  gst: Yup.string().required("GST type is required"),
 
   commencement_date: Yup.string().required("Commencement date is required"),
   // agreement_period_month: Yup.number().required("Agreement period is required"),
@@ -531,7 +561,12 @@ const Pwh = ({ id }) => {
   const [client_data_list, setClient_data_list] = useState([]);
 
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
-  const [selectedClientOpt, setSelectedClientOpt] = useState({});
+  const [selectedClientOpt, setSelectedClientOpt] = useState({
+    client_type: {
+      label: "Retail",
+      value: "Retail",
+    },
+  });
 
   const [formId, setFormId] = useState(null);
   const [formDetails, setFormDetails] = useState({});
@@ -566,6 +601,8 @@ const Pwh = ({ id }) => {
   });
 
   let editedValueState = {};
+  let value_obj = {};
+  let client_data = [];
 
   const autoFillForm = async () => {
     setFormId(id);
@@ -765,12 +802,172 @@ const Pwh = ({ id }) => {
           preStackCommodity: val,
         }));
 
+        setValue("prestack_commodity", val?.value, { shouldValidate: false });
+      }
+
+      if (key === "is_funding_required") {
+        console.log("is_funding_required loop -->", value);
         setValue(
-          formFieldsName.pwh_commodity_details.pre_stack_commodity,
-          val?.value,
-          { shouldValidate: true }
+          formFieldsName.pwh_commodity_details.funding_required,
+          value ? "true" : "false",
+          {
+            shouldValidate: true,
+          }
         );
       }
+
+      if (key === "bank") {
+        add_new_bank_detail(value);
+      }
+
+      if (key === "rent") {
+        let areaId = formDetails?.area;
+
+        console.log(areaId);
+        setValue(formFieldsName.pwh_commercial_details.rent, value, {
+          shouldValidate: false,
+        });
+        fetchMinMaxAvg(areaId, parseInt(value));
+      }
+
+      if (key === "owner") {
+        pwh_commercial_multipal_add_new_detail(value);
+      }
+
+      if (key === "client") {
+        // setClient_data_list(value);
+
+        let commodityMasterOpt = selectBoxOptions?.commodityMasterOpt;
+        let excpected_commodity = value;
+
+        //  const filteredCommodities = commodityMasterOpt.filter((obj2) =>
+        //    excpected_commodity.some((obj1) => obj1.commodity === obj2.value)
+        //  );
+
+        // const filteredCommodities = clientSelectBoxOptions?.regions.filter(
+        //   (obj2) => value.some((obj1) => obj1.region === obj2.value)
+        // );
+
+        const clients = value;
+        console.log(
+          "clients edit clientSelectBoxOptions",
+          clientSelectBoxOptions
+        );
+
+        console.log("clients data --> ", value);
+        // let reg_obj = clientSelectBoxOptions?.regions?.filter((obj2) =>
+        //   clients.some((obj1) => obj1.region === obj2.value)
+        // )[0];
+
+        client_data = await value.map(async (item) => {
+          let reg_obj = clientSelectBoxOptions?.regions?.filter(
+            (el) => el.value === item.region
+          )[0];
+
+          console.log("reg_obj", reg_obj);
+
+          value_obj = {
+            ...value_obj,
+            states: await regionOnClientChange(reg_obj),
+          };
+
+          let state_obj = value_obj?.states?.filter(
+            (el) => el.value === item.state
+          )[0];
+
+          console.log("state_obj", state_obj);
+
+          value_obj = {
+            ...value_obj,
+            subtypes: await stateOnClientChange(state_obj),
+          };
+
+          let subtype_obj = value_obj?.subtypes?.filter(
+            (el) => el.value === item.substate
+          )[0];
+
+          value_obj = {
+            ...value_obj,
+            districts: await zoneOnClientChange(subtype_obj),
+          };
+
+          let district_obj = value_obj?.districts?.filter(
+            (el) => el.value === item.district
+          )[0];
+
+          value_obj = {
+            ...value_obj,
+            areas: await districtOnClientChange(district_obj),
+          };
+
+          let area_obj = value_obj?.areas?.filter(
+            (el) => el.value === item.area
+          )[0];
+
+          console.log("value_obj ===>", value_obj);
+
+          console.log("@@@@@@@@ ", {
+            region: reg_obj,
+            state: state_obj,
+            substate: subtype_obj,
+            district: district_obj,
+            area: area_obj,
+          });
+
+          setClient_data_list((prev) => [
+            ...prev,
+            {
+              ...item,
+
+              region: reg_obj,
+              state: state_obj,
+              substate: subtype_obj,
+              district: district_obj,
+              area: area_obj,
+            },
+          ]);
+
+          // return {
+          //   ...item,
+          //   region: reg_obj,
+          //   state: state_obj,
+          //   substate: subtype_obj,
+          //   district: district_obj,
+          //   area: area_obj,
+          // };
+        });
+
+        // let final_data = await x;
+
+        console.log("value_obj --> ", value_obj);
+        console.log("setClient_data_list client_data", client_data);
+
+        client_form_methods.reset({
+          client_name: "",
+          client_type: "",
+          client_contact_no: "",
+          region: "",
+          state: "",
+          substate: "",
+          district: "",
+          area: "",
+          address: "",
+        });
+
+        setSelectedClientOpt({
+          region: null,
+          state: null,
+          substate: null,
+          district: null,
+          area: null,
+        });
+        setEditedClientIndex(null);
+        // setClient_data_list(x);
+      }
+
+      // pwh_commercial_multipal_details_fields
+
+      // bank_details_fields
 
       // security_guard_night_shift
 
@@ -1043,7 +1240,10 @@ const Pwh = ({ id }) => {
     }
   };
 
-  const fetchMinMaxAvg = async (areaId) => {
+  const fetchMinMaxAvg = async (areaId, val) => {
+    setValue(formFieldsName.pwh_commercial_details.rent, val, {
+      shouldValidate: false,
+    });
     try {
       if (areaId) {
         const response = await minMaxAvg(areaId).unwrap();
@@ -1123,7 +1323,7 @@ const Pwh = ({ id }) => {
     client_form_methods.reset({
       client_name: "",
       client_type: "",
-      mobile_number: "",
+      client_contact_no: "",
       region: "",
       state: "",
       substate: "",
@@ -1188,6 +1388,16 @@ const Pwh = ({ id }) => {
     setClient_data_list([...dataCopy]);
   };
 
+  const clientTypeOnChange = (val) => {
+    client_form_methods.setValue("client_type", val.value, {
+      shouldValidate: true,
+    });
+    setSelectedClientOpt((prev) => ({
+      ...prev,
+      client_type: val,
+    }));
+  };
+
   const regionOnClientChange = async (val) => {
     console.log("value --> ", val);
 
@@ -1227,14 +1437,19 @@ const Pwh = ({ id }) => {
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
+      let arr = [];
+
+      arr = response?.state?.map(({ state_name, id }) => ({
+        label: state_name,
+        value: id,
+      }));
 
       setClientSelectBoxOptions((prev) => ({
         ...prev,
-        states: response?.state?.map(({ state_name, id }) => ({
-          label: state_name,
-          value: id,
-        })),
+        states: arr,
       }));
+
+      return arr;
 
       // setClientLocationDrillDownState((item) => [
       //   ...item.slice(0, index),
@@ -1282,13 +1497,16 @@ const Pwh = ({ id }) => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.substate?.map(({ substate_name, id }) => ({
+        label: substate_name,
+        value: id,
+      }));
       setClientSelectBoxOptions((prev) => ({
         ...prev,
-        zones: response?.substate?.map(({ substate_name, id }) => ({
-          label: substate_name,
-          value: id,
-        })),
+        zones: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1326,13 +1544,17 @@ const Pwh = ({ id }) => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.district?.map(({ district_name, id }) => ({
+        label: district_name,
+        value: id,
+      }));
+
       setClientSelectBoxOptions((prev) => ({
         ...prev,
-        districts: response?.district?.map(({ district_name, id }) => ({
-          label: district_name,
-          value: id,
-        })),
+        districts: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1365,13 +1587,16 @@ const Pwh = ({ id }) => {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.area?.map(({ area_name, id }) => ({
+        label: area_name,
+        value: id,
+      }));
       setClientSelectBoxOptions((prev) => ({
         ...prev,
-        areas: response?.area?.map(({ area_name, id }) => ({
-          label: area_name,
-          value: id,
-        })),
+        areas: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1445,16 +1670,17 @@ const Pwh = ({ id }) => {
           avg_rent: getValues("avg_rent"),
           rent: getValues("rent"),
           total_rent_per_month: getValues("total_rent_per_month"),
+          owner: getValues("pwh_commercial_multipal_details") || [],
           gg_revenue_ratio: getValues("gg_revenue_ratio"),
           security_deposit_amt: getValues("security_deposit_amt"),
           advance_rent: getValues("advance_rent"),
           advance_rent_month: getValues("advance_rent_month"),
           gst: getValues("gst"),
-          commencement_date: moment(getValues("commencement_date")).formate(
+          commencement_date: moment(getValues("commencement_date")).format(
             "YYYY-MM-DD"
           ),
           agreement_period_month: getValues("agreement_period_month"),
-          expiry_date: moment(getValues("expiry_date")).formate("YYYY-MM-DD"),
+          expiry_date: moment(getValues("expiry_date")).format("YYYY-MM-DD"),
           notice_period_month: getValues("notice_period_month"),
           storage_charges_according_to_commodity: getValues(
             "storage_charges_according_to_commodity"
@@ -1861,56 +2087,66 @@ const Pwh = ({ id }) => {
   // Owner Detail Functions start //
 
   const [ownerDetail, setOwnerDetail] = useState({
-    name: "",
-    mobile: "",
-    address: "",
-    rent: "",
+    warehouse_owner_name: "",
+    warehouse_owner_contact_no: "",
+    warehouse_owner_address: "",
+    rent_amount: "",
   });
 
   const [ownerError, setOwnerError] = useState({
-    name: "",
-    mobile: "",
-    address: "",
-    rent: "",
+    warehouse_owner_name: "",
+    warehouse_owner_contact_no: "",
+    warehouse_owner_address: "",
+    rent_amount: "",
   });
 
   const append_new_commercial_detail = () => {
+    console.log("here is funtion");
     if (
-      ownerDetail.name !== "" &&
-      ownerDetail.mobile !== "" &&
-      ownerDetail.address !== "" &&
-      ownerDetail.rent !== "" &&
-      mobileNumberRegex.test(ownerDetail.mobile)
+      ownerDetail.warehouse_owner_name !== "" &&
+      ownerDetail.warehouse_owner_contact_no !== "" &&
+      ownerDetail.warehouse_owner_address !== "" &&
+      ownerDetail.rent_amount !== "" &&
+      mobileNumberRegex.test(ownerDetail.warehouse_owner_contact_no)
     ) {
+      console.log("here in if");
       pwh_commercial_multipal_add_new_detail({
-        owner_name: ownerDetail.name,
-        mobile_no: ownerDetail.mobile,
-        address: ownerDetail.address,
-        rent: ownerDetail.rent,
+        warehouse_owner_name: ownerDetail.warehouse_owner_name,
+        warehouse_owner_contact_no: ownerDetail.warehouse_owner_contact_no,
+        warehouse_owner_address: ownerDetail.warehouse_owner_address,
+        rent_amount: ownerDetail.rent_amount,
       });
       setOwnerDetail({
-        name: "",
-        mobile: "",
-        address: "",
-        rent: "",
+        warehouse_owner_name: "",
+        warehouse_owner_contact_no: "",
+        warehouse_owner_address: "",
+        rent_amount: "",
       });
       setOwnerError({
-        name: "",
-        mobile: "",
-        address: "",
-        rent: "",
+        warehouse_owner_name: "",
+        warehouse_owner_contact_no: "",
+        warehouse_owner_address: "",
+        rent_amount: "",
       });
     } else {
+      console.log("here in else");
       setOwnerError({
-        name: ownerDetail.name !== "" ? "" : "Name can not be empty.",
-        mobile:
-          ownerDetail.mobile !== ""
-            ? mobileNumberRegex.test(ownerDetail.mobile)
+        warehouse_owner_name:
+          ownerDetail.warehouse_owner_name !== ""
+            ? ""
+            : "Name can not be empty.",
+        warehouse_owner_contact_no:
+          ownerDetail.warehouse_owner_contact_no !== ""
+            ? mobileNumberRegex.test(ownerDetail.warehouse_owner_contact_no)
               ? ""
               : "Mobile must be 10 digits long."
             : "Mobile can not be empty.",
-        address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
-        rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
+        warehouse_owner_address:
+          ownerDetail.warehouse_owner_address !== ""
+            ? ""
+            : "Address can not be empty.",
+        rent_amount:
+          ownerDetail.rent_amount !== "" ? "" : "Rent can not be empty.",
       });
     }
   };
@@ -1920,20 +2156,20 @@ const Pwh = ({ id }) => {
   const updateOwnerFlagFunction = (data, id) => {
     setUpdateOwnerFlag(id);
     setOwnerDetail({
-      name: data.owner_name,
-      mobile: data.mobile_no,
-      address: data.address,
-      rent: data.rent,
+      warehouse_owner_name: data.warehouse_owner_name,
+      warehouse_owner_contact_no: data.warehouse_owner_contact_no,
+      warehouse_owner_address: data.warehouse_owner_address,
+      rent_amount: data.rent_amount,
     });
   };
 
   const UpdateCommercialDetail = () => {
     if (
-      ownerDetail.name !== "" &&
-      ownerDetail.mobile !== "" &&
-      ownerDetail.address !== "" &&
-      ownerDetail.rent !== "" &&
-      mobileNumberRegex.test(ownerDetail.mobile)
+      ownerDetail.warehouse_owner_name !== "" &&
+      ownerDetail.warehouse_owner_contact_no !== "" &&
+      ownerDetail.warehouse_owner_address !== "" &&
+      ownerDetail.rent_amount !== "" &&
+      mobileNumberRegex.test(ownerDetail.warehouse_owner_contact_no)
     ) {
       const tempArr = getValues(`pwh_commercial_multipal_details`);
       setValue(
@@ -1941,39 +2177,46 @@ const Pwh = ({ id }) => {
         [
           ...tempArr.slice(0, updateOwnerFlag),
           {
-            owner_name: ownerDetail.name,
-            mobile_no: ownerDetail.mobile,
-            address: ownerDetail.address,
-            rent: ownerDetail.rent,
+            warehouse_owner_name: ownerDetail.warehouse_owner_name,
+            warehouse_owner_contact_no: ownerDetail.warehouse_owner_contact_no,
+            warehouse_owner_address: ownerDetail.warehouse_owner_address,
+            rent_amount: ownerDetail.rent_amount,
           },
           ...tempArr.slice(updateOwnerFlag + 1),
         ],
         { shouldValidate: true }
       );
       setOwnerDetail({
-        name: "",
-        mobile: "",
-        address: "",
-        rent: "",
+        warehouse_owner_name: "",
+        warehouse_owner_contact_no: "",
+        warehouse_owner_address: "",
+        rent_amount: "",
       });
       setUpdateOwnerFlag(null);
       setOwnerError({
-        name: "",
-        mobile: "",
-        address: "",
-        rent: "",
+        warehouse_owner_name: "",
+        warehouse_owner_contact_no: "",
+        warehouse_owner_address: "",
+        rent_amount: "",
       });
     } else {
       setOwnerError({
-        name: ownerDetail.name !== "" ? "" : "Name can not be empty.",
-        mobile:
-          ownerDetail.mobile !== ""
-            ? mobileNumberRegex.test(ownerDetail.mobile)
+        warehouse_owner_name:
+          ownerDetail.warehouse_owner_name !== ""
+            ? ""
+            : "Name can not be empty.",
+        warehouse_owner_contact_no:
+          ownerDetail.warehouse_owner_contact_no !== ""
+            ? mobileNumberRegex.test(ownerDetail.warehouse_owner_contact_no)
               ? ""
               : "Mobile must be 10 digits long."
             : "Mobile can not be empty.",
-        address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
-        rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
+        warehouse_owner_address:
+          ownerDetail.warehouse_owner_address !== ""
+            ? ""
+            : "Address can not be empty.",
+        rent_amount:
+          ownerDetail.rent_amount !== "" ? "" : "Rent can not be empty.",
       });
     }
   };
@@ -3272,7 +3515,12 @@ const Pwh = ({ id }) => {
                                       { shouldValidate: true }
                                     );
                                   }}
-                                  defaultValue="false"
+                                  value={
+                                    getValues(
+                                      formFieldsName.pwh_commodity_details
+                                        .funding_required
+                                    ) || "false"
+                                  }
                                 >
                                   <Stack spacing={5} direction="row">
                                     <Radio
@@ -3970,17 +4218,17 @@ const Pwh = ({ id }) => {
                                       formFieldsName.pwh_commercial_details.rent
                                     }
                                     placeholder="Rent (per/sq ft/month)"
-                                    type="text"
+                                    type="number"
                                     label=""
                                     // inputValue={
                                     //   getValues("covered_area") *
                                     //   getValues("rent")
                                     // }
-                                    onChange={(val) => {
+                                    onChange={(e) => {
                                       let areaId = getValues("area");
 
                                       console.log(areaId);
-                                      fetchMinMaxAvg(areaId);
+                                      fetchMinMaxAvg(areaId, e?.target?.value);
                                     }}
                                     style={{
                                       w: "85%",
@@ -4058,23 +4306,25 @@ const Pwh = ({ id }) => {
                                   Owner Name
                                 </Text>
                                 <Input
-                                  value={ownerDetail.name}
+                                  value={ownerDetail.warehouse_owner_name}
                                   type="text"
                                   name=""
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
                                       ...old,
-                                      name: e.target.value,
+                                      warehouse_owner_name: e.target.value,
                                     }));
                                     setOwnerError((old) => ({
                                       ...old,
-                                      name: "",
+                                      warehouse_owner_name: "",
                                     }));
                                   }}
                                   height="33px"
                                   border="1px"
                                   borderColor={
-                                    ownerError.name ? "red" : "gray.10"
+                                    ownerError.warehouse_owner_name
+                                      ? "red"
+                                      : "gray.10"
                                   }
                                   backgroundColor={"white"}
                                   borderRadius={"lg"}
@@ -4100,7 +4350,7 @@ const Pwh = ({ id }) => {
                                   fontSize="14px"
                                   textAlign="left"
                                 >
-                                  {ownerError.name}
+                                  {ownerError.warehouse_owner_name}
                                 </Text>
                               </GridItem>
                               <GridItem colSpan={2}>
@@ -4108,23 +4358,26 @@ const Pwh = ({ id }) => {
                                   Mobile No.
                                 </Text>
                                 <Input
-                                  type="number"
-                                  value={ownerDetail.mobile}
+                                  type="tel"
+                                  value={ownerDetail.warehouse_owner_contact_no}
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
                                       ...old,
-                                      mobile: e.target.value,
+                                      warehouse_owner_contact_no:
+                                        e.target.value,
                                     }));
                                     console.log(e);
                                     setOwnerError((old) => ({
                                       ...old,
-                                      mobile: "",
+                                      warehouse_owner_contact_no: "",
                                     }));
                                   }}
                                   height="33px"
                                   border="1px"
                                   borderColor={
-                                    ownerError.mobile ? "red" : "gray.10"
+                                    ownerError.warehouse_owner_contact_no
+                                      ? "red"
+                                      : "gray.10"
                                   }
                                   backgroundColor={"white"}
                                   borderRadius={"lg"}
@@ -4150,7 +4403,7 @@ const Pwh = ({ id }) => {
                                   fontSize="14px"
                                   textAlign="left"
                                 >
-                                  {ownerError.mobile}
+                                  {ownerError.warehouse_owner_contact_no}
                                 </Text>
                               </GridItem>
                               <GridItem colSpan={4}>
@@ -4158,22 +4411,24 @@ const Pwh = ({ id }) => {
                                   Address
                                 </Text>
                                 <Textarea
-                                  value={ownerDetail.address}
+                                  value={ownerDetail.warehouse_owner_address}
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
                                       ...old,
-                                      address: e.target.value,
+                                      warehouse_owner_address: e.target.value,
                                     }));
                                     console.log(e);
                                     setOwnerError((old) => ({
                                       ...old,
-                                      address: "",
+                                      warehouse_owner_address: "",
                                     }));
                                   }}
                                   rows={1}
                                   border="1px"
                                   borderColor={
-                                    ownerError.address ? "red" : "gray.10"
+                                    ownerError.warehouse_owner_address
+                                      ? "red"
+                                      : "gray.10"
                                   }
                                   backgroundColor={"white"}
                                   borderRadius={"lg"}
@@ -4200,7 +4455,7 @@ const Pwh = ({ id }) => {
                                   fontSize="14px"
                                   textAlign="left"
                                 >
-                                  {ownerError.address}
+                                  {ownerError.warehouse_owner_address}
                                 </Text>
                               </GridItem>{" "}
                               <GridItem colSpan={2}>
@@ -4209,22 +4464,22 @@ const Pwh = ({ id }) => {
                                 </Text>
                                 <Input
                                   type="number"
-                                  value={ownerDetail.rent}
+                                  value={ownerDetail.rent_amount}
                                   onChange={(e) => {
                                     setOwnerDetail((old) => ({
                                       ...old,
-                                      rent: e.target.value,
+                                      rent_amount: e.target.value,
                                     }));
                                     console.log(e);
                                     setOwnerError((old) => ({
                                       ...old,
-                                      rent: "",
+                                      rent_amount: "",
                                     }));
                                   }}
                                   height="33px"
                                   border="1px"
                                   borderColor={
-                                    ownerError.rent ? "red" : "gray.10"
+                                    ownerError.rent_amount ? "red" : "gray.10"
                                   }
                                   backgroundColor={"white"}
                                   borderRadius={"lg"}
@@ -4250,7 +4505,7 @@ const Pwh = ({ id }) => {
                                   fontSize="14px"
                                   textAlign="left"
                                 >
-                                  {ownerError.rent}
+                                  {ownerError.rent_amount}
                                 </Text>
                               </GridItem>
                               <GridItem colSpan={2} alignSelf="end">
@@ -4264,6 +4519,10 @@ const Pwh = ({ id }) => {
                                   px={"10"}
                                   onClick={
                                     () => {
+                                      console.log(
+                                        "updateOwnerFlag",
+                                        updateOwnerFlag
+                                      );
                                       updateOwnerFlag !== null
                                         ? UpdateCommercialDetail()
                                         : append_new_commercial_detail();
@@ -4350,28 +4609,28 @@ const Pwh = ({ id }) => {
                                             padding: tableStyle.generalPadding,
                                           }}
                                         >
-                                          {item.owner_name}
+                                          {item.warehouse_owner_name}
                                         </td>
                                         <td
                                           style={{
                                             padding: tableStyle.generalPadding,
                                           }}
                                         >
-                                          {item.mobile_no}
+                                          {item.warehouse_owner_contact_no}
                                         </td>
                                         <td
                                           style={{
                                             padding: tableStyle.generalPadding,
                                           }}
                                         >
-                                          {item.address}
+                                          {item.warehouse_owner_address}
                                         </td>
                                         <td
                                           style={{
                                             padding: tableStyle.generalPadding,
                                           }}
                                         >
-                                          {item.rent}
+                                          {item.rent_amount}
                                         </td>
                                         <td
                                           style={{
@@ -4922,7 +5181,6 @@ const Pwh = ({ id }) => {
 
                             {/* -------------- GST-------------- */}
                             <Box mt={commonStyle.mt}>
-                              {" "}
                               <Grid
                                 textAlign="right"
                                 alignItems="center"
@@ -4930,20 +5188,37 @@ const Pwh = ({ id }) => {
                                 gap={4}
                               >
                                 <GridItem colSpan={1}>
-                                  {" "}
                                   <Text textAlign="right">GST</Text>{" "}
                                 </GridItem>
                                 <GridItem colSpan={2}>
-                                  {" "}
-                                  <CustomInput
+                                  <ReactCustomSelect
                                     name={
                                       formFieldsName.pwh_commercial_details.gst
                                     }
-                                    placeholder="GST"
-                                    type="text"
                                     label=""
-                                    style={{
-                                      w: commonStyle.comm_details_style.w,
+                                    options={gstOptions || []}
+                                    selectedValue={gstOptions.filter(
+                                      (item) => item.value === getValues("gst")
+                                    )}
+                                    isClearable={false}
+                                    selectType="label"
+                                    isLoading={false}
+                                    style={{ w: "100%" }}
+                                    handleOnChange={(val) => {
+                                      console.log(
+                                        "selectedOption @@@@@@@@@@@------> ",
+                                        val
+                                      );
+                                      setSelected((prev) => ({
+                                        ...prev,
+                                        gst: val,
+                                      }));
+                                      setValue(
+                                        formFieldsName.pwh_commercial_details
+                                          .gst,
+                                        val.value,
+                                        { shouldValidate: true }
+                                      );
                                     }}
                                   />
                                 </GridItem>
@@ -5421,52 +5696,13 @@ const Pwh = ({ id }) => {
                                     isInvalid={errors?.client_type?.message}
                                   >
                                     <ReactSelect
-                                      options={[
-                                        {
-                                          label: "Corporate",
-                                          value: "Corporate",
-                                        },
-                                        {
-                                          label: "Retail",
-                                          value: "Retail",
-                                        },
-                                      ]}
+                                      options={clientTypes || []}
                                       name="client_type"
-                                      value={
-                                        [
-                                          {
-                                            label: "Corporate",
-                                            value: "Corporate",
-                                          },
-                                          {
-                                            label: "Retail",
-                                            value: "Retail",
-                                          },
-                                        ]?.filter(
-                                          (item) =>
-                                            item.value ===
-                                            client_form_methods.getValues(
-                                              "client_type"
-                                            )
-                                        )[0] || {
-                                          label: "Retail",
-                                          value: "Retail",
-                                        }
-                                      }
+                                      value={selectedClientOpt?.client_type}
                                       isClearable={false}
                                       isLoading={false}
                                       onChange={(val) => {
-                                        console.log(
-                                          "selectedOption @@@@@@@@@@@------> ",
-                                          val
-                                        );
-                                        client_form_methods.setValue(
-                                          "client_type",
-                                          val.value,
-                                          {
-                                            shouldValidate: true,
-                                          }
-                                        );
+                                        clientTypeOnChange(val);
                                       }}
                                       styles={{
                                         control: (base, state) => ({
@@ -5521,16 +5757,16 @@ const Pwh = ({ id }) => {
                                 <GridItem>
                                   <Text textAlign="left"> Mobile Number </Text>{" "}
                                   <CustomInput
-                                    name="mobile_number"
+                                    name="client_contact_no"
                                     placeholder="Mobile number"
                                     type="text"
                                     label=""
                                     inputValue={client_form_methods.getValues(
-                                      "mobile_number"
+                                      "client_contact_no"
                                     )}
                                     onChange={(val) => {
                                       client_form_methods.setValue(
-                                        "mobile_number",
+                                        "client_contact_no",
                                         val.target.value,
                                         { shouldValidate: true }
                                       );
@@ -5538,7 +5774,7 @@ const Pwh = ({ id }) => {
                                     style={{ w: "100%" }}
                                   />
                                   <Box mx="1" color="red" textAlign="left">
-                                    {errors?.mobile_number?.message}
+                                    {errors?.client_contact_no?.message}
                                   </Box>
                                 </GridItem>
 
@@ -6111,12 +6347,12 @@ const Pwh = ({ id }) => {
                                     >
                                       <Td>{item?.client_type} </Td>
                                       <Td>{item?.client_name}</Td>
-                                      <Td>{item?.mobile_number}</Td>
-                                      <Td>{item?.region.label}</Td>
-                                      <Td>{item?.state.label}</Td>
-                                      <Td>{item?.substate.label}</Td>
-                                      <Td>{item?.district.label}</Td>
-                                      <Td>{item?.area.label}</Td>
+                                      <Td>{item?.client_contact_no}</Td>
+                                      <Td>{item?.region?.label}</Td>
+                                      <Td>{item?.state?.label}</Td>
+                                      <Td>{item?.substate?.label}</Td>
+                                      <Td>{item?.district?.label}</Td>
+                                      <Td>{item?.area?.label}</Td>
                                       <Td>{item?.address}</Td>
                                       {/* ----------------------------- */}
                                       <Td>{item?.storage_charges || "-"}</Td>
@@ -6284,17 +6520,22 @@ export default Pwh;
 const toasterAlert = (obj) => {
   let msg = obj?.message;
   let status = obj?.status;
+  console.log("toasterAlert", obj);
   if (status === 400) {
-    const errorData = obj?.data;
+    const errorData = obj?.data || obj?.data?.data;
     let errorMessage = "";
 
     Object.keys(errorData)?.forEach((key) => {
       const messages = errorData[key];
       console.log("messages --> ", messages);
-      messages &&
-        messages?.forEach((message) => {
-          errorMessage += `${key} : ${message} \n`;
-        });
+      if (typeof messages === "object") {
+        messages &&
+          messages?.forEach((message) => {
+            errorMessage += `${key} : ${message} \n`;
+          });
+      } else {
+        showToastByStatusCode(status, msg);
+      }
     });
     showToastByStatusCode(status, errorMessage);
     return false;
