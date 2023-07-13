@@ -101,7 +101,7 @@ const InsurancePolicyMaster = () => {
       cell: (info) => info.getValue(),
       header: "SR. NO",
     }),
-    columnHelper.accessor("insurance_company.insurance_company_name.", {
+    columnHelper.accessor("insurance_company.insurance_company_name", {
       cell: (info) => info.getValue(),
       header: "Insurance company",
     }),
@@ -109,23 +109,30 @@ const InsurancePolicyMaster = () => {
       cell: (info) => info.getValue(),
       header: "Insurance policy number",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("insurance_type", {
       cell: (info) => info.getValue(),
       header: "Insurance type",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("policy_amount", {
       cell: (info) => info.getValue(),
       header: "Insurance Policy Amount",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("policy_start_date", {
       cell: (info) => info.getValue(),
       header: "policy start date",
     }),
-    columnHelper.accessor("", {
+    columnHelper.accessor("policy_end_date", {
       cell: (info) => info.getValue(),
       header: "policy end date",
     }),
-
+    columnHelper.accessor("creation_date", {
+      cell: (info) => info.getValue(),
+      header: "Creation Date",
+    }),
+    columnHelper.accessor("last_update_date", {
+      cell: (info) => info.getValue(),
+      header: " Last Updated Date",
+    }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
       header: () => (

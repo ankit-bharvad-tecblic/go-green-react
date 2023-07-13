@@ -21,11 +21,11 @@ const filterFields = [
     type: "text",
   },
   {
-    Address: "Address",
+    Address: "address",
     isActiveFilter: false,
 
     label: "Address",
-    name: "",
+    name: "address",
     placeholder: "Address",
     type: "text",
   },
@@ -76,12 +76,12 @@ const filterFields = [
   // },
 
   {
-    "Pin code": "",
+    "Pin code": "pin_code",
     isActiveFilter: false,
 
     label: "Pin code",
-    name: "Pin Code",
-    placeholder: "",
+    name: "pin_code",
+    placeholder: "Pin Code",
     type: "number",
   },
 
@@ -237,13 +237,13 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   email: yup.string().trim().required("Email is required"),
   employee_name: yup.string().trim().required("Employee name is required"),
-
+  address: yup.string().trim().required("Address is required"),
   phone: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
-  //user_role: yup.string().trim().required("role is required"),
+  user_role: yup.array().required("role is required"),
   pin_code: yup.number().required("Pin number is required"),
   address: yup.string().trim().required("Address is required"),
   // last_login: yup.date().required("last login is required"),
@@ -251,11 +251,11 @@ const schema = yup.object().shape({
 });
 
 const tableschema = yup.object().shape({
-  region: yup.string().trim().required("Region name is required"),
-  state: yup.string().trim().required("State name is required"),
-  substate: yup.string().trim().required("Sub State name  is required"),
-  district: yup.string().trim().required("District name is required"),
-  area: yup.string().trim().required("Area name is required"),
+  region: yup.string().trim().required(""),
+  state: yup.string().trim().required(""),
+  substate: yup.string().trim().required(""),
+  district: yup.string().trim().required(""),
+  area: yup.string().trim().required(""),
 });
 
 export { filterFields, addEditFormFields, schema, tableschema };

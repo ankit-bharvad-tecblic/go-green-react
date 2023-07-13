@@ -202,6 +202,7 @@ function FunctionalTable({
 
           <Button
             variant="outline"
+            borderColor="border_light.100"
             p="0px 10px"
             height="43px"
             borderRadius="15px"
@@ -215,6 +216,7 @@ function FunctionalTable({
 
           <Button
             variant="outline"
+            borderColor="border_light.100"
             p="0px 10px"
             height="43px"
             borderRadius="15px"
@@ -514,6 +516,22 @@ function FunctionalTable({
                             {cell.row.original.last_update_date
                               ? moment(
                                   cell.row.original.last_update_date
+                                ).format("LL")
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "policy_start_date" ? (
+                          <Text>
+                            {cell.row.original.policy_start_date
+                              ? moment(
+                                  cell.row.original.policy_start_date
+                                ).format("LL")
+                              : " - "}
+                          </Text>
+                        ) : cell.column.id === "policy_end_date" ? (
+                          <Text>
+                            {cell.row.original.policy_end_date
+                              ? moment(
+                                  cell.row.original.policy_end_date
                                 ).format("LL")
                               : " - "}
                           </Text>

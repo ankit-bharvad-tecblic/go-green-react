@@ -102,7 +102,7 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "Address ",
     }),
-    columnHelper.accessor("Pin Code", {
+    columnHelper.accessor("pin_code", {
       cell: (info) => info.getValue(),
       header: " Pin Code ",
     }),
@@ -136,14 +136,16 @@ const UserMaster = () => {
       header: "ROLE",
       cell: (info) => {
         const userRoles = info.row.original.user_role;
+
         if (userRoles && userRoles.length > 0) {
           const roleNames = userRoles.map((role) => role.role_name);
+          console.log(roleNames.join(", "), "here");
           return roleNames.join(", ");
         }
         return "N/A";
       },
     }),
-    columnHelper.accessor("reporting_manager", {
+    columnHelper.accessor("reporting_manager.employee_name", {
       cell: (info) => info.getValue(),
       header: "Reporting Manager",
     }),

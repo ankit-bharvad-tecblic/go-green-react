@@ -34,11 +34,11 @@ const AddEditInsurancePolicy = () => {
     insuranceType: [
       {
         label: "Fire",
-        value: "public",
+        value: "fire",
       },
       {
         label: "Burglary",
-        value: "private",
+        value: "burglary",
       },
     ],
   });
@@ -160,12 +160,12 @@ const AddEditInsurancePolicy = () => {
     getInsuranceList();
     if (details?.id) {
       let obj = {
-        insurance_company_name: details?.insurance_company_name,
+        insurance_company: details?.insurance_company.insurance_company_name,
         insurance_policy_number: details?.insurance_policy_number,
         policy_start_date: details?.policy_start_date,
         policy_end_date: details?.policy_end_date,
-        insuranceType: details?.insuranceType,
-        insurance_policy_amount: details?.insurance_policy_amount,
+        insurance_type: details?.insurance_type,
+        policy_amount: details?.policy_amount,
         is_active: details?.is_active,
       };
 
@@ -211,11 +211,13 @@ const AddEditInsurancePolicy = () => {
                       Insurance Company
                     </Text>
                     <CustomSelector
-                      name="insurance_company_name"
+                      name="insurance_company"
                       label=""
                       options={selectBoxOptions.companys}
                       selectedValue={selectBoxOptions.companys.find(
-                        (opt) => opt.label === details?.insurance_company_name
+                        (opt) =>
+                          opt.label ===
+                          details?.insurance_company.insurance_company_name
                       )}
                       isClearable={false}
                       selectType={"value"}
@@ -382,7 +384,6 @@ const AddEditInsurancePolicy = () => {
 };
 
 export default AddEditInsurancePolicy;
-
 
 const toasterAlert = (obj) => {
   let msg = obj?.message;

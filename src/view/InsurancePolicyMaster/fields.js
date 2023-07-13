@@ -2,11 +2,11 @@ import * as yup from "yup";
 
 const filterFields = [
   {
-    "Insurance company": "insurance_company_name",
+    "Insurance company": "insurance_company.insurance_company_name",
     isActiveFilter: false,
 
     label: "Insurance company",
-    name: "insurance_company_name",
+    name: "insurance_company.insurance_company_name",
     placeholder: "Insurance company",
     type: "text",
   },
@@ -20,31 +20,31 @@ const filterFields = [
     type: "text",
   },
   {
-    "Insurance type": "Insurance type",
+    "Insurance type": "insurance_type",
     isActiveFilter: false,
 
     label: "Insurance type",
-    name: "is_active",
+    name: "insurance_type",
     placeholder: "Insurance type",
     type: "select",
-    multi: false,
-    options: [
-      {
-        label: "Fire",
-        value: "True",
-      },
-      {
-        label: "Burglary",
-        value: "False",
-      },
-    ],
+    // multi: false,
+    // options: [
+    //   {
+    //     label: "Fire",
+    //     value: "True",
+    //   },
+    //   {
+    //     label: "Burglary",
+    //     value: "False",
+    //   },
+    // ],
   },
   {
-    "Insurance Policy Amount": "insurance_policy_amount",
+    "Insurance Policy Amount": "policy_amount",
     isActiveFilter: false,
 
     label: "Insurance Policy Amount",
-    name: "insurance_policy_amount",
+    name: "policy_amount",
     placeholder: "Insurance Policy Amount",
     type: "text",
   },
@@ -95,8 +95,14 @@ const addEditFormFields = [
   //     placeholder: "Insurance policy number",
   //     type: "text",
   //   },
+  // {
+  //   name: "insurance_type",
+  //   label: "Insurance Policy Type",
+  //   placeholder: "Insurance Policy Type",
+  //   type: "select",
+  // },
   {
-    name: "insurance_policy_amount",
+    name: "policy_amount",
     label: "Insurance Policy Amount",
     placeholder: "Insurance Policy Amount",
     type: "text",
@@ -141,18 +147,16 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  insurance_company_name: yup
+  insurance_company: yup
     .string()
     .required("Insurance company name is required"),
   insurance_policy_number: yup
     .string()
     .required("Insurance policy number is required"),
-  insurance_policy_amount: yup
-    .string()
-    .required("Insurance policy amount is required"),
+  policy_amount: yup.string().required("Insurance policy amount is required"),
   policy_start_date: yup.string().required("Start date is required"),
   policy_end_date: yup.string().required("End date is required"),
-  insuranceType: yup.string().required("Insurance type  is required"),
+  insurance_type: yup.string().required("Insurance type  is required"),
   is_active: yup.string(),
   upload_policy_agreement: yup
     .string()
