@@ -137,36 +137,27 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  branch_name: yup.string().trim().required("Branch name is required"),
-  bank: yup.string().trim().required("Bank is required"),
-  region: yup.string().trim().required("Region name is required"),
-  state: yup.string().trim().required("State name is required"),
-  substate: yup.string().trim().required("Sub State name  is required"),
-  district: yup.string().trim().required("District name is required"),
-  area: yup.string().trim().required("Area name is required"),
-  branch_address: yup
-    .string()
-    .trim()
-    .required("Branch address name is required"),
-  pincode: yup.number().required("Pincode is required"),
+  branch_name: yup.string().trim().required(""),
+  bank: yup.string().trim().required(""),
+  region: yup.string().trim().required(""),
+  state: yup.string().trim().required(""),
+  substate: yup.string().trim().required(""),
+  district: yup.string().trim().required(""),
+  area: yup.string().trim().required(""),
+  branch_address: yup.string().trim().required(""),
+  pincode: yup.number().required(""),
   is_active: yup.string(),
   // commodity_type: yup.string().trim().required("Commodity type is required"),
   branch_contact_detail: yup.array().of(
     yup.object().shape({
-      authorized_name: yup.string().trim().required("Name is required"),
-      authorized_mobile_no: yup
-        .string()
-        .trim()
-        .required("Contact No is required"),
+      authorized_name: yup.string().trim().required(""),
+      authorized_mobile_no: yup.string().trim().required(""),
       authorized_email_id: yup
         .string()
         .trim()
         .email("Invalid email")
-        .required("Email ID is required"),
-      signature_upload: yup
-        .string()
-        .trim()
-        .required("Signature Upload is required"),
+        .required(""),
+      signature_upload: yup.string().trim().required(""),
     })
   ),
 });

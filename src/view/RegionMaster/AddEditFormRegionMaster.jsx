@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, FormControl, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,7 +21,7 @@ const AddEditFormRegionMaster = () => {
   const navigate = useNavigate();
   const methods = useForm({
     resolver: yupResolver(schema),
-  }); 
+  });
 
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
 
@@ -122,11 +122,11 @@ const AddEditFormRegionMaster = () => {
   }, []);
 
   return (
-    <Box bg="white" borderRadius={10}  >
+    <Box bg="white" borderRadius={10}>
       <Box bg="white" borderRadius={10} p="10">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Box  maxHeight="calc( 100vh - 260px )" overflowY="auto">
+            <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
               <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
                 {addEditFormFieldsList &&
                   addEditFormFieldsList.map((item, i) => (
@@ -146,6 +146,7 @@ const AddEditFormRegionMaster = () => {
                           isChecked: details?.is_active,
                           isClearable: false,
                           style: { mb: 1, mt: 1 },
+                        
                         })}
                       </Box>
                     </MotionSlideUp>

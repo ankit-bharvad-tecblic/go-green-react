@@ -155,13 +155,13 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  state_name: yup.string().trim().required("State name is required"),
-  state_code: yup.string().trim().max(2).required("State code is required"),
+  state_name: yup.string().trim().required(""),
+  state_code: yup.string().trim().max(2).required(""),
   tin_no: yup
     .string()
     .trim()
     .test("tinNumber", "Invalid TIN number", (value) => tinNumber(value))
-    .required("TIN number is required"),
+    .required(""),
   gstn: yup
     .string()
     .trim()
@@ -169,17 +169,14 @@ const schema = yup.object().shape({
     .test("gst", "Invalid GST Number", (value) =>
       gstNumber(value.toUpperCase())
     )
-    .required("GSTN is required"),
+    .required(""),
 
-  nav_code: yup.string().trim().required("Nav code is required"),
-  state_india_office_addr: yup
-    .string()
-    .trim()
-    .required("Office address is required"),
+  nav_code: yup.string().trim().required(""),
+  state_india_office_addr: yup.string().trim().required(""),
   is_active: yup.string(),
-  state_overhead: yup.number().required("State overhead is required"),
-  ho_overhead: yup.number().required("HO overhead is required"),
-  region: yup.string().trim().required("Region is required"),
+  state_overhead: yup.number().required(""),
+  ho_overhead: yup.number().required(""),
+  region: yup.string().trim().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

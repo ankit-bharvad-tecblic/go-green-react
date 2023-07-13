@@ -221,19 +221,14 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  commodity_variety: yup
-    .string()
-    .trim()
-    .required("Commodity variety is required "),
-  commodity_type: yup.string().trim().required("Commodity Type is required "),
-  description: yup.string().trim().required("Description is required"),
+  commodity_variety: yup.string().trim().required(" "),
+  commodity_type: yup.string().trim().required(" "),
+  description: yup.string().trim().required(""),
   is_active: yup.string(),
-  commodity_id: yup.string().trim().required("Commodity Name is required"),
-  fed: yup.date().required("Final Expiry Date is required"),
-  hsn_code: yup.number().required("HSN code is required"),
-  fumigation_day: yup
-    .number("Only numeric values are allowed for fumigation day")
-    .required("Fumigation day is required"),
+  commodity_id: yup.string().trim().required(""),
+  fed: yup.date().required(""),
+  hsn_code: yup.number().required(""),
+  fumigation_day: yup.number("").required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

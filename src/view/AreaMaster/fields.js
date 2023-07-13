@@ -109,12 +109,12 @@ const filterFields = [
 ];
 
 const addEditFormFields = [
-  {
-    label: "Area",
-    name: "area_name",
-    placeholder: "Area name",
-    type: "text",
-  },
+  // {
+  //   label: "Area",
+  //   name: "area_name",
+  //   placeholder: "Area name",
+  //   type: "text",
+  // },
 
   // {
   //   label: "DISTRICT NAME",
@@ -136,15 +136,13 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   is_active: yup.string(),
-  district: yup.string().trim().required("District name is"),
+  district: yup.string().trim().required(" "),
   is_block: yup.string(),
-  earthquake_zone_type: yup
-    .string()
-    .required("Earthquake zone type is required"),
-  region: yup.string().trim().required("Region name is required"),
-  state: yup.string().trim().required("State name is required"),
-  area_name: yup.string().trim().required("Area Name is required"),
-  substate: yup.string().trim().required("Sub State name  is required"),
+  earthquake_zone_type: yup.string().required(" "),
+  region: yup.string().trim().required(" "),
+  state: yup.string().trim().required(" "),
+  area_name: yup.string().trim().required(" "), 
+  substate: yup.string().trim().required(" "),
 });
 
 export { filterFields, addEditFormFields, schema };

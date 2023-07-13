@@ -310,58 +310,35 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  security_agency_name: yup
-    .string()
-    .trim()
-    .required("Security agency name is required"),
-  security_guard_name: yup
-    .string()
-    .trim()
-    .required("Security guard name is required"),
-  region__region_name: yup.string().trim().required("Region Name is required"),
-  state__state_name: yup.string().trim().required("State Name is required"),
-  district__district_name: yup
-    .string()
-    .trim()
-    .required("District Name is required"),
-  sub_state__state_name: yup
-    .string()
-    .trim()
-    .required("Sub state name is required"),
-  pincode: yup.number().required("Pin code is required"),
+  security_agency_name: yup.string().trim().required(""),
+  security_guard_name: yup.string().trim().required(""),
+  region__region_name: yup.string().trim().required(""),
+  state__state_name: yup.string().trim().required(""),
+  district__district_name: yup.string().trim().required(""),
+  sub_state__state_name: yup.string().trim().required(""),
+  pincode: yup.number().required(""),
 
-  area: yup.string().trim().required("Area name is required"),
-  address_of_security_guard: yup
-    .string()
-    .trim()
-    .required("Address  is required"),
-  aadhar_of_security_guard: yup
-    .string()
-    .trim()
-    .required("Aadhar of security guard is requird"),
-  on_boarding_date: yup.string().trim().required("Onboarding date is required"),
-  de_boarding_date: yup
-    .string()
-    .trim()
-    .required("De-boarding date is required"),
-  shift: yup.string().trim().required("Shift available is required"),
-  guard_salary: yup.string().trim().required("Guard salary is required"),
-  dob_of_security_guard: yup.number().required(" Date of birth is required"),
-  experience_as_security_guard: yup
-    .number()
-    .required("Experience As Security guard  is required"),
+  area: yup.string().trim().required(""),
+  address_of_security_guard: yup.string().trim().required(""),
+  aadhar_of_security_guard: yup.string().trim().required(""),
+  on_boarding_date: yup.string().trim().required(""),
+  de_boarding_date: yup.string().trim().required(""),
+  shift: yup.string().trim().required(""),
+  guard_salary: yup.string().trim().required(""),
+  dob_of_security_guard: yup.number().required(" "),
+  experience_as_security_guard: yup.number().required(""),
   alternate_contact_number: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Alternative contact number is not valid")
-    .required("Alternative contact number is required"),
+    .required(""),
   contact_number: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
-    .required("Contact number is required"),
+    .required(""),
   is_active: yup.string(),
-  commodity_type: yup.string().trim().required("Commodity type is required"),
+  commodity_type: yup.string().trim().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

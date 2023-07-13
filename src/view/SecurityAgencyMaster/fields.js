@@ -240,37 +240,25 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  security_agency_name: yup
-    .string()
-    .trim()
-    .required("Security Agency name is required"),
-  region: yup.string().trim().required("Region name  is required"),
-  state: yup.string().trim().required("State name  is required"),
-  district: yup.string().trim().required("District name  is required"),
-  substate: yup.string().trim().required("Sub State name  is required"),
-  agency_contract_start_date: yup
-    .string()
-    .trim()
-    .required("Agency contract start date is required"),
-  agency_contract_duration: yup
-    .string()
-    .trim()
-    .required("Agency contract duration is required"),
-  area: yup.string().trim().required("Area name  is required"),
-  address: yup.string().trim().required("Address name  is required"),
-  pincode: yup.number().required("pincode   is required"),
+  security_agency_name: yup.string().trim().required(""),
+  region: yup.string().trim().required(""),
+  state: yup.string().trim().required(""),
+  district: yup.string().trim().required(""),
+  substate: yup.string().trim().required(""),
+  agency_contract_start_date: yup.string().trim().required(""),
+  agency_contract_duration: yup.string().trim().required(""),
+  area: yup.string().trim().required(""),
+  address: yup.string().trim().required(""),
+  pincode: yup.number().required(""),
   agency_contact_no: yup
     .string()
     .trim()
-    .matches(validation.phoneRegExp, "Contact number is not valid")
-    .required("Contact number is required"),
-  contact_person_name: yup
-    .string()
-    .trim()
-    .required("contact person name is required"),
-  service_cost: yup.number().required("service_cost  is required"),
-  remarks: yup.string().trim().required("remarks is required"),
-  upload_agreement: yup.string().required(" Upload agreement is required"),
+    .matches(validation.phoneRegExp, "")
+    .required(""),
+  contact_person_name: yup.string().trim().required(""),
+  service_cost: yup.number().required(""),
+  remarks: yup.string().trim().required(""),
+  upload_agreement: yup.string().required(""),
   is_active: yup.string(),
 });
 

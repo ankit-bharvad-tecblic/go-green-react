@@ -103,22 +103,16 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  bank_name: yup.string().trim().required("Bank name is required"),
-  region: yup.string().trim().required("Region is required"),
-  state: yup.string().trim().required("State is required"),
-  bank_sector: yup.string().trim().required("Sector is required"),
-  bank_address: yup
-    .string()
-    .min(20)
-    .max(300)
-    .required("Bank address is required"),
+  bank_name: yup.string().trim().required(""),
+  region: yup.string().trim().required(""),
+  state: yup.string().trim().required(""),
+  bank_sector: yup.string().trim().required(""),
+  bank_address: yup.string().min(20).max(300).required(""),
   is_active: yup.string(),
-  interest_rate: yup.number().required("Rate is required"),
-  agreement_start_date: yup
-    .string()
-    .required(" Agreement Start Date is required"),
-  agreement_end_date: yup.string().required(" Agreement End Date is required"),
-  agreement_path: yup.string().required(" Upload agreement is required"),
+  interest_rate: yup.number().required(""),
+  agreement_start_date: yup.string().required(" "),
+  agreement_end_date: yup.string().required(" "),
+  agreement_path: yup.string().required(" "),
 });
 
 export { filterFields, addEditFormFields, schema };

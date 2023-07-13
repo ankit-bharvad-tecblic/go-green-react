@@ -92,11 +92,11 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("warehouse_type", {
       cell: (info) => info.getValue(),
-      header: "WarehouseTypeID",
+      header: "Warehouse Type",
     }),
     columnHelper.accessor("warehouse_subtype", {
       cell: (info) => info.getValue(),
-      header: "WarehouseSubTypeID",
+      header: "Warehouse Sub Type",
     }),
     columnHelper.accessor("warehouse_name", {
       cell: (info) => info.getValue(),
@@ -104,83 +104,83 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("region", {
       cell: (info) => info.getValue(),
-      header: "RegionID",
+      header: "Region",
     }),
     columnHelper.accessor("state", {
       cell: (info) => info.getValue(),
-      header: "StateID",
+      header: "State",
     }),
-    columnHelper.accessor("bank_name", {
+    columnHelper.accessor("substate", {
       cell: (info) => info.getValue(),
-      header: "ZoneID",
+      header: "Sub State",
     }),
     columnHelper.accessor("district", {
       cell: (info) => info.getValue(),
-      header: "DistrictID",
+      header: "District",
     }),
     columnHelper.accessor("area", {
       cell: (info) => info.getValue(),
-      header: "AreaID",
+      header: "Area",
     }),
     columnHelper.accessor("warehouse_address", {
       cell: (info) => info.getValue(),
-      header: "WarehouseAddress ",
+      header: "Warehouse Address ",
     }),
     columnHelper.accessor("warehouse_pincode", {
       cell: (info) => info.getValue(),
-      header: "WarehousePincode",
+      header: "Warehouse Pincode",
     }),
     columnHelper.accessor("no_of_chambers", {
       cell: (info) => info.getValue(),
-      header: "NoOfChambers",
+      header: "No Of Chambers",
     }),
     columnHelper.accessor("is_factory_permise", {
       cell: (info) => info.getValue(),
-      header: "IsFactoryPremise",
+      header: "Is Factory Premise",
     }),
     columnHelper.accessor("standard_capacity", {
       cell: (info) => info.getValue(),
-      header: "StandardCapacity",
+      header: "Standard Capacity",
     }),
     columnHelper.accessor("currrent_capacity", {
       cell: (info) => info.getValue(),
-      header: "CurrentCapacity",
+      header: "Current Capacity",
     }),
     columnHelper.accessor("currrent_utilised_capacity", {
       cell: (info) => info.getValue(),
-      header: "CurrentUtilisedCapacity",
+      header: "Current Utilised Capacity",
     }),
     columnHelper.accessor("no_of_warehouse_in_area", {
       cell: (info) => info.getValue(),
-      header: "NoOfWarehouseInArea",
+      header: "No Of Warehouse In Area",
     }),
     columnHelper.accessor("lock_in_period", {
       cell: (info) => info.getValue(),
-      header: "LockinPeriod",
+      header: "Lock in Period",
     }),
     columnHelper.accessor("lock_in_period_month", {
       cell: (info) => info.getValue(),
-      header: "LockinPeriodMonth",
+      header: "Lock in Period Month",
     }),
     columnHelper.accessor("covered_area", {
       cell: (info) => info.getValue(),
-      header: "CoveredArea",
+      header: "Covered Area",
     }),
     columnHelper.accessor("supervisor_day_shift", {
       cell: (info) => info.getValue(),
-      header: "SupervisorDayShift",
+      header: "Supervisor Day Shift",
     }),
     columnHelper.accessor("supervisor_night_shift", {
       cell: (info) => info.getValue(),
-      header: "SupervisorNightShift ",
+      header: "Supervisor Night Shift ",
     }),
     columnHelper.accessor("security_guard_day_shift", {
       cell: (info) => info.getValue(),
-      header: "SecurityGuardDayShift ",
+      header: "Security Guard Day Shift ",
     }),
     columnHelper.accessor("security_guard_night_shift", {
       cell: (info) => info.getValue(),
-      header: "SecurityGuardNightShift ",
+      header: "Security Guard Night Shift ",
     }),
     columnHelper.accessor("expected_commodity", {
       cell: (info) => info.getValue(),
@@ -188,23 +188,23 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("commodity_inward_type", {
       cell: (info) => info.getValue(),
-      header: "CommodityInwardType",
+      header: "Commodity Inward Type",
     }),
     columnHelper.accessor("prestack_commodity", {
       cell: (info) => info.getValue(),
-      header: "PreStackCommodityID ",
+      header: "PreStack Commodity ",
     }),
     columnHelper.accessor("prestack_commodity_qty", {
       cell: (info) => info.getValue(),
-      header: "PreStackCommodityQty",
+      header: "PreStack Commodity Qty",
     }),
     columnHelper.accessor("banker_id", {
       cell: (info) => info.getValue(),
-      header: "CCBankerID ",
+      header: "CC Banker ",
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "FundingRequired ",
+      header: "Funding Required ",
     }),
     columnHelper.accessor("rent", {
       cell: (info) => info.getValue(),
@@ -212,19 +212,19 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("gg_revenue_ratio", {
       cell: (info) => info.getValue(),
-      header: "GGRevenueSharingRatio",
+      header: "GG Revenue Sharing Ratio",
     }),
     columnHelper.accessor("security_deposit_month", {
       cell: (info) => info.getValue(),
-      header: "SecurityDepositeMonth",
+      header: "Security Deposite Month",
     }),
     columnHelper.accessor("advance_rent", {
       cell: (info) => info.getValue(),
-      header: "AdvanceRent",
+      header: "Advance Rent",
     }),
     columnHelper.accessor("advance_rent_month", {
       cell: (info) => info.getValue(),
-      header: "AdvanceRentMonth ",
+      header: "Advance Rent Month ",
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
@@ -232,23 +232,23 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "CommencementDate",
+      header: "Commencement Date",
     }),
     columnHelper.accessor("bank_name", {
       cell: (info) => info.getValue(),
-      header: "AgreementPeriodMonth ",
+      header: "Agreement Period Month ",
     }),
     columnHelper.accessor("notice_period_month", {
       cell: (info) => info.getValue(),
-      header: "NoticePeriodMonth",
+      header: "Notice Period Month",
     }),
     columnHelper.accessor("projection_plan_file_path", {
       cell: (info) => info.getValue(),
-      header: "ProjectionPlanFilePath",
+      header: "Projection Plan File Path",
     }),
     columnHelper.accessor("owner_intention_letter_file_path", {
       cell: (info) => info.getValue(),
-      header: "OwnerIntentionLetterFilePath",
+      header: "Owner Intention Letter File Path",
     }),
 
     columnHelper.accessor("remarks", {
@@ -257,15 +257,15 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("cm_proposal_business_form_file_path", {
       cell: (info) => info.getValue(),
-      header: "CMProposalBusinessFormFilePath ",
+      header: "CM Proposal Business Form File Path ",
     }),
     columnHelper.accessor("l1_user", {
       cell: (info) => info.getValue(),
-      header: "L1UserID",
+      header: "L1 User",
     }),
     columnHelper.accessor("l2_user", {
       cell: (info) => info.getValue(),
-      header: "L2UserID",
+      header: "L2 User",
     }),
 
     columnHelper.accessor("is_funding_required", {
@@ -274,19 +274,19 @@ function HiringProposalMaster() {
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "DocumentID",
+      header: "Document",
     }),
     columnHelper.accessor("bank_address", {
       cell: (info) => info.getValue(),
-      header: "InspectionAssignedTo",
+      header: "Inspection Assigned To",
     }),
     columnHelper.accessor("created_at", {
       cell: (info) => info.getValue(),
-      header: "CreationDate",
+      header: "Creation Date",
     }),
     columnHelper.accessor("updated_at", {
       cell: (info) => info.getValue(),
-      header: "LastUpdateDate",
+      header: "Last Update Date",
     }),
 
     columnHelper.accessor("active", {

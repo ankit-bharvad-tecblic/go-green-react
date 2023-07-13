@@ -93,11 +93,8 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  warehouse_type_name: yup
-    .string()
-    .trim()
-    .required("Warehouse type name is required"),
-  description: yup.string().trim().required("Description is required"),
+  warehouse_type_name: yup.string().trim().required(""),
+  description: yup.string().trim().required(""),
   is_active: yup.string(),
 });
 

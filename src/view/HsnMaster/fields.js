@@ -155,11 +155,11 @@ const schema = yup.object().shape({
     .integer()
     .min(1000, "HSN code must be at least 4 digits")
     .max(99999999, "HSN code cannot exceed 8 digits")
-    .required("HSN code is required"),
-  igst_perc: yup.number().required("IGST % is required"),
-  sgst_perc: yup.number().required("SGST % is required"),
-  cgst_perc: yup.number().required("CGSt % is required"),
-  description: yup.string().trim().required("Description is required"),
+    .required(""),
+  igst_perc: yup.number().required(""),
+  sgst_perc: yup.number().required(""),
+  cgst_perc: yup.number().required(""),
+  description: yup.string().trim().required(""),
   is_active: yup.string(),
 });
 
