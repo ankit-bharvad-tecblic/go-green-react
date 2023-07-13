@@ -568,6 +568,7 @@ const Pwh = ({ id }) => {
   let editedValueState = {};
 
   const autoFillForm = async () => {
+    setFormId(id);
     console.log("autoFillFormDetails --> ", formDetails);
     for (const [key, value] of Object.entries(formDetails)) {
       console.log("key value  -->", key, value);
@@ -634,6 +635,144 @@ const Pwh = ({ id }) => {
 
         areaOnChange(obj);
       }
+
+      // selectBoxOptions?.superVisorDayShiftOpt
+
+      if (key === "supervisor_day_shift") {
+        console.log(
+          "selectBoxOptions?.superVisorDayShiftOpt ",
+          selectBoxOptions
+        );
+        let obj = selectBoxOptions?.superVisorDayShiftOpt?.filter(
+          (item) => item.value === value
+        )[0];
+        setSelected((prev) => ({
+          ...prev,
+          superVisorDay: obj,
+        }));
+        setValue(
+          formFieldsName.pwh_warehouse_details.supervisor_for_day_shift,
+          obj?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "supervisor_night_shift") {
+        let val = selectBoxOptions?.superVisorNightShiftOpt?.filter(
+          (item) => item.value === value
+        )[0];
+
+        console.log("supervisor_night_shift ", val);
+
+        setSelected((prev) => ({
+          ...prev,
+          superVisorNight: val,
+        }));
+        setValue(
+          formFieldsName.pwh_warehouse_details.supervisor_for_night_shift,
+          val?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "security_guard_day_shift") {
+        let val = selectBoxOptions?.securityGuardDayShiftOpt?.filter(
+          (item) => item.value === value
+        )[0];
+
+        setSelected((prev) => ({
+          ...prev,
+          securityGuardDay: val,
+        }));
+        setValue(
+          formFieldsName.pwh_warehouse_details.security_guard_for_day_shift,
+          val?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "security_guard_night_shift") {
+        let val = selectBoxOptions?.securityGuardDayShiftOpt?.filter(
+          (item) => item.value === value
+        )[0];
+
+        setSelected((prev) => ({
+          ...prev,
+          securityGuardNight: val,
+        }));
+        setValue(
+          formFieldsName.pwh_warehouse_details.security_guard_for_night_shift,
+          val?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "excpected_commodity") {
+        let commodityMasterOpt = selectBoxOptions?.commodityMasterOpt;
+        let excpected_commodity = value;
+
+        const filteredCommodities = commodityMasterOpt.filter((obj2) =>
+          excpected_commodity.some((obj1) => obj1.commodity === obj2.value)
+        );
+
+        setSelected((prev) => ({
+          ...prev,
+          commodity: filteredCommodities,
+        }));
+        setValue(
+          formFieldsName.pwh_commodity_details.expected_commodity_name,
+          filteredCommodities,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "commodity_inward_type") {
+        let val = [
+          {
+            label: "Fresh Stock",
+            value: "FS",
+          },
+          {
+            label: "Pre Stock",
+            value: "PS",
+          },
+          {
+            label: "Take Over",
+            value: "TO",
+          },
+        ].filter((item) => item.value === value)[0];
+
+        setSelected((prev) => ({
+          ...prev,
+          commodityInwardType: val,
+        }));
+        setValue(
+          formFieldsName.pwh_commodity_details.commodity_inward_type,
+          val?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      if (key === "prestack_commodity") {
+        let val = selectBoxOptions?.commodityMasterOpt?.filter(
+          (item) => item.value === value
+        );
+
+        console.log(val);
+
+        setSelected((prev) => ({
+          ...prev,
+          preStackCommodity: val,
+        }));
+
+        setValue(
+          formFieldsName.pwh_commodity_details.pre_stack_commodity,
+          val?.value,
+          { shouldValidate: true }
+        );
+      }
+
+      // security_guard_night_shift
 
       // if (key === "reservation_start_date" || key === "reservation_end_date") {
       //   client_form_methods.setValue(key, moment(value).format("DD/MM/YYYY"), {
@@ -829,13 +968,11 @@ const Pwh = ({ id }) => {
       const response = await getSupervisorDayShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key === "employee_name" && value,
-          label: key === "user_id" && value,
-          count: key === "count" && value,
-        })
-      );
+      const optionsArray = response?.data?.map((item) => ({
+        label: item.employee_name,
+        value: item.user_id,
+        count: item.count,
+      }));
 
       setSelectBoxOptions((prev) => ({
         ...prev,
@@ -851,13 +988,11 @@ const Pwh = ({ id }) => {
       const response = await getSupervisorNightShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key === "employee_name" && value,
-          label: key === "user_id" && value,
-          count: key === "count" && value,
-        })
-      );
+      const optionsArray = response?.data?.map((item) => ({
+        label: item.employee_name,
+        value: item.user_id,
+        count: item.count,
+      }));
 
       setSelectBoxOptions((prev) => ({
         ...prev,
@@ -873,13 +1008,11 @@ const Pwh = ({ id }) => {
       const response = await getSecurityGuardDayShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key === "employee_name" && value,
-          label: key === "user_id" && value,
-          count: key === "count" && value,
-        })
-      );
+      const optionsArray = response?.data?.map((item) => ({
+        label: item.employee_name,
+        value: item.user_id,
+        count: item.count,
+      }));
 
       setSelectBoxOptions((prev) => ({
         ...prev,
@@ -895,13 +1028,11 @@ const Pwh = ({ id }) => {
       const response = await getSecurityGuardNightShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key === "employee_name" && value,
-          label: key === "user_id" && value,
-          count: key === "count" && value,
-        })
-      );
+      const optionsArray = response?.data?.map((item) => ({
+        label: item.employee_name,
+        value: item.user_id,
+        count: item.count,
+      }));
 
       setSelectBoxOptions((prev) => ({
         ...prev,
@@ -1295,9 +1426,13 @@ const Pwh = ({ id }) => {
           })),
           commodity_inward_type: getValues("commodity_inward_type"),
           prestack_commodity: getValues("prestack_commodity"),
-          bank: getValues("pwh_commodity_bank_details"),
+          bank:
+            getValues("is_funding_required") === "true"
+              ? getValues("pwh_commodity_bank_details")
+              : [],
           prestack_commodity_qty: getValues("prestack_commodity_qty"),
-          is_funding_required: getValues("is_funding_required"),
+          is_funding_required:
+            getValues("is_funding_required") === "true" ? "true" : "false",
         };
 
         console.log("PWH_WAREHOUSE_DETAILS @@ --> ", data);
@@ -1315,9 +1450,11 @@ const Pwh = ({ id }) => {
           advance_rent: getValues("advance_rent"),
           advance_rent_month: getValues("advance_rent_month"),
           gst: getValues("gst"),
-          commencement_date: getValues("commencement_date"),
+          commencement_date: moment(getValues("commencement_date")).formate(
+            "YYYY-MM-DD"
+          ),
           agreement_period_month: getValues("agreement_period_month"),
-          expiry_date: getValues("expiry_date"),
+          expiry_date: moment(getValues("expiry_date")).formate("YYYY-MM-DD"),
           notice_period_month: getValues("notice_period_month"),
           storage_charges_according_to_commodity: getValues(
             "storage_charges_according_to_commodity"
@@ -2677,6 +2814,7 @@ const Pwh = ({ id }) => {
                                           .supervisor_for_night_shift
                                       }
                                       label=""
+                                      selectedValue={selected?.superVisorNight}
                                       options={
                                         selectBoxOptions?.superVisorNightShiftOpt ||
                                         []
