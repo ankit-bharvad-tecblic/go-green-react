@@ -98,6 +98,24 @@ const UserMaster = () => {
       cell: (info) => info.getValue(),
       header: "USER NAME (EMAIL)",
     }),
+
+    columnHelper.accessor("designation", {
+      cell: (info) => info.getValue(),
+      header: "Designation",
+    }),
+    columnHelper.accessor("user_role", {
+      header: "ROLE",
+      cell: (info) => {
+        const userRoles = info.row.original.user_role;
+
+        if (userRoles && userRoles.length > 0) {
+          const roleNames = userRoles.map((role) => role.role_name);
+          console.log(roleNames.join(", "), "here");
+          return roleNames.join(", ");
+        }
+        return "N/A";
+      },
+    }),
     columnHelper.accessor("address", {
       cell: (info) => info.getValue(),
       header: "Address ",
@@ -132,21 +150,8 @@ const UserMaster = () => {
     //   header: "Area ",
     // }),
 
-    columnHelper.accessor("user_role", {
-      header: "ROLE",
-      cell: (info) => {
-        const userRoles = info.row.original.user_role;
-
-        if (userRoles && userRoles.length > 0) {
-          const roleNames = userRoles.map((role) => role.role_name);
-          console.log(roleNames.join(", "), "here");
-          return roleNames.join(", ");
-        }
-        return "N/A";
-      },
-    }),
     columnHelper.accessor("reporting_manager.employee_name", {
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue() || "N/A",
       header: "Reporting Manager",
     }),
 

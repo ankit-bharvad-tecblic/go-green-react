@@ -125,7 +125,7 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "STATE NAME",
     }),
-    columnHelper.accessor("state.substate_name", {
+    columnHelper.accessor("substate.substate_name", {
       cell: (info) => info.getValue(),
       header: "SUB STATE NAME",
     }),
@@ -141,7 +141,7 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "ADDRESS",
     }),
-    columnHelper.accessor("pin_code", {
+    columnHelper.accessor("pincode", {
       cell: (info) => info.getValue(),
       header: "PIN CODE",
     }),
@@ -162,27 +162,27 @@ const SecurityGuardMaster = () => {
       cell: (info) => info.getValue(),
       header: "ALTERNATE CONTACT NUMBER",
     }),
-    columnHelper.accessor("on_boarding_date", {
+    columnHelper.accessor("onboarding_date", {
       cell: (info) => info.getValue(),
       header: "ON BOARDING DATE",
     }),
-    columnHelper.accessor("on_boarding_date", {
+    columnHelper.accessor("deboarding_date", {
       cell: (info) => info.getValue(),
       header: "DEBOARDING DATE",
     }),
-    columnHelper.accessor("shift_available", {
+    columnHelper.accessor("shift_availability", {
       cell: (info) => info.getValue(),
       header: "SHIFT AVAILABLE",
     }),
-    columnHelper.accessor("guard_salary", {
+    columnHelper.accessor("salary", {
       cell: (info) => info.getValue(),
       header: "GUARD SALARY",
     }),
-    columnHelper.accessor("created_date", {
+    columnHelper.accessor("creation_date", {
       cell: (info) => info.getValue(),
       header: "CREATION DATE",
     }),
-    columnHelper.accessor("last_updated_date", {
+    columnHelper.accessor("last_update_date", {
       cell: (info) => info.getValue(),
       header: "LAST UPDATED DATE",
     }),
@@ -269,6 +269,8 @@ const SecurityGuardMaster = () => {
       setFilter((old) => ({
         ...old,
         totalPage: Math.ceil(response?.total / old?.limit),
+        total: response?.total_data,
+        totalFilter: response?.total,
       }));
     } catch (error) {
       console.error("Error:", error);
