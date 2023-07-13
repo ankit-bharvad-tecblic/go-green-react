@@ -33,7 +33,7 @@ export const warehouseProposalApiSlice = apiSlice.injectEndpoints({
 
     getSecurityGuardDayShift: builder.mutation({
       query: () => ({
-        url: API.WAREHOUSE_PROPOSAL.SUPERVISOR_DAY,
+        url: API.WAREHOUSE_PROPOSAL.SECURITY_DAY,
         method: "GET",
       }),
     }),
