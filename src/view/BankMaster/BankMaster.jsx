@@ -3,7 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
 import { useEffect, useState } from "react";
 import {
-  useActiveDeActiveMutation, 
+  useActiveDeActiveMutation,
   useGetBankMasterMutation,
 } from "../../features/master-api-slice";
 import { Box, Flex, Switch, Text, useToast } from "@chakra-ui/react";
