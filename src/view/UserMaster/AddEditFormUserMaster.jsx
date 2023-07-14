@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -73,7 +73,14 @@ function AddEditFormUserMaster() {
 
   const [selectedData, setSelectedData] = useState([]);
   const [sections, setSections] = useState([]);
-
+  const [client_location_list, setClient_location_list] = useState([]);
+  const [selectedLocationList, setSelectedLocationList] = useState({
+    region: {},
+    state: {},
+    substate: {},
+    district: {},
+    area: {},
+  });
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     substate: [],
@@ -100,10 +107,29 @@ function AddEditFormUserMaster() {
 
   const onSubmit = (data) => {
     console.log("data==>", data);
+    console.log("client_location_list", tableData);
+    const user_location = tableData?.map((el) => {
+      return {
+        region: el?.region?.value,
+        state: el?.state?.value,
+        substate: el?.substate?.value,
+        district: el?.district?.value,
+        area: el?.area?.value,
+      };
+    });
     if (details?.id) {
-      updateData({ ...data, id: details.id });
+      let final_data = {
+        ...data,
+        user_location,
+        id: details.id,
+      };
+      updateData(final_data);
     } else {
-      addData(data);
+      let final_data = {
+        ...data,
+        user_location,
+      };
+      addData(final_data);
     }
   };
   // for clear data in form
@@ -343,6 +369,15 @@ function AddEditFormUserMaster() {
       shouldValidate: false,
     });
 
+    setSelectedLocationList((prev) => ({
+      ...prev,
+      region: val,
+      state: null,
+      substate: null,
+      district: null,
+      area: null,
+    }));
+
     setLocationDrillDownState((prev) => ({
       region: val?.value,
     }));
@@ -392,6 +427,14 @@ function AddEditFormUserMaster() {
       state: val?.value,
     }));
 
+    setSelectedLocationList((prev) => ({
+      ...prev,
+      state: val,
+      substate: null,
+      district: null,
+      area: null,
+    }));
+
     const query = {
       region: locationDrillDownState.region,
       state: val?.value,
@@ -433,6 +476,13 @@ function AddEditFormUserMaster() {
       region: locationDrillDownState.region,
       state: locationDrillDownState.state,
       substate: val?.value,
+    }));
+
+    setSelectedLocationList((prev) => ({
+      ...prev,
+      substate: val,
+      district: null,
+      area: null,
     }));
 
     const query = {
@@ -483,6 +533,12 @@ function AddEditFormUserMaster() {
       district: val?.value,
     };
 
+    setSelectedLocationList((prev) => ({
+      ...prev,
+      district: val,
+      area: null,
+    }));
+
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
@@ -505,6 +561,11 @@ function AddEditFormUserMaster() {
     tableDataMethods.setValue("area", val?.value, {
       shouldValidate: true,
     });
+    setSelectedLocationList((prev) => ({
+      ...prev,
+
+      area: val,
+    }));
   };
 
   const updateData = async (data) => {
@@ -555,50 +616,99 @@ function AddEditFormUserMaster() {
     // Set the edit index to null
     setEditIndex(null);
   };
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (data) => {
+    console.log(data);
+    console.log("selectedLocationList", selectedLocationList);
     // Check if all fields are selected
-    const isAllFieldsSelected =
-      tableDataMethods.getValues("region") &&
-      tableDataMethods.getValues("state") &&
-      tableDataMethods.getValues("substate") &&
-      tableDataMethods.getValues("district") &&
-      tableDataMethods.getValues("area");
+    // const isAllFieldsSelected =
+    //   tableDataMethods.getValues("region") &&
+    //   tableDataMethods.getValues("state") &&
+    //   tableDataMethods.getValues("substate") &&
+    //   tableDataMethods.getValues("district") &&
+    //   tableDataMethods.getValues("area");
 
-    if (isAllFieldsSelected) {
-      // Collect form data
-      const formData = {
-        region: getNameById("regions", tableDataMethods.getValues("region")),
-        state: getNameById("states", tableDataMethods.getValues("state")),
-        substate: getNameById(
-          "substate",
-          tableDataMethods.getValues("substate")
-        ),
-        district: getNameById(
-          "districts",
-          tableDataMethods.getValues("district")
-        ),
-        area: getNameById("areas", tableDataMethods.getValues("area")),
-      };
+    //  setClient_location_list((prev) => [{ ...prev, data }]);
+    setTableData((prev) => [...prev, selectedLocationList]);
+    // selectedLocationList
+    setSelectedLocationList((prev) => ({
+      ...prev,
+      region: {},
+      state: {},
+      substate: {},
+      district: {},
+      area: {},
+    }));
 
-      // Add new row or update existing row
-      if (editIndex !== null) {
-        const updatedTableData = [...tableData];
-        updatedTableData[editIndex] = formData;
-        setTableData(updatedTableData);
-        setEditIndex(null);
-      } else {
-        setTableData((prevTableData) => [...prevTableData, formData]);
-      }
+    // if ( false && isAllFieldsSelected) {
+    //   // Collect form data
+    //   const formData = {
+    //     region: getNameById("regions", tableDataMethods.getValues("region")),
+    //     state: getNameById("states", tableDataMethods.getValues("state")),
+    //     substate: getNameById(
+    //       "substate",
+    //       tableDataMethods.getValues("substate")
+    //     ),
+    //     district: getNameById(
+    //       "districts",
+    //       tableDataMethods.getValues("district")
+    //     ),
+    //     area: getNameById("areas", tableDataMethods.getValues("area")),
+    //   };
 
-      // Show the table
+    //   // Add new row or update existing row
+    //   if (editIndex !== null) {
+    //     const updatedTableData = [...tableData];
+    //     updatedTableData[editIndex] = formData;
+    //     setTableData(updatedTableData);
+    //     setEditIndex(null);
+    //   } else {
+    //     setTableData((prevTableData) => [...prevTableData, formData]);
+    //   }
 
-      // Reset the form
-      reset();
-    }
+    //   // Show the table
+
+    //   // Reset the form
+    //   reset();
+    // }
+    reset();
   };
+
+  useMemo(() => {
+    console.log(tableData);
+  }, []);
 
   const handleEditRow = (index) => {
     const rowData = tableData[index];
+
+    // const arr = [
+    //   { id: 1, name: 'Alice' },
+    //   { id: 1, name: 'Bob' },
+    //   { id: 3, name: 'Charlie' },
+    // ];
+
+    // const indexToUpdate = index; // Index of the object to update
+
+    // // Create a new object with the updated values
+    // const updatedObject = { id: 1, name: 'Updated Bob' };
+
+    // // Create a new array by spreading the original elements and replacing the object at the specified index
+    // const newArr = [
+    //   ...arr.slice(0, indexToUpdate), // Spread the elements before the index
+    //   updatedObject, // Updated object
+    //   ...arr.slice(indexToUpdate + 1), // Spread the elements after the index
+    // ];
+
+    // Assign the new array to the 'arr' variable
+
+    setSelectedLocationList(() => ({
+      ...prev,
+      region: rowData.region,
+      state: rowData.state,
+      substate: rowData.substate,
+      district: rowData.district,
+      area: rowData.area,
+    }));
+
     const regionId = getIdByLabel("regions", rowData.region);
     regionOnChange({ value: regionId });
     const stateId = getIdByLabel("states", rowData.state);
@@ -612,13 +722,18 @@ function AddEditFormUserMaster() {
     tableDataMethods.setValue("substate", substateId, { shouldDirty: true });
     tableDataMethods.setValue("district", districtId, { shouldDirty: true });
     tableDataMethods.setValue("area", areaId, { shouldDirty: true });
-
+    // setTableData((prev) => [{ ...prev, selectedLocationList }]);
     setEditIndex(index);
   };
 
   const handleDeleteRow = (index) => {
     setTableData((prevTableData) => {
       const updatedData = [...prevTableData];
+      updatedData.splice(index, 1);
+      return updatedData;
+    });
+    setClient_location_list((prev) => {
+      const updatedData = [...prev];
       updatedData.splice(index, 1);
       return updatedData;
     });
@@ -647,21 +762,21 @@ function AddEditFormUserMaster() {
       //  zoneOnChange({ value: details.district?.substate?.id });
       //  districtOnChange({ value: details.district?.id });
       let obj = {
-        email: details.email,
-        employee_name: details.employee_name,
-        address: details.address,
+        email: details?.email,
+        employee_name: details?.employee_name,
+        address: details?.address,
         designation: details?.designation,
-        phone: details.phone,
+        phone: details?.phone,
         user_role: details?.user_role?.map((item) => item.id) || [],
         reporting_manager: details?.reporting_manager.employee_name,
         pin_code: details?.pin_code,
         region: details?.region?.id,
         state: details?.state?.id,
-        substate: details.substate?.id,
+        substate: details?.substate?.id,
         district: details?.district?.id,
-        area: details.area?.id,
-        last_login: details.last_login,
-        is_active: details.is_active,
+        area: details?.area?.id,
+        last_login: details?.last_login,
+        is_active: details?.is_active,
       };
       console.log("details", details);
       console.log("obj", obj);
@@ -802,7 +917,29 @@ function AddEditFormUserMaster() {
                     <Text textAlign="right" w="550px">
                       Reporting Manager
                     </Text>
-                    <CustomSelector
+
+                    <ReactCustomSelect
+                      name="reporting_manager"
+                      label=""
+                      options={selectBoxOptions.reportingManager}
+                      selectedValue={selectBoxOptions.reportingManager.find(
+                        (opt) =>
+                          opt.label === details?.reporting_manager.employee_name
+                      )}
+                      handleOnChange={(val) => {
+                        setValue("reporting_manager", val.value, {
+                          shouldValidate: true,
+                        });
+                        console.log("selected val", val);
+                      }}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                    {/* <CustomSelector
                       name="reporting_manager"
                       label=""
                       options={selectBoxOptions.reportingManager}
@@ -816,7 +953,7 @@ function AddEditFormUserMaster() {
                         mb: 1,
                         mt: 1,
                       }}
-                    />
+                    /> */}
                     {/* <CustomSelector
                       name="reporting_manager"
                       label=""
@@ -1011,12 +1148,13 @@ function AddEditFormUserMaster() {
                     label=""
                     isLoading={fetchLocationDrillDownApiIsLoading}
                     options={selectBoxOptions?.regions || []}
-                    selectedValue={
-                      selectBoxOptions?.regions?.filter(
-                        (item) =>
-                          item.value === tableDataMethods.getValues("region")
-                      )[0] || {}
-                    }
+                    // selectedValue={
+                    //   selectBoxOptions?.regions?.filter(
+                    //     (item) =>
+                    //       item.value === tableDataMethods.getValues("region")
+                    //   )[0] || {}
+                    // }
+                    selectedValue={selectedLocationList?.region}
                     isClearable={false}
                     selectType="label"
                     style={{
@@ -1037,12 +1175,13 @@ function AddEditFormUserMaster() {
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.states || []}
-                      selectedValue={
-                        selectBoxOptions?.states?.filter(
-                          (item) =>
-                            item.value === tableDataMethods.getValues("state")
-                        )[0] || {}
-                      }
+                      // selectedValue={
+                      //   selectBoxOptions?.states?.filter(
+                      //     (item) =>
+                      //       item.value === tableDataMethods.getValues("state")
+                      //   )[0] || {}
+                      // }
+                      selectedValue={selectedLocationList?.state}
                       isClearable={false}
                       selectType="label"
                       style={{
@@ -1063,13 +1202,14 @@ function AddEditFormUserMaster() {
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.substate || []}
-                      selectedValue={
-                        selectBoxOptions?.substate?.filter(
-                          (item) =>
-                            item.value ===
-                            tableDataMethods.getValues("substate")
-                        )[0] || {}
-                      }
+                      // selectedValue={
+                      //   selectBoxOptions?.substate?.filter(
+                      //     (item) =>
+                      //       item.value ===
+                      //       tableDataMethods.getValues("substate")
+                      //   )[0] || {}
+                      // }
+                      selectedValue={selectedLocationList?.substate}
                       isClearable={false}
                       selectType="label"
                       style={{
@@ -1089,12 +1229,13 @@ function AddEditFormUserMaster() {
                     label=""
                     isLoading={fetchLocationDrillDownApiIsLoading}
                     options={selectBoxOptions?.districts || []}
-                    selectedValue={
-                      selectBoxOptions?.districts?.filter(
-                        (item) =>
-                          item.value === tableDataMethods.getValues("district")
-                      )[0] || {}
-                    }
+                    // selectedValue={
+                    //   selectBoxOptions?.districts?.filter(
+                    //     (item) =>
+                    //       item.value === tableDataMethods.getValues("district")
+                    //   )[0] || {}
+                    // }
+                    selectedValue={selectedLocationList?.district}
                     isClearable={false}
                     selectType="label"
                     style={{
@@ -1114,12 +1255,13 @@ function AddEditFormUserMaster() {
                     label=""
                     isLoading={fetchLocationDrillDownApiIsLoading}
                     options={selectBoxOptions?.areas || []}
-                    selectedValue={
-                      selectBoxOptions?.areas?.filter(
-                        (item) =>
-                          item.value === tableDataMethods.getValues("area")
-                      )[0] || {}
-                    }
+                    // selectedValue={
+                    //   selectBoxOptions?.areas?.filter(
+                    //     (item) =>
+                    //       item.value === tableDataMethods.getValues("area")
+                    //   )[0] || {}
+                    // }
+                    selectedValue={selectedLocationList?.area}
                     isClearable={false}
                     selectType="label"
                     style={{
@@ -1177,11 +1319,11 @@ function AddEditFormUserMaster() {
                       tableData.map((data, index) => (
                         <Tr key={index}>
                           <Td>{index + 1}</Td>
-                          <Td>{data.region}</Td>
-                          <Td>{data.state}</Td>
-                          <Td>{data.substate}</Td>
-                          <Td>{data.district}</Td>
-                          <Td>{data.area}</Td>
+                          <Td>{data.region?.label}</Td>
+                          <Td>{data.state?.label}</Td>
+                          <Td>{data.substate?.label}</Td>
+                          <Td>{data.district?.label}</Td>
+                          <Td>{data.area?.label}</Td>
                           <Td>
                             <Flex gap="20px" justifyContent="center">
                               <Box color={"primary.700"}>
