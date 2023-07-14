@@ -11,7 +11,7 @@ import {
   useGetStateMasterMutation,
   useAddHiringProposalMasterMutation,
   useUpdateHiringProposalMasterMutation,
-} from "../../features/master-api-slice";
+} from "../../features/master-api-slice"; 
 import { showToastByStatusCode } from "../../services/showToastByStatusCode";
 import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";

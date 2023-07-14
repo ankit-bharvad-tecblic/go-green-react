@@ -244,11 +244,11 @@ const WarehouseProposal = () => {
           {hiringProposal?.type?.value === "pwh" ? (
             <Pwh id={details?.id} />
           ) : hiringProposal?.type?.value === "wms" ? (
-            <Wms />
+            <Wms id={details?.id} />
           ) : hiringProposal?.type?.value === "third" ? (
             <ThirdParty />
           ) : hiringProposal?.type?.value === "rent" ? (
-            <WmsRent />
+            <WmsRent id={details?.id} />
           ) : (
             <></>
           )}

@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import FunctionalTable from "../../components/Tables/FunctionalTable";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useActiveDeActiveMutation,
   useGetAreaMasterMutation,
@@ -14,7 +14,7 @@ import { filterFields } from "./fields";
 import { useNavigate } from "react-router-dom";
 
 const AreaMaster = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
 
   const filterQuery = useSelector(

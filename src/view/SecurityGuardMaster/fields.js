@@ -345,12 +345,12 @@ const schema = yup.object().shape({
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Alternative contact number is not valid")
-    .required("Alternative contact number is required"),
+    .required(""),
   contact_number: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
-    .required("Contact number is required"),
+    .required(""),
   is_active: yup.string(),
   // commodity_type: yup.string().trim().required("Commodity type is required"),
 });

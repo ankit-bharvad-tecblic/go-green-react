@@ -80,8 +80,8 @@ const addEditFormFields = [
   },
 ];
 const schema = yup.object().shape({
-  role_name: yup.string().trim().required("Role name is required"),
-  description: yup.string().trim().required("Description is required"),
+  role_name: yup.string().trim().required(""),
+  description: yup.string().trim().required(""),
   is_active: yup.string(),
 });
 export { filterFields, addEditFormFields, schema };

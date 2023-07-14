@@ -535,6 +535,14 @@ function FunctionalTable({
                                 ).format("LL")
                               : " - "}
                           </Text>
+                        ) : cell.column.id === "commencement_date" ? (
+                          <Text>
+                            {cell.row.original.commencement_date
+                              ? moment(
+                                  cell.row.original.commencement_date
+                                ).format("LL")
+                              : " - "}
+                          </Text>
                         ) : cell.column.id === "fed" ? (
                           <Text>
                             {cell.row.original.fed

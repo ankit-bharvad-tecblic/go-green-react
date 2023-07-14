@@ -24,6 +24,7 @@ import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import { useDispatch } from "react-redux";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
+import CustomInput from "../../components/Elements/CustomInput";
 
 const AddEditFormArea = () => {
   const dispatch = useDispatch();
@@ -62,15 +63,22 @@ const AddEditFormArea = () => {
       addData(data);
     }
   };
+
+  const { reset } = methods;
+
   // for clear data in form
   const clearForm = () => {
     const defaultValues = methods.getValues();
     console.log(defaultValues);
+
     Object.keys(defaultValues).forEach((key) => {
       methods.setValue(key, "");
     });
 
+    methods.setValue("area_name", "");
+
     details = {};
+    reset();
 
     console.log(details);
   };
@@ -225,7 +233,7 @@ const AddEditFormArea = () => {
     setValue("district", null, {
       shouldValidate: false,
     });
-
+ 
     setLocationDrillDownState((prev) => ({
       region: locationDrillDownState.region,
       state: val?.value,
@@ -577,7 +585,7 @@ const AddEditFormArea = () => {
                       </Text>{" "}
                       {generateFormField({
                         ...item,
-                        label: "",
+                        label: "", 
                         isChecked: details?.is_active,
 
                         style: {
@@ -597,6 +605,25 @@ const AddEditFormArea = () => {
                     </Box>
                   </MotionSlideUp>
                 ))}
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Area
+                    </Text>
+                    <CustomInput
+                      name="area_name"
+                      placeholder="Enter Area"
+                      type="text"
+                      label=""
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                  </Box>
+                </MotionSlideUp>
+              </Box>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">

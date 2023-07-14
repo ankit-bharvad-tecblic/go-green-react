@@ -268,27 +268,21 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  user: yup.string().trim().required(" user is required"),
-  employee_full_name: yup
-    .string()
-    .trim()
-    .required("employee full name is required"),
-  contact_number: yup.string().trim().required("contact number is required"),
-  region_id: yup.string().trim().required("region is required"), 
-  state_id: yup.string().trim().required("state is required"),
-  zone_id: yup.string().trim().required("zone is required"),
-  district_id: yup.string().trim().required("district is required"), 
-  role: yup.string().trim().required("role is required"),
-  area_id: yup.string().trim().required("area is required"),
+  user: yup.string().trim().required(""),
+  employee_full_name: yup.string().trim().required(""),
+  contact_number: yup.string().trim().required(""),
+  region_id: yup.string().trim().required(""),
+  state_id: yup.string().trim().required(""),
+  zone_id: yup.string().trim().required(""),
+  district_id: yup.string().trim().required(""),
+  role: yup.string().trim().required(""),
+  area_id: yup.string().trim().required(""),
   // department__department_name: yup.string().trim().required("department is required"),
-  address: yup.string().trim().required("address is required"),
-  pin_code: yup.number().required("pin code  is required"),
-  email_id: yup.string().trim().email().required("email is required"),
-  job_title: yup.string().trim().required("job title is required"),
-  reporting_manager_id: yup
-    .string()
-    .trim()
-    .required("reporting manager is required"),
+  address: yup.string().trim().required(""),
+  pin_code: yup.number().required(""),
+  email_id: yup.string().trim().email().required(""),
+  job_title: yup.string().trim().required(""),
+  reporting_manager_id: yup.string().trim().required(""),
 
   is_active: yup.string(),
 });

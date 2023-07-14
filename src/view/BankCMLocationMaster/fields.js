@@ -130,17 +130,11 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  bank_branch: yup.string().trim().required("Branch Name Is Required"),
-  bank_cm_location_name: yup
-    .string()
-    .trim()
-    .required("Branch Location Name Is Required"),
-  cm_charges: yup.number().required("Cm charges is required"),
-  fix_charges: yup.number().required("Fix charges is required"),
-  minimum_commitment: yup
-    .string()
-    .trim()
-    .required("Minimum commitment is required"),
+  bank_branch: yup.string().trim().required(""),
+  bank_cm_location_name: yup.string().trim().required(""),
+  cm_charges: yup.number().required(""),
+  fix_charges: yup.number().required(""),
+  minimum_commitment: yup.string().trim().required(""),
   is_active: yup.string(),
 });
 

@@ -117,13 +117,13 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  commodity_type: yup.string().trim().required("Commodity type is required"),
-  commodity_id: yup.string().trim().required("Commodity name is required "),
-  bag_size: yup.number().required("Bag size is required"),
-  space: yup.number().required("Space/bag/sq.ft is required"),
-  stack_height: yup.number().required("Stack height is required"),
+  commodity_type: yup.string().trim().required(""),
+  commodity_id: yup.string().trim().required(""),
+  bag_size: yup.number().required(""),
+  space: yup.number().required(" "),
+  stack_height: yup.number().required(""),
   is_active: yup.string(),
-  tolerance_size: yup.number().required("Tolerance size is required"),
+  tolerance_size: yup.number().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

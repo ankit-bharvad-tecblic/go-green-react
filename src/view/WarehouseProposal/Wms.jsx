@@ -1,12 +1,13 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
   AccordionPanel,
   Box,
   Button,
+  Checkbox,
   Flex,
   Grid,
   GridItem,
@@ -14,7 +15,6 @@ import {
   Input,
   Radio,
   RadioGroup,
-  Spacer,
   Stack,
   Table,
   TableContainer,
@@ -25,13 +25,9 @@ import {
   Th,
   Thead,
   Tr,
-  list,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import React, { useEffect, useState } from "react";
-import { BreadcrumbLinks } from "./BreadcrumbLinks";
-import BreadcrumbCmp from "../../components/BreadcrumbCmp/BreadcrumbCmp";
-import CustomSelector from "../../components/Elements/CustomSelector";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MotionSlideUp } from "../../utils/animation";
@@ -39,18 +35,12 @@ import ReactCustomSelect from "../../components/Elements/CommonFielsElement/Reac
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import CustomInput from "../../components/Elements/CustomInput";
 import {
-  useGetAreaMasterMutation,
   useGetBankBranchMasterMutation,
   useGetBankMasterMutation,
   useGetCommodityMasterMutation,
-  useGetDistrictMasterMutation,
-  useGetRegionMasterMutation,
-  useGetStateMasterMutation,
-  useGetZoneMasterMutation,
 } from "../../features/master-api-slice";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
-import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import {
   useCalculatePBPMMutation,
   useFetchLocationDrillDownMutation,
@@ -58,6 +48,7 @@ import {
   useGetSecurityGuardNightShiftMutation,
   useGetSupervisorDayShiftMutation,
   useGetSupervisorNightShiftMutation,
+  useGetWarehouseProposalDetailsMutation,
   useMinMaxAvgMutation,
   useSaveAsDraftMutation,
 } from "../../features/warehouse-proposal.slice";
@@ -161,15 +152,15 @@ const formFieldsName = {
   wms_commercial_details: {
     owner: {
       warehouse_owner_name: "warehouse_owner_name", //done
-      mobile_no: "mobile_no", //done
-      address: "address", //done
-      rent: "rent", //done
+      warehouse_owner_contact_no: "warehouse_owner_contact_no", //done
+      warehouse_owner_address: "warehouse_owner_address", //done
+      rent_amount: "rent_amount", //done
     },
     lessee: {
       warehouse_owner_name: "warehouse_owner_name", //done
-      mobile_no: "mobile_no", //done
-      address: "address", //done
-      rent: "rent", //done
+      warehouse_owner_contact_no: "warehouse_owner_contact_no", //done
+      warehouse_owner_address: "warehouse_owner_address", //done
+      rent_amount: "rent_amount", //done
     },
     // min_rent: "min_rent",
     // max_rent: "max_rent",
@@ -189,7 +180,7 @@ const formFieldsName = {
     projected_file_url: "projected_file_url", //done
   },
   wms_clients_details: {
-    client_list: {
+    client: {
       //not found
       client_type: "client_type", //not found
       client_name: "client_name", //not found
@@ -199,7 +190,7 @@ const formFieldsName = {
       substate: "substate", //not found
       district: "district", //not found
       area: "area", //not found
-      address: "address", //not found
+      client_address: "client_address", //not found
       wms_charges: "wms_charges", //not found
       billing_cycle: "billing_cycle", //not found
       // reservation_qty: "reservation_qty", //not found
@@ -213,6 +204,7 @@ const formFieldsName = {
 };
 
 const schema = yup.object().shape({
+  id: yup.string(), // hiring id
   warehouse_name: yup.string().required("Warehouse name is required"),
   region: yup.number().required("Region name is required"),
   state: yup.string().required("State name is required"),
@@ -282,18 +274,33 @@ const schema = yup.object().shape({
   }),
   owner: yup.array().of(
     yup.object().shape({
-      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
-      mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
-      address: yup.string().trim() /*.required("Address is required")*/,
-      rent: yup.string().trim() /*.required("Rent is required")*/,
+      warehouse_owner_name: yup
+        .string()
+        .trim()
+        .required("Owner name is required"),
+      warehouse_owner_contact_no: yup
+        .string()
+        .trim()
+        .required("Mobile no is required"),
+      warehouse_owner_address: yup
+        .string()
+        .trim()
+        .required("Address is required"),
+      rent_amount: yup.string().trim().required("Rent is required"),
     })
   ),
   lessee: yup.array().of(
     yup.object().shape({
-      warehouse_owner_name: yup.string().trim() /*.required("Owner name is required")*/,
-      mobile_no: yup.string().trim() /*.required("Mobile no is required")*/,
-      address: yup.string().trim() /*.required("Address is required")*/,
-      rent: yup.string().trim() /*.required("Rent is required")*/,
+      warehouse_owner_name: yup
+        .string()
+        .trim() /*.required("Owner name is required")*/,
+      warehouse_owner_contact_no: yup
+        .string()
+        .trim() /*.required("Mobile no is required")*/,
+      warehouse_owner_address: yup
+        .string()
+        .trim() /*.required("Address is required")*/,
+      rent_amount: yup.string().trim() /*.required("Rent is required")*/,
     })
   ),
   // min_rent: yup.string().required("Minimum rent is required"),
@@ -322,8 +329,8 @@ const schema = yup.object().shape({
   notice_period_month: yup.string().required("Notice period is required"),
   wms_charges_according_to_commodity: yup.array(),
   // .required("WMS Charges according to commodity is required"),
-  projected_file_url: yup.string() /*.required("Your project is required")*/,
-  client_list: yup.array().of(
+  projected_file_url: yup.string().required("Your project is required"),
+  client: yup.array().of(
     yup.object().shape({
       client_type: yup.string().required("Client type is required"),
       client_name: yup.string().required("Client name is required"),
@@ -333,7 +340,7 @@ const schema = yup.object().shape({
       substate: yup.string().required(" Zone is required"),
       district: yup.string().required("District is required"),
       area: yup.string().required("Area is required"),
-      address: yup.string().required("Address is required"),
+      client_address: yup.string().required("Address is required"),
       wms_charges: yup.string().required("wms charges is required"),
       billing_cycle: yup.string().required("billing cycle is required"),
       /*reservation_qty:
@@ -346,8 +353,7 @@ const schema = yup.object().shape({
         yup.string().required("reservation end date is required"),*/
     })
   ),
-  intention_letter_url:
-    yup.string() /*.required("Intention letter is required")*/,
+  intention_letter_url: yup.string().required("Intention letter is required"),
   remarks: yup.string() /*.required("remarks is required")*/,
 });
 
@@ -372,9 +378,11 @@ const toasterAlert = (obj) => {
   showToastByStatusCode(status, msg);
 };
 
-const mobileNumberRegex = /^\d{10}$/;
+const subType = "Leased";
 
-const Wms = () => {
+const mobileNumberRegex = /^\+91\d{10}$/;
+
+const Wms = ({ id }) => {
   const [selectBoxOptions, setSelectBoxOptions] = useState({
     regions: [],
     community: [],
@@ -390,6 +398,10 @@ const Wms = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       agreement_period_month: 11,
+      advance_rent: "false",
+      is_factory_permise: "false",
+      is_funding_required: "false",
+      lock_in_period: "false",
     },
   });
 
@@ -682,11 +694,11 @@ const Wms = () => {
       const response = await getSupervisorDayShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+      const optionsArray = response?.data?.map(
+        ({ employee_name, user_id, count }) => ({
+          value: user_id,
+          label: employee_name,
+          count: count,
         })
       );
 
@@ -704,11 +716,11 @@ const Wms = () => {
       const response = await getSupervisorNightShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+      const optionsArray = response?.data?.map(
+        ({ employee_name, user_id, count }) => ({
+          value: user_id,
+          label: employee_name,
+          count: count,
         })
       );
 
@@ -726,11 +738,11 @@ const Wms = () => {
       const response = await getSecurityGuardDayShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+      const optionsArray = response?.data?.map(
+        ({ employee_name, user_id, count }) => ({
+          value: user_id,
+          label: employee_name,
+          count: count,
         })
       );
 
@@ -748,11 +760,11 @@ const Wms = () => {
       const response = await getSecurityGuardNightShift().unwrap();
       console.log("Success:", response);
 
-      const optionsArray = Object.entries(response?.data).map(
-        ([key, value]) => ({
-          value: key,
-          label: key,
-          count: value,
+      const optionsArray = response?.data?.map(
+        ({ employee_name, user_id, count }) => ({
+          value: user_id,
+          label: employee_name,
+          count: count,
         })
       );
 
@@ -834,6 +846,21 @@ const Wms = () => {
       console.error("Error:", error);
     }
   };
+
+  const CommodityInwardType = [
+    {
+      label: "Fresh Stock",
+      value: "FS",
+    },
+    {
+      label: "Pre-Stacked",
+      value: "PS",
+    },
+    {
+      label: "Take Over",
+      value: "TO",
+    },
+  ];
 
   // bank add logic start
 
@@ -1001,7 +1028,7 @@ const Wms = () => {
         ownerDetail.mobile !== ""
           ? mobileNumberRegex.test(ownerDetail.mobile)
             ? ""
-            : "Mobile must be 10 digits long."
+            : "Mobile must be like this : +911234567890."
           : "error",
       address: ownerDetail.address !== "" ? "" : "Address can not be empty.",
       rent: ownerDetail.rent !== "" ? "" : "Rent can not be empty.",
@@ -1018,9 +1045,9 @@ const Wms = () => {
     ) {
       add_warehouse_owner_detail({
         warehouse_owner_name: ownerDetail.name,
-        mobile_no: ownerDetail.mobile,
-        address: ownerDetail.address,
-        rent: ownerDetail.rent,
+        warehouse_owner_contact_no: ownerDetail.mobile,
+        warehouse_owner_address: ownerDetail.address,
+        rent_amount: ownerDetail.rent,
       });
       WarehouseErrorClear();
       WarehouseDetailClear();
@@ -1033,9 +1060,9 @@ const Wms = () => {
     setUpdateOwnerFlag(id);
     setOwnerDetail({
       name: data.warehouse_owner_name,
-      mobile: data.mobile_no,
-      address: data.address,
-      rent: data.rent,
+      mobile: data.warehouse_owner_contact_no,
+      warehouse_owner_address: data.address,
+      rent_amount: data.rent_amount,
     });
   };
 
@@ -1054,9 +1081,9 @@ const Wms = () => {
           ...tempArr.slice(0, updateOwnerFlag),
           {
             warehouse_owner_name: ownerDetail.name,
-            mobile_no: ownerDetail.mobile,
-            address: ownerDetail.address,
-            rent: ownerDetail.rent,
+            warehouse_owner_contact_no: ownerDetail.mobile,
+            warehouse_owner_address: ownerDetail.address,
+            rent_amount: ownerDetail.rent,
           },
           ...tempArr.slice(updateOwnerFlag + 1),
         ],
@@ -1128,7 +1155,7 @@ const Wms = () => {
         lesseeDetail.mobile !== ""
           ? mobileNumberRegex.test(lesseeDetail.mobile)
             ? ""
-            : "Mobile must be 10 digits long."
+            : "Mobile must be like this : +911234567890."
           : "error",
       address: lesseeDetail.address !== "" ? "" : "Address can not be empty.",
       rent: lesseeDetail.rent !== "" ? "" : "Rent can not be empty.",
@@ -1145,9 +1172,9 @@ const Wms = () => {
     ) {
       add_lessee_detail({
         warehouse_owner_name: lesseeDetail.name,
-        mobile_no: lesseeDetail.mobile,
-        address: lesseeDetail.address,
-        rent: lesseeDetail.rent,
+        warehouse_owner_contact_no: lesseeDetail.mobile,
+        warehouse_owner_address: lesseeDetail.address,
+        rent_amount: lesseeDetail.rent,
       });
       LesseeErrorClear();
       LesseeDetailClear();
@@ -1160,9 +1187,9 @@ const Wms = () => {
     setUpdateLesseeFlag(id);
     setLesseeDetail({
       name: data.warehouse_owner_name,
-      mobile: data.mobile_no,
-      address: data.address,
-      rent: data.rent,
+      mobile: data.warehouse_owner_contact_no,
+      address: data.warehouse_owner_address,
+      rent_amount: data.rent_amount,
     });
   };
 
@@ -1181,9 +1208,9 @@ const Wms = () => {
           ...tempArr.slice(0, updateLesseeFlag),
           {
             warehouse_owner_name: lesseeDetail.name,
-            mobile_no: lesseeDetail.mobile,
-            address: lesseeDetail.address,
-            rent: lesseeDetail.rent,
+            warehouse_owner_contact_no: lesseeDetail.mobile,
+            warehouse_owner_address: lesseeDetail.address,
+            rent_amount: lesseeDetail.rent,
           },
           ...tempArr.slice(updateLesseeFlag + 1),
         ],
@@ -1232,6 +1259,17 @@ const Wms = () => {
 
   // min max rent logic end
 
+  const gstOptions = [
+    {
+      label: "Applicable",
+      value: "APPLICABLE",
+    },
+    {
+      label: "Not applicable",
+      value: "NOT-APPLICABLE",
+    },
+  ];
+
   useEffect(() => {
     if (
       getValues(formFieldsName.wms_commercial_details.security_deposit_month) &&
@@ -1253,6 +1291,28 @@ const Wms = () => {
     getValues(formFieldsName.wms_commercial_details.total_rent_per_month),
   ]);
 
+  useEffect(() => {
+    if (getValues(formFieldsName.wms_commercial_details.commencement_date)) {
+      setValue(
+        formFieldsName.wms_commercial_details.expiry_date,
+        moment(
+          getValues(formFieldsName.wms_commercial_details.commencement_date)
+        )
+          .add(
+            getValues(
+              formFieldsName.wms_commercial_details.agreement_period_month
+            ),
+            "months"
+          )
+          .format("YYYY-MM-DD"),
+        { shouldValidate: true }
+      );
+    }
+  }, [
+    getValues(formFieldsName.wms_commercial_details.commencement_date),
+    getValues(formFieldsName.wms_commercial_details.agreement_period_month),
+  ]);
+
   // check PBPM logic start
 
   const [calculatePBPM, { isLoading: calculatePBPMApiIsLoading }] =
@@ -1265,7 +1325,9 @@ const Wms = () => {
       formFieldsName.wms_warehouse_details.covered_area
     );
 
-    let commodity = getValues("excpected_commodity")?.map((item) => item.value);
+    let commodity = getValues("excpected_commodity")?.map(
+      (item) => item.commodity
+    );
 
     let obj = {
       commodity: commodity,
@@ -1312,12 +1374,12 @@ const Wms = () => {
   // client list drill down api start
 
   const {
-    fields: client_list,
+    fields: client,
     append: add_client_list,
     remove: remove_client_list,
   } = useFieldArray({
     control: methods.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "client_list",
+    name: "client",
   });
 
   const clientClientType = [
@@ -1646,7 +1708,7 @@ const Wms = () => {
           ? "error"
           : mobileNumberRegex.test(clientList.mobile)
           ? ""
-          : "Mobile number should be 10 digits long.",
+          : "Mobile must be like this : +911234567890.",
       region: clientList.region === "" ? "error" : "",
       state: clientList.state === "" ? "error" : "",
       substate: clientList.substate === "" ? "error" : "",
@@ -1669,7 +1731,7 @@ const Wms = () => {
         substate: clientList.substate,
         district: clientList.district,
         area: clientList.area,
-        address: clientList.address,
+        client_address: clientList.address,
         wms_charges: clientList.charges,
         billing_cycle: clientList.billing,
         // reservation_qty: "",
@@ -1704,7 +1766,7 @@ const Wms = () => {
       substate: data.substate,
       district: data.district,
       area: data.area,
-      address: data.address,
+      address: data.client_address,
       charges: data.wms_charges,
       billing: data.billing_cycle,
     });
@@ -1713,9 +1775,9 @@ const Wms = () => {
 
   const UpdateClientListFunction = () => {
     if (ClientErrorStatus()) {
-      const tempArr = getValues(`client_list`);
+      const tempArr = getValues(`client`);
       setValue(
-        `client_list`,
+        `client`,
         [
           ...tempArr.slice(0, updateClientList),
           {
@@ -1727,7 +1789,7 @@ const Wms = () => {
             substate: clientList.substate,
             district: clientList.district,
             area: clientList.area,
-            address: clientList.address,
+            client_address: clientList.address,
             wms_charges: clientList.charges,
             billing_cycle: clientList.billing,
             // reservation_qty: "",
@@ -1760,6 +1822,8 @@ const Wms = () => {
 
   // client list drill down api end
 
+  // save as draft and onSubmit function start
+
   const [saveAsDraft, { isLoading: saveAsDraftApiIsLoading }] =
     useSaveAsDraftMutation();
 
@@ -1782,6 +1846,7 @@ const Wms = () => {
       if (type === "WMS_WAREHOUSE_DETAILS") {
         data = {
           is_draft: true,
+          id: getValues("id"),
           warehouse_name: getValues("warehouse_name"),
           region: getValues("region"),
           state: getValues("state"),
@@ -1796,7 +1861,10 @@ const Wms = () => {
           currrent_capacity: getValues("currrent_capacity"),
           currrent_utilised_capacity: getValues("currrent_utilised_capacity"),
           lock_in_period: getValues("lock_in_period"),
-          lock_in_period_month: getValues("lock_in_period_month"),
+          lock_in_period_month:
+            getValues("lock_in_period") === "true"
+              ? getValues("lock_in_period_month")
+              : null,
           covered_area: getValues("covered_area"),
           supervisor_day_shift: getValues("supervisor_day_shift"),
           supervisor_night_shift: getValues("supervisor_night_shift"),
@@ -1808,18 +1876,29 @@ const Wms = () => {
       } else if (type === "WMS_COMMODITY_DETAILS") {
         data = {
           is_draft: true,
+          id: getValues("id"),
           excpected_commodity: getValues("excpected_commodity"),
           commodity_inward_type: getValues("commodity_inward_type"),
-          prestack_commodity: getValues("prestack_commodity"),
-          prestack_commodity_qty: getValues("prestack_commodity_qty"),
+          prestack_commodity:
+            getValues("commodity_inward_type") === "PS"
+              ? getValues("prestack_commodity")
+              : null,
+          prestack_commodity_qty:
+            getValues("commodity_inward_type") === "PS"
+              ? getValues("prestack_commodity_qty")
+              : null,
           is_funding_required: getValues("is_funding_required"),
-          bank: getValues("bank"),
+          bank:
+            getValues("is_funding_required") === "true"
+              ? getValues("bank")
+              : [],
         };
 
         console.log("WMS_COMMODITY_DETAILS @@ --> ", data);
       } else if (type === "WMS_COMMERCIAL_DETAILS") {
         data = {
           is_draft: true,
+          id: getValues("id"),
           owner: getValues("owner"), //done
           // min_rent: getValues("min_rent"),
           // max_rent: getValues("max_rent"),
@@ -1829,7 +1908,10 @@ const Wms = () => {
           security_deposit_month: getValues("security_deposit_month"),
           security_deposit_amt: getValues("security_deposit_amt"),
           advance_rent: getValues("advance_rent"),
-          advance_rent_month: getValues("advance_rent_month"),
+          advance_rent_month:
+            getValues("advance_rent") === "true"
+              ? getValues("advance_rent_month")
+              : null,
           gst: getValues("gst"),
           commencement_date: getValues("commencement_date"),
           agreement_period_month: getValues("agreement_period_month"),
@@ -1845,17 +1927,20 @@ const Wms = () => {
       } else if (type === "WMS_CLIENTS_DETAILS") {
         data = {
           is_draft: true,
-          client_list: getValues("client_list"), //not found
+          id: getValues("id"),
+          client: getValues("client"), //not found
           intention_letter_url: getValues("intention_letter_url"), //not found
           remarks: getValues("remarks"), //not found
         };
 
         console.log("WMS_CLIENTS_DETAILS @@ --> ", data);
       }
+
       const response = await saveAsDraft(data).unwrap();
       console.log("saveAsDraftData - Success:", response);
       if (response.status === 200) {
         console.log("response --> ", response);
+        setValue("id", response?.data?.id || null, { shouldValidate: true });
         toasterAlert({
           message: "Save As Draft Successfully",
           status: 200,
@@ -1876,6 +1961,80 @@ const Wms = () => {
     fetchSecurityGuardDayShift();
     fetchSecurityGuardNightShift();
   }, []);
+
+  // save as draft and onSubmit function end
+
+  // edit wms functions start
+
+  const [getWarehouseProposalDetails] =
+    useGetWarehouseProposalDetailsMutation();
+
+  function FillFormData(data) {
+    console.log(data, "here");
+    const DataArr = Object.entries(data)
+      .filter(([key, value]) => value !== null && value !== undefined)
+      .map(([key, index]) => ({
+        key: key,
+        index: index,
+      }));
+    console.log(DataArr, "here");
+    DataArr.map((item) => {
+      if (item.key === "region") {
+        regionOnChange({ value: item.index });
+      } else if (item.key === "state") {
+        stateOnChange({ value: item.index });
+      } else if (item.key === "substate") {
+        zoneOnChange({ value: item.index });
+      } else if (item.key === "district") {
+        districtOnChange({ value: item.index });
+      } else if (item.key === "area") {
+        areaOnChange({ value: item.index });
+      } else if (item.key === "client") {
+        const tempClient = item.index;
+        tempClient.map((old) => {
+          regionOnClientChange({ value: old.region });
+          stateOnClientChange({ value: old.state });
+          zoneOnClientChange({ value: old.substate });
+          districtOnClientChange({ value: old.district });
+          areaOnClientChange({ value: old.area });
+          setClientDripDown((old2) => [
+            ...old2,
+            {
+              states: [],
+              substate: [],
+              districts: [],
+              areas: [],
+            },
+          ]);
+          ClientListClear();
+        });
+        setValue(item.key, item.index, { shouldValidate: true });
+      } else {
+        setValue(item.key, item.index, { shouldValidate: true });
+      }
+    });
+  }
+
+  const fetchWarehouseProposalDetails = async () => {
+    try {
+      const response = await getWarehouseProposalDetails(id).unwrap();
+      console.log("Success:", response);
+      if (response?.status === 200) {
+        console.log("response?.data --> ", response?.data);
+        FillFormData(response?.data || {});
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchWarehouseProposalDetails();
+    }
+  }, []);
+
+  // edit wms functions end
 
   return (
     <Box bg="gray.50" p="0">
@@ -1963,7 +2122,16 @@ const Wms = () => {
                                       fetchLocationDrillDownApiIsLoading
                                     }
                                     options={selectBoxOptions?.regions || []}
-                                    selectedValue={selected?.region}
+                                    selectedValue={
+                                      selectBoxOptions?.regions?.filter(
+                                        (item) =>
+                                          item.value ===
+                                          getValues(
+                                            formFieldsName.wms_warehouse_details
+                                              .region
+                                          )
+                                      ) || {}
+                                    }
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: "100%" }}
@@ -1992,7 +2160,16 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.states || []}
-                                    selectedValue={selected?.state}
+                                    selectedValue={
+                                      selectBoxOptions?.states?.filter(
+                                        (item) =>
+                                          item.value ===
+                                          getValues(
+                                            formFieldsName.wms_warehouse_details
+                                              .state
+                                          )
+                                      ) || {}
+                                    }
                                     isClearable={false}
                                     selectType="label"
                                     style={{ w: "100%" }}
@@ -2025,7 +2202,16 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.substate || []}
-                                    selectedValue={selected?.substate}
+                                    selectedValue={
+                                      selectBoxOptions?.substate?.filter(
+                                        (item) =>
+                                          item.value ===
+                                          getValues(
+                                            formFieldsName.wms_warehouse_details
+                                              .substate
+                                          )
+                                      ) || {}
+                                    }
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={
@@ -2058,7 +2244,16 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.districts || []}
-                                    selectedValue={selected?.district}
+                                    selectedValue={
+                                      selectBoxOptions?.districts?.filter(
+                                        (item) =>
+                                          item.value ===
+                                          getValues(
+                                            formFieldsName.wms_warehouse_details
+                                              .district
+                                          )
+                                      ) || {}
+                                    }
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={
@@ -2090,7 +2285,16 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.areas || []}
-                                    selectedValue={selected?.area}
+                                    selectedValue={
+                                      selectBoxOptions?.areas?.filter(
+                                        (item) =>
+                                          item.value ===
+                                          getValues(
+                                            formFieldsName.wms_warehouse_details
+                                              .area
+                                          )
+                                      ) || {}
+                                    }
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={
@@ -2447,7 +2651,17 @@ const Wms = () => {
                                         selectBoxOptions?.superVisorDayShiftOpt ||
                                         []
                                       }
-                                      selectedValue={selected?.superVisorDay}
+                                      selectedValue={
+                                        selectBoxOptions?.superVisorDayShiftOpt?.filter(
+                                          (item) =>
+                                            item.value ===
+                                            getValues(
+                                              formFieldsName
+                                                .wms_warehouse_details
+                                                .supervisor_day_shift
+                                            )
+                                        ) || {}
+                                      }
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={
@@ -2473,16 +2687,21 @@ const Wms = () => {
                                     />
                                   </Box>
                                 </GridItem>
-                                <GridItem colSpan={1}>
-                                  <Text
-                                    color="primary.700"
-                                    fontWeight="bold"
-                                    textAlign="left"
-                                    textDecoration="underline"
-                                    cursor="pointer"
+                                <GridItem colSpan={1} textAlign="left">
+                                  <Checkbox
+                                    colorScheme="green"
+                                    borderColor="gray.300"
+                                    //defaultChecked
                                   >
-                                    Hire new supervisor
-                                  </Text>{" "}
+                                    <Text
+                                      color="primary.700"
+                                      fontWeight="bold"
+                                      textAlign="left"
+                                      cursor="pointer"
+                                    >
+                                      Hire new supervisor
+                                    </Text>
+                                  </Checkbox>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2515,7 +2734,17 @@ const Wms = () => {
                                         selectBoxOptions?.superVisorNightShiftOpt ||
                                         []
                                       }
-                                      selectedValue={selected.superVisorNight}
+                                      selectedValue={
+                                        selectBoxOptions?.superVisorNightShiftOpt?.filter(
+                                          (item) =>
+                                            item.value ===
+                                            getValues(
+                                              formFieldsName
+                                                .wms_warehouse_details
+                                                .supervisor_night_shift
+                                            )
+                                        ) || {}
+                                      }
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={
@@ -2541,18 +2770,21 @@ const Wms = () => {
                                     />
                                   </Box>
                                 </GridItem>
-                                <GridItem colSpan={1}>
-                                  <Box>
+                                <GridItem colSpan={1} textAlign="left">
+                                  <Checkbox
+                                    colorScheme="green"
+                                    borderColor="gray.300"
+                                    //defaultChecked
+                                  >
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="left"
-                                      textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       Hire new supervisor
-                                    </Text>{" "}
-                                  </Box>
+                                    </Text>
+                                  </Checkbox>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2585,7 +2817,17 @@ const Wms = () => {
                                         selectBoxOptions?.securityGuardDayShiftOpt ||
                                         []
                                       }
-                                      selectedValue={selected?.securityGuardDay}
+                                      selectedValue={
+                                        selectBoxOptions?.securityGuardDayShiftOpt?.filter(
+                                          (item) =>
+                                            item.value ===
+                                            getValues(
+                                              formFieldsName
+                                                .wms_warehouse_details
+                                                .security_guard_day_shift
+                                            )
+                                        ) || {}
+                                      }
                                       isClearable={false}
                                       selectType="label"
                                       isLoading={
@@ -2611,18 +2853,21 @@ const Wms = () => {
                                     />
                                   </Box>
                                 </GridItem>
-                                <GridItem colSpan={1}>
-                                  <Box>
+                                <GridItem colSpan={1} textAlign="left">
+                                  <Checkbox
+                                    colorScheme="green"
+                                    borderColor="gray.300"
+                                    //defaultChecked
+                                  >
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="left"
-                                      textDecoration="underline"
                                       cursor="pointer"
                                     >
                                       Hire new security guard
-                                    </Text>{" "}
-                                  </Box>
+                                    </Text>
+                                  </Checkbox>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2656,7 +2901,15 @@ const Wms = () => {
                                         []
                                       }
                                       selectedValue={
-                                        selected?.securityGuardNight
+                                        selectBoxOptions?.securityGuardNightShiftOpt?.filter(
+                                          (item) =>
+                                            item.value ===
+                                            getValues(
+                                              formFieldsName
+                                                .wms_warehouse_details
+                                                .security_guard_night_shift
+                                            )
+                                        ) || {}
                                       }
                                       isClearable={false}
                                       selectType="label"
@@ -2683,19 +2936,21 @@ const Wms = () => {
                                     />
                                   </Box>
                                 </GridItem>
-                                <GridItem colSpan={1}>
-                                  <Box>
+                                <GridItem colSpan={1} textAlign="left">
+                                  <Checkbox
+                                    colorScheme="green"
+                                    borderColor="gray.300"
+                                    //defaultChecked
+                                  >
                                     <Text
                                       color="primary.700"
                                       fontWeight="bold"
                                       textAlign="left"
-                                      textDecoration="underline"
                                       cursor="pointer"
-                                      sx={{ textWrap: "nowrap" }}
                                     >
                                       Hire new security guard
-                                    </Text>{" "}
-                                  </Box>
+                                    </Text>
+                                  </Checkbox>
                                 </GridItem>
                               </Grid>
                             </Box>
@@ -2775,7 +3030,18 @@ const Wms = () => {
                                     }
                                     label=""
                                     options={selectBoxOptions?.community || []}
-                                    selectedValue={selected.expectedCommodity}
+                                    selectedValue={
+                                      selectBoxOptions?.community?.filter(
+                                        (item) =>
+                                          getValues(
+                                            formFieldsName.wms_commodity_details
+                                              .excpected_commodity
+                                          )?.some(
+                                            (old) =>
+                                              old.commodity === item.value
+                                          )
+                                      ) || []
+                                    }
                                     isClearable={false}
                                     isMultipleSelect={true}
                                     isLoading={getCommodityMasterApiIsLoading}
@@ -2785,6 +3051,9 @@ const Wms = () => {
                                         "selectedOption @@@@@@@@@@@------> ",
                                         val
                                       );
+                                      const tempArr = val.map((item) => ({
+                                        commodity: item.value,
+                                      }));
                                       setSelected((prev) => ({
                                         ...prev,
                                         expectedCommodity: val,
@@ -2792,7 +3061,7 @@ const Wms = () => {
                                       setValue(
                                         formFieldsName.wms_commodity_details
                                           .excpected_commodity,
-                                        val,
+                                        tempArr,
                                         { shouldValidate: true }
                                       );
                                     }}
@@ -2821,21 +3090,12 @@ const Wms = () => {
                                         .commodity_inward_type
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "Fresh Stock",
-                                        value: "FS",
-                                      },
-                                      {
-                                        label: "Pre-Stacked",
-                                        value: "PS",
-                                      },
-                                      {
-                                        label: "Take Over",
-                                        value: "TO",
-                                      },
-                                    ]}
-                                    selectedValue={selected.commodityInwardType}
+                                    options={CommodityInwardType || []}
+                                    selectedValue={CommodityInwardType.filter(
+                                      (item) =>
+                                        item.value ===
+                                        getValues(`commodity_inward_type`)
+                                    )}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -3378,7 +3638,7 @@ const Wms = () => {
                                   Mobile No.
                                 </Text>
                                 <Input
-                                  type="number"
+                                  type="tel"
                                   placeholder="Mobile No."
                                   value={ownerDetail.mobile}
                                   onChange={(e) => {
@@ -3555,21 +3815,21 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.mobile_no}
+                                        {item.warehouse_owner_contact_no}
                                       </td>
                                       <td
                                         style={{
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.address}
+                                        {item.warehouse_owner_address}
                                       </td>
                                       <td
                                         style={{
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.rent}
+                                        {item.rent_amount}
                                       </td>
                                       <td
                                         style={{
@@ -3627,298 +3887,318 @@ const Wms = () => {
                             </table>
                           </Box>
 
-                          {/* {/ ================ Lessee details ================= /} */}
-                          <Box mt={commonStyle.mt}>
-                            <Grid
-                              textAlign="right"
-                              templateColumns="repeat(12, 1fr)"
-                              alignItems="start"
-                              gap={4}
-                              bgColor={"#DBFFF5"}
-                              padding="20px"
-                              borderRadius="10px"
-                            >
-                              <GridItem colSpan={12}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Lessee details
-                                </Text>
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Lessee Name
-                                </Text>
-                                <Input
-                                  value={lesseeDetail.name}
-                                  placeholder="Lessee Name"
-                                  type="text"
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      name: e.target.value,
-                                    }));
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      name: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.name ? "red" : "gray.10"
-                                  }
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Mobile No.
-                                </Text>
-                                <Input
-                                  type="number"
-                                  placeholder="Mobile No."
-                                  value={lesseeDetail.mobile}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      mobile: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      mobile: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.mobile ? "red" : "gray.10"
-                                  }
-                                />
-                                <Text
-                                  color="red"
-                                  fontSize="14px"
-                                  textAlign="left"
+                          {subType === "subLeased" ? (
+                            <>
+                              {/* {/ ================ Lessee details ================= /} */}
+                              <Box mt={commonStyle.mt}>
+                                <Grid
+                                  textAlign="right"
+                                  templateColumns="repeat(12, 1fr)"
+                                  alignItems="start"
+                                  gap={4}
+                                  bgColor={"#DBFFF5"}
+                                  padding="20px"
+                                  borderRadius="10px"
                                 >
-                                  {lesseeError.mobile === "error"
-                                    ? ""
-                                    : lesseeError.mobile}
-                                </Text>
-                              </GridItem>
-                              <GridItem colSpan={4}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Address
-                                </Text>
-                                <Textarea
-                                  value={lesseeDetail.address}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      address: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      address: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  rows={1}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.address ? "red" : "gray.10"
-                                  }
-                                  placeholder={"Address"}
-                                />
-                              </GridItem>{" "}
-                              <GridItem colSpan={2}>
-                                <Text fontWeight="bold" textAlign="left">
-                                  Rent
-                                </Text>
-                                <Input
-                                  type="number"
-                                  value={lesseeDetail.rent}
-                                  onChange={(e) => {
-                                    setLesseeDetail((old) => ({
-                                      ...old,
-                                      rent: e.target.value,
-                                    }));
-                                    console.log(e);
-                                    setLesseeError((old) => ({
-                                      ...old,
-                                      rent: "",
-                                    }));
-                                  }}
-                                  style={inputStyle}
-                                  border="1px"
-                                  borderColor={
-                                    lesseeError.rent ? "red" : "gray.10"
-                                  }
-                                  placeholder={"Rent"}
-                                />
-                              </GridItem>
-                              <GridItem colSpan={2} alignSelf="end">
-                                <Button
-                                  type="button"
-                                  backgroundColor={"primary.700"}
-                                  _hover={{ backgroundColor: "primary.700" }}
-                                  color={"white"}
-                                  borderRadius={"full"}
-                                  px={"10"}
-                                  onClick={() => {
-                                    updateLesseeFlag !== null
-                                      ? UpdateLesseeDetail()
-                                      : append_new_lessee_details();
-                                    console.log("here in lessee");
-                                  }}
-                                >
-                                  {updateLesseeFlag !== null ? "Edit" : "Add"}
-                                </Button>
-                              </GridItem>
-                            </Grid>
-                          </Box>
-
-                          <Box mt={commonStyle.mt} overflow={"auto"}>
-                            <table width="100%">
-                              <thead style={{ background: "#DBFFF5" }}>
-                                <tr>
-                                  <th
-                                    width={tableStyle.idWidth}
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    No.
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Lessee Name
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Mobile No.
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Address
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                  >
-                                    Rent
-                                  </th>
-                                  <th
-                                    style={{
-                                      padding: tableStyle.generalPadding,
-                                    }}
-                                    width={tableStyle.actionWidth}
-                                  >
-                                    Action
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {getValues(`lessee`)?.length > 0 ? (
-                                  lessee.map((item, index) => (
-                                    <tr>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                          textAlign: "center",
-                                        }}
-                                      >
-                                        {index + 1}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.warehouse_owner_name}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.mobile_no}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.address}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        {item.rent}
-                                      </td>
-                                      <td
-                                        style={{
-                                          padding: tableStyle.generalPadding,
-                                        }}
-                                      >
-                                        <Flex
-                                          gap="20px"
-                                          justifyContent="center"
-                                        >
-                                          <Box color={"primary.700"}>
-                                            <BiEditAlt
-                                              // color="#A6CE39"
-                                              fontSize="26px"
-                                              cursor="pointer"
-                                              onClick={() => {
-                                                updateLesseeFlagFunction(
-                                                  item,
-                                                  index
-                                                );
-                                              }}
-                                            />
-                                          </Box>
-                                          <Box color="red">
-                                            <AiOutlineDelete
-                                              cursor="pointer"
-                                              fontSize="26px"
-                                              onClick={() => {
-                                                if (updateLesseeFlag === null) {
-                                                  remove_lessee_detail(index);
-                                                }
-                                              }}
-                                            />
-                                          </Box>
-                                        </Flex>
-                                      </td>
-                                    </tr>
-                                  ))
-                                ) : (
-                                  <tr>
-                                    <td
-                                      style={{
-                                        padding: tableStyle.generalPadding,
-                                        textAlign: "center",
+                                  <GridItem colSpan={12}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Lessee details
+                                    </Text>
+                                  </GridItem>
+                                  <GridItem colSpan={2}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Lessee Name
+                                    </Text>
+                                    <Input
+                                      value={lesseeDetail.name}
+                                      placeholder="Lessee Name"
+                                      type="text"
+                                      onChange={(e) => {
+                                        setLesseeDetail((old) => ({
+                                          ...old,
+                                          name: e.target.value,
+                                        }));
+                                        setLesseeError((old) => ({
+                                          ...old,
+                                          name: "",
+                                        }));
                                       }}
-                                      colSpan={6}
+                                      style={inputStyle}
+                                      border="1px"
+                                      borderColor={
+                                        lesseeError.name ? "red" : "gray.10"
+                                      }
+                                    />
+                                  </GridItem>
+                                  <GridItem colSpan={2}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Mobile No.
+                                    </Text>
+                                    <Input
+                                      type="tel"
+                                      placeholder="Mobile No."
+                                      value={lesseeDetail.mobile}
+                                      onChange={(e) => {
+                                        setLesseeDetail((old) => ({
+                                          ...old,
+                                          mobile: e.target.value,
+                                        }));
+                                        console.log(e);
+                                        setLesseeError((old) => ({
+                                          ...old,
+                                          mobile: "",
+                                        }));
+                                      }}
+                                      style={inputStyle}
+                                      border="1px"
+                                      borderColor={
+                                        lesseeError.mobile ? "red" : "gray.10"
+                                      }
+                                    />
+                                    <Text
+                                      color="red"
+                                      fontSize="14px"
+                                      textAlign="left"
                                     >
-                                      No Data Added
-                                    </td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </table>
-                          </Box>
+                                      {lesseeError.mobile === "error"
+                                        ? ""
+                                        : lesseeError.mobile}
+                                    </Text>
+                                  </GridItem>
+                                  <GridItem colSpan={4}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Address
+                                    </Text>
+                                    <Textarea
+                                      value={lesseeDetail.address}
+                                      onChange={(e) => {
+                                        setLesseeDetail((old) => ({
+                                          ...old,
+                                          address: e.target.value,
+                                        }));
+                                        console.log(e);
+                                        setLesseeError((old) => ({
+                                          ...old,
+                                          address: "",
+                                        }));
+                                      }}
+                                      style={inputStyle}
+                                      rows={1}
+                                      border="1px"
+                                      borderColor={
+                                        lesseeError.address ? "red" : "gray.10"
+                                      }
+                                      placeholder={"Address"}
+                                    />
+                                  </GridItem>{" "}
+                                  <GridItem colSpan={2}>
+                                    <Text fontWeight="bold" textAlign="left">
+                                      Rent
+                                    </Text>
+                                    <Input
+                                      type="number"
+                                      value={lesseeDetail.rent}
+                                      onChange={(e) => {
+                                        setLesseeDetail((old) => ({
+                                          ...old,
+                                          rent: e.target.value,
+                                        }));
+                                        console.log(e);
+                                        setLesseeError((old) => ({
+                                          ...old,
+                                          rent: "",
+                                        }));
+                                      }}
+                                      style={inputStyle}
+                                      border="1px"
+                                      borderColor={
+                                        lesseeError.rent ? "red" : "gray.10"
+                                      }
+                                      placeholder={"Rent"}
+                                    />
+                                  </GridItem>
+                                  <GridItem colSpan={2} alignSelf="end">
+                                    <Button
+                                      type="button"
+                                      backgroundColor={"primary.700"}
+                                      _hover={{
+                                        backgroundColor: "primary.700",
+                                      }}
+                                      color={"white"}
+                                      borderRadius={"full"}
+                                      px={"10"}
+                                      onClick={() => {
+                                        updateLesseeFlag !== null
+                                          ? UpdateLesseeDetail()
+                                          : append_new_lessee_details();
+                                        console.log("here in lessee");
+                                      }}
+                                    >
+                                      {updateLesseeFlag !== null
+                                        ? "Edit"
+                                        : "Add"}
+                                    </Button>
+                                  </GridItem>
+                                </Grid>
+                              </Box>
+
+                              <Box mt={commonStyle.mt} overflow={"auto"}>
+                                <table width="100%">
+                                  <thead style={{ background: "#DBFFF5" }}>
+                                    <tr>
+                                      <th
+                                        width={tableStyle.idWidth}
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        No.
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Lessee Name
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Mobile No.
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Address
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                      >
+                                        Rent
+                                      </th>
+                                      <th
+                                        style={{
+                                          padding: tableStyle.generalPadding,
+                                        }}
+                                        width={tableStyle.actionWidth}
+                                      >
+                                        Action
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {getValues(`lessee`)?.length > 0 ? (
+                                      lessee.map((item, index) => (
+                                        <tr>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                              textAlign: "center",
+                                            }}
+                                          >
+                                            {index + 1}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            {item.warehouse_owner_name}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            {item.warehouse_owner_contact_no}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            {item.warehouse_owner_address}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            {item.rent_amount}
+                                          </td>
+                                          <td
+                                            style={{
+                                              padding:
+                                                tableStyle.generalPadding,
+                                            }}
+                                          >
+                                            <Flex
+                                              gap="20px"
+                                              justifyContent="center"
+                                            >
+                                              <Box color={"primary.700"}>
+                                                <BiEditAlt
+                                                  // color="#A6CE39"
+                                                  fontSize="26px"
+                                                  cursor="pointer"
+                                                  onClick={() => {
+                                                    updateLesseeFlagFunction(
+                                                      item,
+                                                      index
+                                                    );
+                                                  }}
+                                                />
+                                              </Box>
+                                              <Box color="red">
+                                                <AiOutlineDelete
+                                                  cursor="pointer"
+                                                  fontSize="26px"
+                                                  onClick={() => {
+                                                    if (
+                                                      updateLesseeFlag === null
+                                                    ) {
+                                                      remove_lessee_detail(
+                                                        index
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                              </Box>
+                                            </Flex>
+                                          </td>
+                                        </tr>
+                                      ))
+                                    ) : (
+                                      <tr>
+                                        <td
+                                          style={{
+                                            padding: tableStyle.generalPadding,
+                                            textAlign: "center",
+                                          }}
+                                          colSpan={6}
+                                        >
+                                          No Data Added
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
+                              </Box>
+                            </>
+                          ) : (
+                            <></>
+                          )}
 
                           <Box>
                             {/* -------------- Rent (per/sq ft/month)-------------- */}
@@ -3988,6 +4268,10 @@ const Wms = () => {
                                     placeholder="Total rent payable (per month)"
                                     type="number"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .total_rent_per_month
+                                    )}
                                     onChange={(e) => {
                                       setValue(
                                         formFieldsName.wms_commercial_details
@@ -4027,6 +4311,10 @@ const Wms = () => {
                                     placeholder="Security deposit(Month)"
                                     type="number"
                                     label=""
+                                    inputValue={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .security_deposit_month
+                                    )}
                                     onChange={(e) => {
                                       setValue(
                                         formFieldsName.wms_commercial_details
@@ -4180,17 +4468,10 @@ const Wms = () => {
                                       formFieldsName.wms_commercial_details.gst
                                     }
                                     label=""
-                                    options={[
-                                      {
-                                        label: "Applicable",
-                                        value: "Applicable",
-                                      },
-                                      {
-                                        label: "Not applicable",
-                                        value: "Not applicable",
-                                      },
-                                    ]}
-                                    selectedValue={selected.gst}
+                                    options={gstOptions || []}
+                                    selectedValue={gstOptions.filter(
+                                      (item) => item.value === getValues("gst")
+                                    )}
                                     isClearable={false}
                                     selectType="label"
                                     isLoading={false}
@@ -4249,28 +4530,6 @@ const Wms = () => {
                                         val.target.value,
                                         { shouldValidate: true }
                                       );
-                                      if (
-                                        getValues(
-                                          formFieldsName.wms_commercial_details
-                                            .agreement_period_month
-                                        )
-                                      ) {
-                                        setValue(
-                                          formFieldsName.wms_commercial_details
-                                            .expiry_date,
-                                          moment(val.target.value)
-                                            .add(
-                                              getValues(
-                                                formFieldsName
-                                                  .wms_commercial_details
-                                                  .agreement_period_month
-                                              ),
-                                              "months"
-                                            )
-                                            .format("DD/MM/YYYY"),
-                                          { shouldValidate: true }
-                                        );
-                                      }
                                     }}
                                     style={{
                                       w: "100%",
@@ -4313,27 +4572,6 @@ const Wms = () => {
                                         val.target.value,
                                         { shouldValidate: true }
                                       );
-                                      if (
-                                        getValues(
-                                          formFieldsName.wms_commercial_details
-                                            .commencement_date
-                                        )
-                                      ) {
-                                        setValue(
-                                          formFieldsName.wms_commercial_details
-                                            .expiry_date,
-                                          moment(
-                                            getValues(
-                                              formFieldsName
-                                                .wms_commercial_details
-                                                .commencement_date
-                                            )
-                                          )
-                                            .add(val.target.value, "months")
-                                            .format("DD/MM/YYYY"),
-                                          { shouldValidate: true }
-                                        );
-                                      }
                                     }}
                                     style={{
                                       w: "100%",
@@ -4363,10 +4601,21 @@ const Wms = () => {
                                     placeholder="Expiry Date"
                                     type="text"
                                     label=""
-                                    inputValue={getValues(
-                                      formFieldsName.wms_commercial_details
-                                        .expiry_date
-                                    )}
+                                    inputValue={
+                                      getValues(
+                                        formFieldsName.wms_commercial_details
+                                          .expiry_date
+                                      )
+                                        ? moment(
+                                            getValues(
+                                              formFieldsName
+                                                .wms_commercial_details
+                                                .expiry_date
+                                            )
+                                          ).format("DD/MM/YYYY")
+                                        : ""
+                                    }
+                                    onChange={() => {}}
                                     InputDisabled={true}
                                     style={{
                                       w: "100%",
@@ -4434,9 +4683,6 @@ const Wms = () => {
                                     isLoading={false}
                                     style={{ w: "100%" }}
                                     selectDisable={true}
-                                    handleOnChange={(val) => {
-                                      console.log(val, "here");
-                                    }}
                                   />
                                 </GridItem>
                                 <GridItem colSpan={1} textAlign="left">
@@ -4512,6 +4758,10 @@ const Wms = () => {
                                     type="text"
                                     label=""
                                     placeholder="Excel upload"
+                                    value={getValues(
+                                      formFieldsName.wms_commercial_details
+                                        .projected_file_url
+                                    )}
                                     onChange={(e) => {
                                       setValue(
                                         formFieldsName.wms_commercial_details
@@ -4655,7 +4905,7 @@ const Wms = () => {
                                 <Text textAlign="left"> Mobile Number </Text>{" "}
                                 <Input
                                   placeholder="mobile number"
-                                  type="number"
+                                  type="tel"
                                   value={clientList.mobile}
                                   onChange={(val) => {
                                     ClientOnChange(val, "mobile");
@@ -4970,7 +5220,7 @@ const Wms = () => {
                                         Reservation Qty (Bales, MT){" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_qty}`}
+                                        name={`client.${index}.${formFieldsName.wms_clients_details.client.reservation_qty}`}
                                         placeholder="Reservation Qty (Bales, MT)"
                                         type="text"
                                         label=""
@@ -4982,7 +5232,7 @@ const Wms = () => {
                                         Reservation Period(Month)
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_period}`}
+                                        name={`client.${index}.${formFieldsName.wms_clients_details.client.reservation_period}`}
                                         placeholder="Reservation Period(Month)"
                                         type="date"
                                         label=""
@@ -4995,7 +5245,7 @@ const Wms = () => {
                                         Reservation Start Date{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_start_date}`}
+                                        name={`client.${index}.${formFieldsName.wms_clients_details.client.reservation_start_date}`}
                                         placeholder="Reservation Start Date"
                                         type="date"
                                         label=""
@@ -5008,7 +5258,7 @@ const Wms = () => {
                                         Reservation End Date{" "}
                                       </Text>{" "}
                                       <CustomInput
-                                        name={`client_list.${index}.${formFieldsName.wms_clients_details.client_list.reservation_end_date}`}
+                                        name={`client.${index}.${formFieldsName.wms_clients_details.client.reservation_end_date}`}
                                         placeholder="Reservation End Date"
                                         type="date"
                                         label=""
@@ -5147,8 +5397,8 @@ const Wms = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {getValues(`client_list`)?.length > 0 ? (
-                                  client_list.map((item, index) => (
+                                {getValues(`client`)?.length > 0 ? (
+                                  client.map((item, index) => (
                                     <tr>
                                       <td
                                         style={{
@@ -5236,7 +5486,7 @@ const Wms = () => {
                                           padding: tableStyle.generalPadding,
                                         }}
                                       >
-                                        {item.address}
+                                        {item.client_address}
                                       </td>
                                       <td
                                         style={{
@@ -5333,6 +5583,10 @@ const Wms = () => {
                                       formFieldsName.wms_clients_details
                                         .intention_letter_url
                                     }
+                                    value={getValues(
+                                      formFieldsName.wms_clients_details
+                                        .intention_letter_url
+                                    )}
                                     placeholder="Excel upload"
                                     label=""
                                     onChange={(e) => {
@@ -5343,7 +5597,7 @@ const Wms = () => {
                                         { shouldValidate: true }
                                       );
                                     }}
-                                    type=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    type=""
                                     style={{ w: "100%" }}
                                   />
                                 </GridItem>
