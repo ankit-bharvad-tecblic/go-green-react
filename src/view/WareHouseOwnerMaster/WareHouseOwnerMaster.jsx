@@ -31,6 +31,7 @@ const WareHouseOwnerMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "HiringProposalWarehouseOwnerDetails",
   });
 
   const [
@@ -150,7 +151,11 @@ const WareHouseOwnerMaster = () => {
     // }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt

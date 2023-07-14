@@ -32,7 +32,7 @@ const WarehouseTypeMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    excelDownload: "WarehouseType",
+    excelDownload: "WareHouseType",
   });
 
   const [

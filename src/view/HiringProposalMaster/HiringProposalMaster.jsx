@@ -30,6 +30,7 @@ function HiringProposalMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "WarehouseHiringProposal",
   });
 
   const [

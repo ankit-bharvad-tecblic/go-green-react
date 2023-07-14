@@ -180,7 +180,7 @@ const AddEditFormCommodityType = () => {
                     </Text>
                     <CustomSelector
                       name="primary_commodity_name"
-                      label=""
+                      label="" 
                       options={options}
                       selectedValue={selectBoxOptions.PrimarycommodityType?.find(
                         (opt) => opt.label === details?.primary_commodity_name

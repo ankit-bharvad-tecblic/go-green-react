@@ -30,7 +30,7 @@ function InsuranceCompanyMaster() {
     limit: 25,
     totalFilter: 0,
     total: 0,
-    // excelDownload: "InsuranceCompany",
+    excelDownload: "InsuranceCompany",
   });
 
   const [

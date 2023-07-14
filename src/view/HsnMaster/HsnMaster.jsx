@@ -30,6 +30,7 @@ const HsnMaster = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "HSN",
   });
 
   const [getHsnMaster, { isLoading: getHsnMasterApiIsLoading }] =

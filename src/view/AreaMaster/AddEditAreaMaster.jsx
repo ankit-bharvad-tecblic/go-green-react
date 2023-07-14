@@ -29,6 +29,13 @@ import CustomInput from "../../components/Elements/CustomInput";
 const AddEditFormArea = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedDropdownOpt, setSelectedDropdownOpt] = useState({
+    region: null,
+    state: null,
+    substate: null,
+    district: null,
+    earthquake_zone: null,
+  });
   const location = useLocation();
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -64,23 +71,21 @@ const AddEditFormArea = () => {
     }
   };
 
-  const { reset } = methods;
-
   // for clear data in form
   const clearForm = () => {
     const defaultValues = methods.getValues();
     console.log(defaultValues);
-
+    setSelectedDropdownOpt((prev) => ({
+      ...prev,
+      region: null,
+      state: null,
+      substate: null,
+      district: null,
+      earthquake_zone: null,
+    }));
     Object.keys(defaultValues).forEach((key) => {
-      methods.setValue(key, "");
+      methods.setValue(key, " ");
     });
-
-    methods.setValue("area_name", "");
-
-    details = {};
-    reset();
-
-    console.log(details);
   };
 
   const [getEarthQuakeZoneTypeMaster] =
@@ -180,6 +185,11 @@ const AddEditFormArea = () => {
       shouldValidate: false,
     });
 
+    setSelectedDropdownOpt((prev) => ({
+      ...prev,
+      region: val,
+    }));
+
     setLocationDrillDownState((prev) => ({
       region: val?.value,
     }));
@@ -233,10 +243,15 @@ const AddEditFormArea = () => {
     setValue("district", null, {
       shouldValidate: false,
     });
- 
+
     setLocationDrillDownState((prev) => ({
       region: locationDrillDownState.region,
       state: val?.value,
+    }));
+
+    setSelectedDropdownOpt((prev) => ({
+      ...prev,
+      state: val,
     }));
 
     const query = {
@@ -292,6 +307,11 @@ const AddEditFormArea = () => {
       substate: val?.value,
     }));
 
+    setSelectedDropdownOpt((prev) => ({
+      ...prev,
+      substate: val,
+    }));
+
     const query = {
       region: locationDrillDownState.region,
       state: locationDrillDownState.state,
@@ -335,6 +355,10 @@ const AddEditFormArea = () => {
     setValue("district", val?.value, {
       shouldValidate: true,
     });
+    setSelectedDropdownOpt((prev) => ({
+      ...prev,
+      district: val,
+    }));
   };
 
   const getEarthquackList = async () => {
@@ -352,12 +376,12 @@ const AddEditFormArea = () => {
       if (details?.earthquake_zone_type?.is_active) {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          earthquack: arr,
+          earthQuack: arr,
         }));
       } else {
         setSelectBoxOptions((prev) => ({
           ...prev,
-          earthquack: [
+          earthQuack: [
             ...arr,
             {
               label: details?.earthquake_zone_type?.earthquake_zone_type,
@@ -446,11 +470,7 @@ const AddEditFormArea = () => {
                       label=""
                       isLoading={getRegionMasterApiIsLoading}
                       options={selectBoxOptions?.regions || []}
-                      selectedValue={
-                        selectBoxOptions?.regions?.filter(
-                          (item) => item.value === getValues("region")
-                        )[0] || {}
-                      }
+                      selectedValue={selectedDropdownOpt?.region}
                       isClearable={false}
                       selectType="label"
                       style={{
@@ -475,11 +495,7 @@ const AddEditFormArea = () => {
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.states || []}
-                      selectedValue={
-                        selectBoxOptions?.states?.filter(
-                          (item) => item.value === getValues("state")
-                        )[0] || {}
-                      }
+                      selectedValue={selectedDropdownOpt?.state}
                       isClearable={false}
                       selectType="label"
                       style={{
@@ -504,11 +520,7 @@ const AddEditFormArea = () => {
                       label=""
                       isLoading={fetchLocationDrillDownApiIsLoading}
                       options={selectBoxOptions?.substate || []}
-                      selectedValue={
-                        selectBoxOptions?.substate?.filter(
-                          (item) => item.value === getValues("substate")
-                        )[0] || {}
-                      }
+                      selectedValue={selectedDropdownOpt?.substate}
                       isClearable={false}
                       selectType="label"
                       style={{
@@ -532,11 +544,7 @@ const AddEditFormArea = () => {
                     label=""
                     isLoading={fetchLocationDrillDownApiIsLoading}
                     options={selectBoxOptions?.districts || []}
-                    selectedValue={
-                      selectBoxOptions?.districts?.filter(
-                        (item) => item.value === getValues("district")
-                      )[0] || {}
-                    }
+                    selectedValue={selectedDropdownOpt?.district}
                     isClearable={false}
                     selectType="label"
                     style={{
@@ -585,7 +593,7 @@ const AddEditFormArea = () => {
                       </Text>{" "}
                       {generateFormField({
                         ...item,
-                        label: "", 
+                        label: "",
                         isChecked: details?.is_active,
 
                         style: {
@@ -624,6 +632,10 @@ const AddEditFormArea = () => {
                   </Box>
                 </MotionSlideUp>
               </Box>
+
+
+
+              
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -633,17 +645,16 @@ const AddEditFormArea = () => {
                     <CustomSelector
                       name="earthquake_zone_type"
                       label=""
-                      options={selectBoxOptions.earthquack}
-                      selectedValue={selectBoxOptions.earthquack?.find(
-                        (opt) =>
-                          opt.label ===
-                          details?.earthquake_zone_type.earthquake_zone_type
-                      )}
+                      options={selectBoxOptions.earthQuack || []}
+                      selectedValue={selectedDropdownOpt?.earthquake_zone}
                       isClearable={false}
-                      selectType={"value"}
+                      selectType={"label"}
                       style={{
                         mb: 1,
                         mt: 1,
+                      }}
+                      handleOnChange={(val) => {
+                        regionOnChange(val);
                       }}
                     />
                   </Box>

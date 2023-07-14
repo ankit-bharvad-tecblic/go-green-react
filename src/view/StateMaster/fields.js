@@ -164,6 +164,7 @@ const schema = yup.object().shape({
     .required(""),
   gstn: yup
     .string()
+    .uppercase()
     .trim()
     // .test("gst", "Invalid GST Number", (value) => gstNumber(value))
     .test("gst", "Invalid GST Number", (value) =>
