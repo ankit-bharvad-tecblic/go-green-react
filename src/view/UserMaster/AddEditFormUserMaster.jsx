@@ -41,10 +41,12 @@ import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import { useFetchLocationDrillDownMutation } from "../../features/warehouse-proposal.slice";
 import ReactCustomSelect from "../../components/Elements/CommonFielsElement/ReactCustomSelect";
 import CustomTextArea from "../../components/Elements/CustomTextArea";
+import { BiEditAlt } from "react-icons/bi";
+import { AiOutlineDelete } from "react-icons/ai";
 function AddEditFormUserMaster() {
   const [tableData, setTableData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [isTableVisible, setTableVisible] = useState(false);
+  // const [isTableVisible, setTableVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -80,7 +82,7 @@ function AddEditFormUserMaster() {
     areas: [],
     roles: [],
     areas: [],
-    reporting_managers: [],
+    reportingManager: [],
     users: [],
   });
   const [getStateMaster] = useGetStateMasterMutation();
@@ -130,6 +132,34 @@ function AddEditFormUserMaster() {
       toasterAlert(error);
     }
   };
+
+  // These is for reporting manager list code
+  const getReportingManagerList = async () => {
+    try {
+      const response = await getUserMaster().unwrap();
+      console.log("Success:", response);
+      let onlyActive = response?.results?.filter((item) => item.is_active);
+      let arr = onlyActive?.map((item) => ({
+        label: item.employee_name,
+        value: item.id,
+        count: item.designation,
+      }));
+      // let arr = onlyActive?.map((item) => ({
+      //   label: item.employee_name,
+      //   value: item.reporting_manager ? item.reporting_manager : null,
+      // }));
+
+      console.log(arr);
+
+      setSelectBoxOptions((prev) => ({
+        ...prev,
+        reportingManager: arr,
+      }));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   // const getAllStateMaster = async () => {
   //   try {
   //     const response = await getStateMaster().unwrap();
@@ -561,7 +591,6 @@ function AddEditFormUserMaster() {
       }
 
       // Show the table
-      setTableVisible(true);
 
       // Reset the form
       reset();
@@ -611,6 +640,7 @@ function AddEditFormUserMaster() {
 
   useEffect(() => {
     setAddEditFormFieldsList(addEditFormFields);
+    getReportingManagerList();
     if (details?.id) {
       // regionOnChange({ value: details?.region?.id });
       //  stateOnChange({ value: details.state?.id });
@@ -620,8 +650,10 @@ function AddEditFormUserMaster() {
         email: details.email,
         employee_name: details.employee_name,
         address: details.address,
+        designation: details?.designation,
         phone: details.phone,
         user_role: details?.user_role?.map((item) => item.id) || [],
+        reporting_manager: details?.reporting_manager.employee_name,
         pin_code: details?.pin_code,
         region: details?.region?.id,
         state: details?.state?.id,
@@ -663,13 +695,13 @@ function AddEditFormUserMaster() {
     dispatch(setBreadCrumb(breadcrumbArray));
   }, [details]);
 
-  const temp = [{ id: 1 }, { id: 2 }];
-  let tempmap = [2, 4];
+  // const temp = [{ id: 1 }, { id: 2 }];
+  // let tempmap = [2, 4];
 
-  const commonValues = temp
-    .filter((item) => tempmap.includes(item.id))
-    .map((item) => ({ id: item.id }));
-  console.log(commonValues, "here 4");
+  // const commonValues = temp
+  //   .filter((item) => tempmap.includes(item.id))
+  //   .map((item) => ({ id: item.id }));
+  // console.log(commonValues, "here 4");
   useEffect(() => {
     getRegionMasterList();
     return () => {
@@ -681,7 +713,8 @@ function AddEditFormUserMaster() {
     <Box bg="white" borderRadius={10} p="10">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <Box maxHeight="calc( 100vh - 260px )" overflowY="auto">
+          <Box>
+            {/*  maxHeight="calc( 100vh - 260px )" overflowY="auto" */}
             <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               {addEditFormFieldsList &&
                 addEditFormFieldsList.map((item, i) => (
@@ -761,6 +794,61 @@ function AddEditFormUserMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
+              {/* This is for reporting manager code */}
+
+              <Box>
+                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+                  <Box gap="4" display={{ base: "flex" }} alignItems="center">
+                    <Text textAlign="right" w="550px">
+                      Reporting Manager
+                    </Text>
+                    <CustomSelector
+                      name="reporting_manager"
+                      label=""
+                      options={selectBoxOptions.reportingManager}
+                      selectedValue={selectBoxOptions.reportingManager.find(
+                        (opt) =>
+                          opt.label === details?.reporting_manager.employee_name
+                      )}
+                      isClearable={false}
+                      selectType={"value"}
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                    />
+                    {/* <CustomSelector
+                      name="reporting_manager"
+                      label=""
+                      options={selectBoxOptions.reportingManager}
+                      selectedValue={selectBoxOptions.reportingManager.find(
+                        (opt) =>
+                          opt.label ===
+                          details?.reporting_manager?.employee_name
+                      )}
+                      isClearable={false}
+                      selectType="value"
+                      style={{
+                        mb: 1,
+                        mt: 1,
+                      }}
+                      formatOptionLabel={({ label, reportingManager }) => (
+                        <Box>
+                          <Text>{label}</Text>
+                          {reportingManager && (
+                            <Text fontSize="sm" color="gray.500">
+                              Reporting Manager:{" "}
+                              {reportingManager.employee_name}
+                            </Text>
+                          )}
+                        </Box>
+                      )}
+                    /> */}
+                  </Box>
+                </MotionSlideUp>
+              </Box>
+
+              {/* Role called code */}
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -894,7 +982,8 @@ function AddEditFormUserMaster() {
                 my={"4"}
                 px={"10"}
               >
-                {details?.id ? "Update" : "Add"}
+                {/* {details?.id ? "Update" : "Add"} */}
+                Submit
               </Button>
             </Box>
           </Box>
@@ -906,7 +995,9 @@ function AddEditFormUserMaster() {
         <form onSubmit={tableDataMethods.handleSubmit(handleFormSubmit)}>
           {/* This is the start of the area zone state  */}
           <Box m="5">
-            <Text fontWeight={"semibold"}>Data Accessibility</Text>
+            <Text fontWeight={"semibold"} fontSize={"23px"}>
+              Data Accessibility
+            </Text>
             <Box backgroundColor={"#DBFFF5"}>
               <Grid
                 templateColumns="repeat(auto-fit, minmax(180px, 1fr))"
@@ -1064,25 +1155,26 @@ function AddEditFormUserMaster() {
 
           {/* This is for table code  */}
 
-          <Box m={5}>
+          <Box mt={5}>
             {/* Display the table */}
-            {isTableVisible && (
-              <Box m={5}>
-                <TableContainer>
-                  <Table>
-                    <Thead style={{ backgroundColor: "#DBFFF5" }}>
-                      <Tr>
-                        <Th>Sr no</Th>
-                        <Th>Region</Th>
-                        <Th>State</Th>
-                        <Th>Sub-State</Th>
-                        <Th>District</Th>
-                        <Th>Area</Th>
-                        <Th>Actions</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody style={{ backgroundColor: "#ffffff" }}>
-                      {tableData.map((data, index) => (
+            {/* {isTableVisible && ( */}
+            <Box m={5}>
+              <TableContainer>
+                <Table color="#000">
+                  <Thead bg="#dbfff5" border="1px" borderColor="#000">
+                    <Tr style={{ color: "#000" }}>
+                      <Th color="#000">Sr no</Th>
+                      <Th color="#000">Region</Th>
+                      <Th color="#000">State</Th>
+                      <Th color="#000">Sub-State</Th>
+                      <Th color="#000">District</Th>
+                      <Th color="#000">Area</Th>
+                      <Th color="#000">Actions</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody style={{ backgroundColor: "#ffffff" }}>
+                    {tableData &&
+                      tableData.map((data, index) => (
                         <Tr key={index}>
                           <Td>{index + 1}</Td>
                           <Td>{data.region}</Td>
@@ -1091,29 +1183,35 @@ function AddEditFormUserMaster() {
                           <Td>{data.district}</Td>
                           <Td>{data.area}</Td>
                           <Td>
-                            <Button
-                              onClick={() => handleEditRow(index)}
-                              size="sm"
-                              colorScheme="teal"
-                              mr={2}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              onClick={() => handleDeleteRow(index)}
-                              size="sm"
-                              colorScheme="red"
-                            >
-                              Delete
-                            </Button>
+                            <Flex gap="20px" justifyContent="center">
+                              <Box color={"primary.700"}>
+                                <BiEditAlt
+                                  // color="#A6CE39"
+                                  fontSize="26px"
+                                  cursor="pointer"
+                                  onClick={() => {
+                                    handleEditRow(index);
+                                  }}
+                                />
+                              </Box>
+                              <Box color="red">
+                                <AiOutlineDelete
+                                  cursor="pointer"
+                                  fontSize="26px"
+                                  onClick={() => {
+                                    handleDeleteRow(index);
+                                  }}
+                                />
+                              </Box>
+                            </Flex>
                           </Td>
                         </Tr>
                       ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Box>
+            {/* )} */}
           </Box>
         </form>
       </FormProvider>

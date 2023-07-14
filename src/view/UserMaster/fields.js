@@ -182,6 +182,13 @@ const addEditFormFields = [
     type: "text",
   },
   {
+    name: "designation",
+    label: "Designation ",
+    placeholder: "Designation",
+    type: "text",
+  },
+
+  {
     name: "phone",
     label: "Contact Number",
     placeholder: "Contact Number",
@@ -237,12 +244,14 @@ const addEditFormFields = [
 const schema = yup.object().shape({
   email: yup.string().trim().required("Email is required"),
   employee_name: yup.string().trim().required("Employee name is required"),
+  reporting_manager: yup.string().required("Reporting manager is required"),
   address: yup.string().trim().required("Address is required"),
   phone: yup
     .string()
     .trim()
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
+  designation: yup.string().trim().required("Designation is required"),
   user_role: yup.array().required("role is required"),
   pin_code: yup.number().required("Pin number is required"),
   address: yup.string().trim().required("Address is required"),

@@ -36,7 +36,11 @@ const AddEditSecurityGuardMaster = () => {
     resolver: yupResolver(schema),
   });
 
-  const { setValue, getValues } = methods;
+  const {
+    setValue,
+    getValues,
+    formState: { errors },
+  } = methods;
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
   const [commodityTypeMaster, setCommodityTypeMaster] = useState([]);
   const [addEditFormFieldsList, setAddEditFormFieldsList] =
@@ -48,25 +52,27 @@ const AddEditSecurityGuardMaster = () => {
     states: [],
     areas: [],
     securityAgency: [],
-    shift: [
-      {
-        label: "Day",
-        value: "day",
-      },
-      {
-        label: "Night",
-        value: "night",
-      },
-      {
-        label: "Both",
-        value: "both",
-      },
-    ],
+    shift: [],
   });
+  const options = [
+    {
+      value: "Day",
+      label: "Day",
+    },
+    {
+      value: "Night",
+      label: "Night",
+    },
+    {
+      value: "Both",
+      label: "Both",
+    },
+  ];
   const [getSecurityAgencyMaster] = useGetSecurityAgencyMasterMutation();
   const details = location.state?.details;
   console.log("details ---> ", details);
 
+  console.log("errors", errors);
   const onSubmit = (data) => {
     console.log("data==>", data);
     if (details?.id) {
@@ -75,6 +81,7 @@ const AddEditSecurityGuardMaster = () => {
       addData(data);
     }
   };
+
   // for clear data in form
   const clearForm = () => {
     const defaultValues = methods.getValues();
@@ -117,10 +124,10 @@ const AddEditSecurityGuardMaster = () => {
       console.log("Success:", response);
       // setCommodityTypeMaster();
       let arr = response?.results.map((type) => ({
-        label: type.commodity_type,
+        label: type.shift_availability,
         value: type.id,
       }));
-
+      console.log(arr);
       setAddEditFormFieldsList(
         addEditFormFields.map((field) => {
           if (field.type === "select") {
@@ -141,6 +148,7 @@ const AddEditSecurityGuardMaster = () => {
     try {
       const response = await updateSecurityGuardMaster(data).unwrap();
       if (response.status === 200) {
+        console.log(data, "yoooo");
         console.log("update security guard master res", response);
         toasterAlert(response);
         navigate("/security-guard-master");
@@ -388,7 +396,7 @@ const AddEditSecurityGuardMaster = () => {
   useEffect(() => {
     getSecurityGuard();
     getSecurityAgencyList();
-
+    console.log(details);
     if (details?.id) {
       regionOnChange({ value: details.district?.substate?.state?.region?.id });
       stateOnChange({ value: details.district?.substate?.state?.id });
@@ -396,24 +404,25 @@ const AddEditSecurityGuardMaster = () => {
       districtOnChange({ value: details.district?.id });
       areaOnChange({ value: details.area?.id });
       let obj = {
-        security_agency_name: details?.security_agency_id.security_agency_name,
+        security_agency_id: details?.security_agency_id.security_agency_name,
         security_guard_name: details.security_guard_name,
-        region: details.district?.substate?.state?.region.id,
-        state: details.district?.substate?.state.id,
-        district_name: details.district?.id,
-        substate: details.district?.substate?.id,
-        area: details.dustrict?.id,
+        region: details?.region?.id,
+        state: details?.state?.id,
+        district: details?.district?.id,
+        substate: details.substate?.id,
+        area: details.area?.id,
         pincode: details?.pincode,
         aadhar_of_security_guard: details?.aadhar_of_security_guard,
-        on_boarding_date: details?.on_boarding_date,
-        de_boarding_date: details?.de_boarding_date,
-        guard_salary: details?.guard_salary,
+        onboarding_date: details?.onboarding_date,
+        deboarding_date: details?.deboarding_date,
+        shift_availability: details?.shift_availability,
+        salary: details?.salary,
         address_of_security_guard: details.address_of_security_guard,
         dob_of_security_guard: details.dob_of_security_guard,
         contact_number: details.contact_number,
         alternate_contact_number: details.alternate_contact_number,
         experience_as_security_guard: details.experience_as_security_guard,
-        shift: details?.shift,
+
         active: details.active,
       };
 
@@ -460,7 +469,7 @@ const AddEditSecurityGuardMaster = () => {
                       Security Agency Name
                     </Text>
                     <CustomSelector
-                      name="security_agency_name"
+                      name="security_agency_id"
                       label=""
                       options={selectBoxOptions.securityAgency}
                       selectedValue={selectBoxOptions.securityAgency.find(
@@ -680,27 +689,29 @@ const AddEditSecurityGuardMaster = () => {
                     <Text textAlign="right" w="550px">
                       Shift Availability
                     </Text>
-                    <ReactCustomSelect
-                      name="shift"
+                    <CustomSelector
+                      name="shift_availability"
                       label=""
-                      isLoading={false}
-                      options={selectBoxOptions?.shift || []}
-                      selectedValue={
-                        selectBoxOptions?.shift?.filter(
-                          (item) => item.value === getValues("shift")
-                        )[0] || {}
-                      }
+                      options={options}
+                      // selectedValue={
+                      //   selectBoxOptions?.shift?.filter(
+                      //     (item) => item.value === getValues("shift")
+                      //   )[0] || {}
+                      // }
+                      selectedValue={selectBoxOptions.shift?.find(
+                        (opt) => opt.label === details?.shift_availability
+                      )}
                       isClearable={false}
-                      selectType="label"
+                      selectType={"value"}
                       style={{
                         mb: 1,
                         mt: 1,
                       }}
-                      handleOnChange={(val) => {
-                        setValue("shift", val.value, {
-                          shouldValidate: true,
-                        });
-                      }}
+                      // handleOnChange={(val) => {
+                      //   setValue("shift", val.value, {
+                      //     shouldValidate: true,
+                      //   });
+                      // }}
                     />
                   </Box>
                 </MotionSlideUp>
@@ -712,7 +723,7 @@ const AddEditSecurityGuardMaster = () => {
                       Guard Salary{" "}
                     </Text>
                     <CustomInput
-                      name="guard_salary"
+                      name="salary"
                       placeholder=" Guard Salary"
                       type="number"
                       label=""

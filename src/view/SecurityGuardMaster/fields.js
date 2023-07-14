@@ -3,11 +3,11 @@ import validation from "../../utils/validation";
 
 const filterFields = [
   {
-    NAME: "security_agency_name",
+    NAME: "security_agency_id",
     isActiveFilter: false,
 
     label: "Security Agency Name",
-    name: "security_guard_name",
+    name: "security_agency_id",
     placeholder: "Security Agency Name",
     type: "text",
   },
@@ -70,7 +70,7 @@ const filterFields = [
     isActiveFilter: false,
 
     label: "Address",
-    name: "security_agency_id__security_agency_name",
+    name: "address_of_security_guard",
     placeholder: "Address",
     type: "text",
   },
@@ -120,29 +120,29 @@ const filterFields = [
     type: "number",
   },
   {
-    "ON BOARDING DATE": "on_boarding_date",
+    "ON BOARDING DATE": "onboarding_date",
     isActiveFilter: false,
 
     label: "On Boarding Date",
-    name: "on_boarding_date",
+    name: "onboarding_date",
     placeholder: "On Boarding Date",
     type: "date",
   },
   {
-    "DE BOARDING DATE": "de_boarding_date",
+    "DE BOARDING DATE": "deboarding_date",
     isActiveFilter: false,
 
     label: "De Boarding Date",
-    name: "de_boarding_date",
+    name: "deboarding_date",
     placeholder: "De Boarding Date",
     type: "date",
   },
   {
-    "SHIFT AVAILABLE": "shift_available",
+    "SHIFT AVAILABLE": "shift_availability",
     isActiveFilter: false,
 
     label: "Shift Available",
-    name: "shift_available",
+    name: "shift_availability",
     placeholder: "shift Available",
     type: "select",
     multi: false,
@@ -163,11 +163,11 @@ const filterFields = [
     ],
   },
   {
-    "GUARD SALARY": "guard_salary",
+    "GUARD SALARY": "salary",
     isActiveFilter: false,
 
     label: "Guard Salary",
-    name: "guard_salary",
+    name: "salary",
     placeholder: "Guard Salary",
     type: "number",
   },
@@ -181,11 +181,11 @@ const filterFields = [
     type: "date",
   },
   {
-    "LAST UPDATED DATE": "last_updated_date",
+    "LAST UPDATED DATE": "last_update_date",
     isActiveFilter: false,
 
     label: "Last Updated Date",
-    name: "last_updated_date",
+    name: "last_update_date",
     placeholder: "Last Updated Date",
     type: "date",
   },
@@ -262,11 +262,11 @@ const addEditFormFields = [
     name: "aadhar_of_security_guard",
     label: "Aadhar Card ID",
     placeholder: "Aadhar Card ID",
-    type: "text",
+    type: "number",
   },
   {
     name: "dob_of_security_guard",
-    label: "Date Of BIrth",
+    label: "Date Of Birth",
     placeholder: "Date Of Birth",
     type: "date",
   },
@@ -283,13 +283,13 @@ const addEditFormFields = [
     type: "text",
   },
   {
-    name: "on_boarding_date",
+    name: "onboarding_date",
     label: "On Boarding Date",
     placeholder: "On Boarding Date",
     type: "date",
   },
   {
-    name: "de_boarding_date",
+    name: "deboarding_date",
     label: "De Boarding Date",
     placeholder: "De Boarding Date",
     type: "date",
@@ -310,7 +310,7 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  security_agency_name: yup
+  security_agency_id: yup
     .string()
     .trim()
     .required("Security agency name is required"),
@@ -318,16 +318,10 @@ const schema = yup.object().shape({
     .string()
     .trim()
     .required("Security guard name is required"),
-  region__region_name: yup.string().trim().required("Region Name is required"),
-  state__state_name: yup.string().trim().required("State Name is required"),
-  district__district_name: yup
-    .string()
-    .trim()
-    .required("District Name is required"),
-  sub_state__state_name: yup
-    .string()
-    .trim()
-    .required("Sub state name is required"),
+  region: yup.string().trim().required("Region Name is required"),
+  state: yup.string().trim().required("State Name is required"),
+  district: yup.string().trim().required("District Name is required"),
+  substate: yup.string().trim().required("Sub state name is required"),
   pincode: yup.number().required("Pin code is required"),
 
   area: yup.string().trim().required("Area name is required"),
@@ -336,20 +330,17 @@ const schema = yup.object().shape({
     .trim()
     .required("Address  is required"),
   aadhar_of_security_guard: yup
-    .string()
-    .trim()
-    .required("Aadhar of security guard is requird"),
-  on_boarding_date: yup.string().trim().required("Onboarding date is required"),
-  de_boarding_date: yup
-    .string()
-    .trim()
-    .required("De-boarding date is required"),
-  shift: yup.string().trim().required("Shift available is required"),
-  guard_salary: yup.string().trim().required("Guard salary is required"),
-  dob_of_security_guard: yup.number().required(" Date of birth is required"),
-  experience_as_security_guard: yup
     .number()
-    .required("Experience As Security guard  is required"),
+
+    .required("Aadhar of security guard is requird"),
+  onboarding_date: yup.string().trim().required("Onboarding date is required"),
+  deboarding_date: yup.string().trim().required("De-boarding date is required"),
+  // shift: yup.string().trim().required("Shift available is required"),
+  salary: yup.number().required("Guard salary is required"),
+  dob_of_security_guard: yup.string().required(" Date of birth is required"),
+  // experience_as_security_guard: yup
+  //   .number()
+  //   .required("Experience As Security guard  is required"),
   alternate_contact_number: yup
     .string()
     .trim()
@@ -361,7 +352,7 @@ const schema = yup.object().shape({
     .matches(validation.phoneRegExp, "Contact number is not valid")
     .required("Contact number is required"),
   is_active: yup.string(),
-  commodity_type: yup.string().trim().required("Commodity type is required"),
+  // commodity_type: yup.string().trim().required("Commodity type is required"),
 });
 
 export { filterFields, addEditFormFields, schema };
