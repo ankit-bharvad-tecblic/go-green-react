@@ -4,6 +4,7 @@ import CustomSelector from "./CustomSelector";
 import CustomSwitch from "./CustomSwitch";
 import CustomTextArea from "./CustomTextArea";
 import CustomDatepicker from "./CustomDatepicker";
+import { useForm } from "react-hook-form";
 
 function generateFormField(obj) {
   const {

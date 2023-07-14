@@ -67,7 +67,7 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  department_name: yup.string().trim().required("Department name is required"),
+  department_name: yup.string().trim().required(""),
   is_active: yup.string(),
 });
 

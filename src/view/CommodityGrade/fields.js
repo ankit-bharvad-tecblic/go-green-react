@@ -8,7 +8,7 @@ const filterFields = [
     name: "commodity_grade_name",
     placeholder: "Commodity Grade",
     type: "text",
-  },
+  }, 
   // {
   //   DESCRIPTION: "description",
   //   isActiveFilter: false,
@@ -80,7 +80,7 @@ const schema = yup.object().shape({
   commodity_grade_name: yup
     .string()
     .trim()
-    .required("Commodity grade is required"),
+    .required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

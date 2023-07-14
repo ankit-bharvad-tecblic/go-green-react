@@ -674,69 +674,46 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  warehouse_type: yup.number().required("warehouse type is required"),
-  warehouse_subtype: yup.number().required("warehouse sub type is required"),
-  warehouse_name: yup.string().trim().required("warehouse name is required"),
-  region: yup.number().required("region is required"),
-  state: yup.number().required("state is required"),
+  warehouse_type: yup.number().required(""),
+  warehouse_subtype: yup.number().required(""),
+  warehouse_name: yup.string().trim().required(""),
+  region: yup.number().required(""),
+  state: yup.number().required(""),
   // warehouse_type: yup.string().trim().required("Zone ID is required"),
-  district: yup.number().required("district is required"),
-  area: yup.number().required("area  is required"),
-  warehouse_address: yup
-    .string()
-    .trim()
-    .required("warehouse address is required"),
-  warehouse_pincode: yup.number().required("warehouse pincode is required"),
-  no_of_chambers: yup.number().required("no of chambers  is required"),
-  standard_capacity: yup.number().required("standard capacity is required"),
-  currrent_capacity: yup.number().required("currrent capacity is required"),
-  currrent_utilised_capacity: yup
-    .number()
-    .required("currrent utilised capacity  is required"),
-  no_of_warehouse_in_area: yup
-    .number()
-    .required("no of warehouse in area is required"),
-  lock_in_period: yup.number().required("lock in period is required"),
-  lock_in_period_month: yup.date().required("lock in period month is required"),
-  covered_area: yup.number().required("covered area  is required"),
-  supervisor_day_shift: yup
-    .number()
-    .required("supervisor day shift  is required"),
-  supervisor_night_shift: yup
-    .number()
-    .required("supervisor night shift is required"),
-  security_guard_day_shift: yup
-    .string()
-    .trim()
-    .required("security guard day shift is required"),
-  security_guard_night_shift: yup
-    .number()
-    .required("security guard night shift is required"),
-  expected_commodity: yup.number().required("expected commodity  is required"),
-  commodity_inward_type: yup
-    .string()
-    .trim()
-    .required("commodity inward type is required"),
-  prestack_commodity: yup.number().required("prestack commodity  is required"),
-  prestack_commodity_qty: yup
-    .number()
-    .required("prestack commodity qty is required"),
-  banker_id: yup.number().required("banker id  is required"),
+  district: yup.number().required(""),
+  area: yup.number().required(""),
+  warehouse_address: yup.string().trim().required(""),
+  warehouse_pincode: yup.number().required(""),
+  no_of_chambers: yup.number().required(""),
+  standard_capacity: yup.number().required(""),
+  currrent_capacity: yup.number().required(""),
+  currrent_utilised_capacity: yup.number().required(""),
+  no_of_warehouse_in_area: yup.number().required(""),
+  lock_in_period: yup.number().required(""), 
+  lock_in_period_month: yup.date().required(""),
+  covered_area: yup.number().required(""),
+  supervisor_day_shift: yup.number().required(""),
+  supervisor_night_shift: yup.number().required(""),
+  security_guard_day_shift: yup.string().trim().required(""),
+  security_guard_night_shift: yup.number().required(""),
+  expected_commodity: yup.number().required(""),
+  commodity_inward_type: yup.string().trim().required(""),
+  prestack_commodity: yup.number().required(""),
+  prestack_commodity_qty: yup.number().required(""),
+  banker_id: yup.number().required(""),
   // bank_name: yup.string().trim().required("Funding Required is required"),
-  rent: yup.number().required("rent  is required"),
-  gg_revenue_ratio: yup.number().required("gg revenue ratio  is required"),
-  security_deposit_month: yup
-    .date()
-    .required("security deposit month  is required"),
-  advance_rent: yup.number().required("advance rent  is required"),
-  advance_rent_month: yup.date().required("advance rent month  is required"),
+  rent: yup.number().required(""),
+  gg_revenue_ratio: yup.number().required(""),
+  security_deposit_month: yup.date().required(""),
+  advance_rent: yup.number().required(""),
+  advance_rent_month: yup.date().required(""),
   // warehouse_type: yup.string().trim().required("GST type is required"),
   // warehouse_type: yup.string().trim().required("CommencementDate type is required"),
   // warehouse_type: yup.string().trim().required("AgreementPeriodMonth type is required"),
-  notice_period_month: yup.date().required("notice period month  is required"),
-  remarks: yup.string().trim().required("remarks  is required"),
-  l1_user: yup.number().required("l1 user  is required"),
-  l2_user: yup.number().required("l2 user  is required"),
+  notice_period_month: yup.date().required(""),
+  remarks: yup.string().trim().required(""),
+  l1_user: yup.number().required(""),
+  l2_user: yup.number().required(""),
   // warehouse_type: yup.string().trim().required("DocumentID type is required"),
   // warehouse_type: yup.string().trim().required("InspectionAssignedTo type is required"),
 

@@ -103,11 +103,11 @@ const schema = yup.object().shape({
   insurance_company_name: yup
     .string()
     .trim()
-    .required("Company name is required"),
+    .required(""),
   insurance_company_address: yup
     .string()
     .trim()
-    .required("Address name  is required"),
+    .required(""),
 
   active: yup.string(),
 });

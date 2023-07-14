@@ -56,7 +56,7 @@ const filterFields = [
     isActiveFilter: false,
     label: "Active",
     name: "is_active",
-    placeholder: "Active", 
+    placeholder: "Active",
     type: "select",
     multi: false,
     options: [
@@ -93,11 +93,11 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  district_name: yup.string().trim().required("District  is required"),
-  region: yup.string().trim().required("Region name is required"),
-  state: yup.string().trim().required("State name is required"),
+  district_name: yup.string().trim().required(""),
+  region: yup.string().trim().required(""),
+  state: yup.string().trim().required(""),
   is_active: yup.string(),
-  substate: yup.string().trim().required("Sub State name  is required"),
+  substate: yup.string().trim().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

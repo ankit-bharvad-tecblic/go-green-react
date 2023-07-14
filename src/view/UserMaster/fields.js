@@ -235,17 +235,13 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  email: yup.string().trim().required("Email is required"),
-  employee_name: yup.string().trim().required("Employee name is required"),
-  address: yup.string().trim().required("Address is required"),
-  phone: yup
-    .string()
-    .trim()
-    .matches(validation.phoneRegExp, "Contact number is not valid")
-    .required("Contact number is required"),
-  user_role: yup.array().required("role is required"),
-  pin_code: yup.number().required("Pin number is required"),
-  address: yup.string().trim().required("Address is required"),
+  email: yup.string().trim().required(""),
+  employee_name: yup.string().trim().required(""),
+  address: yup.string().trim().required(""),
+  phone: yup.string().trim().matches(validation.phoneRegExp, "").required(""),
+  user_role: yup.array().required(""),
+  pin_code: yup.number().required(""),
+  address: yup.string().trim().required(""),
   // last_login: yup.date().required("last login is required"),
   is_active: yup.string(),
 });

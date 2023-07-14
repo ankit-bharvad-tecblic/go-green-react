@@ -147,20 +147,14 @@ const addEditFormFields = [
 ];
 
 const schema = yup.object().shape({
-  insurance_company: yup
-    .string()
-    .required("Insurance company name is required"),
-  insurance_policy_number: yup
-    .string()
-    .required("Insurance policy number is required"),
-  policy_amount: yup.string().required("Insurance policy amount is required"),
-  policy_start_date: yup.string().required("Start date is required"),
-  policy_end_date: yup.string().required("End date is required"),
-  insurance_type: yup.string().required("Insurance type  is required"),
+  insurance_company: yup.string().required(""),
+  insurance_policy_number: yup.string().required(""),
+  policy_amount: yup.string().required(""),
+  policy_start_date: yup.string().required(""),
+  policy_end_date: yup.string().required(""),
+  insurance_type: yup.string().required(""),
   is_active: yup.string(),
-  upload_policy_agreement: yup
-    .string()
-    .required("Upload policy agreement is required"),
+  upload_policy_agreement: yup.string().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

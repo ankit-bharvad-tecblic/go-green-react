@@ -21,10 +21,10 @@ const filterFields = [
   {
     "CREATION DATE ": "created_at",
     isActiveFilter: false,
-    label: "Creation Date ", 
+    label: "Creation Date ",
     name: "created_at",
     placeholder: "Creation Date ",
-    type: "date",
+    type: "date-from-to",
     max: new Date().toISOString().split("T")[0],
   },
 
@@ -74,7 +74,7 @@ const addEditFormFields = [
 
 const schema = yup.object().shape({
   is_active: yup.string(),
-  region_name: yup.string().trim().required("Region name is required"),
+  region_name: yup.string().trim().required(" "),
 });
 
 export { filterFields, addEditFormFields, schema };

@@ -30,6 +30,7 @@ const WareHouseSubType = () => {
     limit: 25,
     totalFilter: 0,
     total: 0,
+    excelDownload: "WareHouseSubType",
   });
 
   const [getWareHouseSubType, { isLoading: getWareHouseSubTypeApiIsLoading }] =
@@ -117,7 +118,11 @@ const WareHouseSubType = () => {
     }),
     columnHelper.accessor("is_active", {
       // header: "ACTIVE",
-      header: () => <Text id="active_col" fontWeight="800">Active</Text>,
+      header: () => (
+        <Text id="active_col" fontWeight="800">
+          Active
+        </Text>
+      ),
       cell: (info) => (
         <Box id="active_row">
           <Switch
@@ -139,7 +144,11 @@ const WareHouseSubType = () => {
     }),
     columnHelper.accessor("update", {
       // header: "UPDATE",
-      header: () => <Text id="update_col" fontWeight="800">UPDATE</Text>,
+      header: () => (
+        <Text id="update_col" fontWeight="800">
+          UPDATE
+        </Text>
+      ),
       cell: (info) => (
         <Flex justifyContent="center" color="primary.700" id="update_row">
           <BiEditAlt
