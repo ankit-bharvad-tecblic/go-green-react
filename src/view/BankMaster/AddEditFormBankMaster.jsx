@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
@@ -24,6 +36,7 @@ import { useDispatch } from "react-redux";
 import { setBreadCrumb } from "../../features/manage-breadcrumb.slice";
 import CustomInput from "../../components/Elements/CustomInput";
 import CustomFileInput from "../../components/Elements/CustomFileInput";
+import { BiDownload, BiEditAlt } from "react-icons/bi";
 function AddEditFormBankMaster() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,6 +62,59 @@ function AddEditFormBankMaster() {
       },
     ],
   });
+  // Define a state variable to hold the table data
+  const [tableData, setTableData] = useState([]);
+
+  // Function to handle form submission and add data to the table
+  const handleSubmit = (formData) => {
+    // Assuming formData is an object containing the form values
+    const newData = {
+      cm_rate: formData.cm_rate,
+      agreement_start_date: formData.agreement_start_date,
+      agreement_end_date: formData.agreement_end_date,
+      agreement_path: formData.agreement_path,
+    };
+
+    // Add the new data to the table
+    setTableData([...tableData, newData]);
+    for (const [key, value] of Object.entries(newData)) {
+      console.log(`${key}: ${value}`);
+      methods.setValue(key, "", { shouldValidate: false });
+    }
+  };
+
+  const handleDownload = async (agreementPath) => {
+    try {
+      const response = await fetch(agreementPath, {
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
+
+      const fileBlob = await response.blob();
+
+      // Create a temporary URL for the Blob object
+      const fileURL = URL.createObjectURL(fileBlob);
+
+      // Create a temporary link element
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.target = "_blank";
+      link.download = agreementPath.substr(agreementPath.lastIndexOf("/") + 1);
+
+      // Append the link to the document body
+      document.body.appendChild(link);
+
+      // Trigger the download
+      link.click();
+
+      // Clean up by removing the link from the document body
+      document.body.removeChild(link);
+    } catch (error) {
+      console.log("Failed to download file:", error);
+    }
+  };
 
   const [addBankMaster, { isLoading: addBankMasterApiIsLoading }] =
     useAddBankMasterMutation();
@@ -260,6 +326,7 @@ function AddEditFormBankMaster() {
 
   useEffect(() => {
     if (details?.id) {
+      console.log("detail s", details);
       regionOnChange({ value: details.region?.id });
       let obj = {
         bank_name: details?.bank_name,
@@ -267,6 +334,10 @@ function AddEditFormBankMaster() {
         state: details?.state?.id,
         sector: details?.sector,
         bank_address: details?.bank_address,
+        //   cm_rate: details?.cm_rate,
+        // agreement_path: details?.agreement_path,
+        // agreement_end_date: details?.agreement_end_date,
+        // agreement_start_date: details?.agreement_start_date,
         is_active: details.is_active,
         bank_sector: details?.bank_sector,
       };
@@ -472,15 +543,16 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
-
-              <Box>
-                <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+            </Box>
+            <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
+              <Box w={{ base: "100%", md: "80%", lg: "100%", xl: "100%" }}>
+                <Flex gap={4}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
-                    <Text textAlign="right" w="550px">
-                      Rate
+                    <Text textAlign="right" w="420px">
+                      CM Rate
                     </Text>
                     <CustomInput
-                      name="interest_rate"
+                      name="cm_rate"
                       placeholder="Rate"
                       type="number"
                       label=""
@@ -490,9 +562,23 @@ function AddEditFormBankMaster() {
                       }}
                     />
                   </Box>
-                </MotionSlideUp>
+                  <Button
+                    type="button"
+                    backgroundColor={"white"}
+                    borderWidth={"1px"}
+                    borderColor={"#A6CE39"}
+                    _hover={{ backgroundColor: "" }}
+                    color={"#A6CE39"}
+                    borderRadius={"full"}
+                    my={"4"}
+                    onClick={() => handleSubmit(getValues())}
+                  >
+                    Change CM Rate
+                  </Button>
+                </Flex>
               </Box>
-
+            </MotionSlideUp>
+            <Box w={{ base: "100%", md: "80%", lg: "90%", xl: "60%" }}>
               <Box>
                 <MotionSlideUp duration={0.2 * 1} delay={0.1 * 1}>
                   <Box gap="4" display={{ base: "flex" }} alignItems="center">
@@ -559,6 +645,42 @@ function AddEditFormBankMaster() {
                   </Box>
                 </MotionSlideUp>
               </Box>
+            </Box>
+            {/* This is for the table code  */}
+            <Box mt={5}>
+              <TableContainer>
+                <Table color="#000">
+                  <Thead bg="#dbfff5" border="1px" borderColor="#000">
+                    <Tr style={{ color: "#000" }}>
+                      <Th color="#000">CM Rate</Th>
+                      <Th color="#000">Start Date </Th>
+                      <Th color="#000">End date</Th>
+                      <Th color="#000">View</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody style={{ backgroundColor: "#ffffff" }}>
+                    {tableData &&
+                      tableData.map((data, index) => (
+                        <Tr key={index}>
+                          <Td>{data.cm_rate}</Td>
+                          <Td>{data.agreement_start_date}</Td>
+                          <Td>{data.agreement_end_date}</Td>
+                          <Td>
+                            <Box color={"primary.700"}>
+                              <BiDownload
+                                fontSize="26px"
+                                cursor="pointer"
+                                onClick={() =>
+                                  handleDownload(data.agreement_path)
+                                }
+                              />
+                            </Box>
+                          </Td>
+                        </Tr>
+                      ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
             </Box>
             <Box
               display="flex"

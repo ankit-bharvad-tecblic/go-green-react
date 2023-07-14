@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   Controller,
   FormProvider,
-  useForm, 
+  useForm,
   useFormContext,
 } from "react-hook-form";
 import * as yup from "yup";
@@ -126,9 +126,9 @@ const AddEditFormCommodityMaster = () => {
       let obj = {
         commodity_name: details.commodity_name,
         commodity_type: details.commodity_type.commodity_type,
-        maximum_bag_size: details.maximum_bag_size,
-        minimum_bag_size: details.minimum_bag_size,
-        rent_on_bag: details.rent_on_bag,
+        // maximum_bag_size: details.maximum_bag_size,
+        // minimum_bag_size: details.minimum_bag_size,
+        // rent_on_bag: details.rent_on_bag,
         is_active: details.is_active,
       };
 

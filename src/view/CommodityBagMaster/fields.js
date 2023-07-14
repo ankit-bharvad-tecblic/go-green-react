@@ -28,15 +28,15 @@ const filterFields = [
     placeholder: "Bag Size",
     type: "number",
   },
-  {
-    "Tolerance size": "Tolerance size",
-    isActiveFilter: false,
+  // {
+  //   "Tolerance size": "Tolerance size",
+  //   isActiveFilter: false,
 
-    label: "Tolerance size",
-    name: "tolerance_size",
-    placeholder: "Tolerance size",
-    type: "number",
-  },
+  //   label: "Tolerance size",
+  //   name: "tolerance_size",
+  //   placeholder: "Tolerance size",
+  //   type: "number",
+  // },
 
   {
     "CREATION DATE": "created_at",
@@ -90,12 +90,12 @@ const addEditFormFields = [
     placeholder: "Bag Size",
     type: "number",
   },
-  {
-    label: "Tolerance size",
-    name: "tolerance_size",
-    placeholder: "Tolerance size",
-    type: "number",
-  },
+  // {
+  //   label: "Tolerance size",
+  //   name: "tolerance_size",
+  //   placeholder: "Tolerance size",
+  //   type: "number",
+  // },
   {
     label: "Space / bag / sq. ft",
     name: "space",
@@ -123,7 +123,7 @@ const schema = yup.object().shape({
   space: yup.number().required(" "),
   stack_height: yup.number().required(""),
   is_active: yup.string(),
-  tolerance_size: yup.number().required(""),
+  // tolerance_size: yup.number().required(""),
 });
 
 export { filterFields, addEditFormFields, schema };

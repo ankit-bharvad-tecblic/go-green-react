@@ -109,10 +109,10 @@ const schema = yup.object().shape({
   bank_sector: yup.string().trim().required(""),
   bank_address: yup.string().min(20).max(300).required(""),
   is_active: yup.string(),
-  interest_rate: yup.number().required(""),
-  agreement_start_date: yup.string().required(" "),
-  agreement_end_date: yup.string().required(" "),
-  agreement_path: yup.string().required(" "),
+  cm_rate: yup.number(),
+  agreement_start_date: yup.string(),
+  agreement_end_date: yup.string(),
+  agreement_path: yup.string(),
 });
 
 export { filterFields, addEditFormFields, schema };

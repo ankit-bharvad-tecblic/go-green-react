@@ -102,10 +102,10 @@ const CommodityBagMaster = () => {
       cell: (info) => info.getValue(),
       header: "Bag Size",
     }),
-    columnHelper.accessor("tolerance_level ", {
-      cell: (info) => info.getValue(),
-      header: "Tolerance Size",
-    }),
+    // columnHelper.accessor("tolerance_level ", {
+    //   cell: (info) => info.getValue(),
+    //   header: "Tolerance Size",
+    // }),
     columnHelper.accessor("space ", {
       cell: (info) => info.getValue(),
       header: "Space / bag / sq. ft",

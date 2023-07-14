@@ -148,13 +148,13 @@ const AddEditCommodityBagMaster = () => {
     if (details?.id) {
       console.log(details);
       let obj = {
-        bag_size: details.bag_size,
-        tolerance_size: details.tolerance_size,
+        bag_size: details?.bag_size,
+        // tolerance_size: details.tolerance_size,
         space: details?.space,
         stack_height: details?.stack_height,
-        commodity_type: details.commodity_type,
+        commodity_type: details?.commodity_type,
         commodity_id: details?.commodity_id.id,
-        is_active: details.is_active,
+        is_active: details?.is_active,
       };
       console.log(obj);
       // setHandleSelectBoxVal
