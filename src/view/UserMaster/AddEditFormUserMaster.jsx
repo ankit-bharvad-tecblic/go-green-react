@@ -103,7 +103,7 @@ function AddEditFormUserMaster() {
   const [addEditFormFieldsList, setAddEditFormFieldsList] = useState([]);
   const [locationDrillDownState, setLocationDrillDownState] = useState({});
   const details = location.state?.details;
-  console.log("details ---> ", details);
+  console.log("details for parent --->", details);
 
   const onSubmit = (data) => {
     console.log("data==>", data);
@@ -117,18 +117,23 @@ function AddEditFormUserMaster() {
         area: el?.area?.value,
       };
     });
+    console.log("user_location", user_location);
     if (details?.id) {
       let final_data = {
         ...data,
-        user_location,
+        user_location: user_location,
         id: details.id,
       };
+
+      console.log("update -> ", final_data);
       updateData(final_data);
     } else {
       let final_data = {
         ...data,
-        user_location,
+        user_location: user_location,
       };
+
+      console.log("add -> ", final_data);
       addData(final_data);
     }
   };
@@ -332,6 +337,16 @@ function AddEditFormUserMaster() {
     { isLoading: fetchLocationDrillDownApiIsLoading },
   ] = useFetchLocationDrillDownMutation();
 
+  const fetchLocationDrillDownBaseId = async (query) => {
+    try {
+      const response = await fetchLocationDrillDown(query).unwrap();
+      console.log("fetchLocationDrillDown response :", response);
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const getRegionMasterList = async () => {
     try {
       const response = await fetchLocationDrillDown().unwrap();
@@ -389,16 +404,17 @@ function AddEditFormUserMaster() {
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
-
+      let arr = response?.state
+        ?.filter((item) => item.state_name !== "All - State")
+        .map(({ state_name, id }) => ({
+          label: state_name,
+          value: id,
+        }));
       setSelectBoxOptions((prev) => ({
         ...prev,
-        states: response?.state
-          ?.filter((item) => item.state_name !== "All - State")
-          .map(({ state_name, id }) => ({
-            label: state_name,
-            value: id,
-          })),
+        states: arr,
       }));
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -444,15 +460,19 @@ function AddEditFormUserMaster() {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.substate
+        ?.filter((item) => item.substate_name !== "All - Zone")
+        .map(({ substate_name, id }) => ({
+          label: substate_name,
+          value: id,
+        }));
+
       setSelectBoxOptions((prev) => ({
         ...prev,
-        substate: response?.substate
-          ?.filter((item) => item.substate_name !== "All - Zone")
-          .map(({ substate_name, id }) => ({
-            label: substate_name,
-            value: id,
-          })),
+        substate: arr,
       }));
+
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -495,15 +515,17 @@ function AddEditFormUserMaster() {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
 
+      let arr = response?.district
+        ?.filter((item) => item.district_name !== "All - District")
+        .map(({ district_name, id }) => ({
+          label: district_name,
+          value: id,
+        }));
       setSelectBoxOptions((prev) => ({
         ...prev,
-        districts: response?.district
-          ?.filter((item) => item.district_name !== "All - District")
-          .map(({ district_name, id }) => ({
-            label: district_name,
-            value: id,
-          })),
+        districts: arr,
       }));
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -542,16 +564,17 @@ function AddEditFormUserMaster() {
     try {
       const response = await fetchLocationDrillDown(query).unwrap();
       console.log("fetchLocationDrillDown response :", response);
-
+      let arr = response?.area
+        ?.filter((item) => item.area_name !== "All - District")
+        .map(({ area_name, id }) => ({
+          label: area_name,
+          value: id,
+        }));
       setSelectBoxOptions((prev) => ({
         ...prev,
-        areas: response?.area
-          ?.filter((item) => item.area_name !== "All - District")
-          .map(({ area_name, id }) => ({
-            label: area_name,
-            value: id,
-          })),
+        areas: arr,
       }));
+      return arr;
     } catch (error) {
       console.error("Error:", error);
     }
@@ -628,7 +651,12 @@ function AddEditFormUserMaster() {
     //   tableDataMethods.getValues("area");
 
     //  setClient_location_list((prev) => [{ ...prev, data }]);
-    setTableData((prev) => [...prev, selectedLocationList]);
+    // if(editIndex){
+
+    // }else{
+
+    //   setTableData((prev) => [...prev, selectedLocationList]);
+    // }
     // selectedLocationList
     setSelectedLocationList((prev) => ({
       ...prev,
@@ -641,29 +669,26 @@ function AddEditFormUserMaster() {
 
     // if ( false && isAllFieldsSelected) {
     //   // Collect form data
-    //   const formData = {
-    //     region: getNameById("regions", tableDataMethods.getValues("region")),
-    //     state: getNameById("states", tableDataMethods.getValues("state")),
-    //     substate: getNameById(
-    //       "substate",
-    //       tableDataMethods.getValues("substate")
-    //     ),
-    //     district: getNameById(
-    //       "districts",
-    //       tableDataMethods.getValues("district")
-    //     ),
-    //     area: getNameById("areas", tableDataMethods.getValues("area")),
-    //   };
+    const formData = {
+      region: getNameById("regions", tableDataMethods.getValues("region")),
+      state: getNameById("states", tableDataMethods.getValues("state")),
+      substate: getNameById("substate", tableDataMethods.getValues("substate")),
+      district: getNameById(
+        "districts",
+        tableDataMethods.getValues("district")
+      ),
+      area: getNameById("areas", tableDataMethods.getValues("area")),
+    };
 
-    //   // Add new row or update existing row
-    //   if (editIndex !== null) {
-    //     const updatedTableData = [...tableData];
-    //     updatedTableData[editIndex] = formData;
-    //     setTableData(updatedTableData);
-    //     setEditIndex(null);
-    //   } else {
-    //     setTableData((prevTableData) => [...prevTableData, formData]);
-    //   }
+    // Add new row or update existing row
+    if (editIndex !== null) {
+      const updatedTableData = [...tableData];
+      updatedTableData[editIndex] = selectedLocationList;
+      setTableData(updatedTableData);
+      setEditIndex(null);
+    } else {
+      setTableData((prevTableData) => [...prevTableData, selectedLocationList]);
+    }
 
     //   // Show the table
 
@@ -674,11 +699,74 @@ function AddEditFormUserMaster() {
   };
 
   useMemo(() => {
-    console.log(tableData);
-  }, []);
+    console.log("tableData on edit time ", tableData);
+  }, [tableData]);
 
-  const handleEditRow = (index) => {
+  const handleEditRow = async (index) => {
     const rowData = tableData[index];
+    setEditIndex(index);
+    console.log("row data on edit time ", rowData);
+
+    let obj = {
+      region: rowData?.region?.value,
+      state: rowData?.state?.value,
+      substate: rowData?.substate?.value,
+      district: rowData?.district?.value,
+      area: rowData?.area?.value,
+    };
+
+    const responses = await Promise.all([
+      fetchLocationDrillDownBaseId({ region: obj.region }),
+      fetchLocationDrillDownBaseId({
+        region: obj.region,
+        state: obj.state,
+      }),
+      fetchLocationDrillDownBaseId({
+        region: obj.region,
+        state: obj.state,
+        substate: obj.substate,
+      }),
+      fetchLocationDrillDownBaseId({
+        region: obj.region,
+        state: obj.state,
+        substate: obj.substate,
+        district: obj.district,
+      }),
+      fetchLocationDrillDownBaseId({
+        region: obj.region,
+        state: obj.state,
+        substate: obj.substate,
+        district: obj.district,
+        area: obj.area,
+      }),
+    ]);
+
+    console.log("responses --------------> ", responses);
+
+    setSelectBoxOptions((prev) => ({
+      ...prev,
+
+      region: responses[4]?.region?.map((el) => ({
+        label: el.region_name,
+        value: el.id,
+      })),
+      state: responses[4]?.state?.map((el) => ({
+        label: el.state_name,
+        value: el.id,
+      })),
+      substate: responses[4]?.substate?.map((el) => ({
+        label: el.substate_name,
+        value: el.id,
+      })),
+      district: responses[4]?.district?.map((el) => ({
+        label: el.district_name,
+        value: el.id,
+      })),
+      area: responses[4]?.area?.map((el) => ({
+        label: el.area_name,
+        value: el.id,
+      })),
+    }));
 
     // const arr = [
     //   { id: 1, name: 'Alice' },
@@ -700,7 +788,7 @@ function AddEditFormUserMaster() {
 
     // Assign the new array to the 'arr' variable
 
-    setSelectedLocationList(() => ({
+    setSelectedLocationList((prev) => ({
       ...prev,
       region: rowData.region,
       state: rowData.state,
@@ -709,20 +797,22 @@ function AddEditFormUserMaster() {
       area: rowData.area,
     }));
 
-    const regionId = getIdByLabel("regions", rowData.region);
-    regionOnChange({ value: regionId });
-    const stateId = getIdByLabel("states", rowData.state);
-    stateOnChange({ value: stateId });
-    const substateId = getIdByLabel("substate", rowData.substate);
-    const districtId = getIdByLabel("districts", rowData.district);
-    const areaId = getIdByLabel("areas", rowData.area);
+    tableDataMethods.setValue("region", rowData.region.value, {
+      shouldDirty: false,
+    });
+    tableDataMethods.setValue("state", rowData.state.value, {
+      shouldDirty: false,
+    });
+    tableDataMethods.setValue("substate", rowData.substate.value, {
+      shouldDirty: false,
+    });
+    tableDataMethods.setValue("district", rowData.district.value, {
+      shouldDirty: false,
+    });
+    tableDataMethods.setValue("area", rowData.area.value, {
+      shouldDirty: false,
+    });
 
-    tableDataMethods.setValue("region", regionId, { shouldDirty: true });
-    tableDataMethods.setValue("state", stateId, { shouldDirty: true });
-    tableDataMethods.setValue("substate", substateId, { shouldDirty: true });
-    tableDataMethods.setValue("district", districtId, { shouldDirty: true });
-    tableDataMethods.setValue("area", areaId, { shouldDirty: true });
-    // setTableData((prev) => [{ ...prev, selectedLocationList }]);
     setEditIndex(index);
   };
 
@@ -753,9 +843,9 @@ function AddEditFormUserMaster() {
     return selectedOption ? selectedOption.value : "";
   };
 
-  useEffect(() => {
-    setAddEditFormFieldsList(addEditFormFields);
-    getReportingManagerList();
+  let drillDownList = {};
+
+  const autoFillForm = () => {
     if (details?.id) {
       // regionOnChange({ value: details?.region?.id });
       //  stateOnChange({ value: details.state?.id });
@@ -768,7 +858,7 @@ function AddEditFormUserMaster() {
         designation: details?.designation,
         phone: details?.phone,
         user_role: details?.user_role?.map((item) => item.id) || [],
-        reporting_manager: details?.reporting_manager.employee_name,
+        reporting_manager: details?.employee_name,
         pin_code: details?.pin_code,
         region: details?.region?.id,
         state: details?.state?.id,
@@ -778,6 +868,7 @@ function AddEditFormUserMaster() {
         last_login: details?.last_login,
         is_active: details?.is_active,
       };
+
       console.log("details", details);
       console.log("obj", obj);
 
@@ -786,11 +877,27 @@ function AddEditFormUserMaster() {
         methods.setValue(key, obj[key], { shouldValidate: true });
       });
     }
+
+    let y = details?.user_location?.map((el) => ({
+      region: { label: el.region?.region_name, value: el.region?.id },
+      state: { label: el.state?.state_name, value: el.state?.id },
+      substate: { label: el.substate?.substate_name, value: el.substate?.id },
+      district: { label: el.district?.district_name, value: el.district?.id },
+      area: { label: el.area?.area_name, value: el.area?.id },
+    }));
+
+    setTableData(y);
+  };
+
+  useEffect(() => {
+    setAddEditFormFieldsList(addEditFormFields);
+    getReportingManagerList();
+
     // getAllStateMaster();
     // getRegionMasterList();
     // getAllDistrict();
     // getAllZone();
-    getAllRole();
+    // getAllRole();
     // getAllArea();
     // getAllReportingManager();
     // getAllUsers();
@@ -819,10 +926,14 @@ function AddEditFormUserMaster() {
   // console.log(commonValues, "here 4");
   useEffect(() => {
     getRegionMasterList();
+    getAllRole();
+    console.log("details --> ", details);
+    autoFillForm();
     return () => {
       dispatch(setBreadCrumb([]));
     };
   }, []);
+
   return (
     // <Box bg={"white"}>
     <Box bg="white" borderRadius={10} p="10">
@@ -922,10 +1033,11 @@ function AddEditFormUserMaster() {
                       name="reporting_manager"
                       label=""
                       options={selectBoxOptions.reportingManager}
-                      selectedValue={selectBoxOptions.reportingManager.find(
-                        (opt) =>
-                          opt.label === details?.reporting_manager.employee_name
-                      )}
+                      selectedValue={
+                        selectBoxOptions.reportingManager.filter(
+                          (opt) => opt.label === details?.employee_name
+                        )[0]
+                      }
                       handleOnChange={(val) => {
                         setValue("reporting_manager", val.value, {
                           shouldValidate: true,
