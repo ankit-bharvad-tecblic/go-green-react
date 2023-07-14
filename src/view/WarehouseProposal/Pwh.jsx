@@ -253,7 +253,12 @@ const formFieldsName = {
 const client_schema = Yup.object().shape({
   client_type: Yup.string().trim().required("Client type name is required"),
   client_name: Yup.string().trim().required("Client name is required"),
-  client_contact_no: Yup.string().trim().required("Mobile number is required"),
+  // client_contact_no: Yup.string().trim().required("Mobile number is required"),
+  client_contact_no: Yup.string()
+    .trim()
+    .required("Mobile number is required")
+    .matches(/^\d{10}$/, "Mobile number must be a 10-digit number"),
+
   region: Yup.string().trim().required("Region is required"),
   state: Yup.string().trim().required("State is required"),
   substate: Yup.string().trim().required("Substate is required"),
@@ -673,6 +678,22 @@ const Pwh = ({ id }) => {
         areaOnChange(obj);
       }
 
+      if (key === "remarks") {
+        setValue("remarks", value != null ? value : "", {
+          shouldValidate: true,
+        });
+      }
+
+      if (key === "lock_in_period_month") {
+        setValue(
+          "lock_in_period_month",
+          value === "true" || value != null ? "true" : "false",
+          {
+            shouldValidate: true,
+          }
+        );
+      }
+
       // selectBoxOptions?.superVisorDayShiftOpt
 
       if (key === "supervisor_day_shift") {
@@ -914,18 +935,50 @@ const Pwh = ({ id }) => {
             area: area_obj,
           });
 
-          setClient_data_list((prev) => [
-            ...prev,
-            {
-              ...item,
+          if (item.client_type === "Retail") {
+            setClient_data_list((prev) => [
+              ...prev,
+              {
+                client_type: item.client_type,
+                client_name: item.client_name,
+                client_contact_no: item.client_contact_no,
+                region: reg_obj,
+                state: state_obj,
+                substate: subtype_obj,
+                district: district_obj,
+                area: area_obj,
+                client_address: item.client_address,
+              },
+            ]);
+          } else {
+            setClient_data_list((prev) => [
+              ...prev,
+              {
+                client_type: item.client_type,
+                client_name: item.client_name,
+                client_contact_no: item.client_contact_no,
+                region: reg_obj,
+                state: state_obj,
+                substate: subtype_obj,
+                district: district_obj,
+                area: area_obj,
+                client_address: item.client_address,
 
-              region: reg_obj,
-              state: state_obj,
-              substate: subtype_obj,
-              district: district_obj,
-              area: area_obj,
-            },
-          ]);
+                /// daynamic field
+
+                storage_charges: item.storage_charges,
+                reservation_qty: item.reservation_qty,
+                reservation_start_date: item.reservation_start_date,
+                reservation_end_date: item.reservation_end_date,
+                reservation_period_month: item.reservation_period_month,
+                billing_cycle: item.billing_cycle,
+                post_reservation_billing_cycle:
+                  item.post_reservation_billing_cycle,
+                post_reservation_storage_charges:
+                  item.post_reservation_storage_charges,
+              },
+            ]);
+          }
 
           // return {
           //   ...item,
@@ -951,7 +1004,7 @@ const Pwh = ({ id }) => {
           substate: "",
           district: "",
           area: "",
-          address: "",
+          client_address: "",
         });
 
         setSelectedClientOpt({
@@ -1329,7 +1382,7 @@ const Pwh = ({ id }) => {
       substate: "",
       district: "",
       area: "",
-      address: "",
+      client_address: "",
     });
 
     setSelectedClientOpt({
@@ -1345,7 +1398,12 @@ const Pwh = ({ id }) => {
   const editClientDetails = (item, i) => {
     setEditedClientIndex(i);
     console.log("item ", item);
+    client_form_methods.setValue("client_type", item.client_type, {
+      shouldValidate: true,
+    });
+
     setSelectedClientOpt({
+      client_type: clientTypes.filter((el) => el.value === item.client_type)[0],
       region: item.region,
       state: item.state,
       substate: item.substate,
@@ -1356,25 +1414,64 @@ const Pwh = ({ id }) => {
     for (const [key, value] of Object.entries(item)) {
       console.log(key, value);
 
-      if (key === "reservation_start_date" || key === "reservation_end_date") {
-        client_form_methods.setValue(key, moment(value).format("DD/MM/YYYY"), {
-          shouldValidate: true,
-        });
-      }
-      if (
-        key === "region" ||
-        key === "state" ||
-        key === "substate" ||
-        key === "district" ||
-        key === "area"
-      ) {
-        client_form_methods.setValue(key, value.value, {
-          shouldValidate: true,
-        });
+      if (item.client_type === "Retail") {
+        if (key === "client_address") {
+          client_form_methods.setValue("client_address", value, {
+            shouldValidate: true,
+          });
+        }
+
+        if (key === "client_name") {
+          client_form_methods.setValue("client_name", value, {
+            shouldValidate: true,
+          });
+        }
+
+        if (key === "client_contact_no") {
+          client_form_methods.setValue("client_contact_no", value, {
+            shouldValidate: true,
+          });
+        }
+
+        if (
+          key === "region" ||
+          key === "state" ||
+          key === "substate" ||
+          key === "district" ||
+          key === "area"
+        ) {
+          client_form_methods.setValue(key, value.value, {
+            shouldValidate: true,
+          });
+        }
       } else {
-        client_form_methods.setValue(key, value, {
-          shouldValidate: true,
-        });
+        if (
+          key === "reservation_start_date" ||
+          key === "reservation_end_date"
+        ) {
+          client_form_methods.setValue(
+            key,
+            moment(value).format("DD/MM/YYYY"),
+            {
+              shouldValidate: true,
+            }
+          );
+        }
+        if (
+          key === "region" ||
+          key === "state" ||
+          key === "substate" ||
+          key === "district" ||
+          key === "area"
+        ) {
+          client_form_methods.setValue(key, value.value, {
+            shouldValidate: true,
+          });
+        } else {
+          client_form_methods.setValue(key, value, {
+            shouldValidate: true,
+          });
+        }
       }
     }
   };
@@ -1696,14 +1793,15 @@ const Pwh = ({ id }) => {
           is_draft: true,
           client: client_data_list.map((item) => ({
             ...item,
+            client_contact_no: `+91${item.client_contact_no}`,
             region: item.region.value,
             state: item.state.value,
             substate: item.substate.value,
             district: item.district.value,
             area: item.area.value,
           })),
-          intention_letter: getValues("intention_letter"), //not found
-          remarks: getValues("remarks"), //not found
+          //intention_letter: getValues("intention_letter"), //not found
+          // remarks: getValues("remarks"), //not found
         };
       }
 
@@ -5898,18 +5996,18 @@ const Pwh = ({ id }) => {
                                 <GridItem colSpan={{ base: 1, sm: 2 }}>
                                   <Text textAlign="left"> Address </Text>{" "}
                                   <CustomTextArea
-                                    name="address"
-                                    placeholder="address"
+                                    name="client_address"
+                                    placeholder="Address"
                                     type="text"
                                     rowLength={1}
                                     label=""
                                     style={{ w: "100%" }}
                                     inputValue={client_form_methods.getValues(
-                                      "address"
+                                      "client_address"
                                     )}
                                     onChange={(val) => {
                                       client_form_methods.setValue(
-                                        "address",
+                                        "client_address",
                                         val.target.value,
                                         {
                                           shouldValidate: true,
@@ -5918,7 +6016,7 @@ const Pwh = ({ id }) => {
                                     }}
                                   />
                                   <Box mx="1" color="red" textAlign="left">
-                                    {errors?.address?.message}
+                                    {errors?.client_address?.message}
                                   </Box>
                                 </GridItem>
 
@@ -6353,7 +6451,7 @@ const Pwh = ({ id }) => {
                                       <Td>{item?.substate?.label}</Td>
                                       <Td>{item?.district?.label}</Td>
                                       <Td>{item?.area?.label}</Td>
-                                      <Td>{item?.address}</Td>
+                                      <Td>{item?.client_address}</Td>
                                       {/* ----------------------------- */}
                                       <Td>{item?.storage_charges || "-"}</Td>
                                       <Td>{item?.reservation_qty || "-"}</Td>

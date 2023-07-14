@@ -41,9 +41,21 @@ const WarehouseProposal = () => {
 
   const [formDetails, setFormDetails] = useState([]);
 
+  let warehouseTypeOptions = [
+    { label: "PWH ", value: "pwh" },
+    { label: "WMS", value: "wms" },
+    { label: "THIRD PARTY", value: "third" },
+    { label: "WMS + RENT", value: "rent" },
+  ];
+  let warehouseSubTypeOptions = [
+    { label: "Leased ", value: "leased" },
+    { label: "Sub Leased ", value: "sub-leased" },
+    { label: "Tri Party ", value: "tri-party" },
+    { label: "Revenue Sharing ", value: "revenue" },
+  ];
   const [options, setOptions] = useState({
-    warehouseType: [],
-    subType: [],
+    warehouseType: warehouseTypeOptions,
+    subType: warehouseSubTypeOptions,
   });
 
   const location = useLocation();
@@ -169,12 +181,7 @@ const WarehouseProposal = () => {
                 name="Select-warehouse-Type"
                 label="Select warehouse Type"
                 // options={options?.warehouseType || []}
-                options={[
-                  { label: "PWH ", value: "pwh" },
-                  { label: "WMS", value: "wms" },
-                  { label: "THIRD PARTY", value: "third" },
-                  { label: "WMS + RENT", value: "rent" },
-                ]}
+                options={options?.warehouseType || []}
                 selectedValue={selected?.selectedWarehouse}
                 isClearable={false}
                 selectType="label"
@@ -183,6 +190,27 @@ const WarehouseProposal = () => {
                   setSelected((prev) => ({ ...prev, selectedWarehouse: val }));
                   console.log("selectedOption @@@@@@@@@@@------> ", val);
                   setHiringProposal((old) => ({ ...old, type: val }));
+
+                  if (val.value === "pwh") {
+                    setOptions((prev) => ({
+                      ...prev,
+                      subType: [
+                        { label: "Leased ", value: "leased" },
+                        { label: "Sub Leased ", value: "sub-leased" },
+                        { label: "Tri Party ", value: "tri-party" },
+                        { label: "Revenue Sharing ", value: "revenue" },
+                      ],
+                    }));
+                  } else {
+                    setOptions((prev) => ({
+                      ...prev,
+                      subType: [
+                        { label: "Leased ", value: "leased" },
+                        { label: "Sub Leased ", value: "sub-leased" },
+                        { label: "Tri Party ", value: "tri-party" },
+                      ],
+                    }));
+                  }
                 }}
               />
             </MotionSlideUp>
@@ -194,12 +222,7 @@ const WarehouseProposal = () => {
                 name="Select-warehouse-sub-Type"
                 label="Select warehouse Sub Type"
                 // options={options?.subType || []}
-                options={[
-                  { label: "Leased ", value: "leased" },
-                  { label: "Sub Leased ", value: "sub-leased" },
-                  { label: "Tri Party ", value: "tri-party" },
-                  { label: "Revenue Sharing ", value: "revenue" },
-                ]}
+                options={options?.subType || []}
                 selectedValue={selected?.selectedWarehouseSubType}
                 isClearable={false}
                 selectType="label"
