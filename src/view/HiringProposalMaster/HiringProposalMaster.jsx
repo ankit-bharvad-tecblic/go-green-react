@@ -91,204 +91,197 @@ function HiringProposalMaster() {
       header: "SR. NO",
     }),
     columnHelper.accessor("warehouse_type", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Warehouse Type",
     }),
     columnHelper.accessor("warehouse_subtype", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Warehouse Sub Type",
     }),
     columnHelper.accessor("warehouse_name", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Warehouse Name",
     }),
     columnHelper.accessor("region", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Region",
     }),
     columnHelper.accessor("state", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "State",
     }),
     columnHelper.accessor("substate", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Sub State",
     }),
     columnHelper.accessor("district", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "District",
     }),
     columnHelper.accessor("area", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Area",
     }),
     columnHelper.accessor("warehouse_address", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Warehouse Address ",
     }),
     columnHelper.accessor("warehouse_pincode", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Warehouse Pincode",
     }),
     columnHelper.accessor("no_of_chambers", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "No Of Chambers",
     }),
     columnHelper.accessor("is_factory_permise", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? "True" : "False"),
       header: "Is Factory Premise",
     }),
     columnHelper.accessor("standard_capacity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Standard Capacity",
     }),
     columnHelper.accessor("currrent_capacity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Current Capacity",
     }),
     columnHelper.accessor("currrent_utilised_capacity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Current Utilised Capacity",
     }),
     columnHelper.accessor("no_of_warehouse_in_area", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "No Of Warehouse In Area",
     }),
     columnHelper.accessor("lock_in_period", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? "True" : "False"),
       header: "Lock in Period",
     }),
     columnHelper.accessor("lock_in_period_month", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Lock in Period Month",
     }),
     columnHelper.accessor("covered_area", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Covered Area",
     }),
     columnHelper.accessor("supervisor_day_shift", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Supervisor Day Shift",
     }),
     columnHelper.accessor("supervisor_night_shift", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Supervisor Night Shift ",
     }),
     columnHelper.accessor("security_guard_day_shift", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Security Guard Day Shift ",
     }),
     columnHelper.accessor("security_guard_night_shift", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Security Guard Night Shift ",
     }),
     columnHelper.accessor("expected_commodity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Expected Commodity ",
     }),
     columnHelper.accessor("commodity_inward_type", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Commodity Inward Type",
     }),
     columnHelper.accessor("prestack_commodity", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "PreStack Commodity ",
     }),
     columnHelper.accessor("prestack_commodity_qty", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "PreStack Commodity Qty",
     }),
-    columnHelper.accessor("banker_id", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("ccbanker_name", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "CC Banker ",
     }),
-    columnHelper.accessor("bank_name", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("is_funding_required", {
+      cell: (info) => (info.getValue() ? "True" : "False"),
       header: "Funding Required ",
     }),
     columnHelper.accessor("rent", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Rent",
     }),
     columnHelper.accessor("gg_revenue_ratio", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "GG Revenue Sharing Ratio",
     }),
     columnHelper.accessor("security_deposit_month", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Security Deposite Month",
     }),
     columnHelper.accessor("advance_rent", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? "True" : "False"),
       header: "Advance Rent",
     }),
     columnHelper.accessor("advance_rent_month", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Advance Rent Month ",
     }),
-    columnHelper.accessor("bank_name", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("gst", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "GST",
     }),
-    columnHelper.accessor("bank_name", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("commencement_date", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Commencement Date",
     }),
-    columnHelper.accessor("bank_name", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("security_deposit_month", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Agreement Period Month ",
     }),
     columnHelper.accessor("notice_period_month", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Notice Period Month",
     }),
-    columnHelper.accessor("projection_plan_file_path", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("projected_file_url", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Projection Plan File Path",
     }),
-    columnHelper.accessor("owner_intention_letter_file_path", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("intention_letter_url", {
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Owner Intention Letter File Path",
     }),
-
     columnHelper.accessor("remarks", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Remarks ",
     }),
     columnHelper.accessor("cm_proposal_business_form_file_path", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "CM Proposal Business Form File Path ",
     }),
     columnHelper.accessor("l1_user", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "L1 User",
     }),
     columnHelper.accessor("l2_user", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "L2 User",
     }),
-
-    columnHelper.accessor("is_funding_required", {
-      cell: (info) => info.getValue(),
-      header: "Is Funding Required ",
-    }),
     columnHelper.accessor("bank_address", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Document",
     }),
     columnHelper.accessor("bank_address", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Inspection Assigned To",
     }),
     columnHelper.accessor("created_at", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Creation Date",
     }),
     columnHelper.accessor("updated_at", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() ? info.getValue() : " - "),
       header: "Last Update Date",
     }),
-
     columnHelper.accessor("active", {
       // header: "ACTIVE",
       header: () => (
